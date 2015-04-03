@@ -1,4 +1,4 @@
-package elec332.eflux.main;
+package elec332.eflux;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -12,7 +12,7 @@ import elec332.eflux.init.ItemRegister;
 import elec332.core.helper.FileHelper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModBase;
-import elec332.core.modBaseUtils.modInfo;
+import elec332.core.modBaseUtils.ModInfo;
 import elec332.eflux.proxies.CommonProxy;
 
 import java.io.File;
@@ -20,8 +20,8 @@ import java.io.File;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = modInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)",
-        acceptedMinecraftVersions = modInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)",
+        acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class EFlux extends ModBase {
 
     public static final String ModName = "E-Flux"; //Human readable name

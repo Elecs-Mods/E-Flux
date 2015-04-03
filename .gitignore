@@ -1,1 +1,6 @@
 *.db
+*.iml
+
+*.iws
+*.ipr
+.gradle/
