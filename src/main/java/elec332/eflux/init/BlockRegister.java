@@ -1,7 +1,11 @@
 package elec332.eflux.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import elec332.core.main.ElecCTab;
+import elec332.core.main.ElecCore;
+import elec332.eflux.blocks.BaseBlockWithSidedFacing;
+import elec332.eflux.blocks.DirectionBlock;
+import net.minecraft.block.material.Material;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -9,11 +13,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class BlockRegister {
     public static final BlockRegister instance = new BlockRegister();
 
-    public void preInit(FMLPreInitializationEvent event){
-        //Early block registering
-    }
-
     public void init(FMLInitializationEvent event){
-        //Normal block registering
+        if (ElecCore.developmentEnvironment){
+            new DirectionBlock().setCreativeTab(ElecCTab.ElecTab);
+            new BaseBlockWithSidedFacing(Material.rock, "test").setCreativeTab(ElecCTab.ElecTab);
+        }
     }
 }
