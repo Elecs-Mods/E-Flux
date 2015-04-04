@@ -7,6 +7,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
  */
 public class CommandRegister {
     public static final CommandRegister instance = new CommandRegister();
+    private CommandRegister(){
+    }
 
     public void init(FMLServerStartingEvent event){
     }

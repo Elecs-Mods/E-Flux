@@ -1,7 +1,11 @@
 package elec332.eflux.blocks.machines;
 
+import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BaseBlockMachine;
+import elec332.eflux.tileentity.TEGrinder;
+import elec332.eflux.util.GuiID;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +20,14 @@ public class Grinder extends BaseBlockMachine {
     }
 
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        player.openGui(EFlux.instance, GuiID.GRINDER.ordinal(), world, x, y, z);
+        return true;
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        return null;
+        return new TEGrinder();
     }
 
     @Override

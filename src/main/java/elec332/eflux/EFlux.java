@@ -6,12 +6,16 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.proxies.CommonProxy;
+import elec332.eflux.tileentity.TEGrinder;
+import elec332.eflux.util.GuiID;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -63,14 +67,15 @@ public class EFlux {
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+        GameRegistry.registerTileEntity(TEGrinder.class, GuiID.GRINDER.toString());
         //register items/blocks
-
 
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-
+        //Nope
     }
 
     @Mod.EventHandler

@@ -5,6 +5,7 @@ import elec332.core.main.ElecCore;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BaseBlockWithSidedFacing;
 import elec332.eflux.blocks.DirectionBlock;
+import elec332.eflux.blocks.machines.Grinder;
 import net.minecraft.block.material.Material;
 
 /**
@@ -12,11 +13,14 @@ import net.minecraft.block.material.Material;
  */
 public class BlockRegister {
     public static final BlockRegister instance = new BlockRegister();
+    private BlockRegister(){
+    }
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment){
             new DirectionBlock().setCreativeTab(EFlux.CreativeTab);
             new BaseBlockWithSidedFacing(Material.rock, "test").setCreativeTab(EFlux.CreativeTab);
         }
+        new Grinder(Material.rock, "Grinder");
     }
 }

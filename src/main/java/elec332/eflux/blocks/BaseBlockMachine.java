@@ -1,12 +1,8 @@
 package elec332.eflux.blocks;
 
-import elec332.core.api.wrench.IRotatable;
 import elec332.core.api.wrench.IWrenchable;
-import elec332.core.util.DirectionHelper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
