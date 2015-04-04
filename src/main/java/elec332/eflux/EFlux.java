@@ -13,6 +13,9 @@ import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.world.WorldGenOres;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -24,8 +27,8 @@ import java.io.File;
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class EFlux {
 
-    public static final String ModName = "E-Flux"; //Human readable name
-    public static final String ModID = "EFlux";  //modid (usually lowercase)
+    public static final String ModName = "E-Flux";
+    public static final String ModID = "EFlux";
     public static File baseFolder;
 
     @SidedProxy(clientSide = "elec332.eflux.proxies.ClientProxy", serverSide = "elec332.eflux.proxies.CommonProxy")
@@ -34,11 +37,18 @@ public class EFlux {
     @Mod.Instance(ModID)
     public static EFlux instance;
     public static Configuration config;
+    public static CreativeTabs CreativeTab;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
+        CreativeTab = new CreativeTabs("EFlux") {
+            @Override
+            public Item getTabIconItem() {
+                return Item.getItemFromBlock(Blocks.anvil);  //TODO: replace with mod item, once we got a nice one
+            }
+        };
         //setting up mod stuff
 
 

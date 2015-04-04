@@ -2,6 +2,7 @@ package elec332.eflux.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import elec332.core.player.PlayerHelper;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.EFlux;
 import net.minecraft.block.material.Material;
@@ -32,6 +33,7 @@ public class BaseBlockWithSidedFacing extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, entityLivingBase, stack);
+        PlayerHelper.addPersonalMessageToClient("PlacementNumber: " + DirectionHelper.getDirectionNumberOnPlacement(entityLivingBase));
         world.setBlockMetadataWithNotify(x, y, z, DirectionHelper.getDirectionNumberOnPlacement(entityLivingBase), 2);
     }
 

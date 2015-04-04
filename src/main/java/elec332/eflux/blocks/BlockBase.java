@@ -10,5 +10,6 @@ import net.minecraft.block.material.Material;
 public class BlockBase extends BaseBlock {
     public BlockBase(Material baseMaterial, String blockName) {
         super(baseMaterial, blockName, EFlux.ModID);
+        setCreativeTab(EFlux.CreativeTab);
     }
 }

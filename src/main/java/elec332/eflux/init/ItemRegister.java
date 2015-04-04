@@ -2,6 +2,8 @@ package elec332.eflux.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import elec332.eflux.items.Wrench;
+import net.minecraft.item.Item;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -9,11 +11,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class ItemRegister {
     public static final ItemRegister instance = new ItemRegister();
 
-    public void preInit(FMLPreInitializationEvent event){
-        //Early item registering
-    }
+    public static Item wrench;
 
     public void init(FMLInitializationEvent event){
-        //Normal item registering
+        wrench = new Wrench("Wrench");
     }
 }

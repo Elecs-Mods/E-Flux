@@ -1,8 +1,8 @@
 package elec332.eflux.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import elec332.core.main.ElecCTab;
 import elec332.core.main.ElecCore;
+import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BaseBlockWithSidedFacing;
 import elec332.eflux.blocks.DirectionBlock;
 import net.minecraft.block.material.Material;
@@ -15,8 +15,8 @@ public class BlockRegister {
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment){
-            new DirectionBlock().setCreativeTab(ElecCTab.ElecTab);
-            new BaseBlockWithSidedFacing(Material.rock, "test").setCreativeTab(ElecCTab.ElecTab);
+            new DirectionBlock().setCreativeTab(EFlux.CreativeTab);
+            new BaseBlockWithSidedFacing(Material.rock, "test").setCreativeTab(EFlux.CreativeTab);
         }
     }
 }
