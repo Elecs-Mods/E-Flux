@@ -33,7 +33,7 @@ public class BaseBlockWithSidedFacing extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, entityLivingBase, stack);
-        PlayerHelper.addPersonalMessageToClient("PlacementNumber: " + DirectionHelper.getDirectionNumberOnPlacement(entityLivingBase));
+        //PlayerHelper.addPersonalMessageToClient("PlacementNumber: " + DirectionHelper.getDirectionNumberOnPlacement(entityLivingBase));
         world.setBlockMetadataWithNotify(x, y, z, DirectionHelper.getDirectionNumberOnPlacement(entityLivingBase), 2);
     }
 
