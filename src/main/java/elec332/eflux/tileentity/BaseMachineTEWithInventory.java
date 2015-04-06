@@ -4,13 +4,18 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import elec332.core.baseclasses.tileentity.BaseTileWithInventory;
 import elec332.eflux.EFlux;
+import elec332.eflux.util.IEFluxTile;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 4-4-2015.
  */
-public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver {
+public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver, IEFluxTile {
 
     public void modifyEnergyStored(int energy) {
         storage.modifyEnergyStored(energy);
@@ -62,5 +67,44 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         this.storage.writeToNBT(tagCompound);
+    }
+
+    public boolean openGui(EntityPlayer player){
+        player.openGui(EFlux.instance, 0, worldObj, xCoord, yCoord, zCoord);
+        return true;
+    }
+
+    public abstract Object getGuiServer(EntityPlayer player);
+
+    public abstract Object getGuiClient(EntityPlayer player);
+
+    @Override
+    public int getLightOpacity() {
+        return 0;
+    }
+
+    @Override
+    public int getLightValue() {
+        return 0;
+    }
+
+    @Override
+    public void onBlockRemoved() {
+    }
+
+    @Override
+    public void onBlockAdded() {
+    }
+
+    @Override
+    public void onBlockPlacedBy(EntityLivingBase entityLiving, ItemStack stack) {
+    }
+
+    @Override
+    public void onNeighborBlockChange(Block block) {
+    }
+
+    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ){
+        return false;
     }
 }

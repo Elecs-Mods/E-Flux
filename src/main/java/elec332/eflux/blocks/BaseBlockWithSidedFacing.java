@@ -2,7 +2,6 @@ package elec332.eflux.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import elec332.core.player.PlayerHelper;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.EFlux;
 import net.minecraft.block.material.Material;

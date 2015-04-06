@@ -26,15 +26,18 @@ public class Wrench extends Item {
         RegisterHelper.registerItem(this, name);
     }
 
+    @Override
     public boolean doesContainerItemLeaveCraftingGrid(ItemStack itemStack) {
         return false;
     }
 
+    @Override
     public ItemStack getContainerItem(ItemStack itemStack) {
         return new ItemStack(this, 1, itemStack.getItemDamage() + 1);
     }
 
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float HitX, float HitY, float HitZ) {
+    @Override
+    public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float HitX, float HitY, float HitZ) {
         Block block = world.getBlock(x, y, z);
         if (block instanceof IWrenchable) {
             if (player.isSneaking()) {
@@ -42,16 +45,16 @@ public class Wrench extends Item {
                 if (!world.isRemote) {
                     world.spawnEntityInWorld(new EntityItem(world, x, y, z, ((IWrenchable) block).ItemDropped()));
                 }
-            } else {
+            } else if (!world.isRemote){
                 ((IWrenchable) block).onWrenched(world, x, y, z, ForgeDirection.getOrientation(side));
             }
             player.swingItem();
             itemStack.damageItem(1, player);
-            return true;
+            return false;
         } else if (block.rotateBlock(world, x, y, z, ForgeDirection.getOrientation(side))) {
             player.swingItem();
             itemStack.damageItem(1, player);
-            return true;
+            return false;
         }
         return false;
     }
