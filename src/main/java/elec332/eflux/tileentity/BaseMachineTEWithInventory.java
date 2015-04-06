@@ -23,6 +23,7 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
     }
 
     private EnergyStorage storage;
+    private int comparatorPower;
 
     public BaseMachineTEWithInventory(int maxEnergy, int maxReceive, int invSize) {
         super(invSize);
@@ -32,6 +33,18 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
 
     public boolean timeCheck() {
         return this.worldObj.getTotalWorldTime() % 32L == 0L;
+    }
+
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        if (this.timeCheck()){
+            int newComp = (int) Math.ceil(((float) this.getEnergyStored(ForgeDirection.UNKNOWN) / (float) this.getMaxEnergyStored(ForgeDirection.UNKNOWN) * 15.0));
+            if (this.comparatorPower != newComp){
+                this.comparatorPower = newComp;
+                this.markDirty();
+            }
+        }
     }
 
     @Override
@@ -85,8 +98,7 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
 
     @Override
     public int getComparatorInputOverride(int side) {
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-        return (int) Math.ceil(((float) this.getEnergyStored(dir) / (float) this.getMaxEnergyStored(dir) * 15.0));
+        return this.comparatorPower;
     }
 
     @Override
