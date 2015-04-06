@@ -20,6 +20,10 @@ import net.minecraft.world.World;
  */
 public class BlockMachine extends BaseBlockMachine {
 
+    public BlockMachine(EnumMachines machine){
+        this(machine.toString(), machine);
+    }
+
     public BlockMachine(String name, EnumMachines machine) {
         super(Material.rock, name);
         setResistance(4.5F);

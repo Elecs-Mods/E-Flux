@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TEGrinder extends BaseMachineTEWithInventory{
 
     public TEGrinder() {
-        super(6000, 40, 18);
+        super(60000, 40, 18);
     }
 
     @Override

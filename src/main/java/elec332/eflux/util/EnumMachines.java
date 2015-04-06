@@ -31,7 +31,7 @@ public enum EnumMachines {
 
     public void init(){
         GameRegistry.registerTileEntity(this.tileClass, this.toString());
-        this.blockMachine = new BlockMachine(this.toString(), this);
+        this.blockMachine = new BlockMachine(this);
     }
 
     public TileEntity getTileEntity() {

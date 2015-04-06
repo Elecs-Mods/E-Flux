@@ -4,6 +4,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import elec332.core.baseclasses.tileentity.BaseTileWithInventory;
 import elec332.eflux.EFlux;
+import elec332.eflux.util.IComparatorOverride;
 import elec332.eflux.util.IEFluxTile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 4-4-2015.
  */
-public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver, IEFluxTile {
+public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver, IEFluxTile, IComparatorOverride {
 
     public void modifyEnergyStored(int energy) {
         storage.modifyEnergyStored(energy);
@@ -27,6 +28,10 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
         super(invSize);
         this.storage = new EnergyStorage(maxEnergy);
         this.storage.setMaxReceive(maxReceive);
+    }
+
+    public boolean timeCheck() {
+        return this.worldObj.getTotalWorldTime() % 32L == 0L;
     }
 
     @Override
@@ -77,6 +82,12 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
     public abstract Object getGuiServer(EntityPlayer player);
 
     public abstract Object getGuiClient(EntityPlayer player);
+
+    @Override
+    public int getComparatorInputOverride(int side) {
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        return (int) Math.ceil(((float) this.getEnergyStored(dir) / (float) this.getMaxEnergyStored(dir) * 15.0));
+    }
 
     @Override
     public int getLightOpacity() {
