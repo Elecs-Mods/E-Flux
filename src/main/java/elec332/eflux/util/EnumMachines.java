@@ -55,7 +55,7 @@ public enum EnumMachines {
     }
 
     public boolean hasComparatorInputOverride(){
-        return IRedstoneHandler.class.isAssignableFrom(this.tileClass);
+        return IComparatorOverride.class.isAssignableFrom(this.tileClass);
     }
 
     @Override

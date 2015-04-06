@@ -3,6 +3,7 @@ package elec332.eflux.blocks.machines;
 import elec332.eflux.blocks.BaseBlockMachine;
 import elec332.eflux.items.Wrench;
 import elec332.eflux.util.EnumMachines;
+import elec332.eflux.util.IComparatorOverride;
 import elec332.eflux.util.IEFluxTile;
 import elec332.eflux.util.IRedstoneHandler;
 import net.minecraft.block.Block;
@@ -111,7 +112,7 @@ public class BlockMachine extends BaseBlockMachine {
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof IRedstoneHandler)
-            return ((IRedstoneHandler) tile).isProvidingWeakPower(world, x, y, z, side);
+            return ((IRedstoneHandler) tile).isProvidingWeakPower(side);
         return super.isProvidingWeakPower(world, x, y, z, side);
     }
 
@@ -119,7 +120,7 @@ public class BlockMachine extends BaseBlockMachine {
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int direction) {
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile instanceof IRedstoneHandler)
-            return ((IRedstoneHandler) tile).canConnectRedstone(world, x, y, z, direction);
+            return ((IRedstoneHandler) tile).canConnectRedstone(direction);
         return super.canConnectRedstone(world, x, y, z, direction);
     }
 
@@ -131,8 +132,8 @@ public class BlockMachine extends BaseBlockMachine {
     @Override
     public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof IRedstoneHandler)
-            return ((IRedstoneHandler) tile).getComparatorInputOverride(world, x, y, z, side);
+        if (tile instanceof IComparatorOverride)
+            return ((IComparatorOverride) tile).getComparatorInputOverride(side);
         return super.getComparatorInputOverride(world, x, y, z, side);
     }
 }
