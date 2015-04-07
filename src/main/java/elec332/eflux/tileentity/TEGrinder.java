@@ -5,7 +5,11 @@ import elec332.eflux.inventory.TEGrinderContainer;
 import elec332.eflux.util.Directions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -24,14 +28,7 @@ public class TEGrinder extends BaseMultiBlockMachine{
 
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
-        return Directions.getDirectionFromNumber(worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) == from && this.isFormed();
-    }
-
-    @Override
-    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (!isFormed())
-            return tryToForm();
-        else return openGui(player);
+        return Directions.getDirectionFromNumber(this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) == from && this.isFormed();
     }
 
     @Override
@@ -45,11 +42,24 @@ public class TEGrinder extends BaseMultiBlockMachine{
     }
 
     @Override
+    protected boolean arePlayerConditionsMet(EntityPlayer player) {
+        return true;
+    }
+
+    @Override
     protected boolean areBlocksAtRightLocations() {
         return getBlockAtOffset(-1, 0, -1) == Blocks.beacon && getBlockAtOffset(-1, 0, 1) == Blocks.beacon && getBlockAtOffset(1, 0, 1) == Blocks.beacon && getBlockAtOffset(1, 0, -1) == Blocks.beacon;
     }
 
     @Override
+    protected List<Vec3> getIMultiBlockLocations() {
+        ArrayList<Vec3> ret = new ArrayList<Vec3>();
+        ret.add(Vec3.createVectorHelper(0, 2, 0));
+        return ret;
+    }
+
+    @Override
     protected void onCreated() {
     }
+
 }

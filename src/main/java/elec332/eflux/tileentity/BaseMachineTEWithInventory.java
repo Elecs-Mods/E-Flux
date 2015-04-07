@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -127,7 +128,36 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
     public void onNeighborBlockChange(Block block) {
     }
 
+    @Override
+    public void onWrenched(ForgeDirection forgeDirection) {
+        switch (forgeDirection){
+            case NORTH:
+               this.setBlockMetadataWithNotify(0);
+                break;
+            case EAST:
+                this.setBlockMetadataWithNotify(1);
+                break;
+            case SOUTH:
+                this.setBlockMetadataWithNotify(2);
+                break;
+            case WEST:
+                this.setBlockMetadataWithNotify(3);
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void setBlockMetadataWithNotify(int meta){
+        this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta, 2);
+        notifyNeighboursOfDataChange();
+    }
+
     public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ){
-        return false;
+        return openGui(player);
+    }
+
+    public void notifyNeighboursOfDataChange(){
+        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

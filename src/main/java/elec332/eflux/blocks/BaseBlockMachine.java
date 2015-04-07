@@ -18,19 +18,24 @@ public abstract class BaseBlockMachine extends BaseBlockWithSidedFacing implemen
     public void onWrenched(World world, int i, int i1, int i2, ForgeDirection forgeDirection) {
         switch (forgeDirection){
             case NORTH:
+                world.markBlockForUpdate(i, i1, i2);
                 world.setBlockMetadataWithNotify(i, i1, i2, 0, 2);
                 break;
             case EAST:
+                world.markBlockForUpdate(i, i1, i2);
                 world.setBlockMetadataWithNotify(i, i1, i2, 1, 2);
                 break;
             case SOUTH:
+                world.markBlockForUpdate(i, i1, i2);
                 world.setBlockMetadataWithNotify(i, i1, i2, 2, 2);
                 break;
             case WEST:
+                world.markBlockForUpdate(i, i1, i2);
                 world.setBlockMetadataWithNotify(i, i1, i2, 3, 2);
                 break;
             default:
                 break;
+
         }
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 6-4-2015.
@@ -62,6 +63,14 @@ public class BlockMachine extends BaseBlockMachine {
     @Override
     public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
         return false;
+    }
+
+    @Override
+    public void onWrenched(World world, int i, int i1, int i2, ForgeDirection forgeDirection) {
+        TileEntity tile = world.getTileEntity(i, i1, i2);
+        if (tile instanceof IEFluxTile)
+            ((IEFluxTile) tile).onWrenched(forgeDirection);
+        super.onWrenched(world, i, i1, i2, forgeDirection);
     }
 
     @Override
