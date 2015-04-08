@@ -32,10 +32,6 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
         this.storage.setMaxReceive(maxReceive);
     }
 
-    public boolean timeCheck() {
-        return this.worldObj.getTotalWorldTime() % 32L == 0L;
-    }
-
     @Override
     public void updateEntity() {
         super.updateEntity();
@@ -47,13 +43,6 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
             }
         }
     }
-
-    @Override
-    public String getInventoryName() {
-        return this.hasCustomInventoryName()?this.customInventoryName: EFlux.ModID+"."+standardInventoryName();
-    }
-
-    protected abstract String standardInventoryName();
 
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
@@ -146,18 +135,10 @@ public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory i
             default:
                 break;
         }
-    }
-
-    protected void setBlockMetadataWithNotify(int meta){
-        this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, meta, 2);
-        notifyNeighboursOfDataChange();
+        markDirty();
     }
 
     public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ){
         return openGui(player);
-    }
-
-    public void notifyNeighboursOfDataChange(){
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

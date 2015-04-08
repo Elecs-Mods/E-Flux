@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity;
 
+import elec332.core.world.WorldHelper;
 import elec332.eflux.util.IMultiBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -187,11 +188,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     }
 
     public TileEntity getTileAt(World world, Vec3 vec3){
-        return world.getTileEntity((int)vec3.xCoord, (int)vec3.yCoord, (int)vec3.zCoord);
-    }
-
-    public Vec3 myLocation(){
-        return Vec3.createVectorHelper(this.x(), this.y(), this.z());
+        return WorldHelper.getTileAt(world, vec3);
     }
 
     public Vec3 mergeLocationAndOffset(Vec3 location, Vec3 offset){
