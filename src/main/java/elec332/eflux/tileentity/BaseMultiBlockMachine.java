@@ -2,6 +2,7 @@ package elec332.eflux.tileentity;
 
 import elec332.core.world.WorldHelper;
 import elec332.eflux.util.IMultiBlock;
+import elec332.eflux.util.ISaveData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +11,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -22,13 +24,18 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
         this.setAllMultiBlockDataToNull();
     }
 
-    private boolean formed;
-    private boolean master;
-    private boolean slave;
-    private int masterX;
-    private int masterY;
-    private int masterZ;
-    private List<Vec3> slaveLocations;
+    @ISaveData
+    protected boolean formed;
+    @ISaveData
+    protected boolean master;
+    @ISaveData
+    protected boolean slave;
+    @ISaveData
+    protected int masterX;
+    @ISaveData
+    protected int masterY;
+    @ISaveData
+    protected int masterZ;
 
     public boolean isFormed() {
         if (this.isMaster())
@@ -61,15 +68,65 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
+    public void readFromNBT(NBTTagCompound tagCompound){
         super.readFromNBT(tagCompound);
-        this.formed = tagCompound.getBoolean("formed");
+        /*this.formed = tagCompound.getBoolean("formed");
+        this.master = tagCompound.getBoolean("master");
+        this.slave = tagCompound.getBoolean("slave");
+        this.masterX = tagCompound.getInteger("masterX");
+        this.masterY = tagCompound.getInteger("masterY");
+        this.masterZ = tagCompound.getInteger("masterZ");*/
+        try {
+            for (Field field : this.getClass().getFields()) {
+                System.out.println("There are " + this.getClass().getFields().length + " valid fields");
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(ISaveData.class)) {
+                    System.out.println(field.getName() + " is annotated with @ISaveData");
+                    if (field.getType().equals(Integer.TYPE)) {
+                        System.out.println(field.getName() + " was a valid integer");
+                        tagCompound.setInteger(field.getName(), field.getInt(this));
+                        System.out.println(field.getName() + " was read from NBT");
+                    } else if (field.getType().equals(Boolean.TYPE)) {
+                        System.out.println(field.getName() + " was a valid boolean");
+                        tagCompound.setBoolean(field.getName(), field.getBoolean(this));
+                        System.out.println(field.getName() + " was read from NBT");
+                    }
+                }
+            }
+        } catch (Throwable throwable){
+            throwable.printStackTrace();
+        }
+        System.out.println("Read");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        tagCompound.setBoolean("formed", this.formed);
+        /*tagCompound.setBoolean("formed", this.formed);
+        tagCompound.setBoolean("master", this.master);
+        tagCompound.setBoolean("slave", this.slave);
+        tagCompound.setInteger("masterX", this.masterX);
+        tagCompound.setInteger("masterY", this.masterY);
+        tagCompound.setInteger("masterZ", this.masterZ);*/
+        try {
+            for (Field field : this.getClass().getFields()) {
+                System.out.println("There are " + this.getClass().getFields().length + " valid fields");
+                if (field.isAnnotationPresent(ISaveData.class)) {
+                    System.out.println(field.getName() + " is annotated with @ISaveData");
+                    if (field.getType().equals(Integer.TYPE)) {
+                        System.out.println(field.getName() + " was a valid integer");
+                        field.setInt(this, tagCompound.getInteger(field.getName()));
+                        System.out.println(field.getName() + " was read from NBT");
+                    } else if (field.getType().equals(Boolean.TYPE)){
+                        System.out.println(field.getName() + " was a valid boolean");
+                        field.setBoolean(this, tagCompound.getBoolean(field.getName()));
+                        System.out.println(field.getName() + " was read from NBT");
+                    }
+                }
+            }
+        } catch (Throwable throwable){
+            throwable.printStackTrace();
+        }
     }
 
     public boolean tryToForm(EntityPlayer player){
@@ -104,35 +161,14 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     }
 
     @Override
-    public World world() {
-        return this.worldObj;
-    }
-
-    @Override
-    public int x() {
-        return this.xCoord;
-    }
-
-    @Override
-    public int y() {
-        return this.yCoord;
-    }
-
-    @Override
-    public int z() {
-        return this.zCoord;
-    }
-
-    @Override
     public boolean isMaster() {
         return this.master;
     }
 
     @Override
     public boolean setMaster() {
-        this.slaveLocations = this.getIMultiBlockLocations();
-        for (Vec3 loc : this.slaveLocations){
-            ((BaseMultiBlockMachine)getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc))).setSlave(x(), y(), z());
+        for (Vec3 loc : this.getIMultiBlockLocations()){
+            ((BaseMultiBlockMachine)getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc))).setSlave(xCoord, yCoord, zCoord);
         }
         this.master = true;
         return true;
@@ -151,7 +187,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     @Override
     public void invalidateMultiBlock() {
         if (this.isMaster())
-            for (Vec3 loc : this.slaveLocations)
+            for (Vec3 loc : this.getIMultiBlockLocations())
                 if (getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc)) != null)
                     ((BaseMultiBlockMachine) getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc))).invalidateMultiBlock();
         this.setAllMultiBlockDataToNull();
@@ -165,7 +201,6 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
         this.masterX = 0;
         this.masterY = 0;
         this.masterZ = 0;
-        this.slaveLocations = null;
     }
 
     @Override
@@ -175,7 +210,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
 
     @Override
     public BaseMultiBlockMachine getMaster() {
-        return (BaseMultiBlockMachine) this.world().getTileEntity(this.masterX, this.masterY, this.masterZ);
+        return (BaseMultiBlockMachine) this.worldObj.getTileEntity(this.masterX, this.masterY, this.masterZ);
     }
 
     @Override
@@ -201,27 +236,27 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
         if (this.isSlave())
             return this.getMaster().receiveEnergy(from, maxReceive, simulate);
-        return super.receiveEnergy(from, maxReceive, simulate);
+        return this.isFormed()?super.receiveEnergy(from, maxReceive, simulate):0;
     }
 
     @Override
     public int getEnergyStored(ForgeDirection from) {
         if (this.isSlave())
             return this.getMaster().getEnergyStored(from);
-        return super.getEnergyStored(from);
+        return this.isFormed()?super.getEnergyStored(from):0;
     }
 
     @Override
     public int getMaxEnergyStored(ForgeDirection from) {
         if (this.isSlave())
             return this.getMaster().getMaxEnergyStored(from);
-        return super.getMaxEnergyStored(from);
+        return this.isFormed()?super.getMaxEnergyStored(from):0;
     }
 
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
         if (this.isSlave())
             return this.getMaster().canConnectEnergy(from);
-        return super.canConnectEnergy(from);
+        return super.canConnectEnergy(from) && this.isFormed();
     }
 }
