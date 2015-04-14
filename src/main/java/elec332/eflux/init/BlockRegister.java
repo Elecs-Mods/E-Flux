@@ -5,7 +5,6 @@ import elec332.core.main.ElecCore;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BaseBlockWithSidedFacing;
 import elec332.eflux.blocks.DirectionBlock;
-import elec332.eflux.blocks.machines.Grinder;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.material.Material;
 

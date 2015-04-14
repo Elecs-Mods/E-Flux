@@ -3,6 +3,7 @@ package elec332.eflux.tileentity;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.client.inventory.GuiInventoryGrinder;
 import elec332.eflux.inventory.TEGrinderContainer;
+import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.Vec3;
@@ -62,4 +63,8 @@ public class TEGrinder extends BaseMultiBlockMachine{
     protected void onCreated() {
     }
 
+    @Override
+    public EnumMachines getMachine() {
+        return EnumMachines.GRINDER;
+    }
 }

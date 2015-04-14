@@ -2,7 +2,6 @@ package elec332.eflux.tileentity;
 
 import elec332.core.world.WorldHelper;
 import elec332.eflux.util.IMultiBlock;
-import elec332.eflux.util.ISaveData;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +10,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -24,18 +22,12 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
         this.setAllMultiBlockDataToNull();
     }
 
-    @ISaveData
-    protected boolean formed;
-    @ISaveData
-    protected boolean master;
-    @ISaveData
-    protected boolean slave;
-    @ISaveData
-    protected int masterX;
-    @ISaveData
-    protected int masterY;
-    @ISaveData
-    protected int masterZ;
+    public int masterX;
+    public int masterY;
+    public int masterZ;
+    public boolean formed;
+    public boolean master;
+    public boolean slave;
 
     public boolean isFormed() {
         if (this.isMaster())
@@ -70,13 +62,15 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     @Override
     public void readFromNBT(NBTTagCompound tagCompound){
         super.readFromNBT(tagCompound);
-        /*this.formed = tagCompound.getBoolean("formed");
+        this.formed = tagCompound.getBoolean("formed");
         this.master = tagCompound.getBoolean("master");
         this.slave = tagCompound.getBoolean("slave");
         this.masterX = tagCompound.getInteger("masterX");
         this.masterY = tagCompound.getInteger("masterY");
-        this.masterZ = tagCompound.getInteger("masterZ");*/
-        try {
+        this.masterZ = tagCompound.getInteger("masterZ");
+
+        //Please don't delete yet
+        /*try {
             for (Field field : this.getClass().getFields()) {
                 System.out.println("There are " + this.getClass().getFields().length + " valid fields");
                 field.setAccessible(true);
@@ -95,20 +89,23 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
             }
         } catch (Throwable throwable){
             throwable.printStackTrace();
-        }
-        System.out.println("Read");
+        }*/
+
+        //NBTHelper.load(tagCompound, this);System.out.println("Read");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        /*tagCompound.setBoolean("formed", this.formed);
+        tagCompound.setBoolean("formed", this.formed);
         tagCompound.setBoolean("master", this.master);
         tagCompound.setBoolean("slave", this.slave);
         tagCompound.setInteger("masterX", this.masterX);
         tagCompound.setInteger("masterY", this.masterY);
-        tagCompound.setInteger("masterZ", this.masterZ);*/
-        try {
+        tagCompound.setInteger("masterZ", this.masterZ);
+
+        //Please don't delete yet
+        /*try {
             for (Field field : this.getClass().getFields()) {
                 System.out.println("There are " + this.getClass().getFields().length + " valid fields");
                 if (field.isAnnotationPresent(ISaveData.class)) {
@@ -126,7 +123,8 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
             }
         } catch (Throwable throwable){
             throwable.printStackTrace();
-        }
+        }*/
+        //NBTHelper.save(tagCompound, this);System.out.println("Saved");
     }
 
     public boolean tryToForm(EntityPlayer player){

@@ -5,19 +5,19 @@ import cofh.api.energy.IEnergyReceiver;
 import elec332.core.baseclasses.tileentity.BaseTileWithInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.util.IComparatorOverride;
+import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.IEFluxTile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 4-4-2015.
  */
-public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver, IEFluxTile, IComparatorOverride {
+public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEnergyReceiver, IEFluxTile, IComparatorOverride, IEFluxMachine {
 
     public void modifyEnergyStored(int energy) {
         storage.modifyEnergyStored(energy);
