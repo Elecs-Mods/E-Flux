@@ -3,6 +3,7 @@ package elec332.eflux.test;
 import cofh.api.energy.IEnergyReceiver;
 import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
+import elec332.eflux.api.transmitter.IPowerTransmitter;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -32,13 +33,23 @@ public class EFluxCableGrid {
     public boolean addToGrid(IEnergyTile tile, Vec3 loc){
         if (locations.contains(loc))
             return false;
+        if (tile instanceof IPowerTransmitter){
+            acceptors.add(loc);
+            providers.add(loc);
+            locations.add(loc);
+            return true;
+        }
         if (tile instanceof IEnergyReceiver){
             acceptors.add(loc);
             locations.add(loc);
-        } else if (tile instanceof IEnergySource){
+            return true;
+        } //else
+        if (tile instanceof IEnergySource){
             providers.add(loc);
+            //if (!locations.contains(loc))
             locations.add(loc);
-        } else throw new RuntimeException();
+            return true;
+        } //else throw new RuntimeException();
         return true;
     }
 
@@ -54,6 +65,10 @@ public class EFluxCableGrid {
         return locations.contains(vec);
     }
 
+    public List<Vec3> getLocations(){
+        return locations;
+    }
+
 
     public EFluxCableGrid mergeGrids(EFluxCableGrid grid){
         if (this.world.provider.dimensionId != grid.world.provider.dimensionId)
@@ -66,6 +81,9 @@ public class EFluxCableGrid {
     }
 
     public void onTick(){
-
+        System.out.println("START");
+        for (Vec3 vec:locations)
+            System.out.println(vec.toString());
+        System.out.println("STOP");
     }
 }

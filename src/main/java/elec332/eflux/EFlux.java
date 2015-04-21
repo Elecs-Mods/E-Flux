@@ -1,5 +1,6 @@
 package elec332.eflux;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -17,6 +18,7 @@ import elec332.eflux.inventory.ContainerNull;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.GrinderRecipe;
 import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.test.EventHandler;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;
@@ -92,7 +94,9 @@ public class EFlux {
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         configWrapper.refresh();
-        MinecraftForge.EVENT_BUS.register(new elec332.eflux.test.EventHandler());
+        EventHandler eventHandler = new EventHandler();
+        MinecraftForge.EVENT_BUS.register(eventHandler);
+        FMLCommonHandler.instance().bus().register(eventHandler);
         //GameRegistry.registerTileEntity(TEGrinder.class, EnumMachines.GRINDER.toString());
         //register items/blocks
 

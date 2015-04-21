@@ -1,6 +1,7 @@
 package elec332.eflux.test;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
 
@@ -16,6 +17,16 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onEnergyTileRemoved(TransmitterUnloadedEvent event){
-        WorldRegistryPowerNetwork.get(event.world).addTile(event.transmitterTile);
+        WorldRegistryPowerNetwork.get(event.world).removeTile(event.transmitterTile);
+    }
+
+    /*@SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event){
+        WorldRegistryPowerNetwork.onServerTick(event);
+    }*/
+
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event){
+        WorldRegistryPowerNetwork.get(event.world).onServerTickInternal(event);
     }
 }
