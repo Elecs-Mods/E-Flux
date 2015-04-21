@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.eflux.init.BlockRegister;
@@ -16,6 +17,7 @@ import elec332.eflux.inventory.ContainerNull;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.GrinderRecipe;
 import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.util.Config;
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,6 +27,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
@@ -49,6 +52,7 @@ public class EFlux {
     public static Configuration config;
     public static CreativeTabs CreativeTab;
     public static Logger logger;
+    public static ConfigWrapper configWrapper;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -61,13 +65,18 @@ public class EFlux {
             }
         };
         logger = event.getModLog();
+        configWrapper = new ConfigWrapper(config);
 
-        //DEBUG
+        //DEBUG///////////////////
         RecipeRegistry.instance.registerRecipe(new GrinderRecipe(new ItemStack(Items.stick), new ItemStack(Items.wheat)));
         IInventory fake = new InventoryCrafting(new ContainerNull(), 1, 1);
         fake.setInventorySlotContents(0, new ItemStack(Items.stick));
         logger.info(RecipeRegistry.instance.hasResult((InventoryCrafting) fake, EnumMachines.GRINDER));
+        /////////////////////////
+
+
         //setting up mod stuff
+        configWrapper.registerConfig(new Config());
 
 
         MCModInfo.CreateMCModInfo(event, "Created by Elec332",
@@ -82,6 +91,8 @@ public class EFlux {
         BlockRegister.instance.init(event);
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+        configWrapper.refresh();
+        MinecraftForge.EVENT_BUS.register(new elec332.eflux.test.EventHandler());
         //GameRegistry.registerTileEntity(TEGrinder.class, EnumMachines.GRINDER.toString());
         //register items/blocks
 
