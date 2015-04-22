@@ -34,8 +34,8 @@ public class EFluxCableGrid {
         if (locations.contains(loc))
             return false;
         if (tile instanceof IPowerTransmitter){
-            acceptors.add(loc);
-            providers.add(loc);
+            //acceptors.add(loc);
+            //providers.add(loc);
             locations.add(loc);
             return true;
         }
@@ -61,8 +61,19 @@ public class EFluxCableGrid {
         return acceptors.contains(vec);
     }
 
+
+    //workaround
     public boolean hasTile(Vec3 vec){
-        return locations.contains(vec);
+        //WorldRegistryPowerNetwork.get(world).sm(""+locations.contains(vec));
+        //return locations.contains(vec);
+        for (Vec3 vec0: locations){
+            if (vec0.toString().equalsIgnoreCase(vec.toString())) {
+                WorldRegistryPowerNetwork.get(world).sm("ttrr");
+                return true;
+            }
+        }
+        WorldRegistryPowerNetwork.get(world).sm("ffff");
+        return false;
     }
 
     public List<Vec3> getLocations(){

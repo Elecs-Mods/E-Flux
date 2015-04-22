@@ -3,12 +3,16 @@ package elec332.eflux.test;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import elec332.core.player.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.transmitter.IEnergyReceiver;
 import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
+import elec332.eflux.api.transmitter.IPowerTransmitter;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,6 +67,7 @@ public class WorldRegistryPowerNetwork {
     }
 
     public void addTile(IEnergyTile tile){
+        if(!world.isRemote){
         TileEntity theTile = ((TileEntity) tile);
         Vec3 tileCoords = genCoords(theTile);
         boolean hasDoneSomething = false;
@@ -72,14 +77,33 @@ public class WorldRegistryPowerNetwork {
 
                 if (possTile != null && possTile instanceof IEnergyTile) {
                     Vec3 possTileLoc = genCoords(possTile);
+                    if (possTile instanceof IPowerTransmitter){
+                        EFluxCableGrid tileGrid = getFirstGrid(tileCoords);
+                        EFluxCableGrid possGrid = getFirstGrid(possTileLoc);
+                        if (tileGrid == null && possGrid == null) {
+                            genNewPowerGrid(tile).addToGrid((IEnergyTile) possTile, possTileLoc);
+                            sm("Both null");
+                        } else if (tileGrid == null) {
+                            possGrid.addToGrid(tile, tileCoords);
+                            sm("Tile null");
+                        } else if (possGrid == null) {
+                            tileGrid.addToGrid((IEnergyTile) possTile, possTileLoc);
+                            sm("poss null");
+                        } else {
+                            possGrid.mergeGrids(tileGrid);
+                            sm("else");
+                        }
+                        EFlux.logger.info("Placed and added to grid");
+                    } else
                     if (possTile instanceof IEnergyReceiver && ((IEnergyReceiver) possTile).canAcceptEnergyFrom(direction.getOpposite())) {
                         genNewPowerGrid(tile).addToGrid((IEnergyTile) possTile, possTileLoc);
+                        EFlux.logger.info("Placed and added to grid");
                     /*Vec3 loc = genCoords(possTile);
                     for (EFluxCableGrid grid : grids.keySet()){
                         if (grid.canAddReceiver(loc))
                             grid.addToGrid(tile, genCoords(theTile));
                     }*/
-                    }
+                    } else
                     if (possTile instanceof IEnergySource && ((IEnergySource) possTile).canProvidePowerTo(direction.getOpposite())) {
                         EFluxCableGrid tileGrid = getFirstGrid(tileCoords);
                         EFluxCableGrid possGrid = getFirstGrid(possTileLoc);
@@ -90,7 +114,7 @@ public class WorldRegistryPowerNetwork {
                         } else if (possGrid == null) {
                             tileGrid.addToGrid((IEnergyTile) possTile, possTileLoc);
                         } else possGrid.mergeGrids(tileGrid);
-
+                        EFlux.logger.info("Placed and added to grid");
                     /*Vec3 loc = genCoords(possTile);
                     for (EFluxCableGrid grid : grids.keySet()){
                         if (grid.canAddProvider(loc))
@@ -104,13 +128,19 @@ public class WorldRegistryPowerNetwork {
             System.out.println("ERR");
         }
 
-        if (!hasDoneSomething)
+        if (!hasDoneSomething) {
             genNewPowerGrid(tile);
+            EFlux.logger.info("Placed and added to grid _ NVT");
+        }
         /*
         for (EFluxCableGrid grid : grids.keySet()){
             if (grid.addToGrid(tile))
                 break;
-        }*/
+        }*/}
+    }
+
+    public void sm(String s){
+        ((EntityPlayer) world.playerEntities.get(0)).addChatMessage(new ChatComponentText(s));
     }
 
     public void removeTile(IEnergyTile tile){
@@ -141,20 +171,25 @@ public class WorldRegistryPowerNetwork {
     }
 
     private EFluxCableGrid getFirstGrid(Vec3 vec){
-        if (vec != null){
+        //if (vec != null){
             for (EFluxCableGrid grid : grids.keySet()){
                 if (grid.hasTile(vec))
                     return grid;
             }
-        }
+        //}
         return null;
     }
 
     protected void onServerTickInternal(TickEvent event){
-        if (event.phase == TickEvent.Phase.START)
+        if (event.phase == TickEvent.Phase.START) {
             EFlux.logger.info("Tick!");
-            for (EFluxCableGrid grid : grids.keySet())
+            int i = 0;
+            for (EFluxCableGrid grid : grids.keySet()) {
+                i++;
                 grid.onTick();
+                EFlux.logger.info(i);
+            }
+        }
     }
 
 

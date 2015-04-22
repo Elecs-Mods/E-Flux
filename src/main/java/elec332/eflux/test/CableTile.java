@@ -12,25 +12,21 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class CableTile extends TileBase implements IPowerTransmitter{
 
+    private boolean validated = false;
+
     @Override
     public void validate() {
         super.validate();
-        MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));
+        if (!validated) {
+            if (!worldObj.isRemote)
+                MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));
+            validated = true;
+        }
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
         MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
-    }
-
-    @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return true;
-    }
-
-    @Override
-    public boolean canProvidePowerTo(ForgeDirection direction) {
-        return true;
     }
 }
