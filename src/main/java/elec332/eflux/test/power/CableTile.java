@@ -1,4 +1,4 @@
-package elec332.eflux.test;
+package elec332.eflux.test.power;
 
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
@@ -15,8 +15,8 @@ public class CableTile extends TileBase implements IPowerTransmitter{
     private boolean validated = false;
 
     @Override
-    public void validate() {
-        super.validate();
+    public void updateEntity() {
+        super.updateEntity();
         if (!validated) {
             if (!worldObj.isRemote)
                 MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));

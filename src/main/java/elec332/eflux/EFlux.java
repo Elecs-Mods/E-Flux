@@ -18,7 +18,7 @@ import elec332.eflux.inventory.ContainerNull;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.GrinderRecipe;
 import elec332.eflux.recipes.RecipeRegistry;
-import elec332.eflux.test.EventHandler;
+import elec332.eflux.test.power.EventHandler;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;

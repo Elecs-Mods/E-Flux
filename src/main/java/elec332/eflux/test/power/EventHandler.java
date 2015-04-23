@@ -1,9 +1,11 @@
-package elec332.eflux.test;
+package elec332.eflux.test.power;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
+import elec332.eflux.test.WorldRegistry;
+import net.minecraftforge.event.world.WorldEvent;
 
 /**
  * Created by Elec332 on 16-4-2015.
@@ -12,12 +14,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onEnergyTileAdded(TransmitterLoadedEvent event){
-        WorldRegistryPowerNetwork.get(event.world).addTile(event.transmitterTile);
+        WorldRegistry.get(event.world).getWorldPowerGrid().addTile(event.transmitterTile);
     }
 
     @SubscribeEvent
     public void onEnergyTileRemoved(TransmitterUnloadedEvent event){
-        WorldRegistryPowerNetwork.get(event.world).removeTile(event.transmitterTile);
+        WorldRegistry.get(event.world).getWorldPowerGrid().removeTile(event.transmitterTile);
     }
 
     /*@SubscribeEvent
@@ -27,6 +29,11 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event){
-        WorldRegistryPowerNetwork.get(event.world).onServerTickInternal(event);
+        WorldRegistry.get(event.world).getWorldPowerGrid().onServerTickInternal(event);
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event){
+        WorldRegistry.get(event.world).unload();
     }
 }
