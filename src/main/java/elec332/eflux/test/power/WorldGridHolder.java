@@ -54,27 +54,38 @@ public class WorldGridHolder {
     }
 */
     protected void removeGrid(EFluxCableGrid grid){
-        grids.remove(grid);
+        //grids.remove(grid);
+        try{
+        for (EFluxCableGrid grid1 : grids){
+            if (grid.equals(grid1))
+                grids.remove(grid1);
+        }}catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void addTile(IEnergyTile tile){
         if(!world.isRemote) {
-            try {
+            //try {
                 TileEntity theTile = (TileEntity) tile;
                 PowerTile powerTile = new PowerTile(theTile, this);
+                registeredTiles.put(genCoords(theTile), powerTile);
                 for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                     TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
                     if (possTile != null && possTile instanceof IEnergyTile) {
                         if (possTile instanceof IPowerTransmitter) {
                             PowerTile powerTile1 = getPowerTile(genCoords(possTile));//registeredTiles.get(genCoords(possTile));
-                            EFluxCableGrid grid = powerTile1.getGrid();
                             EFluxCableGrid intGrid = powerTile.getGrid();
-                            grid.mergeGrids(intGrid);
+                            if (powerTile1 != null && powerTile1.hasInit()) {
+                                EFluxCableGrid grid = powerTile1.getGrid();
+                                if (!grid.equals(intGrid))
+                                    grid.mergeGrids(intGrid);
+                            }
                         }
                     }
                 }
-                registeredTiles.put(genCoords(theTile), powerTile);
-            } catch (Exception e){}
+
+            //} catch (Exception e){}
         }
     }
 
@@ -94,7 +105,7 @@ public class WorldGridHolder {
                         MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent((IEnergyTile) tileEntity1));
                 }
             }
-        } catch (NullPointerException e){}
+        } catch (NullPointerException e){e.printStackTrace();}
         /*EFluxCableGrid[] grids = getGrid(genCoords((TileEntity) tile));
         if (grids == null || grids.length == 0)
             return;
@@ -135,15 +146,19 @@ public class WorldGridHolder {
         if (event.phase == TickEvent.Phase.START) {
             EFlux.logger.info("Tick!");
             int i = 0;
-            for (EFluxCableGrid grid : grids) {
-                i++;
-                grid.onTick();
-                EFlux.logger.info(i);
+            try {
+                for (EFluxCableGrid grid : grids) {
+                    i++;
+                    grid.onTick();
+                    EFlux.logger.info(i);
+                }
+            } catch (ConcurrentModificationException e){
+
             }
         }
     }
 
-    private PowerTile getPowerTile(BlockLoc loc){
+    public PowerTile getPowerTile(BlockLoc loc){
         for (BlockLoc blockLoc : registeredTiles.keySet()){
             if (blockLoc.equals(loc))
                 return registeredTiles.get(blockLoc);

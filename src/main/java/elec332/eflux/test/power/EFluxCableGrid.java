@@ -98,11 +98,13 @@ public class EFluxCableGrid {
         this.locations.addAll(grid.locations);
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
-        for (BlockLoc vec : locations){
-            Map<BlockLoc, PowerTile> blockLocPowerTileMap = WorldRegistry.get(world).getWorldPowerGrid().getRegisteredTiles();
-            PowerTile powerTile = blockLocPowerTileMap.get(vec);
-            powerTile.replaceGrid(grid, this);
+        for (BlockLoc vec : grid.locations){
+            //Map<BlockLoc, PowerTile> blockLocPowerTileMap = WorldRegistry.get(world).getWorldPowerGrid().getRegisteredTiles();
+            //PowerTile powerTile = blockLocPowerTileMap.get(vec);
+            WorldRegistry.get(world).getWorldPowerGrid().getPowerTile(vec).replaceGrid(grid, this);
+            //powerTile.replaceGrid(grid, this);
         }
+        grid.invalidate();
         return this;
     }
 
@@ -111,6 +113,10 @@ public class EFluxCableGrid {
         for (BlockLoc vec:locations)
             System.out.println(vec.toString());
         System.out.println("STOP");
+    }
+
+    private void invalidate(){
+
     }
 
     @Override
