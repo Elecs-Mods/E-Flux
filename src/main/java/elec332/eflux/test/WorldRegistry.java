@@ -67,7 +67,7 @@ public class WorldRegistry {
     }
 
     public void unload(World world){
-        world.getSaveHandler().loadWorldInfo().getNBTTagCompound().setTag("Derp", gridHolderPower.);
+        //world.getSaveHandler().loadWorldInfo().getNBTTagCompound().setTag("Derp", gridHolderPower.);
         gridHolderPower = null;
         mappings.remove(world.provider.dimensionId);
         world = null;
