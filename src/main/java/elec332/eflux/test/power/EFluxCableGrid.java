@@ -1,11 +1,16 @@
 package elec332.eflux.test.power;
 
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
 import elec332.eflux.test.WorldRegistry;
 import elec332.eflux.test.blockLoc.BlockLoc;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -28,6 +33,7 @@ public class EFluxCableGrid {
         this.world = world;
         if (!addToGrid((IEnergyTile)p.getTile(), p.getLocation()))
             throw new RuntimeException();
+        FMLCommonHandler.instance().bus().register(this);
         identifier = UUID.randomUUID();
     }
 
@@ -113,6 +119,31 @@ public class EFluxCableGrid {
         for (BlockLoc vec:locations)
             System.out.println(vec.toString());
         System.out.println("STOP");
+    }
+
+    /*@SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event){
+        if (event.world.provider.dimensionId == world.provider.dimensionId)
+            onTick();
+    }*/
+
+    public NBTTagCompound toTag(NBTTagCompound tagCompound){
+        NBTTagList tagList = new NBTTagList();
+        NBTTagList tagList1 = new NBTTagList();
+        NBTTagList tagList2 = new NBTTagList();
+        for (BlockLoc blockLoc : locations){
+            tagList.appendTag(blockLoc.toNBT(new NBTTagCompound()));
+        }
+        for (BlockLoc blockLoc : providers){
+            tagList1.appendTag(blockLoc.toNBT(new NBTTagCompound()));
+        }
+        for (BlockLoc blockLoc : acceptors){
+            tagList2.appendTag(blockLoc.toNBT(new NBTTagCompound()));
+        }
+        tagCompound.setTag("loc", tagList);
+        tagCompound.setTag("prov", tagList1);
+        tagCompound.setTag("acc", tagList2);
+        return tagCompound;
     }
 
     private void invalidate(){

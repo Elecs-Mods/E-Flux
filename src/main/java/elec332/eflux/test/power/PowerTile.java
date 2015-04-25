@@ -28,6 +28,7 @@ public class PowerTile {  //Wrapper for TileEntities
     private BlockLoc location;
     private List<EFluxCableGrid> grids;
     private boolean singleGrid;
+    public int toGo;
 
     public BlockLoc getLocation() {
         return location;

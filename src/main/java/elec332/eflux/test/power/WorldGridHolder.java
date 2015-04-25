@@ -9,6 +9,7 @@ import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
@@ -25,20 +26,26 @@ public class WorldGridHolder {
 
     public WorldGridHolder(World world){
         this.world = world;
-        this.grids = new HashSet<EFluxCableGrid>();
+        this.grids = new ArrayList<EFluxCableGrid>();
         this.registeredTiles = new HashMap<BlockLoc, PowerTile>();
+        this.pending = new ArrayList<PowerTile>();
     }
 
 
     private World world;  //Dunno why I have this here (yet)
     //private List<EFluxCableGrid> grids;
     //private WeakHashMap<EFluxCableGrid, Object> grids;
-    private Set<EFluxCableGrid> grids;
+    private List<EFluxCableGrid> grids;
+    private List<PowerTile> pending;
     private Map<BlockLoc, PowerTile> registeredTiles;
 
     public EFluxCableGrid registerGrid(EFluxCableGrid grid){
         this.grids.add(grid);
         return grid;
+    }
+
+    public NBTTagCompound toNBT(NBTTagCompound tagCompound){
+        return tagCompound;
     }
 
     public Map<BlockLoc, PowerTile> getRegisteredTiles() {
@@ -54,14 +61,14 @@ public class WorldGridHolder {
     }
 */
     protected void removeGrid(EFluxCableGrid grid){
-        //grids.remove(grid);
-        try{
+        grids.remove(grid);
+        /*try{
         for (EFluxCableGrid grid1 : grids){
             if (grid.equals(grid1))
                 grids.remove(grid1);
         }}catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void addTile(IEnergyTile tile){
@@ -73,14 +80,21 @@ public class WorldGridHolder {
                 for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                     TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
                     if (possTile != null && possTile instanceof IEnergyTile) {
+
                         if (possTile instanceof IPowerTransmitter) {
-                            PowerTile powerTile1 = getPowerTile(genCoords(possTile));//registeredTiles.get(genCoords(possTile));
+                            //PowerTile powerTile1 = getPowerTile(genCoords(possTile));//registeredTiles.get(genCoords(possTile));
                             EFluxCableGrid intGrid = powerTile.getGrid();
-                            if (powerTile1 != null && powerTile1.hasInit()) {
+                            PowerTile powerTile1 = getPowerTile(genCoords(possTile));
+                            if (powerTile1 == null || !powerTile1.hasInit()) {
+                                powerTile.toGo = 3;
+                                pending.add(powerTile);
+                                break;
+                            }
+                            //if (powerTile1.hasInit()) {
                                 EFluxCableGrid grid = powerTile1.getGrid();
                                 if (!grid.equals(intGrid))
                                     grid.mergeGrids(intGrid);
-                            }
+                            //}
                         }
                     }
                 }
@@ -145,7 +159,17 @@ public class WorldGridHolder {
     protected void onServerTickInternal(TickEvent event){
         if (event.phase == TickEvent.Phase.START) {
             EFlux.logger.info("Tick!");
-            int i = 0;
+            List<PowerTile> tr = new ArrayList<PowerTile>();
+            try {
+                for (PowerTile powerTile : pending) {
+                    MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent((IEnergyTile) powerTile.getTile()));
+                    powerTile.toGo--;
+                    if (!(powerTile.toGo > 0))
+                        tr.add(powerTile);
+                }
+            } catch (ConcurrentModificationException e){}
+            pending.removeAll(tr);
+            /*int i = 0;
             try {
                 for (EFluxCableGrid grid : grids) {
                     i++;
@@ -154,16 +178,23 @@ public class WorldGridHolder {
                 }
             } catch (ConcurrentModificationException e){
 
+            }*/
+            for (int i = 0; i < grids.size(); i++){
+                try {
+                    grids.get(i).onTick();
+                } catch (Throwable t){}
+                EFlux.logger.info(i);
             }
         }
     }
 
     public PowerTile getPowerTile(BlockLoc loc){
-        for (BlockLoc blockLoc : registeredTiles.keySet()){
+        return registeredTiles.get(loc);
+        /*for (BlockLoc blockLoc : registeredTiles.keySet()){
             if (blockLoc.equals(loc))
                 return registeredTiles.get(blockLoc);
         }
-        return null;
+        return null;*/
     }
 
 

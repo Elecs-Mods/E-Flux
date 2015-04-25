@@ -1,5 +1,6 @@
 package elec332.eflux.test.blockLoc;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -16,6 +17,19 @@ public class BlockLoc {
     public int xCoord;
     public int yCoord;
     public int zCoord;
+
+    public BlockLoc(NBTTagCompound tagCompound){
+        this.xCoord = tagCompound.getInteger("xCoord");
+        this.yCoord = tagCompound.getInteger("yCoord");
+        this.zCoord = tagCompound.getInteger("zCoord");
+    }
+
+    public NBTTagCompound toNBT(NBTTagCompound tagCompound){
+        tagCompound.setInteger("xCoord", xCoord);
+        tagCompound.setInteger("yCoord", yCoord);
+        tagCompound.setInteger("zCoord", zCoord);
+        return tagCompound;
+    }
 
     @Override
     public boolean equals(Object obj) {

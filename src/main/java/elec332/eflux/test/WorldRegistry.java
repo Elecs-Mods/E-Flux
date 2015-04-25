@@ -66,7 +66,8 @@ public class WorldRegistry {
         ((EntityPlayer) world.playerEntities.get(0)).addChatMessage(new ChatComponentText(s));
     }
 
-    public void unload(){
+    public void unload(World world){
+        world.getSaveHandler().loadWorldInfo().getNBTTagCompound().setTag("Derp", gridHolderPower.);
         gridHolderPower = null;
         mappings.remove(world.provider.dimensionId);
         world = null;
