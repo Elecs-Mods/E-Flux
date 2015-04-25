@@ -1,6 +1,5 @@
 package elec332.eflux.test.power;
 
-import com.sun.xml.internal.ws.addressing.model.ActionNotSupportedException;
 import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
@@ -69,7 +68,7 @@ public class PowerTile {  //Wrapper for TileEntities
 
     public EFluxCableGrid getGrid(){
         if (!singleGrid)
-            throw new ActionNotSupportedException("Request grid when tile has multiple grids");
+            throw new UnsupportedOperationException("Request grid when tile has multiple grids");
         return grids.get(0);
     }
 
