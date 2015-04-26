@@ -4,11 +4,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.transmitter.IEnergyReceiver;
 import elec332.eflux.api.transmitter.IEnergySource;
-import elec332.eflux.api.transmitter.IEnergyTile;
-import elec332.eflux.api.transmitter.IPowerTransmitter;
 import elec332.eflux.test.WorldRegistry;
 import elec332.eflux.test.blockLoc.BlockLoc;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -26,65 +23,24 @@ public class EFluxCableGrid {
         providers = new ArrayList<BlockLoc>();
         locations = new ArrayList<BlockLoc>();
         this.world = world;
-        //if (p.getTile() instanceof IPowerTransmitter)
-            locations.add(p.getLocation());
-        //else {
-            if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction))
-                providers.add(p.getLocation());
-            if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
-                acceptors.add(p.getLocation());
-        //}
-        //if (!addToGrid((IEnergyTile)p.getTile(), p.getLocation()))
-        //    throw new RuntimeException();
+        locations.add(p.getLocation());
+        if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction))
+            providers.add(p.getLocation());
+        if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
+            acceptors.add(p.getLocation());
         FMLCommonHandler.instance().bus().register(this);
         identifier = UUID.randomUUID();
     }
 
     private UUID identifier;
-
     private World world;
     private List<BlockLoc> acceptors;
     private List<BlockLoc> providers;
     private List<BlockLoc> locations;
 
-    @Deprecated
-    public boolean addToGrid(IEnergyTile tile, BlockLoc loc){
-        if (locations.contains(loc))
-            return false;
-        if (tile instanceof IPowerTransmitter){
-            locations.add(loc);
-            return true;
-        }
-        if (tile instanceof IEnergyReceiver){
-            acceptors.add(loc);
-            locations.add(loc);
-            return true;
-        }
-        if (tile instanceof IEnergySource){
-            providers.add(loc);
-            locations.add(loc);
-            return true;
-        }
-        return true;
-    }
-
-
-    //workaround
-    public boolean hasTile(Vec3 vec){
-        for (BlockLoc vec0: locations){
-            if (vec0.toString().equalsIgnoreCase(vec.toString())) {
-                WorldRegistry.get(world).sm("ttrr");
-                return true;
-            }
-        }
-        WorldRegistry.get(world).sm("ffff");
-        return false;
-    }
-
     public List<BlockLoc> getLocations(){
         return locations;
     }
-
 
     public EFluxCableGrid mergeGrids(EFluxCableGrid grid){
         if (this.world.provider.dimensionId != grid.world.provider.dimensionId)

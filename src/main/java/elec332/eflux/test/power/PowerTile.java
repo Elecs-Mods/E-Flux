@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * Created by Elec332 on 23-4-2015.
  */
 public class PowerTile {  //Wrapper for TileEntities
-    public PowerTile(TileEntity tileEntity, WorldGridHolder gridHolder){
+    public PowerTile(TileEntity tileEntity){
         if (!(tileEntity instanceof IEnergyTile))
             throw new IllegalArgumentException();
         this.tile = tileEntity;
@@ -32,7 +32,6 @@ public class PowerTile {  //Wrapper for TileEntities
     }
 
     private TileEntity tile;
-    //private WorldGridHolder gridHolder;
     private boolean hasInit = false;
     private BlockLoc location;
     private EFluxCableGrid[] grids;
@@ -65,18 +64,13 @@ public class PowerTile {  //Wrapper for TileEntities
         } else {
             int i = removeGrid(old);
             System.out.println(i);
-            //if (i != 0) {
-                //grids.set(i, newGrid);
-            //} else grids.add(newGrid);
             grids[i] = newGrid;
-            //grids.add(newGrid);
             System.out.println(grids.length);
         }
     }
 
     public void resetGrid(EFluxCableGrid grid){
-        int i = removeGrid(grid);
-        //grids[i] = newGrid();
+        removeGrid(grid);
     }
 
     public int removeGrid(EFluxCableGrid grid){
@@ -84,7 +78,6 @@ public class PowerTile {  //Wrapper for TileEntities
             throw new RuntimeException();
         for (int i = 0; i < grids.length; i++){
             if (grid.equals(grids[i])){
-                //int i = grids.indexOf(grid1);
                 grids[i] = null;
                 return i;
             }
@@ -106,17 +99,6 @@ public class PowerTile {  //Wrapper for TileEntities
             grid = newGrid(direction);
             grids[direction.ordinal()] = grid;
         }
-
-        /*try {
-            grid = grids.get(i);
-        } catch (IndexOutOfBoundsException e){
-            grid = WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this));
-            grids.add(i, grid);
-        }
-        /*if (grid == null){
-            grid = WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this));
-            grids.add(i, grid);
-        }*/
         return grid;
     }
 
