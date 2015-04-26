@@ -66,7 +66,9 @@ public class WorldRegistry {
         ((EntityPlayer) world.playerEntities.get(0)).addChatMessage(new ChatComponentText(s));
     }
 
-    public void unload(World world){
+    public void unload(){
+        //sm("Unloaded World!!");
+        EFlux.logger.info("Unloaded World!!");
         //world.getSaveHandler().loadWorldInfo().getNBTTagCompound().setTag("Derp", gridHolderPower.);
         gridHolderPower = null;
         mappings.remove(world.provider.dimensionId);

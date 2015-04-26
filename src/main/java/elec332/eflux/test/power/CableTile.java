@@ -5,7 +5,6 @@ import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 21-4-2015.

@@ -2,22 +2,19 @@ package elec332.eflux.test.power;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.event.TransmitterLoadedEvent;
-import elec332.eflux.api.transmitter.IEnergyReceiver;
-import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
 import elec332.eflux.test.blockLoc.BlockLoc;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Elec332 on 23-4-2015.
@@ -29,6 +26,8 @@ public class WorldGridHolder {
         this.grids = new ArrayList<EFluxCableGrid>();
         this.registeredTiles = new HashMap<BlockLoc, PowerTile>();
         this.pending = new ArrayList<PowerTile>();
+        this.pendingRemovals = new ArrayList<PowerTile>();
+        this.oldInt = 0;
     }
 
 
@@ -37,7 +36,11 @@ public class WorldGridHolder {
     //private WeakHashMap<EFluxCableGrid, Object> grids;
     private List<EFluxCableGrid> grids;
     private List<PowerTile> pending;
+    private List<PowerTile> pendingRemovals;
+    private boolean q = true;
     private Map<BlockLoc, PowerTile> registeredTiles;
+    private int oldInt;
+    private boolean r = true;
 
     public EFluxCableGrid registerGrid(EFluxCableGrid grid){
         this.grids.add(grid);
@@ -72,11 +75,18 @@ public class WorldGridHolder {
     }
 
     public void addTile(IEnergyTile tile){
+        TileEntity theTile = (TileEntity) tile;
+        PowerTile powerTile = new PowerTile(theTile, this);
+        registeredTiles.put(genCoords(theTile), powerTile);
+        //pending.add(powerTile);
+        addTile(powerTile);
+        r = true;
+    }
+
+    public void addTile(PowerTile powerTile){
         if(!world.isRemote) {
             //try {
-                TileEntity theTile = (TileEntity) tile;
-                PowerTile powerTile = new PowerTile(theTile, this);
-                registeredTiles.put(genCoords(theTile), powerTile);
+                TileEntity theTile = powerTile.getTile();
                 for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                     TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
                     if (possTile != null && possTile instanceof IEnergyTile) {
@@ -86,7 +96,6 @@ public class WorldGridHolder {
                             EFluxCableGrid intGrid = powerTile.getGrid();
                             PowerTile powerTile1 = getPowerTile(genCoords(possTile));
                             if (powerTile1 == null || !powerTile1.hasInit()) {
-                                powerTile.toGo = 3;
                                 pending.add(powerTile);
                                 break;
                             }
@@ -104,22 +113,36 @@ public class WorldGridHolder {
     }
 
     public void removeTile(IEnergyTile tile){
-        PowerTile powerTile = registeredTiles.get(genCoords((TileEntity) tile));
-        try {
+        PowerTile powerTile = getPowerTile(genCoords((TileEntity) tile));
+        powerTile.toGo = 3;
+        pendingRemovals.add(powerTile);
+        q = true;
+    }
+
+    public void removeTile(PowerTile tile){
+        PowerTile powerTile = tile; // = registeredTiles.get(genCoords((TileEntity) tile));
+        //powerTile = getPowerTile(genCoords((TileEntity)tile));
+        //try {
+        if (powerTile != null)
             for (EFluxCableGrid grid : powerTile.getGrids()) {
                 List<BlockLoc> vec3List = new ArrayList<BlockLoc>();
                 vec3List.addAll(grid.getLocations());
                 vec3List.remove(powerTile.getLocation());
+                EFlux.logger.info(registeredTiles.keySet().size());
                 registeredTiles.remove(powerTile.getLocation());
+                EFlux.logger.info(registeredTiles.keySet().size());
                 this.grids.remove(grid);
                 for (BlockLoc vec : vec3List) {
-                    registeredTiles.remove(vec);
+                    if (vec.equals(powerTile.getLocation()))
+                        break;
+                    //registeredTiles.remove(vec);
                     TileEntity tileEntity1 = getTile(vec);
                     if (tileEntity1 instanceof IEnergyTile)
-                        MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent((IEnergyTile) tileEntity1));
+                        if (getPowerTile(vec) != null)
+                            addTile(getPowerTile(vec));
                 }
             }
-        } catch (NullPointerException e){e.printStackTrace();}
+        //} catch (NullPointerException e){e.printStackTrace();}
         /*EFluxCableGrid[] grids = getGrid(genCoords((TileEntity) tile));
         if (grids == null || grids.length == 0)
             return;
@@ -133,6 +156,13 @@ public class WorldGridHolder {
                     MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent((IEnergyTile) tileEntity1));
             }
         }*/
+    }
+
+    private void remTile(BlockLoc loc){
+        for (BlockLoc loc1 : registeredTiles.keySet()){
+            if (loc.equals(loc1))
+                registeredTiles.remove(loc1);
+        }
     }
 
     private EFluxCableGrid[] getGrid(Vec3 vec){
@@ -159,16 +189,33 @@ public class WorldGridHolder {
     protected void onServerTickInternal(TickEvent event){
         if (event.phase == TickEvent.Phase.START) {
             EFlux.logger.info("Tick!");
-            List<PowerTile> tr = new ArrayList<PowerTile>();
-            try {
-                for (PowerTile powerTile : pending) {
-                    MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent((IEnergyTile) powerTile.getTile()));
+            if (pending.size() == oldInt && oldInt > 0 && !r) {
+                List<PowerTile> tr = new ArrayList<PowerTile>();
+                for (int i = 0; i < pending.size(); i++)
+                    tr.add(pending.get(i));
+                for (PowerTile powerTile : tr) {
+                    addTile(powerTile);
+                }
+                pending.removeAll(tr);
+                EFlux.logger.info("TickStuffPendingDone");
+            }
+            if (!q && !pendingRemovals.isEmpty()){
+                List<PowerTile> tr = new ArrayList<PowerTile>();
+                for (PowerTile powerTile : pendingRemovals){
                     powerTile.toGo--;
-                    if (!(powerTile.toGo > 0))
+                    if (getTile(powerTile.getLocation()) == null){
+                        powerTile.toGo = 0;
+                        removeTile(powerTile);
+                    }
+                    if (powerTile.toGo <= 0)
                         tr.add(powerTile);
                 }
-            } catch (ConcurrentModificationException e){}
-            pending.removeAll(tr);
+                pendingRemovals.removeAll(tr);
+            }
+
+            this.oldInt = pending.size();
+            r = false;
+            q = false;
             /*int i = 0;
             try {
                 for (EFluxCableGrid grid : grids) {
@@ -182,7 +229,9 @@ public class WorldGridHolder {
             for (int i = 0; i < grids.size(); i++){
                 try {
                     grids.get(i).onTick();
-                } catch (Throwable t){}
+                } catch (Throwable t){
+                    throw new RuntimeException(t);
+                }
                 EFlux.logger.info(i);
             }
         }

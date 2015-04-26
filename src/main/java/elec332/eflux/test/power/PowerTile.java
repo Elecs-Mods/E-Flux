@@ -51,7 +51,9 @@ public class PowerTile {  //Wrapper for TileEntities
         System.out.println(grids.size());
     }
 
-    private int removeGrid(EFluxCableGrid grid){
+    public int removeGrid(EFluxCableGrid grid){
+        if (grids.isEmpty())
+            throw new RuntimeException();
         for (EFluxCableGrid grid1 : grids){
             if (grid.equals(grid1)){
                 int i = grids.indexOf(grid1);

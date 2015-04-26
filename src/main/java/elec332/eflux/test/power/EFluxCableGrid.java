@@ -2,8 +2,7 @@ package elec332.eflux.test.power;
 
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import elec332.eflux.EFlux;
 import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
@@ -16,7 +15,6 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -100,6 +98,8 @@ public class EFluxCableGrid {
     public EFluxCableGrid mergeGrids(EFluxCableGrid grid){
         if (this.world.provider.dimensionId != grid.world.provider.dimensionId)
             throw new RuntimeException();
+        if (this.equals(grid))
+            return this;
         WorldRegistry.get(grid.world).getWorldPowerGrid().removeGrid(grid);
         this.locations.addAll(grid.locations);
         this.acceptors.addAll(grid.acceptors);
@@ -111,6 +111,7 @@ public class EFluxCableGrid {
             //powerTile.replaceGrid(grid, this);
         }
         grid.invalidate();
+        EFlux.logger.info("MERGED");
         return this;
     }
 
