@@ -106,7 +106,7 @@ public class WorldGridHolder {
                             break;
                         }
                         if (canConnect(powerTile, direction, powerTile1)) {
-                            if (possTile instanceof IPowerTransmitter) {
+                            /*if (possTile instanceof IPowerTransmitter) {
                                 EFluxCableGrid intGrid = powerTile.getGridFromSide(direction);
                                 EFluxCableGrid grid = powerTile1.getGrid();
                                 if (!grid.equals(intGrid))
@@ -132,7 +132,7 @@ public class WorldGridHolder {
                                 }*/
                                 EFluxCableGrid grid = powerTile1.getGridFromSide(direction.getOpposite());
                                 powerTile.getGridFromSide(direction).mergeGrids(grid);
-                            }
+                            //}
                         }
                     } else {
                         EFlux.logger.info("There is no tile at side "+direction.toString() + " that is valid for connection");
@@ -208,8 +208,11 @@ public class WorldGridHolder {
                     List<BlockLoc> vec3List2 = new ArrayList<BlockLoc>();
                     for (BlockLoc vec : vec3List) {
                         if (!vec.equals(powerTile.getLocation())) {
-                            getPowerTile(vec).resetGrid(grid);
-                            vec3List2.add(vec);
+                            PowerTile pt = getPowerTile(vec);
+                            if (pt != null) {
+                                pt.resetGrid(grid);
+                                vec3List2.add(vec);
+                            }
                         }
                         //registeredTiles.remove(vec);
                     }

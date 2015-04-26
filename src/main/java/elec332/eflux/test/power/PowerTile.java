@@ -20,16 +20,14 @@ public class PowerTile {  //Wrapper for TileEntities
         this.location = new BlockLoc(tileEntity);
         this.grids = new EFluxCableGrid[6];
         if (tileEntity instanceof IPowerTransmitter) {
-            this.grids[0] = (gridHolder.registerGrid(new EFluxCableGrid(tileEntity.getWorldObj(), this)));
+            this.grids[0] = newGrid(ForgeDirection.UNKNOWN);
             this.connectType = ConnectType.CONNECTOR;
-        }
-        if (tileEntity instanceof IEnergyReceiver && tileEntity instanceof IEnergySource)
+        } else if (tileEntity instanceof IEnergyReceiver && tileEntity instanceof IEnergySource)
             this.connectType = ConnectType.SEND_RECEIVE;
         else if (tileEntity instanceof IEnergyReceiver)
             this.connectType = ConnectType.RECEIVE;
         else if (tileEntity instanceof  IEnergySource)
             this.connectType = ConnectType.RECEIVE;
-        this.singleGrid = this.connectType == ConnectType.CONNECTOR;
         this.hasInit = true;
     }
 
@@ -37,10 +35,13 @@ public class PowerTile {  //Wrapper for TileEntities
     //private WorldGridHolder gridHolder;
     private boolean hasInit = false;
     private BlockLoc location;
-    private boolean singleGrid;
     private EFluxCableGrid[] grids;
     public int toGo;
     private ConnectType connectType;
+
+    private boolean singleGrid(){
+        return this.connectType == ConnectType.CONNECTOR;
+    }
 
     public ConnectType getConnectType() {
         return connectType;
@@ -59,8 +60,8 @@ public class PowerTile {  //Wrapper for TileEntities
     }
 
     public void replaceGrid(EFluxCableGrid old, EFluxCableGrid newGrid){
-        if (singleGrid){
-            grids[0] = (newGrid);
+        if (singleGrid()){
+            grids[0] = newGrid;
         } else {
             int i = removeGrid(old);
             System.out.println(i);
@@ -75,7 +76,7 @@ public class PowerTile {  //Wrapper for TileEntities
 
     public void resetGrid(EFluxCableGrid grid){
         int i = removeGrid(grid);
-        grids[i] = newGrid();
+        //grids[i] = newGrid();
     }
 
     public int removeGrid(EFluxCableGrid grid){
@@ -96,14 +97,14 @@ public class PowerTile {  //Wrapper for TileEntities
     }
 
     public EFluxCableGrid getGridFromSide(ForgeDirection forgeDirection){
-        return singleGrid?getGrid():getFromSide(forgeDirection.ordinal());
+        return singleGrid()?getGrid():getFromSide(forgeDirection);
     }
 
-    private EFluxCableGrid getFromSide(int i){
-        EFluxCableGrid grid = grids[i];
+    private EFluxCableGrid getFromSide(ForgeDirection direction){
+        EFluxCableGrid grid = grids[direction.ordinal()];
         if (grid == null) {
-            grid = newGrid();
-            grids[i] = grid;
+            grid = newGrid(direction);
+            grids[direction.ordinal()] = grid;
         }
 
         /*try {
@@ -120,13 +121,18 @@ public class PowerTile {  //Wrapper for TileEntities
     }
 
     public EFluxCableGrid getGrid(){
-        if (!singleGrid)
+        if (!singleGrid())
             throw new UnsupportedOperationException("Request grid when tile has multiple grids");
-        return grids[0];
+        EFluxCableGrid grid = grids[0];
+        if (grid == null){
+            grid = newGrid(ForgeDirection.UNKNOWN);
+            grids[0] = grid;
+        }
+        return grid;
     }
 
-    private EFluxCableGrid newGrid(){
-        return WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this));
+    private EFluxCableGrid newGrid(ForgeDirection direction){
+        return WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this, direction));
     }
 
     @Override
