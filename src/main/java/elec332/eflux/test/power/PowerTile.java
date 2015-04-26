@@ -73,6 +73,11 @@ public class PowerTile {  //Wrapper for TileEntities
         }
     }
 
+    public void resetGrid(EFluxCableGrid grid){
+        int i = removeGrid(grid);
+        grids[i] = newGrid();
+    }
+
     public int removeGrid(EFluxCableGrid grid){
         if (grids.length == 0)
             throw new RuntimeException();
@@ -97,7 +102,7 @@ public class PowerTile {  //Wrapper for TileEntities
     private EFluxCableGrid getFromSide(int i){
         EFluxCableGrid grid = grids[i];
         if (grid == null) {
-            grid = WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this));
+            grid = newGrid();
             grids[i] = grid;
         }
 
@@ -118,6 +123,10 @@ public class PowerTile {  //Wrapper for TileEntities
         if (!singleGrid)
             throw new UnsupportedOperationException("Request grid when tile has multiple grids");
         return grids[0];
+    }
+
+    private EFluxCableGrid newGrid(){
+        return WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this));
     }
 
     @Override

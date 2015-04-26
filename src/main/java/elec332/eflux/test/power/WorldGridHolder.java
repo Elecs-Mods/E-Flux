@@ -107,7 +107,7 @@ public class WorldGridHolder {
                         }
                         if (canConnect(powerTile, direction, powerTile1)) {
                             if (possTile instanceof IPowerTransmitter) {
-                                EFluxCableGrid intGrid = powerTile.getGrid();
+                                EFluxCableGrid intGrid = powerTile.getGridFromSide(direction);
                                 EFluxCableGrid grid = powerTile1.getGrid();
                                 if (!grid.equals(intGrid))
                                     grid.mergeGrids(intGrid);
@@ -148,7 +148,7 @@ public class WorldGridHolder {
         //TileEntity secondTile = powerTile2.getTile();
         boolean flag1 = false;
         boolean flag2 = false;
-        if (powerTile1.getConnectType() == powerTile2.getConnectType() && powerTile1.getConnectType() != PowerTile.ConnectType.SEND_RECEIVE)
+        if (powerTile1.getConnectType() == powerTile2.getConnectType() && (powerTile1.getConnectType() == PowerTile.ConnectType.SEND || powerTile1.getConnectType() == PowerTile.ConnectType.RECEIVE))
             return false; //We don't want to receivers or 2 sources connecting, do we?
         if (mainTile instanceof IPowerTransmitter){
             return canConnectFromSide(direction.getOpposite(), powerTile2);
@@ -205,11 +205,16 @@ public class WorldGridHolder {
                     registeredTiles.remove(powerTile.getLocation());
                     EFlux.logger.info(registeredTiles.keySet().size());
                     this.grids.remove(grid);
+                    List<BlockLoc> vec3List2 = new ArrayList<BlockLoc>();
                     for (BlockLoc vec : vec3List) {
-                        if (vec.equals(powerTile.getLocation()))
-                            break;
+                        if (!vec.equals(powerTile.getLocation())) {
+                            getPowerTile(vec).resetGrid(grid);
+                            vec3List2.add(vec);
+                        }
                         //registeredTiles.remove(vec);
-                        EFlux.logger.info("Readding tile at " + vec.toString());
+                    }
+                    for (BlockLoc vec : vec3List2){
+                        EFlux.logger.info("Re-adding tile at " + vec.toString());
                         TileEntity tileEntity1 = getTile(vec);
                         if (tileEntity1 instanceof IEnergyTile)
                             if (getPowerTile(vec) != null)
