@@ -2,6 +2,8 @@ package elec332.eflux.test.power;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.transmitter.IEnergyReceiver;
+import elec332.eflux.api.transmitter.IEnergySource;
 import elec332.eflux.api.transmitter.IEnergyTile;
 import elec332.eflux.api.transmitter.IPowerTransmitter;
 import elec332.eflux.test.blockLoc.BlockLoc;
@@ -37,10 +39,10 @@ public class WorldGridHolder {
     private List<EFluxCableGrid> grids;
     private List<PowerTile> pending;
     private List<PowerTile> pendingRemovals;
-    private boolean q = true;
+    //private boolean q = true;
     private Map<BlockLoc, PowerTile> registeredTiles;
     private int oldInt;
-    private boolean r = true;
+    //private boolean r = true;
 
     public EFluxCableGrid registerGrid(EFluxCableGrid grid){
         this.grids.add(grid);
@@ -77,34 +79,63 @@ public class WorldGridHolder {
     public void addTile(IEnergyTile tile){
         TileEntity theTile = (TileEntity) tile;
         PowerTile powerTile = new PowerTile(theTile, this);
+        /*if (theTile instanceof IEnergyReceiver || theTile instanceof IEnergySource){
+            for (int i = 0; i < 5; i++){
+                powerTile.getGrids().add(registerGrid(new EFluxCableGrid(world, powerTile)));
+            }
+        }*/
         registeredTiles.put(genCoords(theTile), powerTile);
         //pending.add(powerTile);
         addTile(powerTile);
-        r = true;
+        EFlux.logger.info("Tile placed at "+genCoords(theTile).toString());
+       // r = true;
     }
 
     public void addTile(PowerTile powerTile){
         if(!world.isRemote) {
             //try {
+            EFlux.logger.info("Processing tile at "+powerTile.getLocation().toString());
                 TileEntity theTile = powerTile.getTile();
                 for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+                    EFlux.logger.info("Processing tile at "+powerTile.getLocation().toString() + " for side "+direction.toString());
                     TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
                     if (possTile != null && possTile instanceof IEnergyTile) {
-
-                        if (possTile instanceof IPowerTransmitter) {
-                            //PowerTile powerTile1 = getPowerTile(genCoords(possTile));//registeredTiles.get(genCoords(possTile));
-                            EFluxCableGrid intGrid = powerTile.getGrid();
-                            PowerTile powerTile1 = getPowerTile(genCoords(possTile));
-                            if (powerTile1 == null || !powerTile1.hasInit()) {
-                                pending.add(powerTile);
-                                break;
-                            }
-                            //if (powerTile1.hasInit()) {
+                        PowerTile powerTile1 = getPowerTile(genCoords(possTile));
+                        if (powerTile1 == null || !powerTile1.hasInit()) {
+                            pending.add(powerTile);
+                            break;
+                        }
+                        if (canConnect(powerTile, direction, powerTile1)) {
+                            if (possTile instanceof IPowerTransmitter) {
+                                EFluxCableGrid intGrid = powerTile.getGrid();
                                 EFluxCableGrid grid = powerTile1.getGrid();
                                 if (!grid.equals(intGrid))
                                     grid.mergeGrids(intGrid);
-                            //}
+                            } else {
+                                /*if (possTile instanceof IEnergySource) {
+                                    //IEnergySource energySource = (IEnergySource) possTile;
+                                    //if (energySource.canProvidePowerTo(direction.getOpposite())) {
+                                       // if (!(powerTile.getTile() instanceof IEnergySource)) {
+                                            EFluxCableGrid grid = powerTile1.getGridFromSide(direction.getOpposite());
+                                            powerTile.getGridFromSide(direction).mergeGrids(grid);
+                                        //}
+                                    //}
+                                }
+                                if (possTile instanceof IEnergyReceiver) {
+                                    //IEnergyReceiver energyReceiver = (IEnergyReceiver) possTile;
+                                    //if (energyReceiver.canAcceptEnergyFrom(direction.getOpposite())) {
+                                        //if (!(powerTile.getTile() instanceof IEnergyReceiver)) {
+                                            EFluxCableGrid grid = powerTile1.getGridFromSide(direction.getOpposite());
+                                            powerTile.getGridFromSide(direction).mergeGrids(grid);
+                                        //}
+                                    //}
+                                }*/
+                                EFluxCableGrid grid = powerTile1.getGridFromSide(direction.getOpposite());
+                                powerTile.getGridFromSide(direction).mergeGrids(grid);
+                            }
                         }
+                    } else {
+                        EFlux.logger.info("There is no tile at side "+direction.toString() + " that is valid for connection");
                     }
                 }
 
@@ -112,11 +143,51 @@ public class WorldGridHolder {
         }
     }
 
+    private boolean canConnect(PowerTile powerTile1, ForgeDirection direction, PowerTile powerTile2){
+        TileEntity mainTile = powerTile1.getTile();
+        //TileEntity secondTile = powerTile2.getTile();
+        boolean flag1 = false;
+        boolean flag2 = false;
+        if (powerTile1.getConnectType() == powerTile2.getConnectType() && powerTile1.getConnectType() != PowerTile.ConnectType.SEND_RECEIVE)
+            return false; //We don't want to receivers or 2 sources connecting, do we?
+        if (mainTile instanceof IPowerTransmitter){
+            return canConnectFromSide(direction.getOpposite(), powerTile2);
+        } else {
+            if (powerTile1.getConnectType() == PowerTile.ConnectType.SEND_RECEIVE){
+                if (((IEnergySource) mainTile).canProvidePowerTo(direction))
+                    flag1 = canConnectFromSide(direction.getOpposite(), powerTile2);
+                if (((IEnergyReceiver)mainTile).canAcceptEnergyFrom(direction))
+                    flag2 = canConnectFromSide(direction.getOpposite(), powerTile2);
+                return flag1 || flag2;
+            } else if (powerTile1.getConnectType() == PowerTile.ConnectType.RECEIVE){
+                if (((IEnergyReceiver) mainTile).canAcceptEnergyFrom(direction))
+                    return canConnectFromSide(direction.getOpposite(), powerTile2);
+            } else if (powerTile1.getConnectType() == PowerTile.ConnectType.SEND){
+                if (((IEnergySource) mainTile).canProvidePowerTo(direction))
+                    return canConnectFromSide(direction.getOpposite(), powerTile2);
+            }
+            return false;
+        }
+    }
+
+    private boolean canConnectFromSide(ForgeDirection direction, PowerTile powerTile2){
+        TileEntity secondTile = powerTile2.getTile();
+        boolean flag1 = false;
+        boolean flag2 = false;
+        if (secondTile instanceof IPowerTransmitter)
+            return true;
+        if (secondTile instanceof IEnergyReceiver)
+            flag1 = ((IEnergyReceiver) secondTile).canAcceptEnergyFrom(direction);
+        if (secondTile instanceof IEnergySource)
+            flag2 = ((IEnergySource)secondTile).canProvidePowerTo(direction);
+        return flag1 || flag2;
+    }
+
     public void removeTile(IEnergyTile tile){
         PowerTile powerTile = getPowerTile(genCoords((TileEntity) tile));
         powerTile.toGo = 3;
         pendingRemovals.add(powerTile);
-        q = true;
+        //q = true;
     }
 
     public void removeTile(PowerTile tile){
@@ -125,21 +196,25 @@ public class WorldGridHolder {
         //try {
         if (powerTile != null)
             for (EFluxCableGrid grid : powerTile.getGrids()) {
-                List<BlockLoc> vec3List = new ArrayList<BlockLoc>();
-                vec3List.addAll(grid.getLocations());
-                vec3List.remove(powerTile.getLocation());
-                EFlux.logger.info(registeredTiles.keySet().size());
-                registeredTiles.remove(powerTile.getLocation());
-                EFlux.logger.info(registeredTiles.keySet().size());
-                this.grids.remove(grid);
-                for (BlockLoc vec : vec3List) {
-                    if (vec.equals(powerTile.getLocation()))
-                        break;
-                    //registeredTiles.remove(vec);
-                    TileEntity tileEntity1 = getTile(vec);
-                    if (tileEntity1 instanceof IEnergyTile)
-                        if (getPowerTile(vec) != null)
-                            addTile(getPowerTile(vec));
+                if(grid != null) {
+                    EFlux.logger.info("Removing tile at " + powerTile.getLocation().toString());
+                    List<BlockLoc> vec3List = new ArrayList<BlockLoc>();
+                    vec3List.addAll(grid.getLocations());
+                    vec3List.remove(powerTile.getLocation());
+                    EFlux.logger.info(registeredTiles.keySet().size());
+                    registeredTiles.remove(powerTile.getLocation());
+                    EFlux.logger.info(registeredTiles.keySet().size());
+                    this.grids.remove(grid);
+                    for (BlockLoc vec : vec3List) {
+                        if (vec.equals(powerTile.getLocation()))
+                            break;
+                        //registeredTiles.remove(vec);
+                        EFlux.logger.info("Readding tile at " + vec.toString());
+                        TileEntity tileEntity1 = getTile(vec);
+                        if (tileEntity1 instanceof IEnergyTile)
+                            if (getPowerTile(vec) != null)
+                                addTile(getPowerTile(vec));
+                    }
                 }
             }
         //} catch (NullPointerException e){e.printStackTrace();}
@@ -189,6 +264,8 @@ public class WorldGridHolder {
     protected void onServerTickInternal(TickEvent event){
         if (event.phase == TickEvent.Phase.START) {
             EFlux.logger.info("Tick!");
+            boolean r = false;
+            boolean q = false;
             if (pending.size() == oldInt && oldInt > 0 && !r) {
                 List<PowerTile> tr = new ArrayList<PowerTile>();
                 for (int i = 0; i < pending.size(); i++)
@@ -205,7 +282,8 @@ public class WorldGridHolder {
                     powerTile.toGo--;
                     if (getTile(powerTile.getLocation()) == null){
                         powerTile.toGo = 0;
-                        removeTile(powerTile);
+                        if (!tr.contains(powerTile))
+                            removeTile(powerTile);
                     }
                     if (powerTile.toGo <= 0)
                         tr.add(powerTile);
@@ -214,8 +292,8 @@ public class WorldGridHolder {
             }
 
             this.oldInt = pending.size();
-            r = false;
-            q = false;
+            //r = false;
+            //q = false;
             /*int i = 0;
             try {
                 for (EFluxCableGrid grid : grids) {

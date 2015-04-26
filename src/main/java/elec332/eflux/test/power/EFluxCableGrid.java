@@ -96,6 +96,9 @@ public class EFluxCableGrid {
 
 
     public EFluxCableGrid mergeGrids(EFluxCableGrid grid){
+        World world1 = grid.world;
+       int world2 = world.provider.dimensionId;
+        int q = world1.provider.dimensionId;
         if (this.world.provider.dimensionId != grid.world.provider.dimensionId)
             throw new RuntimeException();
         if (this.equals(grid))

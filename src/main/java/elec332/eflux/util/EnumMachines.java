@@ -3,6 +3,7 @@ package elec332.eflux.util;
 import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.machines.BlockMachine;
 import elec332.eflux.test.power.CableTile;
+import elec332.eflux.test.power.TestTile;
 import elec332.eflux.tileentity.TEGrinder;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -12,10 +13,11 @@ import net.minecraft.tileentity.TileEntity;
  */
 public enum EnumMachines {
     GRINDER(TEGrinder.class),
-    TESTCABLE(CableTile.class);
+    TESTCABLE(CableTile.class),
+    TESTENERGYTILE(TestTile.class)
 
 
-
+    ;
     //___DATA__//////////////////////////////////////////////////////////
 
     private Class<? extends TileEntity> tileClass;
