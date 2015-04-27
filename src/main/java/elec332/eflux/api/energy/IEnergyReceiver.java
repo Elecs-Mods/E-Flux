@@ -8,6 +8,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IEnergyReceiver extends IEnergyTile{
 
     /**
+     * @param direction
+     *      the direction from which a connection is requested
+     *
      * @return weather the tile can connect and accept power from the given side
      */
     public boolean canAcceptEnergyFrom(ForgeDirection direction);

@@ -8,6 +8,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IEnergySource extends IEnergyTile{
 
     /**
+     * @param direction
+     *      the direction from which a connection is requested
+     *
      * @return weather the tile can connect and provide power to the given side
      */
     public boolean canProvidePowerTo(ForgeDirection direction);
@@ -17,12 +20,21 @@ public interface IEnergySource extends IEnergyTile{
      *      the RedstonePotential in the network
      * @param direction
      *      the direction where the power will be provided to
-     * @param execute
-     *      weather the energy is actually drawn from the tile, or if its just to check how much power the tile
-     *      is going to provide. If true, the power is drawn from the tile, if false, its just to check.
+     *
+     * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
+     */
+    public int getMaxEFForRP(int rp, ForgeDirection direction);
+
+    /**
+     * @param rp
+     *      the RedstonePotential in the network
+     * @param direction
+     *      the direction where the power will be provided to
+     * @param reqEF
+     *      the requested amount of EnergeticFlux
      *
      * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
      */
-    public int getProvidedEFForRP(int rp, ForgeDirection direction, boolean execute);
+    public int getMaxProvidedEFForRP(int rp, ForgeDirection direction, int reqEF);
 
 }
