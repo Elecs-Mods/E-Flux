@@ -72,19 +72,54 @@ public class EFluxCableGrid {
         processPower();
     }
 
+    private int unUsed = 0;
+
     public void processPower(){
-        int totalToProvide = 0;
+        int requestedPower = 0;
         int rp = 0;
-        int totalProvided = 0;
+        int totalProvided = this.unUsed;
         for (GridData gridData: acceptors)
             rp = Math.max(rp, ((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
         for (GridData gridData : acceptors){
-            int i = totalToProvide;
-            totalToProvide = i+((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
+            int i = requestedPower;
+            requestedPower = i+((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
         }
         for (GridData gridData : providers){
             int i = totalProvided;
-            totalProvided = i+((IEnergySource)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getProvidedEFForRP(rp, gridData.getDirection(), false);
+            totalProvided = i+((IEnergySource)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getMaxEFForRP(rp, gridData.getDirection());
+        }
+        if (totalProvided > requestedPower){
+            int totalDrawn = 0;
+            for (GridData gridData : acceptors){
+                IEnergyReceiver receiver = (IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
+                int i = receiver.getRequestedEF(rp, gridData.getDirection());
+                int q = totalDrawn;
+                receiver.receivePower(gridData.getDirection(), rp, i);
+                totalDrawn = i+q;
+            }
+            for (GridData gridData : providers){
+                IEnergySource source = (IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
+                int q = totalDrawn;
+                if (totalDrawn > 0)
+                    totalDrawn = q-source.provideEnergeticFlux(rp, gridData.getDirection(), totalDrawn);
+            }
+        } else {
+            int total_goingToProvide = 0;
+            for (GridData gridData : providers){
+                IEnergySource source = (IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
+                int q = total_goingToProvide;
+                total_goingToProvide = q+source.provideEnergeticFlux(rp, gridData.getDirection(), source.getMaxEFForRP(rp, gridData.getDirection()));
+            }
+            int tg = acceptors.size();
+            for (GridData gridData : acceptors){
+                int gt = total_goingToProvide/tg;
+                IEnergyReceiver receiver = (IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
+                int nu = receiver.receivePower(gridData.getDirection(), rp, gt);
+                gt = gt-nu;
+                total_goingToProvide = requestedPower-gt;
+                tg--;
+            }
+            this.unUsed = total_goingToProvide;
         }
     }
 
