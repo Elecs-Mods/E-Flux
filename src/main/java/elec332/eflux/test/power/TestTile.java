@@ -31,13 +31,72 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
         MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
     }
 
+    /**
+     * @param direction the direction from which a connection is requested
+     * @return weather the tile can connect and accept power from the given side
+     */
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
         return direction == ForgeDirection.DOWN;
     }
 
+    /**
+     * @param rp        The Redstone Potential in the network
+     * @param direction The requested direction
+     * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
+     */
+    @Override
+    public int getRequestedEF(int rp, ForgeDirection direction) {
+        return 30;
+    }
+
+    /**
+     * @param direction The requested direction
+     * @return The Redstone Potential at which the machine wishes to operate
+     */
+    @Override
+    public int requestedRP(ForgeDirection direction) {
+        return 0;
+    }
+
+    /**
+     * @param direction the direction where the power will be provided to
+     * @param rp        the RedstonePotential in the network
+     * @param ef        the amount of EnergeticFlux that is being provided
+     * @return The amount of EnergeticFlux that wasn't used
+     */
+    @Override
+    public int receivePower(ForgeDirection direction, int rp, int ef) {
+        return 0;
+    }
+
+    /**
+     * @param direction the direction from which a connection is requested
+     * @return weather the tile can connect and provide power to the given side
+     */
     @Override
     public boolean canProvidePowerTo(ForgeDirection direction) {
-        return direction == ForgeDirection.UP;
+        return false;
+    }
+
+    /**
+     * @param rp        the RedstonePotential in the network
+     * @param direction the direction where the power will be provided to
+     * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
+     */
+    @Override
+    public int getMaxEFForRP(int rp, ForgeDirection direction) {
+        return 0;
+    }
+
+    /**
+     * @param rp        the RedstonePotential in the network
+     * @param direction the direction where the power will be provided to
+     * @param reqEF     the requested amount of EnergeticFlux
+     * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
+     */
+    @Override
+    public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
+        return 0;
     }
 }

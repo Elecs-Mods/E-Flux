@@ -16,6 +16,14 @@ public interface IEnergyReceiver extends IEnergyTile{
     public boolean canAcceptEnergyFrom(ForgeDirection direction);
 
     /**
+     * @param direction
+     *      The requested direction
+     *
+     * @return The Redstone Potential at which the machine wishes to operate
+     */
+    public int requestedRP(ForgeDirection direction);
+
+    /**
      *
      * @param rp
      *      The Redstone Potential in the network
@@ -25,14 +33,6 @@ public interface IEnergyReceiver extends IEnergyTile{
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
      */
     public int getRequestedEF(int rp, ForgeDirection direction);
-
-    /**
-     * @param direction
-     *      The requested direction
-     *      
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
-    public int requestedRP(ForgeDirection direction);
 
     /**
      * @param rp
@@ -45,6 +45,5 @@ public interface IEnergyReceiver extends IEnergyTile{
      * @return The amount of EnergeticFlux that wasn't used
      */
     public int receivePower(ForgeDirection direction, int rp, int ef);
-
 
 }

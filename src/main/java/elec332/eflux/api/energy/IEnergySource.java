@@ -35,6 +35,6 @@ public interface IEnergySource extends IEnergyTile{
      *
      * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
      */
-    public int getMaxProvidedEFForRP(int rp, ForgeDirection direction, int reqEF);
+    public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF);
 
 }
