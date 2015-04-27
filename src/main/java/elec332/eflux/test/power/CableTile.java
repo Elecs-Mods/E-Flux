@@ -3,7 +3,7 @@ package elec332.eflux.test.power;
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
-import elec332.eflux.api.transmitter.IPowerTransmitter;
+import elec332.eflux.api.energy.IPowerTransmitter;
 import net.minecraftforge.common.MinecraftForge;
 
 /**

@@ -2,8 +2,8 @@ package elec332.eflux.test.power;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.transmitter.IEnergyReceiver;
-import elec332.eflux.api.transmitter.IEnergySource;
+import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.test.WorldRegistry;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.world.World;
@@ -19,23 +19,23 @@ import java.util.UUID;
 public class EFluxCableGrid {
 
     public EFluxCableGrid(World world, PowerTile p, ForgeDirection direction){
-        acceptors = new ArrayList<BlockLoc>();
-        providers = new ArrayList<BlockLoc>();
+        acceptors = new ArrayList<GridData>();
+        providers = new ArrayList<GridData>();
         locations = new ArrayList<BlockLoc>();
         this.world = world;
         locations.add(p.getLocation());
         if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction))
-            providers.add(p.getLocation());
+            providers.add(new GridData(p.getLocation(), direction));
         if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
-            acceptors.add(p.getLocation());
+            acceptors.add(new GridData(p.getLocation(), direction));
         FMLCommonHandler.instance().bus().register(this);
         identifier = UUID.randomUUID();
     }
 
     private UUID identifier;
     private World world;
-    private List<BlockLoc> acceptors;
-    private List<BlockLoc> providers;
+    private List<GridData> acceptors;
+    private List<GridData> providers;
     private List<BlockLoc> locations;
 
     public List<BlockLoc> getLocations(){
@@ -52,7 +52,7 @@ public class EFluxCableGrid {
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
         for (BlockLoc vec : grid.locations){
-            PowerTile powerTile = WorldRegistry.get(world).getWorldPowerGrid().getPowerTile(vec);
+            PowerTile powerTile = getWorldHolder().getPowerTile(vec);
             if (powerTile != null)
                 powerTile.replaceGrid(grid, this);
         }
@@ -69,6 +69,27 @@ public class EFluxCableGrid {
         System.out.println("Acceptors: "+acceptors.size());
         System.out.println("Providers "+providers.size());
         System.out.println("STOP");
+        processPower();
+    }
+
+    public void processPower(){
+        int totalToProvide = 0;
+        int rp = 0;
+        int totalProvided = 0;
+        for (GridData gridData: acceptors)
+            rp = Math.max(rp, ((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
+        for (GridData gridData : acceptors){
+            int i = totalToProvide;
+            totalToProvide = i+((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
+        }
+        for (GridData gridData : providers){
+            int i = totalProvided;
+            totalProvided = i+((IEnergySource)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getProvidedEFForRP(rp, gridData.getDirection(), false);
+        }
+    }
+
+    private WorldGridHolder getWorldHolder(){
+        return WorldRegistry.get(world).getWorldPowerGrid();
     }
 
     private void invalidate(){

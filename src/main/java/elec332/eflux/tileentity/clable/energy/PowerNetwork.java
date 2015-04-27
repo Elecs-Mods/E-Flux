@@ -1,7 +1,7 @@
 package elec332.eflux.tileentity.clable.energy;
 /*
-import elec332.eflux.api.transmitter.IPowerTransmitter;
-import elec332.eflux.api.transmitter.IEnergyReceiver;
+import elec332.eflux.api.energy.IPowerTransmitter;
+import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.util.TransmitterNetwork;
 import net.minecraft.world.World;
 

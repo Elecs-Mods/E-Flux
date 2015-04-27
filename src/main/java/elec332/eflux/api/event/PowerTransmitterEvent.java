@@ -1,6 +1,6 @@
 package elec332.eflux.api.event;
 
-import elec332.eflux.api.transmitter.IEnergyTile;
+import elec332.eflux.api.energy.IEnergyTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.WorldEvent;
 

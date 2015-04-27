@@ -1,7 +1,7 @@
 package elec332.eflux.util;
 /*
 import com.google.common.collect.Lists;
-import elec332.eflux.api.transmitter.IEnergyReceiver;
+import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.handlers.TransmitterNetworkHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

@@ -2,10 +2,10 @@ package elec332.eflux.test.power;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.transmitter.IEnergyReceiver;
-import elec332.eflux.api.transmitter.IEnergySource;
-import elec332.eflux.api.transmitter.IEnergyTile;
-import elec332.eflux.api.transmitter.IPowerTransmitter;
+import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyTile;
+import elec332.eflux.api.energy.IPowerTransmitter;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
