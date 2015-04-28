@@ -100,7 +100,7 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
-        this.markDirty();
+        //this.markDirty();
         if (getMaxEFForRP(rp, direction) >= reqEF){
             this.storedPower = storedPower - rp*reqEF;
             return reqEF;
