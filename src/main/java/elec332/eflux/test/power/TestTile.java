@@ -88,26 +88,9 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int getMaxEFForRP(int rp, ForgeDirection direction) {
-        return this.storedPower/rp;
-    }
-
-    /**
-     * @param rp        the RedstonePotential in the network
-     * @param direction the direction where the power will be provided to
-     * @param reqEF     the requested amount of EnergeticFlux
-     * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
-     */
-    @Override
-    public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
-        //this.markDirty();
-        if (getMaxEFForRP(rp, direction) >= reqEF){
-            this.storedPower = storedPower - rp*reqEF;
-            return reqEF;
-        } else {
-            int ret = this.storedPower/rp;
-            this.storedPower = 0;
-            return ret;
-        }
+    public int provideEnergy(int rp, ForgeDirection direction) {
+        int i = storedPower/rp;
+        storedPower = 0;
+        return i;
     }
 }

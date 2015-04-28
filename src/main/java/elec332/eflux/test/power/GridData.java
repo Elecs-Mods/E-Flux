@@ -30,6 +30,6 @@ public class GridData {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof GridData && ((GridData) obj).loc.equals(loc) && ((GridData) obj).direction == direction;
+        return obj instanceof GridData && ((GridData) obj).loc.equals(loc) && ((GridData) obj).direction.equals(direction);
     }
 }

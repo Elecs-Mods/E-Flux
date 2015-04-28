@@ -11,6 +11,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
+//import elec332.eflux.compat.Compat;
+//import elec332.eflux.compat.LoadedMods;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
@@ -79,6 +81,8 @@ public class EFlux {
 
         //setting up mod stuff
         configWrapper.registerConfig(new Config());
+        //Compat.loadList();
+        //logger.info("RF API loaded: "+LoadedMods.RF_API);
 
 
         MCModInfo.CreateMCModInfo(event, "Created by Elec332",

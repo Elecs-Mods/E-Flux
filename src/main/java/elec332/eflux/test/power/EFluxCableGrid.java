@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,11 +75,40 @@ public class EFluxCableGrid {
 
     private int unUsed = 0;
 
-    public void processPower(){
+    public void processPower() {
         int requestedPower = 0;
         int rp = 1;
-        int totalProvided = 0;//this.unUsed;
-        for (GridData gridData: acceptors) {
+        int totalProvided = 0;
+        int[] va = new int[acceptors.size()];
+        for (GridData gridData : acceptors)
+            rp = Math.max(rp, ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
+        for (GridData gridData : providers)
+            totalProvided = totalProvided + ((IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection());
+        for (GridData gridData : acceptors) {
+            int e = ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
+            va[acceptors.indexOf(gridData)] = e;
+            print("Index set: "+acceptors.indexOf(gridData)+" ___ "+va[acceptors.indexOf(gridData)]);
+            requestedPower = requestedPower + e;
+        }
+        if (totalProvided > 0) {
+            spam("RP in network: " + rp);
+            spam("Requested network: " + requestedPower);
+            spam("Able to provide: " + totalProvided);
+        }
+        if (totalProvided > requestedPower){
+            spam("Providing MAX power to all receivers");
+            for (GridData gridData : acceptors)
+                ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, va[acceptors.indexOf(gridData)]);
+        }else if (totalProvided > 0){
+            float diff = (float)totalProvided/(float)requestedPower;
+            print(diff+"");
+            for (GridData gridData : acceptors) {
+                ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, (int)(va[acceptors.indexOf(gridData)] * diff));
+                print("Index read: "+acceptors.indexOf(gridData)+" ___ "+va[acceptors.indexOf(gridData)]);
+                spam("Gave "+((int)(va[acceptors.indexOf(gridData)] * diff))+" energy to tile");
+            }
+        }
+        /*for (GridData gridData: acceptors) {
             int i = ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection());
             print("Tile at "+gridData.getLoc().toString()+" requests "+i+" rp from side "+gridData.getDirection());
             rp = Math.max(rp, i);
@@ -137,11 +167,17 @@ public class EFluxCableGrid {
                 this.unUsed = total_goingToProvide;
                 System.out.println( unUsed+" Left over power");
             }
-        }
+        }*/
     }
 
     private void print(String s){
         EFlux.logger.info(s);
+    }
+
+    private void spam(String s){
+        for (int i = 0; i < 100; i++) {
+            print(s);
+        }
     }
 
     private WorldGridHolder getWorldHolder(){
