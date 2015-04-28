@@ -25,6 +25,8 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
         }
     }
 
+    public int storedPower = 0;
+
     @Override
     public void invalidate() {
         super.invalidate();
@@ -41,22 +43,22 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
     }
 
     /**
+     * @param direction The requested direction
+     * @return The Redstone Potential at which the machine wishes to operate
+     */
+    @Override
+    public int requestedRP(ForgeDirection direction) {
+        return 30;
+    }
+
+    /**
      * @param rp        The Redstone Potential in the network
      * @param direction The requested direction
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
      */
     @Override
     public int getRequestedEF(int rp, ForgeDirection direction) {
-        return 30;
-    }
-
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
-    @Override
-    public int requestedRP(ForgeDirection direction) {
-        return 0;
+        return 600/rp;
     }
 
     /**
@@ -67,6 +69,7 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public int receivePower(ForgeDirection direction, int rp, int ef) {
+        storedPower = storedPower+rp*ef;
         return 0;
     }
 
@@ -76,7 +79,7 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public boolean canProvidePowerTo(ForgeDirection direction) {
-        return false;
+        return direction == ForgeDirection.UP;
     }
 
     /**
@@ -86,7 +89,7 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public int getMaxEFForRP(int rp, ForgeDirection direction) {
-        return 0;
+        return this.storedPower/rp;
     }
 
     /**
@@ -97,6 +100,14 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
-        return 0;
+        this.markDirty();
+        if (getMaxEFForRP(rp, direction) >= reqEF){
+            this.storedPower = storedPower - rp*reqEF;
+            return reqEF;
+        } else {
+            int ret = this.storedPower/rp;
+            this.storedPower = 0;
+            return ret;
+        }
     }
 }

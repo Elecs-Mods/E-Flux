@@ -76,18 +76,29 @@ public class EFluxCableGrid {
 
     public void processPower(){
         int requestedPower = 0;
-        int rp = 0;
-        int totalProvided = this.unUsed;
-        for (GridData gridData: acceptors)
-            rp = Math.max(rp, ((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
+        int rp = 1;
+        int totalProvided = 0;//this.unUsed;
+        for (GridData gridData: acceptors) {
+            int i = ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection());
+            print("Tile at "+gridData.getLoc().toString()+" requests "+i+" rp from side "+gridData.getDirection());
+            rp = Math.max(rp, i);
+        }
         for (GridData gridData : acceptors){
             int i = requestedPower;
-            requestedPower = i+((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
+            int e = ((IEnergyReceiver)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
+            requestedPower = i+e;
+            print("Tile at "+gridData.getLoc().toString()+" requests "+i+" ef from side "+gridData.getDirection()+" from an RP of" + rp);
+
         }
         for (GridData gridData : providers){
             int i = totalProvided;
-            totalProvided = i+((IEnergySource)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getMaxEFForRP(rp, gridData.getDirection());
+            int e = ((IEnergySource)getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getMaxEFForRP(rp, gridData.getDirection());
+            totalProvided = i+e;
+            print("Tile at "+gridData.getLoc().toString()+" can provide "+i+" ef from side "+gridData.getDirection()+" from an RP of" + rp);
         }
+        print("RP in network: "+rp);
+        print("Requested network: "+requestedPower);
+        print("Able to provide: "+totalProvided);
         if (totalProvided > requestedPower){
             int totalDrawn = 0;
             for (GridData gridData : acceptors){
@@ -104,23 +115,33 @@ public class EFluxCableGrid {
                     totalDrawn = q-source.provideEnergeticFlux(rp, gridData.getDirection(), totalDrawn);
             }
         } else {
+            System.out.println("More power requested than able to provide!");
             int total_goingToProvide = 0;
             for (GridData gridData : providers){
                 IEnergySource source = (IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
                 int q = total_goingToProvide;
                 total_goingToProvide = q+source.provideEnergeticFlux(rp, gridData.getDirection(), source.getMaxEFForRP(rp, gridData.getDirection()));
             }
-            int tg = acceptors.size();
-            for (GridData gridData : acceptors){
-                int gt = total_goingToProvide/tg;
-                IEnergyReceiver receiver = (IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
-                int nu = receiver.receivePower(gridData.getDirection(), rp, gt);
-                gt = gt-nu;
-                total_goingToProvide = requestedPower-gt;
-                tg--;
+            print("Network is able to provide "+total_goingToProvide+" EF at "+rp+" RP");
+            if (total_goingToProvide > 0) {
+                int tg = acceptors.size();
+                for (GridData gridData : acceptors) {
+                    int gt = total_goingToProvide / tg;
+                    IEnergyReceiver receiver = (IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile();
+                    print("Tile at "+gridData.getLoc().toString()+" will receive "+gt+" ef from side "+gridData.getDirection()+" from an RP of" + rp);
+                    int nu = receiver.receivePower(gridData.getDirection(), rp, gt);
+                    gt = gt - nu;
+                    total_goingToProvide = total_goingToProvide - gt;
+                    tg--;
+                }
+                this.unUsed = total_goingToProvide;
+                System.out.println( unUsed+" Left over power");
             }
-            this.unUsed = total_goingToProvide;
         }
+    }
+
+    private void print(String s){
+        EFlux.logger.info(s);
     }
 
     private WorldGridHolder getWorldHolder(){

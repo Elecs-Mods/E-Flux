@@ -2,6 +2,7 @@ package elec332.eflux.items;
 
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.test.power.TestTile;
 import elec332.eflux.tileentity.BaseMachineTEWithInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,10 +35,15 @@ public class MultiMeter extends Item {
 
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float HitX, float HitY, float HitZ) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof BaseMachineTEWithInventory && !world.isRemote) {
-            player.addChatComponentMessage(new ChatComponentText("Power : " + ((BaseMachineTEWithInventory) tileEntity).getEnergyStored(ForgeDirection.UNKNOWN)));
-            player.addChatComponentMessage(new ChatComponentText("Can receive power from clicked side : " + ((BaseMachineTEWithInventory) tileEntity).canConnectEnergy(ForgeDirection.getOrientation(side))));
-            return true;
+        if (!world.isRemote) {
+            if (tileEntity instanceof BaseMachineTEWithInventory) {
+                player.addChatComponentMessage(new ChatComponentText("Power : " + ((BaseMachineTEWithInventory) tileEntity).getEnergyStored(ForgeDirection.UNKNOWN)));
+                player.addChatComponentMessage(new ChatComponentText("Can receive power from clicked side : " + ((BaseMachineTEWithInventory) tileEntity).canConnectEnergy(ForgeDirection.getOrientation(side))));
+                return true;
+            } else if (tileEntity instanceof TestTile) {
+                player.addChatComponentMessage(new ChatComponentText("Power : " + ((TestTile) tileEntity).storedPower));
+                return true;
+            }
         }
         return false;
     }
