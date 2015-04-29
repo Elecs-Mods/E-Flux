@@ -13,6 +13,7 @@ import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 //import elec332.eflux.compat.Compat;
 //import elec332.eflux.compat.LoadedMods;
+import elec332.eflux.compat.Compat;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
@@ -20,7 +21,7 @@ import elec332.eflux.inventory.ContainerNull;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.GrinderRecipe;
 import elec332.eflux.recipes.RecipeRegistry;
-import elec332.eflux.test.power.EventHandler;
+import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;
@@ -81,12 +82,14 @@ public class EFlux {
 
         //setting up mod stuff
         configWrapper.registerConfig(new Config());
-        //Compat.loadList();
-        //logger.info("RF API loaded: "+LoadedMods.RF_API);
+        configWrapper.refresh();
+        Compat.instance.loadList();
+        logger.info("RF API loaded: "+Compat.RF);
+        logger.info("RFTools: "+Compat.RFTools);
 
 
         MCModInfo.CreateMCModInfo(event, "Created by Elec332",
-                "mod description",
+                "E-Flux",
                 "website link", "logo",
                 new String[]{"Elec332"});
     }

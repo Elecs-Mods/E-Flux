@@ -7,6 +7,7 @@ import elec332.core.config.Configurable;
  */
 public class Config {
 
-    @Configurable(category = "compat")
-    public static boolean RFCompatibility = true;
+    @Configurable(category = "debug", comment = "Prints a LOT of debug information to the game log")
+    public static boolean DebugLog = false;
+
 }

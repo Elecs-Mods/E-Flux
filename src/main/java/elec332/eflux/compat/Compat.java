@@ -1,7 +1,10 @@
 package elec332.eflux.compat;
 
-import elec332.core.config.Configurable;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.ModContainer;
 import elec332.eflux.EFlux;
+import net.minecraftforge.common.config.Configuration;
 
 import java.lang.reflect.Field;
 
@@ -10,28 +13,63 @@ import java.lang.reflect.Field;
  */
 public class Compat {
 
-    public static final Compat instance = new Compat();
-    private Compat(){
+    public static final Compat instance = new Compat(EFlux.config);
+    private Compat(Configuration config){
+        config.getCategory("compat").setComment("Sets if compat for the mod will be enabled, FALSE = always disabled, AUTO = enabled if mod is loaded, TRUE = always enabled (Not recommended, will crash if said mod isn't loaded)");
+        configuration = config;
     }
+    private final Configuration configuration;
 
     public void loadList(){
-        LoadedMods.check();
-        EFlux.configWrapper.registerConfig(this);
-        for (Field field : LoadedMods.class.getFields()){
-            if (field.getType().isAssignableFrom(Boolean.TYPE)){
-
-            }
-        }
+        RF = compatEnabled("CoFHAPI|energy", ModType.API);
+        RFTools = compatEnabled("RFTools");
     }
 
-    @Configurable(validStrings = {"TRUE", "AUTO", "FALSE"})
-    private String RF = compatType.AUTO.toString();
+    public static boolean RF;
+    public static boolean RFTools;
 
 
+    ///////////////////////////////////////////////////////////////
+    private boolean compatEnabled(String name){
+        return compatEnabled(name, ModType.MOD);
+    }
 
+    private boolean compatEnabled(String name, ModType type){
+        return compatEnabled(type, CompatEnabled.AUTO, name);
+    }
 
+    private boolean compatEnabled(ModType type, CompatEnabled enabled, String name){
+        switch (isConfigEnabled(name, enabled)){
+            case FALSE:
+                return false;
+            case AUTO:
+                break;
+            case TRUE:
+                return true;
+        }
+        if (type == ModType.API)
+            return isAPILoaded(name);
+        else
+            return Loader.isModLoaded(name);
+    }
 
-    private enum compatType{
-        TRUE, AUTO, FALSE
+    private CompatEnabled isConfigEnabled(String name, CompatEnabled def){
+        return CompatEnabled.valueOf(configuration.getString(name, "compat", def.toString(), "", new String[]{CompatEnabled.FALSE.toString(), CompatEnabled.AUTO.toString(), CompatEnabled.TRUE.toString()}));
+    }
+
+    private static boolean isAPILoaded(String name){
+        for (ModContainer API : ModAPIManager.INSTANCE.getAPIList()){
+            if (API.getModId().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    private enum CompatEnabled{
+        FALSE, AUTO, TRUE
+    }
+
+    private enum ModType{
+        MOD, API
     }
 }
