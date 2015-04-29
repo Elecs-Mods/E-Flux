@@ -6,5 +6,5 @@ package elec332.eflux.api;
 public class EFluxAPIProps {
     public static final String owner = "EFlux";
     public static final String provides = "EFlux-API";
-    public static final String apiVersion = "0.1";
+    public static final String apiVersion = "1.0Beta";
 }

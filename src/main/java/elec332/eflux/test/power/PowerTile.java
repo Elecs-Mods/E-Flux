@@ -23,7 +23,7 @@ public class PowerTile {  //Wrapper for TileEntities
             this.connectType = ConnectType.SEND_RECEIVE;
         else if (tileEntity instanceof IEnergyReceiver)
             this.connectType = ConnectType.RECEIVE;
-        else if (tileEntity instanceof  IEnergySource)
+        else if (tileEntity instanceof IEnergySource)
             this.connectType = ConnectType.SEND;
         this.hasInit = true;
     }

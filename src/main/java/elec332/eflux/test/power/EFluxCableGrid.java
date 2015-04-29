@@ -4,13 +4,13 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.test.WorldRegistry;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,10 +23,14 @@ public class EFluxCableGrid {
         acceptors = new ArrayList<GridData>();
         providers = new ArrayList<GridData>();
         locations = new ArrayList<BlockLoc>();
+        specialProviders = new ArrayList<GridData>();
         this.world = world;
         locations.add(p.getLocation());
-        if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction))
-            providers.add(new GridData(p.getLocation(), direction));
+        if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction)) {
+            if (!(p.getTile() instanceof ISpecialEnergySource))
+                providers.add(new GridData(p.getLocation(), direction));
+            else specialProviders.add(new GridData(p.getLocation(), direction));
+        }
         if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
             acceptors.add(new GridData(p.getLocation(), direction));
         FMLCommonHandler.instance().bus().register(this);
@@ -37,6 +41,7 @@ public class EFluxCableGrid {
     private World world;
     private List<GridData> acceptors;
     private List<GridData> providers;
+    private List<GridData> specialProviders;
     private List<BlockLoc> locations;
 
     public List<BlockLoc> getLocations(){
@@ -52,6 +57,7 @@ public class EFluxCableGrid {
         this.locations.addAll(grid.locations);
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
+        this.specialProviders.addAll(grid.specialProviders);
         for (BlockLoc vec : grid.locations){
             PowerTile powerTile = getWorldHolder().getPowerTile(vec);
             if (powerTile != null)
@@ -68,45 +74,51 @@ public class EFluxCableGrid {
             System.out.println(vec.toString());
         System.out.println("Locations: "+locations.size());
         System.out.println("Acceptors: "+acceptors.size());
-        System.out.println("Providers "+providers.size());
+        System.out.println("Providers "+(providers.size()+specialProviders.size()));
         System.out.println("STOP");
         processPower();
     }
 
-    private int unUsed = 0;
 
     public void processPower() {
         int requestedPower = 0;
         int rp = 1;
         int totalProvided = 0;
+        int specialCanProvide = 0;
         int[] va = new int[acceptors.size()];
+        int[] vs = new int[specialProviders.size()];
         for (GridData gridData : acceptors)
             rp = Math.max(rp, ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
         for (GridData gridData : providers)
-            totalProvided = totalProvided + ((IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection());
+            totalProvided = totalProvided + ((IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection(), true);
+        for (GridData gridData : specialProviders) {
+            int s = ((ISpecialEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection(), false);
+            vs[specialProviders.indexOf(gridData)] = s;
+            specialCanProvide = specialCanProvide + s;
+        }
         for (GridData gridData : acceptors) {
             int e = ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).getRequestedEF(rp, gridData.getDirection());
             va[acceptors.indexOf(gridData)] = e;
-            print("Index set: "+acceptors.indexOf(gridData)+" ___ "+va[acceptors.indexOf(gridData)]);
             requestedPower = requestedPower + e;
         }
-        if (totalProvided > 0) {
-            spam("RP in network: " + rp);
-            spam("Requested network: " + requestedPower);
-            spam("Able to provide: " + totalProvided);
-        }
-        if (totalProvided > requestedPower){
-            spam("Providing MAX power to all receivers");
+        if (totalProvided >= requestedPower){
             for (GridData gridData : acceptors)
                 ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, va[acceptors.indexOf(gridData)]);
-        }else if (totalProvided > 0){
-            float diff = (float)totalProvided/(float)requestedPower;
-            print(diff+"");
-            for (GridData gridData : acceptors) {
-                ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, (int)(va[acceptors.indexOf(gridData)] * diff));
-                print("Index read: "+acceptors.indexOf(gridData)+" ___ "+va[acceptors.indexOf(gridData)]);
-                spam("Gave "+((int)(va[acceptors.indexOf(gridData)] * diff))+" energy to tile");
+        }else if (totalProvided > 0 || specialCanProvide > 0){
+            int needed = requestedPower-totalProvided;
+            if (specialCanProvide > needed){
+                float d = needed/(float)specialCanProvide;
+                for (GridData gridData : specialProviders)
+                    totalProvided = totalProvided+((ISpecialEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergeticFlux(rp, gridData.getDirection(), (int)(vs[specialProviders.indexOf(gridData)] * d));
+            } else {
+                for (GridData gridData : specialProviders)
+                    totalProvided = totalProvided+((ISpecialEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergeticFlux(rp, gridData.getDirection(), vs[specialProviders.indexOf(gridData)]);
             }
+            if (totalProvided > requestedPower)
+                totalProvided = requestedPower;
+            float diff = (float)totalProvided/(float)requestedPower;
+            for (GridData gridData : acceptors)
+                ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, (int)(va[acceptors.indexOf(gridData)] * diff));
         }
         /*for (GridData gridData: acceptors) {
             int i = ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection());
@@ -174,11 +186,6 @@ public class EFluxCableGrid {
         EFlux.logger.info(s);
     }
 
-    private void spam(String s){
-        for (int i = 0; i < 100; i++) {
-            print(s);
-        }
-    }
 
     private WorldGridHolder getWorldHolder(){
         return WorldRegistry.get(world).getWorldPowerGrid();

@@ -20,9 +20,12 @@ public interface IEnergySource extends IEnergyTile{
      *      the RedstonePotential in the network
      * @param direction
      *      the direction where the power will be provided to
+     * @param execute
+     *      weather the power is actually drawn from the tile,
+     *      this flag is always true for IEnergySource.
      *
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
-    public int provideEnergy(int rp, ForgeDirection direction);
+    public int provideEnergy(int rp, ForgeDirection direction, boolean execute);
 
 }

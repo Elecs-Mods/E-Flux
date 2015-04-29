@@ -58,7 +58,7 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
      */
     @Override
     public int getRequestedEF(int rp, ForgeDirection direction) {
-        return 600/rp;
+        return storedPower > 320? 0 : 2;
     }
 
     /**
@@ -85,12 +85,15 @@ public class TestTile extends TileBase implements IEnergySource, IEnergyReceiver
     /**
      * @param rp        the RedstonePotential in the network
      * @param direction the direction where the power will be provided to
+     * @param execute   weather the power is actually drawn from the tile,
+     *                  This does NOTHING if the tile doesn't implement ISpecialEnergySource
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergy(int rp, ForgeDirection direction) {
+    public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
         int i = storedPower/rp;
         storedPower = 0;
         return i;
     }
+
 }
