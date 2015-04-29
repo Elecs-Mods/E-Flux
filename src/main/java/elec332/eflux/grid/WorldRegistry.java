@@ -1,9 +1,7 @@
-package elec332.eflux.test;
+package elec332.eflux.grid;
 
 import elec332.eflux.EFlux;
-import elec332.eflux.test.power.WorldGridHolder;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
+import elec332.eflux.grid.power.WorldGridHolder;
 import net.minecraft.world.World;
 
 import java.util.Map;

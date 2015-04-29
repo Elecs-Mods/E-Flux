@@ -1,4 +1,4 @@
-package elec332.eflux.test.blockLoc;
+package elec332.eflux.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

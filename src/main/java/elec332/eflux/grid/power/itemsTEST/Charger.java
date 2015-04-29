@@ -1,9 +1,9 @@
-package elec332.eflux.test.power.itemsTEST;
+package elec332.eflux.grid.power.itemsTEST;
 
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.test.power.TestTile;
-import elec332.eflux.test.power.TestTileII;
+import elec332.eflux.grid.power.TestTile;
+import elec332.eflux.grid.power.TestTileII;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

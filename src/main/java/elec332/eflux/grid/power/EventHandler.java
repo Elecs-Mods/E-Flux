@@ -1,10 +1,10 @@
-package elec332.eflux.test.power;
+package elec332.eflux.grid.power;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
-import elec332.eflux.test.WorldRegistry;
+import elec332.eflux.grid.WorldRegistry;
 import net.minecraftforge.event.world.WorldEvent;
 
 /**
@@ -27,10 +27,10 @@ public class EventHandler {
         WorldRegistryPowerNetwork.onServerTick(event);
     }*/
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event){
         WorldRegistry.get(event.world).getWorldPowerGrid().onServerTickInternal(event);
-    }
+    }*/
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event){

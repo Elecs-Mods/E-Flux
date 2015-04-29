@@ -1,4 +1,4 @@
-package elec332.eflux.test.power;
+package elec332.eflux.grid.power;
 
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.eflux.api.event.TransmitterLoadedEvent;

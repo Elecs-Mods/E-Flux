@@ -1,12 +1,14 @@
-package elec332.eflux.test.power;
+package elec332.eflux.grid.power;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTile;
 import elec332.eflux.api.energy.IPowerTransmitter;
-import elec332.eflux.test.blockLoc.BlockLoc;
+import elec332.eflux.util.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -28,6 +30,7 @@ public class WorldGridHolder {
         this.pending = new ArrayList<PowerTile>();
         this.pendingRemovals = new ArrayList<PowerTile>();
         this.oldInt = 0;
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     private World world;  //Dunno why I have this here (yet)
@@ -155,6 +158,11 @@ public class WorldGridHolder {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event){
+        onServerTickInternal(event);
     }
 
     protected void onServerTickInternal(TickEvent event){

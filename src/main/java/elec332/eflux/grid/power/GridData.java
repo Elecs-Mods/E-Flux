@@ -1,6 +1,6 @@
-package elec332.eflux.test.power;
+package elec332.eflux.grid.power;
 
-import elec332.eflux.test.blockLoc.BlockLoc;
+import elec332.eflux.util.BlockLoc;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

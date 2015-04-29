@@ -1,8 +1,8 @@
-package elec332.eflux.test.power;
+package elec332.eflux.grid.power;
 
 import elec332.eflux.api.energy.*;
-import elec332.eflux.test.WorldRegistry;
-import elec332.eflux.test.blockLoc.BlockLoc;
+import elec332.eflux.grid.WorldRegistry;
+import elec332.eflux.util.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
