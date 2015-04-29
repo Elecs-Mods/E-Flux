@@ -1,9 +1,6 @@
 package elec332.eflux.test.power;
 
-import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.api.energy.IEnergyTile;
-import elec332.eflux.api.energy.IPowerTransmitter;
+import elec332.eflux.api.energy.*;
 import elec332.eflux.test.WorldRegistry;
 import elec332.eflux.test.blockLoc.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +24,7 @@ public class PowerTile {  //Wrapper for TileEntities
         else if (tileEntity instanceof IEnergyReceiver)
             this.connectType = ConnectType.RECEIVE;
         else if (tileEntity instanceof  IEnergySource)
-            this.connectType = ConnectType.RECEIVE;
+            this.connectType = ConnectType.SEND;
         this.hasInit = true;
     }
 
