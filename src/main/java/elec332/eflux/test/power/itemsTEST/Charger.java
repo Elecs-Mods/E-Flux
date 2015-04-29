@@ -3,6 +3,7 @@ package elec332.eflux.test.power.itemsTEST;
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.test.power.TestTile;
+import elec332.eflux.test.power.TestTileII;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,8 @@ public class Charger extends Item {
         TileEntity tileEntity = p_77648_3_.getTileEntity(p_77648_4_, p_77648_5_, p_77648_6_);
         if (tileEntity instanceof TestTile && !p_77648_3_.isRemote){
             ((TestTile) tileEntity).storedPower = 300;
-        }
+        } else if (tileEntity instanceof TestTileII && !p_77648_3_.isRemote)
+            ((TestTileII) tileEntity).storedPower = 300;
         return true;
     }
 }
