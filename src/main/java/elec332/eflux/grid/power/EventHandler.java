@@ -1,6 +1,7 @@
 package elec332.eflux.grid.power;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.grid.WorldRegistry;
@@ -18,6 +19,11 @@ public class EventHandler {
     @SubscribeEvent
     public void onEnergyTileRemoved(TransmitterUnloadedEvent event){
         WorldRegistry.get(event.world).getWorldPowerGrid().removeTile(event.transmitterTile);
+    }
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event){
+        WorldRegistry.tick(event);
     }
 
 }

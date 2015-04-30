@@ -27,7 +27,6 @@ public class WorldGridHolder {
         this.pending = new ArrayDeque<PowerTile>();
         //this.pendingRemovals = new ArrayList<PowerTile>();
         this.oldInt = 0;
-        FMLCommonHandler.instance().bus().register(this);
     }
 
     private World world;  //Dunno why I have this here (yet)
@@ -135,7 +134,9 @@ public class WorldGridHolder {
                     EFlux.logger.info(registeredTiles.keySet().size());
                     registeredTiles.remove(powerTile.getLocation());
                     EFlux.logger.info(registeredTiles.keySet().size());
+                    EFlux.logger.info(grids.size());
                     this.grids.remove(grid);
+                    EFlux.logger.info(grids.size());
                     List<BlockLoc> vec3List2 = new ArrayList<BlockLoc>();
                     for (BlockLoc vec : vec3List) {
                         if (!vec.equals(powerTile.getLocation())) {
@@ -158,13 +159,7 @@ public class WorldGridHolder {
         }
     }
 
-    @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event){
-        if (event.phase == TickEvent.Phase.START)
-            onServerTickInternal();
-    }
-
-    protected void onServerTickInternal(){
+    public void onServerTickInternal(){
         EFlux.logger.info("Tick! "+world.provider.dimensionId);
         if (!pending.isEmpty()) {
                /*List<PowerTile> tr = new ArrayList<PowerTile>();

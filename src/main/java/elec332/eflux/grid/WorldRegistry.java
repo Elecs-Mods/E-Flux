@@ -1,10 +1,15 @@
 package elec332.eflux.grid;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 /**
@@ -12,17 +17,28 @@ import java.util.WeakHashMap;
  */
 public class WorldRegistry {
 
-    private static Map<World, WorldRegistry> mappings = new WeakHashMap<World, WorldRegistry>();
+    private static WeakHashMap<World, WorldRegistry> mappings = new WeakHashMap<World, WorldRegistry>();
+    private static List<World> worlds = new ArrayList<World>();
 
     public static WorldRegistry get(World world){
         if (world == null)
             throw new IllegalArgumentException();
-        WorldRegistry ret = mappings.get(world);
-        if (ret == null){
-            ret = new WorldRegistry(world);
-            mappings.put(world, ret);
+        if (!world.isRemote) {
+            WorldRegistry ret = mappings.get(world);
+            if (ret == null) {
+                ret = new WorldRegistry(world);
+                mappings.put(world, ret);
+                worlds.add(world);
+            }
+            return ret;
+        } return null;
+    }
+
+    public static void tick(TickEvent event){
+        if (event.phase == TickEvent.Phase.START){
+            for (World world : worlds)
+                get(world).tick();
         }
-        return ret;
     }
     //////////////////////////////////////////////////////
 
@@ -30,6 +46,7 @@ public class WorldRegistry {
         this.gridHolderPower = new WorldGridHolder(world);
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private WorldGridHolder gridHolderPower;
@@ -39,17 +56,19 @@ public class WorldRegistry {
         return gridHolderPower;
     }
 
-   /* public void unload(){
-        EFlux.logger.info("Unloaded World!!");
-        gridHolderPower.unload();
-        gridHolderPower = null;
-        mappings.remove(world.provider.dimensionId);
-        world = null;
-    }*/
+    public void tick(){
+        gridHolderPower.onServerTickInternal();
+    }
 
-    /*@SubscribeEvent
+    public void unload(){
+        MinecraftForge.EVENT_BUS.unregister(this);
+        mappings.remove(world);
+        worlds.remove(world);
+    }
+
+    @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event){
         if (event.world.provider.dimensionId == world.provider.dimensionId)
             unload();
-    }*/
+    }
 }

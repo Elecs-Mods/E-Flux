@@ -12,11 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 public class BasicCable extends TileBase implements IPowerTransmitter {
 
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-
-    @Override
     public void onTileLoaded() {
         if (!worldObj.isRemote)
             MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));

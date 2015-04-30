@@ -71,6 +71,8 @@ public class PowerTile {  //Wrapper for TileEntities
 
     public void resetGrid(EFluxCableGrid grid){
         removeGrid(grid);
+        if (singleGrid())
+            getGrid();
     }
 
     public int removeGrid(EFluxCableGrid grid){
