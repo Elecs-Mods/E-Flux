@@ -2,7 +2,7 @@ package elec332.eflux.grid.power;
 
 import elec332.eflux.api.energy.*;
 import elec332.eflux.grid.WorldRegistry;
-import elec332.eflux.util.BlockLoc;
+import elec332.core.util.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 

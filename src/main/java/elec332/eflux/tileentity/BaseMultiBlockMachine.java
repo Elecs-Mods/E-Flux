@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity;
 
+import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.util.IMultiBlock;
 import net.minecraft.block.Block;
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory implements IMultiBlock{
 
-    public BaseMultiBlockMachine(int maxEnergy, int maxReceive, int invSize) {
-        super(maxEnergy, maxReceive, invSize);
+    public BaseMultiBlockMachine(int invSize) {
+        super(invSize);
         this.setAllMultiBlockDataToNull();
     }
 
@@ -42,11 +43,11 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
             if (this.isFormed() && this.isMaster()) {
                 if (!areBlocksAtRightLocations()) {
                     this.invalidateMultiBlock();
-                    this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
+                    //this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
                     this.markDirty();
                     this.notifyNeighboursOfDataChange();
                 }
-            } else this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
+            } //else this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
         }
     }
 
@@ -140,7 +141,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     }
 
     private boolean areIMultiBlockTilesAtRightPosition(){
-        for(Vec3 loc : this.getIMultiBlockLocations())
+        for(BlockLoc loc : this.getIMultiBlockLocations())
             if (!(getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc)) instanceof IMultiBlock))
                 return false;
         return true;
@@ -150,7 +151,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
 
     protected abstract boolean areBlocksAtRightLocations();
 
-    protected abstract List<Vec3> getIMultiBlockLocations();
+    protected abstract List<BlockLoc> getIMultiBlockLocations();
 
     protected abstract void onCreated();
 
@@ -165,7 +166,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
 
     @Override
     public boolean setMaster() {
-        for (Vec3 loc : this.getIMultiBlockLocations()){
+        for (BlockLoc loc : this.getIMultiBlockLocations()){
             ((BaseMultiBlockMachine)getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc))).setSlave(xCoord, yCoord, zCoord);
         }
         this.master = true;
@@ -185,7 +186,7 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     @Override
     public void invalidateMultiBlock() {
         if (this.isMaster())
-            for (Vec3 loc : this.getIMultiBlockLocations())
+            for (BlockLoc loc : this.getIMultiBlockLocations())
                 if (getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc)) != null)
                     ((BaseMultiBlockMachine) getTileAt(this.worldObj, mergeLocationAndOffset(this.myLocation(), loc))).invalidateMultiBlock();
         this.setAllMultiBlockDataToNull();
@@ -220,16 +221,16 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
             this.getMaster().invalidateMultiBlock();
     }
 
-    public TileEntity getTileAt(World world, Vec3 vec3){
+    public TileEntity getTileAt(World world, BlockLoc vec3){
         return WorldHelper.getTileAt(world, vec3);
     }
 
-    public Vec3 mergeLocationAndOffset(Vec3 location, Vec3 offset){
-        return Vec3.createVectorHelper(location.xCoord+offset.xCoord, location.yCoord+offset.yCoord, location.zCoord+offset.zCoord);
+    public BlockLoc mergeLocationAndOffset(BlockLoc location, BlockLoc offset){
+        return new BlockLoc(location.xCoord+offset.xCoord, location.yCoord+offset.yCoord, location.zCoord+offset.zCoord);
     }
 
     //Overrides for master block
-
+/*
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
         if (this.isSlave())
@@ -256,5 +257,5 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
         if (this.isSlave())
             return this.getMaster().canConnectEnergy(from);
         return super.canConnectEnergy(from) && this.isFormed();
-    }
+    }*/
 }

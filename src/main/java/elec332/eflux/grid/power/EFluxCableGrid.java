@@ -6,7 +6,7 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
-import elec332.eflux.util.BlockLoc;
+import elec332.core.util.BlockLoc;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -182,9 +182,9 @@ public class EFluxCableGrid {
         }*/
     }
 
-    private void print(String s){
+    /*private void print(String s){
         EFlux.logger.info(s);
-    }
+    }*/
 
 
     private WorldGridHolder getWorldHolder(){
@@ -202,5 +202,33 @@ public class EFluxCableGrid {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof EFluxCableGrid && ((EFluxCableGrid)obj).identifier.equals(identifier);
+    }
+
+    public class GridData {
+        public GridData(BlockLoc blockLoc, ForgeDirection direction){
+            this.loc = blockLoc;
+            this.direction = direction;
+        }
+
+        private BlockLoc loc;
+        private ForgeDirection direction;
+
+        public BlockLoc getLoc() {
+            return loc;
+        }
+
+        public ForgeDirection getDirection() {
+            return direction;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof GridData && ((GridData) obj).loc.equals(loc) && ((GridData) obj).direction.equals(direction);
+        }
     }
 }

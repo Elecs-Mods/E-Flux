@@ -8,15 +8,12 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTile;
 import elec332.eflux.api.energy.IPowerTransmitter;
-import elec332.eflux.util.BlockLoc;
+import elec332.core.util.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Elec332 on 23-4-2015.
@@ -27,16 +24,16 @@ public class WorldGridHolder {
         this.world = world;
         this.grids = new ArrayList<EFluxCableGrid>();
         this.registeredTiles = new HashMap<BlockLoc, PowerTile>();
-        this.pending = new ArrayList<PowerTile>();
-        this.pendingRemovals = new ArrayList<PowerTile>();
+        this.pending = new ArrayDeque<PowerTile>();
+        //this.pendingRemovals = new ArrayList<PowerTile>();
         this.oldInt = 0;
         FMLCommonHandler.instance().bus().register(this);
     }
 
     private World world;  //Dunno why I have this here (yet)
     private List<EFluxCableGrid> grids;
-    private List<PowerTile> pending;
-    private List<PowerTile> pendingRemovals;
+    private Queue<PowerTile> pending;
+    //private List<PowerTile> pendingRemovals;
     private Map<BlockLoc, PowerTile> registeredTiles;
     private int oldInt;
 
@@ -121,9 +118,10 @@ public class WorldGridHolder {
     }
 
     public void removeTile(IEnergyTile tile){
-        PowerTile powerTile = getPowerTile(genCoords((TileEntity) tile));
+        /*PowerTile powerTile = ;
         powerTile.toGo = 3;
-        pendingRemovals.add(powerTile);
+        pendingRemovals.add(powerTile);*/
+        removeTile(getPowerTile(genCoords((TileEntity) tile)));
     }
 
     public void removeTile(PowerTile powerTile){
@@ -167,17 +165,21 @@ public class WorldGridHolder {
 
     protected void onServerTickInternal(TickEvent event){
         if (event.phase == TickEvent.Phase.START) {
-            EFlux.logger.info("Tick!");
-            if (pending.size() == oldInt && oldInt > 0) {
-                List<PowerTile> tr = new ArrayList<PowerTile>();
+            EFlux.logger.info("Tick! "+world.provider.dimensionId);
+            if (!pending.isEmpty()) {
+                /*List<PowerTile> tr = new ArrayList<PowerTile>();
                 for (PowerTile powerTile : pending)
                     tr.add(powerTile);
                 for (PowerTile powerTile : tr)
                     addTile(powerTile);
                 pending.removeAll(tr);
-                EFlux.logger.info("TickStuffPendingDone");
+                EFlux.logger.info("TickStuffPendingDone");*/
+                for (PowerTile powerTile : pending){
+                    addTile(powerTile);
+                }
+                pending.clear();
             }
-            if (!pendingRemovals.isEmpty()){
+            /*if (!pendingRemovals.isEmpty()){
                 List<PowerTile> tr = new ArrayList<PowerTile>();
                 for (PowerTile powerTile : pendingRemovals){
                     powerTile.toGo--;
@@ -191,7 +193,7 @@ public class WorldGridHolder {
                 }
                 pendingRemovals.removeAll(tr);
             }
-            this.oldInt = pending.size();
+            this.oldInt = pending.size();*/
             for (int i = 0; i < grids.size(); i++){
                 try {
                     grids.get(i).onTick();
@@ -206,7 +208,6 @@ public class WorldGridHolder {
     public PowerTile getPowerTile(BlockLoc loc){
         return registeredTiles.get(loc);
     }
-
 
     private BlockLoc genCoords(TileEntity tileEntity){
         return new BlockLoc(tileEntity);

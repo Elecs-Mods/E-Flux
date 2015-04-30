@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity;
 
+import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.client.inventory.GuiInventoryGrinder;
 import elec332.eflux.inventory.TEGrinderContainer;
@@ -19,7 +20,8 @@ import java.util.List;
 public class TEGrinder extends BaseMultiBlockMachine{
 
     public TEGrinder() {
-        super(60000, 40, 18);
+        //super(60000, 40, 18);
+        super(18);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class TEGrinder extends BaseMultiBlockMachine{
         return "grinder";
     }
 
-    @Override
+    //@Override
     public boolean canConnectEnergy(ForgeDirection from) {
         return DirectionHelper.getDirectionFromNumber(this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord)) == from && this.isFormed();
     }
@@ -53,9 +55,9 @@ public class TEGrinder extends BaseMultiBlockMachine{
     }
 
     @Override
-    protected List<Vec3> getIMultiBlockLocations() {
-        ArrayList<Vec3> ret = new ArrayList<Vec3>();
-        ret.add(Vec3.createVectorHelper(0, 2, 0));
+    protected List<BlockLoc> getIMultiBlockLocations() {
+        ArrayList<BlockLoc> ret = new ArrayList<BlockLoc>();
+        ret.add(new BlockLoc(0, 2, 0));
         return ret;
     }
 
