@@ -1,10 +1,8 @@
 package elec332.eflux.grid;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
 import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;

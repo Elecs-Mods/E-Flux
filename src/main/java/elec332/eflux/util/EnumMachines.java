@@ -1,9 +1,10 @@
 package elec332.eflux.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import elec332.eflux.blocks.machines.BlockMachine;
+import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.tileentity.TEGrinder;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 
@@ -12,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
  */
 public enum EnumMachines {
     GRINDER(TEGrinder.class),
-    TESTCABLE(BasicCable.class);
+    TESTCABLE(BasicCable.class)
 
 
     ;
@@ -21,6 +22,12 @@ public enum EnumMachines {
     private Class<? extends TileEntity> tileClass;
     private BlockMachine blockMachine;
     private int renderID = 0;
+    private Material material = Material.rock;
+
+    private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material){
+        this(tileClass, renderID);
+        this.material = material;
+    }
 
     private EnumMachines(Class<? extends TileEntity> tileClass, int renderID){
         this(tileClass);
@@ -34,17 +41,18 @@ public enum EnumMachines {
     public void init(){
         GameRegistry.registerTileEntity(this.tileClass, this.toString());
         this.blockMachine = new BlockMachine(this);
+        blockMachine.register();
     }
 
-    public TileEntity getTileEntity() {
-        try {
-            return this.tileClass.newInstance();
-        } catch (Exception ex) {
-            return null;
-        }
+    public Class<? extends TileEntity> getTileClass(){
+        return this.tileClass;
     }
 
-    public BlockMachine getBlockMachine() {
+    public Material getBlockMaterial(){
+        return this.material;
+    }
+
+    public BlockMachine getBlock() {
         return blockMachine;
     }
 
@@ -54,10 +62,6 @@ public enum EnumMachines {
 
     public int getRenderID() {
         return renderID;
-    }
-
-    public boolean hasComparatorInputOverride(){
-        return IComparatorOverride.class.isAssignableFrom(this.tileClass);
     }
 
     @Override

@@ -6,8 +6,6 @@ import cpw.mods.fml.common.ModContainer;
 import elec332.eflux.EFlux;
 import net.minecraftforge.common.config.Configuration;
 
-import java.lang.reflect.Field;
-
 /**
  * Created by Elec332 on 28-4-2015.
  */

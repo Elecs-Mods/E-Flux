@@ -1,12 +1,12 @@
 package elec332.eflux.grid.power;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
-import elec332.core.util.BlockLoc;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 

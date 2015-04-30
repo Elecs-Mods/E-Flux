@@ -3,12 +3,12 @@ package elec332.eflux.grid.power;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTile;
 import elec332.eflux.api.energy.IPowerTransmitter;
-import elec332.core.util.BlockLoc;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -160,15 +160,15 @@ public class WorldGridHolder {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event){
-        onServerTickInternal(event);
+        if (event.phase == TickEvent.Phase.START)
+            onServerTickInternal();
     }
 
-    protected void onServerTickInternal(TickEvent event){
-        if (event.phase == TickEvent.Phase.START) {
-            EFlux.logger.info("Tick! "+world.provider.dimensionId);
-            if (!pending.isEmpty()) {
-                /*List<PowerTile> tr = new ArrayList<PowerTile>();
-                for (PowerTile powerTile : pending)
+    protected void onServerTickInternal(){
+        EFlux.logger.info("Tick! "+world.provider.dimensionId);
+        if (!pending.isEmpty()) {
+               /*List<PowerTile> tr = new ArrayList<PowerTile>();
+               for (PowerTile powerTile : pending)
                     tr.add(powerTile);
                 for (PowerTile powerTile : tr)
                     addTile(powerTile);
@@ -202,7 +202,7 @@ public class WorldGridHolder {
                 }
                 EFlux.logger.info(i);
             }
-        }
+
     }
 
     public PowerTile getPowerTile(BlockLoc loc){

@@ -7,7 +7,6 @@ import elec332.eflux.inventory.TEGrinderContainer;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;

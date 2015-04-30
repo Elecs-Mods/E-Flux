@@ -2,14 +2,11 @@ package elec332.eflux.items;
 
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.tileentity.BaseMachineTEWithInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 5-4-2015.
