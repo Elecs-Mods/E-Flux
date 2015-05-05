@@ -11,17 +11,17 @@ import net.minecraft.inventory.Slot;
 public class BaseContainer extends Container {
 
     public BaseContainer(BaseTileWithInventory tile, EntityPlayer player, int offset){
-        this(tile, player);
+        this(player);
         this.offset = offset;
     }
 
-    public BaseContainer(BaseTileWithInventory tile, EntityPlayer player){
-        this.tileEntity = tile;
+    public BaseContainer(EntityPlayer player){
+        //this.tileEntity = tile;
         this.thePlayer = player;
         this.offset = 0;
     }
 
-    private BaseTileWithInventory tileEntity;
+    //private BaseTileWithInventory tileEntity;
     protected EntityPlayer thePlayer;
     private int offset;
 
@@ -42,12 +42,17 @@ public class BaseContainer extends Container {
         }
 
         for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(thePlayer.inventory, i, 8 + i * 18, 142 + this.offset + 1));  //TODO: fix that +1
+            addSlotToContainer(new Slot(thePlayer.inventory, i, 8 + i * 18, 142 + this.offset + hotBarFactor()));
         }
+    }
+
+    protected int hotBarFactor(){
+        return 0;
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return this.tileEntity.isUseableByPlayer(player);
+        return //this.tileEntity.isUseableByPlayer(player);
+        true;
     }
 }

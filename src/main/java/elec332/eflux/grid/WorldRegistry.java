@@ -20,7 +20,7 @@ public class WorldRegistry {
     private static WeakHashMap<World, WorldRegistry> mappings = new WeakHashMap<World, WorldRegistry>();
     private static List<World> worlds = new ArrayList<World>();
 
-    public static WorldRegistry get(World world){
+    public static WorldRegistry get(World world) {
         if (world == null)
             throw new IllegalArgumentException();
         if (!world.isRemote) {
@@ -31,18 +31,19 @@ public class WorldRegistry {
                 worlds.add(world);
             }
             return ret;
-        } return null;
+        }
+        return null;
     }
 
-    public static void tick(TickEvent event){
-        if (event.phase == TickEvent.Phase.START){
+    public static void tick(TickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
             for (World world : worlds)
-                get(world).tick();
+                get(world).tickInternal();
         }
     }
     //////////////////////////////////////////////////////
 
-    private WorldRegistry(World world){
+    private WorldRegistry(World world) {
         this.gridHolderPower = new WorldGridHolder(world);
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
@@ -52,23 +53,24 @@ public class WorldRegistry {
     private WorldGridHolder gridHolderPower;
     private World world;
 
-    public WorldGridHolder getWorldPowerGrid(){
+    public WorldGridHolder getWorldPowerGrid() {
         return gridHolderPower;
     }
 
-    public void tick(){
+    public void tickInternal() {
         gridHolderPower.onServerTickInternal();
     }
 
-    public void unload(){
+    public void unload() {
         MinecraftForge.EVENT_BUS.unregister(this);
         mappings.remove(world);
         worlds.remove(world);
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event){
+    public void onWorldUnload(WorldEvent.Unload event) {
         if (event.world.provider.dimensionId == world.provider.dimensionId)
             unload();
     }
 }
+

@@ -1,6 +1,6 @@
 package elec332.eflux.inventory;
 
-import elec332.eflux.tileentity.TEGrinder;
+import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 
@@ -22,4 +22,9 @@ public class TEGrinderContainer extends BaseContainer {
     }
 
     private TEGrinder theGrinder;
+
+    @Override
+    protected int hotBarFactor() {
+        return 1;
+    }
 }

@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.api.wrench.IRightClickCancel;
 import elec332.core.api.wrench.IWrenchable;
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
@@ -14,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 3-4-2015.
  */
-public class Wrench extends Item {
+public class Wrench extends Item implements IRightClickCancel {
     public Wrench(String name) {
         setCreativeTab(EFlux.CreativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);

@@ -2,11 +2,14 @@ package elec332.eflux.tileentity.energy.generator;
 
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.event.TransmitterLoadedEvent;
+import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.client.inventory.GuiCoalGenerator;
 import elec332.eflux.inventory.ContainerCoalGenerator;
 import elec332.eflux.tileentity.BaseMachineTEWithInventory;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -56,6 +59,18 @@ public class CoalGenerator extends BaseMachineTEWithInventory implements IEnergy
      */
     @Override
     public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
-        return getStackInSlot(0) != null?20:0;
+        return 20; //getStackInSlot(0) != null?20:0;
+    }
+
+    @Override
+    public void onTileLoaded() {
+        if (!worldObj.isRemote)
+            MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));
+    }
+
+    @Override
+    public void onTileUnloaded() {
+        if (!worldObj.isRemote)
+            MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
     }
 }

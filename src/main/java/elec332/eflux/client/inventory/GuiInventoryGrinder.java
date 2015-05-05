@@ -1,8 +1,10 @@
 package elec332.eflux.client.inventory;
 
+import elec332.eflux.EFlux;
 import elec332.eflux.inventory.TEGrinderContainer;
-import elec332.eflux.tileentity.TEGrinder;
+import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 4-4-2015.
@@ -14,8 +16,8 @@ public class GuiInventoryGrinder extends BaseGuiContainer {
     }
 
     @Override
-    public String getBackgroundImageLocation() {
-        return "gui/stolenimagefromCTIV.png";
+    public ResourceLocation getBackgroundImageLocation() {
+        return new ResourceLocation(EFlux.ModID,"gui/stolenimagefromCTIV.png");
     }
 
 }

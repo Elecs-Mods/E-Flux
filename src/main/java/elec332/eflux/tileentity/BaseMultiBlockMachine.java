@@ -41,11 +41,9 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
             if (this.isFormed() && this.isMaster()) {
                 if (!areBlocksAtRightLocations()) {
                     this.invalidateMultiBlock();
-                    //this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
-                    this.markDirty();
                     this.notifyNeighboursOfDataChange();
                 }
-            } //else this.modifyEnergyStored(-this.getMaxEnergyStored(ForgeDirection.UNKNOWN));
+            }
         }
     }
 
@@ -211,8 +209,8 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void onTileUnloaded() {
+        super.onTileUnloaded();
         if (this.isMaster())
             this.invalidateMultiBlock();
         else if (this.isSlave())

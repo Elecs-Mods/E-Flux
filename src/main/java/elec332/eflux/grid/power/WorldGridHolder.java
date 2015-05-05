@@ -161,7 +161,7 @@ public class WorldGridHolder {
 
     public void onServerTickInternal(){
         EFlux.logger.info("Tick! "+world.provider.dimensionId);
-        if (!pending.isEmpty()) {
+        if (!pending.isEmpty() && pending.size() == oldInt) {
                /*List<PowerTile> tr = new ArrayList<PowerTile>();
                for (PowerTile powerTile : pending)
                     tr.add(powerTile);
@@ -187,8 +187,8 @@ public class WorldGridHolder {
                         tr.add(powerTile);
                 }
                 pendingRemovals.removeAll(tr);
-            }
-            this.oldInt = pending.size();*/
+            }*/
+            this.oldInt = pending.size();
             for (int i = 0; i < grids.size(); i++){
                 try {
                     grids.get(i).onTick();

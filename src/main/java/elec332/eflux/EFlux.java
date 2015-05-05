@@ -11,15 +11,18 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
+import elec332.core.network.NetworkHandler;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.inventory.ContainerNull;
+import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.GrinderRecipe;
 import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;
@@ -35,6 +38,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Random;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -56,6 +60,8 @@ public class EFlux {
     public static CreativeTabs CreativeTab;
     public static Logger logger;
     public static ConfigWrapper configWrapper;
+    public static Random random;
+    public static NetworkHandler networkHandler;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -69,6 +75,8 @@ public class EFlux {
         };
         logger = event.getModLog();
         configWrapper = new ConfigWrapper(config);
+        random = new Random();
+        networkHandler = new NetworkHandler(ModID);
 
         //DEBUG///////////////////
         RecipeRegistry.instance.registerRecipe(new GrinderRecipe(new ItemStack(Items.stick), new ItemStack(Items.wheat)));
@@ -76,6 +84,10 @@ public class EFlux {
         fake.setInventorySlotContents(0, new ItemStack(Items.stick));
         logger.info(RecipeRegistry.instance.hasResult((InventoryCrafting) fake, EnumMachines.GRINDER));
         /////////////////////////
+        logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
+        logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
+        logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));
+        logger.info(CalculationHelper.calcRequestedEF(24, 20, 40, 1000, 0.15f));
 
 
         //setting up mod stuff
@@ -102,6 +114,7 @@ public class EFlux {
         EventHandler eventHandler = new EventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);
         FMLCommonHandler.instance().bus().register(eventHandler);
+        CircuitHandler.register();
         //GameRegistry.registerTileEntity(TEGrinder.class, EnumMachines.GRINDER.toString());
         //register items/blocks
 
