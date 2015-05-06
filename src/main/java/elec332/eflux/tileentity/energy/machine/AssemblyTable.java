@@ -6,7 +6,9 @@ import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.util.BasicInventory;
+import elec332.eflux.util.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 4-5-2015.
  */
-public class AssemblyTable extends BreakableMachineTile{
+public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
         @Override
@@ -57,24 +59,18 @@ public class AssemblyTable extends BreakableMachineTile{
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (isBroken())
-            return super.onBlockActivated(player, side, hitX, hitY, hitZ);
+    public boolean onBlockActivatedSafe(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         player.openGui(EFlux.instance, 0, worldObj, xCoord, yCoord, zCoord);
         return true;
     }
 
     @Override
     public Object getGuiClient(EntityPlayer player) {
-        if (isBroken())
-            return super.getGuiClient(player);
         return new GuiStandardFormat(new ContainerAssemblyTable(player, inv), new ResourceLocation("textures/gui/container/crafting_table.png"));
     }
 
     @Override
-    public Object getGuiServer(EntityPlayer player) {
-        if (isBroken())
-            return super.getGuiServer(player);
+    public Container getGuiServer(EntityPlayer player) {
         return new ContainerAssemblyTable(player, inv);
     }
 

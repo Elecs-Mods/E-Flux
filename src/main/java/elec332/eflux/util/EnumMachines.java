@@ -7,6 +7,7 @@ import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.Capacitor;
+import elec332.eflux.tileentity.energy.machine.furnace.T1Furnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -19,7 +20,8 @@ public enum EnumMachines {
     TESTCABLE(BasicCable.class),
     CAPACITOR(Capacitor.class),
     COAL_GENERATOR(CoalGenerator.class),
-    ASSEMBLY_TABLE(AssemblyTable.class)
+    ASSEMBLY_TABLE(AssemblyTable.class),
+    FURNACE_TIER1(T1Furnace.class)
 
 
     ;

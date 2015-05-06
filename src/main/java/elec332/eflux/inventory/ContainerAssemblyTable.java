@@ -1,8 +1,10 @@
 package elec332.eflux.inventory;
 
 import com.google.common.collect.Lists;
+import elec332.core.helper.ItemHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
+import elec332.eflux.inventory.slot.SlotAssembly;
 import elec332.eflux.util.BasicInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,10 +23,7 @@ public class ContainerAssemblyTable extends BaseContainer {
         super(player);
         this.addSlotToContainer(new Slot(inv, 0, 124, 35));
         inv.openInventory();
-        //if (inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ICircuit) {
-        this.circuit = new getInv();
-        //int a = ((ICircuit)inv.getStackInSlot(0).getItem()).boardSize(inv.getStackInSlot(0));
-        //int q = 0;
+        this.circuit = new InventoryCircuit();
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 assemblies.add((SlotAssembly) this.addSlotToContainer(new SlotAssembly(circuit, j + i * 3, 30 + j * 18, 17 + i * 18)));
@@ -38,35 +37,41 @@ public class ContainerAssemblyTable extends BaseContainer {
     }
 
     private List<SlotAssembly> assemblies = Lists.newArrayList();
-    private getInv circuit;
+    private InventoryCircuit circuit;
 
     private void syncSlots(){
         ItemStack stack = getSlot(0).inventory.getStackInSlot(0);
         if (stack!= null && stack.getItem() instanceof ICircuit){
             circuit.setStack(stack);
             int i = ((ICircuit)stack.getItem()).boardSize(stack);
-            //for (int j = 1; j < 10; j++) {
             for (SlotAssembly assembly : assemblies) {
                 assembly.setI(i);
+                if (i > assembly.getSlotIndex())
+                    assembly.validItem = ((ICircuit)stack.getItem()).getRequiredComponent(assembly.getSlotIndex(), stack);
             }
-                //Slot s = getSlot(j);
-                //((SlotAssembly)s).setI(i);
-
-            //}
-        } else circuit.removeStack();
+        } else {
+            for (SlotAssembly assembly : assemblies) {
+                assembly.setI(0);
+                assembly.validItem = null;
+            }
+            circuit.removeStack();
+        }
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
+        circuit.validate();
         syncSlots();
     }
 
     @Override
-    public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, EntityPlayer p_75144_4_) {
-        if (p_75144_1_ == 0)
+    public ItemStack slotClick(int slotID, int var2, int var3, EntityPlayer player) {
+        if (slotID  < 10) {
+
             syncSlots();
-        return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
+        }
+        return super.slotClick(slotID, var2, var3, player);
     }
 
     @Override
@@ -76,10 +81,9 @@ public class ContainerAssemblyTable extends BaseContainer {
         getSlot(0).inventory.closeInventory();
     }
 
-
-    private class getInv extends BasicInventory implements IInventory{
-        private getInv(){
-            super("NAME", 9);//((ICircuit) stack.getItem()).boardSize(stack));
+    private class InventoryCircuit extends BasicInventory implements IInventory{
+        private InventoryCircuit(){
+            super("NAME", 9);
         }
 
         public void setStack(ItemStack stack) {
@@ -122,9 +126,30 @@ public class ContainerAssemblyTable extends BaseContainer {
             }
         }
 
+        public void validate(){
+            if (stack != null) {
+                formed = isValid();
+                markDirty();
+            }
+        }
+
+        private boolean isValid(){
+            ICircuit circuit = (ICircuit) stack.getItem();
+            for (int i = 0; i < circuit.boardSize(stack); i++) {
+                if (!ItemHelper.areItemsEqual(circuit.getRequiredComponent(i, stack), getStackInSlot(i)))
+                    return false;
+            }
+            return true;
+        }
+
         @Override
         public boolean isItemValidForSlot(int id, ItemStack stack) {
             return stack.getItem() instanceof IElectricComponent;
+        }
+
+        @Override
+        public int getInventoryStackLimit() {
+            return 1;
         }
 
         @Override

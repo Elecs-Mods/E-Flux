@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 public class TEGrinderContainer extends BaseContainer {
 
     public TEGrinderContainer(TEGrinder theGrinder, EntityPlayer player){
-        super(theGrinder, player, 68);  //The last in is the visual offset (down)
+        super(player, 68);  //The last in is the visual offset (down)
         this.theGrinder = theGrinder;
 
         for(int a = 0; a < 2; a++) {

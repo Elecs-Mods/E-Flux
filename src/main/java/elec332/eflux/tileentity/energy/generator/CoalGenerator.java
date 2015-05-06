@@ -9,6 +9,7 @@ import elec332.eflux.inventory.ContainerCoalGenerator;
 import elec332.eflux.tileentity.BaseMachineTEWithInventory;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -22,7 +23,7 @@ public class CoalGenerator extends BaseMachineTEWithInventory implements IEnergy
     }
 
     @Override
-    public Object getGuiServer(EntityPlayer player) {
+    public Container getGuiServer(EntityPlayer player) {
         return new ContainerCoalGenerator(this, player);
     }
 

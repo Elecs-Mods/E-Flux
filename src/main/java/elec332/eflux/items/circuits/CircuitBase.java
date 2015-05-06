@@ -43,11 +43,11 @@ public abstract class CircuitBase extends Item implements ICircuit{
 
     private boolean breakComponent(int i, ItemStack stack) {
         if (isBoard(stack)){
-            ItemStack component = ItemStack.loadItemStackFromNBT(stack.getTagCompound().getTagList("items", Constants.NBT.TAG_LIST).getCompoundTagAt(i));
+            ItemStack component = ItemStack.loadItemStackFromNBT(stack.getTagCompound().getTagList("Items", Constants.NBT.TAG_LIST).getCompoundTagAt(i));
             if (component != null && component.getItem() instanceof IElectricComponent && !((IElectricComponent) component.getItem()).isBroken()) {
                 NBTTagCompound tag = new NBTTagCompound();
                 ((IElectricComponent) component.getItem()).getBroken(component).writeToNBT(tag);
-                stack.getTagCompound().getTagList("items", Constants.NBT.TAG_LIST).func_150304_a(i, tag);
+                stack.getTagCompound().getTagList("Items", Constants.NBT.TAG_LIST).func_150304_a(i, tag);
             }
         }
         return false;

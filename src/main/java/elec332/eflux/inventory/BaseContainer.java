@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
  */
 public class BaseContainer extends Container {
 
-    public BaseContainer(BaseTileWithInventory tile, EntityPlayer player, int offset){
+    public BaseContainer(EntityPlayer player, int offset){
         this(player);
         this.offset = offset;
     }
@@ -24,6 +24,7 @@ public class BaseContainer extends Container {
     //private BaseTileWithInventory tileEntity;
     protected EntityPlayer thePlayer;
     private int offset;
+    private int hotBarFactor = 0;
 
     public void addPlayerInventoryToContainer(){
         /*for(int j = 0; j < 3; j++) {
@@ -46,8 +47,21 @@ public class BaseContainer extends Container {
         }
     }
 
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    @Override
+    public Slot addSlotToContainer(Slot slot) {
+        return super.addSlotToContainer(slot);
+    }
+
+    public void setHotBarFactor(int hotBarFactor) {
+        this.hotBarFactor = hotBarFactor;
+    }
+
     protected int hotBarFactor(){
-        return 0;
+        return hotBarFactor;
     }
 
     @Override

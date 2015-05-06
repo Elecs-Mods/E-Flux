@@ -32,7 +32,7 @@ public class BreakableMachineInventory implements IInventory{
     public Object brokenGui(Side side, EntityPlayer player){
         Container container = new ContainerSingleSlot(this, player);
         if (side==Side.CLIENT)
-            return new GuiStandardFormat(container, new ResourceLocation(""));
+            return new GuiStandardFormat(container, new ResourceLocation("nope.png"));
         return container;
     }
 

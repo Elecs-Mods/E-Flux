@@ -11,6 +11,7 @@ import elec332.eflux.tileentity.BaseMultiBlockMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -40,7 +41,7 @@ public class TEGrinder extends BaseMultiBlockMachine implements IEnergyReceiver{
     }
 
     @Override
-    public Object getGuiServer(EntityPlayer player) {
+    public Container getGuiServer(EntityPlayer player) {
         return new TEGrinderContainer(this, player);
     }
 

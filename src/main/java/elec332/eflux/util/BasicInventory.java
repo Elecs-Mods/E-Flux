@@ -67,6 +67,24 @@ public class BasicInventory implements IInventory {
         this.markDirty();
     }
 
+    public boolean canAddItemStackFully(ItemStack itemStack, int i, boolean ignoreNBT){
+        if (!isItemValidForSlot(i, itemStack))
+            return false;
+        ItemStack stackInSlot = getStackInSlot(i);
+        if (stackInSlot == null)
+            return true;
+        if (itemStack.getItem() == stackInSlot.getItem() && itemStack.getItemDamage() == stackInSlot.getItemDamage()){
+            int j = itemStack.stackSize+stackInSlot.stackSize;
+            if (j > 64)
+                return false;
+            if (!itemStack.hasTagCompound() && !stackInSlot.hasTagCompound() || ignoreNBT)
+                return true;
+            if (itemStack.hasTagCompound() && stackInSlot.hasTagCompound() && stackInSlot.getTagCompound().equals(itemStack.getTagCompound()))
+                return true;
+        }
+        return false;
+    }
+
     public int getSizeInventory() {
         return this.slotsCount;
     }

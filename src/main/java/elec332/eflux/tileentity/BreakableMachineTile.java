@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends TileBase implements IInventoryTile, IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+public abstract class BreakableMachineTile extends TileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
 
     public abstract ItemStack getRandomRepairItem();
 
@@ -47,6 +47,10 @@ public abstract class BreakableMachineTile extends TileBase implements IInventor
 
     private BreakableMachineInventory breakableMachineInventory;
 
+    public BreakableMachineInventory getBreakableMachineInventory() {
+        return breakableMachineInventory;
+    }
+
     public void setBroken(boolean broken) {
         if (!broken)
             this.breakableMachineInventory = null;
@@ -57,24 +61,18 @@ public abstract class BreakableMachineTile extends TileBase implements IInventor
     @Override
     public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (broken) return openBrokenGui(player);
-        return super.onBlockActivated(player, side, hitX, hitY, hitZ);
+        return onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
+    }
+
+    public boolean onBlockActivatedSafe(EntityPlayer player, int side, float hitX, float hitY, float hitZ){
+        return false;
     }
 
     private boolean openBrokenGui(EntityPlayer player){
         //if (breakableMachineInventory == null)
         //    breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
-        player.openGui(EFlux.instance, 0, worldObj, xCoord, yCoord, zCoord);
+        player.openGui(EFlux.instance, 1, worldObj, xCoord, yCoord, zCoord);
         return true;
-    }
-
-    @Override
-    public Object getGuiServer(EntityPlayer player) {
-        return breakableMachineInventory.brokenGui(Side.SERVER, player);
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return breakableMachineInventory.brokenGui(Side.CLIENT, player);
     }
 
     /**

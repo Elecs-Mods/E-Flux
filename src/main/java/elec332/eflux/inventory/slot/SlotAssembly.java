@@ -1,5 +1,6 @@
-package elec332.eflux.inventory;
+package elec332.eflux.inventory.slot;
 
+import elec332.core.helper.ItemHelper;
 import elec332.eflux.api.circuit.IElectricComponent;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -13,13 +14,14 @@ public class SlotAssembly extends Slot {
         super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
     }
 
-    protected void setI(int i){
+    public void setI(int i){
         this.i = i;
     }
     private int i = 0;
+    public ItemStack validItem = null;
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return i > getSlotIndex() && stack.getItem() instanceof IElectricComponent;
+        return i > getSlotIndex() && stack.getItem() instanceof IElectricComponent && ItemHelper.areItemsEqual(stack, validItem);
     }
 }

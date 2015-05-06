@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
  */
 public class ContainerCoalGenerator extends BaseContainer {
     public ContainerCoalGenerator(BaseMachineTEWithInventory te, EntityPlayer player){
-        super(te, player, 68);  //The last in is the visual offset (down)
+        super(player, 68);  //The last in is the visual offset (down)
         addSlotToContainer(new Slot(te, 0, 8 * 18, 130));
         addPlayerInventoryToContainer();
     }
