@@ -64,16 +64,16 @@ public class ContainerMachine extends BaseContainer {
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (!(slot instanceof SlotInput)) {
-                //if (slotID < playerInvIndexStart) {
-                    for (int i = 0; i < playerInvIndexStart; i++) {
-                        Slot slot1 = getSlot(slotID);
-                        if (slot1.isItemValid(itemstack1)) {
-                            if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
-                                return (ItemStack)null;
-                            }
+                for (int i = 0; i < playerInvIndexStart; i++) {
+                    Slot slot1 = getSlot(i);
+                    if (slot1.isItemValid(itemstack1)) {
+                        if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
+                            if (itemstack1.stackSize < 1)
+                                putStackInSlot(slotID, null);  //Workaround for ghost itemstacks
+                            return null;
                         }
                     }
-                //} else
+                }
                 if (slotID >= playerInvIndexStart && slotID < playerInvIndexStop-9) {
                     if (!this.mergeItemStack(itemstack1, playerInvIndexStop-9, playerInvIndexStop, false)) {
                         return null;
