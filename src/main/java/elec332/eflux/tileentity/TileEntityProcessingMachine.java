@@ -25,20 +25,21 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTile i
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if ((canProcess() && storedPower >= getRequiredPowerPerTick())){ // || process > 0){
-            this.progress = (float)process/getProcessTime();
-            this.storedPower = storedPower-getRequiredPowerPerTick();
-            process++;
-            if (process >= getProcessTime()){
-                this.process = 0;
-                this.progress = 0;
-                onProcessDone();
+        if (!worldObj.isRemote) {
+            if ((canProcess() && storedPower >= getRequiredPowerPerTick())) {
+                this.storedPower = storedPower - getRequiredPowerPerTick();
+                progress++;
+                if (progress >= getProcessTime()) {
+                    this.progress = 0;
+                    onProcessDone();
+                }
+            } else if (progress > 0) {
+                progress = 0;
             }
         }
     }
 
-    private int process = 0;
-    private float progress = 0;
+    private int progress = 0;
     protected BasicInventory inventory;
 
     protected abstract SlotInput[] getInputSlots();
@@ -56,18 +57,36 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTile i
     protected abstract void onProcessDone();
 
     @Override
+    public int getProgress(){
+        return progress;
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public float getProgressScaled() {
+        return (float)this.progress/getProcessTime();
+    }
+
+    @Override
+    public boolean isWorking() {
+        return progress > 0;
+    }
+
+    @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        tagCompound.setFloat("progress", progress);
-        tagCompound.setInteger("process", process);
+        tagCompound.setInteger("progress", progress);
         this.inventory.writeToNBT(tagCompound);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        this.progress = tagCompound.getFloat("progress");
-        this.process = tagCompound.getInteger("process");
+        this.progress = tagCompound.getInteger("progress");
         this.inventory.readFromNBT(tagCompound);
     }
 

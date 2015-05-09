@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
-import elec332.eflux.api.circuit.IElectricComponent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

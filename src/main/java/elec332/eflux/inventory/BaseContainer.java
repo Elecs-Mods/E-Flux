@@ -1,6 +1,5 @@
 package elec332.eflux.inventory;
 
-import elec332.core.baseclasses.tileentity.BaseTileWithInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;

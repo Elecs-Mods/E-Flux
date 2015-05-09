@@ -1,6 +1,5 @@
 package elec332.eflux.client.inventory;
 
-import elec332.eflux.EFlux;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +11,10 @@ import org.lwjgl.opengl.GL11;
 public abstract class BaseGuiContainer extends GuiContainer {
     public BaseGuiContainer(Container container) {
         super(container);
+        this.container = container;
     }
+
+    protected Container container;
 
     public abstract ResourceLocation getBackgroundImageLocation();
 

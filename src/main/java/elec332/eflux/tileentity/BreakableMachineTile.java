@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -9,13 +8,9 @@ import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.CalculationHelper;
-import elec332.eflux.util.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 

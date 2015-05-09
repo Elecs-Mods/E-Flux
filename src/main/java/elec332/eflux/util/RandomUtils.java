@@ -1,6 +1,7 @@
 package elec332.eflux.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Elec332 on 3-5-2015.

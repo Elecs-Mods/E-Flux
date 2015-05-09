@@ -1,8 +1,5 @@
 package elec332.eflux.grid.power;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.api.circuit.ICircuit;
-import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.items.Components;
 import net.minecraft.item.ItemStack;
 

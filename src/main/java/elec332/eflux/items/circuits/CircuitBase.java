@@ -3,17 +3,12 @@ package elec332.eflux.items.circuits;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
-import elec332.eflux.items.EFluxItemBase;
-import elec332.eflux.util.BasicInventory;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ReportedException;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.List;

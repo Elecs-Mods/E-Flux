@@ -1,6 +1,11 @@
 package elec332.eflux.inventory;
 
+import elec332.eflux.inventory.slot.SlotInput;
+import elec332.eflux.inventory.slot.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by Elec332 on 5-5-2015.
@@ -8,6 +13,100 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerMachine extends BaseContainer {
     public ContainerMachine(ITileWithSlots tileWithSlots, EntityPlayer player, int offset) {
         super(player, offset);
+        this.tileWithSlots = tileWithSlots;
         tileWithSlots.addSlots(this);
+    }
+
+    private ITileWithSlots tileWithSlots;
+    private int lastProgressBarStatus = 0;
+    private int playerInvIndexStart = 0;
+    private int playerInvIndexStop = 0;
+
+    public ITileWithSlots getTileWithSlots() {
+        return tileWithSlots;
+    }
+
+    @Override
+    public void addPlayerInventoryToContainer() {
+        this.playerInvIndexStart = inventorySlots.size();
+        super.addPlayerInventoryToContainer();
+        this.playerInvIndexStop = inventorySlots.size();
+    }
+
+    @Override
+    public void addCraftingToCrafters(ICrafting iCrafting) {
+        super.addCraftingToCrafters(iCrafting);
+        iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (Object obj : this.crafters){
+            ICrafting iCrafting = (ICrafting) obj;
+            if (tileWithSlots.getProgress() != lastProgressBarStatus){
+                iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
+            }
+        }
+        this.lastProgressBarStatus = tileWithSlots.getProgress();
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+        ItemStack itemstack = null;
+        Slot slot = getSlot(slotID);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            if (slot instanceof SlotOutput) {
+                if (!this.mergeItemStack(itemstack1, playerInvIndexStart, playerInvIndexStop, true)) {
+                    return null;
+                }
+                slot.onSlotChange(itemstack1, itemstack);
+            } else if (!(slot instanceof SlotInput)) {
+                //if (slotID < playerInvIndexStart) {
+                    for (int i = 0; i < playerInvIndexStart; i++) {
+                        Slot slot1 = getSlot(slotID);
+                        if (slot1.isItemValid(itemstack1)) {
+                            if (!this.mergeItemStack(itemstack1, i, i + 1, false)) {
+                                return (ItemStack)null;
+                            }
+                        }
+                    }
+                //} else
+                if (slotID >= playerInvIndexStart && slotID < playerInvIndexStop-9) {
+                    if (!this.mergeItemStack(itemstack1, playerInvIndexStop-9, playerInvIndexStop, false)) {
+                        return null;
+                    }
+                } else if (slotID >= playerInvIndexStop-9 && slotID < playerInvIndexStop && !this.mergeItemStack(itemstack1, playerInvIndexStart, playerInvIndexStop-9, false)) {
+                    return null;
+                }
+            }
+            else if (!this.mergeItemStack(itemstack1, playerInvIndexStart, playerInvIndexStop, false)) {
+                return null;
+            }
+
+            if (itemstack1.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (itemstack1.stackSize == itemstack.stackSize) {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, itemstack1);
+        }
+
+        return itemstack;
+    }
+
+    @Override
+    public void updateProgressBar(int id, int value) {
+        super.updateProgressBar(id, value);
+        if (id == 0){
+            tileWithSlots.setProgress(value);
+        }
     }
 }

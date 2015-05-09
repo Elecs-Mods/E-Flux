@@ -2,11 +2,11 @@ package elec332.eflux.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
-import elec332.eflux.tileentity.energy.machine.AssemblyTable;
-import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
+import elec332.eflux.tileentity.energy.machine.AssemblyTable;
 import elec332.eflux.tileentity.energy.machine.Capacitor;
+import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import elec332.eflux.tileentity.energy.machine.furnace.T1Furnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
