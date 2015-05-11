@@ -7,6 +7,7 @@ import elec332.eflux.inventory.ITileWithSlots;
 import elec332.eflux.inventory.slot.SlotInput;
 import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.util.BasicInventory;
+import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -16,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableMachineTile implements ITileWithSlots, IInventoryTile{
+public abstract class TileEntityProcessingMachine extends BreakableMachineTile implements ITileWithSlots, IInventoryTile, IEFluxMachine{
 
     public TileEntityProcessingMachine(int i){
         this.inventory = new BasicInventory("Inventory", i);
@@ -40,7 +41,12 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTile i
     }
 
     private int progress = 0;
+
     protected BasicInventory inventory;
+
+    public BasicInventory getInventory() {
+        return inventory;
+    }
 
     protected abstract SlotInput[] getInputSlots();
 

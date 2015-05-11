@@ -14,10 +14,10 @@ public class ItemRegister {
     private ItemRegister(){
     }
 
-    public static Item wrench;
+    public static Item wrench, multimeter;
 
     public void init(FMLInitializationEvent event){
-        new MultiMeter("MultiMeter");
+        multimeter = new MultiMeter("MultiMeter");
         wrench = new Wrench("Wrench");
         Components.init();
     }

@@ -17,22 +17,14 @@ import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.inventory.ContainerNull;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
-import elec332.eflux.recipes.GrinderRecipe;
-import elec332.eflux.recipes.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
-import elec332.eflux.util.EnumMachines;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
@@ -79,15 +71,11 @@ public class EFlux {
         networkHandler = new NetworkHandler(ModID);
 
         //DEBUG///////////////////
-        RecipeRegistry.instance.registerRecipe(new GrinderRecipe(new ItemStack(Items.stick), new ItemStack(Items.wheat)));
-        IInventory fake = new InventoryCrafting(new ContainerNull(), 1, 1);
-        fake.setInventorySlotContents(0, new ItemStack(Items.stick));
-        logger.info(RecipeRegistry.instance.hasResult((InventoryCrafting) fake, EnumMachines.GRINDER));
-        /////////////////////////
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(24, 20, 40, 1000, 0.15f));
+        /////////////////////////
 
 
         //setting up mod stuff

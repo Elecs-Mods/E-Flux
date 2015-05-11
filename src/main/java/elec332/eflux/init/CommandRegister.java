@@ -11,5 +11,6 @@ public class CommandRegister {
     }
 
     public void init(FMLServerStartingEvent event){
+
     }
 }

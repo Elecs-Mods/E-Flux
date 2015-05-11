@@ -1,8 +1,12 @@
 package elec332.eflux.tileentity;
 
+import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.inventory.slot.SlotInput;
+import elec332.eflux.inventory.slot.SlotMachine;
 import elec332.eflux.inventory.slot.SlotOutput;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 8-5-2015.
@@ -27,9 +31,13 @@ public abstract class TileEntityProcessingMachineSingleSlot extends TileEntityPr
         };
     }
 
-    protected abstract SlotInput getInputSlot();
+    protected SlotInput getInputSlot() {
+        return new SlotMachine(this, 0, 56, 35);
+    }
 
-    protected abstract SlotOutput getOutputSlot();
+    protected SlotOutput getOutputSlot() {
+        return new SlotOutput(inventory, 1, 116, 35);
+    }
 
     @Override
     protected boolean canProcess() {
@@ -47,5 +55,14 @@ public abstract class TileEntityProcessingMachineSingleSlot extends TileEntityPr
         getInputSlots()[0].consumeOnProcess();
         notifyNeighboursOfDataChange();
         syncData();
+    }
+
+    protected GuiMachine basicGui(EntityPlayer player){
+        return new GuiMachine(getGuiServer(player)) {
+            @Override
+            public ResourceLocation getBackgroundImageLocation() {
+                return new ResourceLocation("textures/gui/container/furnace.png");
+            }
+        };
     }
 }

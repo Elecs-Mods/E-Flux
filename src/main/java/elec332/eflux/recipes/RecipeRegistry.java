@@ -1,12 +1,8 @@
 package elec332.eflux.recipes;
 
 import elec332.eflux.util.EnumMachines;
-import net.minecraft.inventory.InventoryCrafting;
+import elec332.eflux.util.IEFluxMachine;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Elec332 on 13-4-2015.
@@ -15,29 +11,50 @@ public class RecipeRegistry {
 
     public static final RecipeRegistry instance = new RecipeRegistry();
     private RecipeRegistry(){
-        recipes = new HashMap<EnumMachines, List<IEFluxRecipe>>();
+        recipeHandlers = new IRecipeHandler[32];
     }
 
-    private HashMap<EnumMachines, List<IEFluxRecipe>> recipes;
+    private IRecipeHandler[] recipeHandlers;
 
-    public void registerRecipe(IEFluxRecipe recipe){
-        if (recipes.get(recipe.getMachine()) == null)
-            recipes.put(recipe.getMachine(), new ArrayList<IEFluxRecipe>());
-        recipes.get(recipe.getMachine()).add(recipe);
+    public void registerHandler(IRecipeHandler handler, EnumMachines machine){
+        if (recipeHandlers[machine.ordinal()] == null)
+            recipeHandlers[machine.ordinal()] = handler;
+        else throw new RuntimeException("There is already a handler for EnumMachine "+machine.toString());
     }
 
-    public boolean hasResult(InventoryCrafting stack, EnumMachines machine){
-        return getOutput(stack, machine) != null;
+    public boolean hasOutput(IEFluxMachine machine, ItemStack... itemStack){
+        return hasOutput(machine.getMachine(), itemStack);
     }
 
-    public ItemStack[] getOutput(InventoryCrafting inventoryCrafting, EnumMachines machine){
+    public boolean hasOutput(EnumMachines machine, ItemStack... itemStack){
+        return getRecipeHandler(machine).hasOutput(itemStack);
+    }
+
+    public ItemStack[] getOutput(IEFluxMachine machine, ItemStack... itemStack){
+        return getOutput(machine.getMachine(), itemStack);
+    }
+
+    public ItemStack[] getOutput(EnumMachines machine, ItemStack... itemStack){
+        return getRecipeHandler(machine).getOutput(itemStack);
+    }
+
+    public void registerRecipe(EnumMachines machine, Object input, ItemStack... itemStack){
+        getRecipeHandler(machine).registerRecipe(input, itemStack);
+    }
+
+    public IRecipeHandler getRecipeHandler(EnumMachines machine){
+        return recipeHandlers[machine.ordinal()];
+    }
+
+
+    /*public ItemStack[] getOutput(InventoryCrafting inventoryCrafting, EnumMachines machine){
         int numSlots = inventoryCrafting.getSizeInventory();
         List<ItemStack> tempList = new ArrayList<ItemStack>();
         for (int i = 0; i < numSlots; i++){
             tempList.add(inventoryCrafting.getStackInSlot(i));
         }
         ItemStack[] itemStacks = tempList.toArray(new ItemStack[tempList.size()]);
-        for (IEFluxRecipe recipe : this.recipes.get(machine)){
+        for (IEFluxRecipe recipe : this.recipeHandlers.get(machine)){
             if (!recipe.multipleInput() && inventoryCrafting.getSizeInventory() == 1){
                 if (isStackValidForCrafting(recipe.getIngredients()[0], itemStacks[0]))
                     return recipe.getResult();
@@ -71,5 +88,9 @@ public class RecipeRegistry {
 
     private boolean isStackValidForCrafting(ItemStack recipeStack, ItemStack toCheck){
         return recipeStack != null && toCheck != null && recipeStack.getItem() == toCheck.getItem() && toCheck.stackSize >= recipeStack.stackSize &&(toCheck.getItemDamage() == Short.MAX_VALUE || recipeStack.getItemDamage() == toCheck.getItemDamage()) || recipeStack == null && toCheck == null;
+    }*/
+
+    static {
+        instance.registerHandler(new GrinderRecipeHandler(), EnumMachines.GRINDER);
     }
 }

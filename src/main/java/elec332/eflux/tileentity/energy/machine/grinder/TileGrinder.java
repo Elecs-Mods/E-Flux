@@ -1,38 +1,44 @@
-package elec332.eflux.tileentity.energy.machine.furnace;
+package elec332.eflux.tileentity.energy.machine.grinder;
 
+import elec332.eflux.tileentity.TileEntityProcessingMachineSingleSlot;
 import elec332.eflux.util.EnumMachines;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Created by Elec332 on 6-5-2015.
+ * Created by Elec332 on 10-5-2015.
  */
-public class T1Furnace extends TileFurnaceBase {
+public class TileGrinder extends TileEntityProcessingMachineSingleSlot {
 
     @Override
     public int getRequiredPowerPerTick() {
-        return 10;
+        return 400;
     }
 
     @Override
     protected int getMaxStoredPower() {
-        return 3000;
+        return 9000;
+    }
+
+    @Override
+    protected int getProcessTime() {
+        return 20;
     }
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.iron_ingot);
+        return null;
     }
 
     @Override
     public float getAcceptance() {
-        return 0.5f;
+        return 1.0f;
     }
 
     @Override
     public int getEFForOptimalRP() {
-        return 10;
+        return 40;
     }
 
     /**
@@ -41,11 +47,16 @@ public class T1Furnace extends TileFurnaceBase {
      */
     @Override
     public int requestedRP(ForgeDirection direction) {
-        return 5;
+        return 3;
+    }
+
+    @Override
+    public Object getGuiClient(EntityPlayer player) {
+        return basicGui(player);
     }
 
     @Override
     public EnumMachines getMachine() {
-        return EnumMachines.FURNACE_TIER1;
+        return EnumMachines.GRINDER;
     }
 }
