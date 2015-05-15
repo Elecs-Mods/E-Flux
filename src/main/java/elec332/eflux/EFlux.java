@@ -1,6 +1,5 @@
 package elec332.eflux;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -21,11 +20,11 @@ import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
+import elec332.eflux.util.EventHelper;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
@@ -99,11 +98,8 @@ public class EFlux {
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         configWrapper.refresh();
-        EventHandler eventHandler = new EventHandler();
-        MinecraftForge.EVENT_BUS.register(eventHandler);
-        FMLCommonHandler.instance().bus().register(eventHandler);
+        EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
         CircuitHandler.register();
-        //GameRegistry.registerTileEntity(TEGrinder.class, EnumMachines.GRINDER.toString());
         //register items/blocks
 
     }

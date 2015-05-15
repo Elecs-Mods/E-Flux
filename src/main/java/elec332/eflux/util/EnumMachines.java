@@ -23,8 +23,7 @@ public enum EnumMachines {
     COAL_GENERATOR(CoalGenerator.class),
     ASSEMBLY_TABLE(AssemblyTable.class),
     FURNACE_TIER1(T1Furnace.class),
-    GRINDER_TEST_ONEBLOCK(TileGrinder.class)
-
+    GRINDER_TEST_ONEBLOCK(TileGrinder.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////

@@ -2,6 +2,7 @@ package elec332.eflux.grid;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
 import net.minecraft.world.World;

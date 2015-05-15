@@ -224,34 +224,4 @@ public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory i
     public BlockLoc mergeLocationAndOffset(BlockLoc location, BlockLoc offset){
         return new BlockLoc(location.xCoord+offset.xCoord, location.yCoord+offset.yCoord, location.zCoord+offset.zCoord);
     }
-
-    //Overrides for master block
-/*
-    @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-        if (this.isSlave())
-            return this.getMaster().receiveEnergy(from, maxReceive, simulate);
-        return this.isFormed()?super.receiveEnergy(from, maxReceive, simulate):0;
-    }
-
-    @Override
-    public int getEnergyStored(ForgeDirection from) {
-        if (this.isSlave())
-            return this.getMaster().getEnergyStored(from);
-        return this.isFormed()?super.getEnergyStored(from):0;
-    }
-
-    @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
-        if (this.isSlave())
-            return this.getMaster().getMaxEnergyStored(from);
-        return this.isFormed()?super.getMaxEnergyStored(from):0;
-    }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        if (this.isSlave())
-            return this.getMaster().canConnectEnergy(from);
-        return super.canConnectEnergy(from) && this.isFormed();
-    }*/
 }
