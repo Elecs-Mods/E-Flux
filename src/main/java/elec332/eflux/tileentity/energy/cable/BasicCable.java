@@ -22,4 +22,19 @@ public class BasicCable extends TileBase implements IPowerTransmitter {
         if (!worldObj.isRemote)
             MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
     }
+
+    @Override
+    public String getUniqueIdentifier() {
+        return "q49d";
+    }
+
+    @Override
+    public int getMaxEFTransfer() {
+        return 10;
+    }
+
+    @Override
+    public int getMaxRPTransfer() {
+        return 5;
+    }
 }

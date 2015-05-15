@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 3-4-2015.
  */
+@Deprecated //But don't delete yet
 public class TEGrinder extends BaseMultiBlockMachine implements IEnergyReceiver{
 
     public TEGrinder() {

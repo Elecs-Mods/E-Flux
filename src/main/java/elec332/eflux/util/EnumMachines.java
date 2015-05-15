@@ -6,9 +6,8 @@ import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.AssemblyTable;
 import elec332.eflux.tileentity.energy.machine.Capacitor;
-import elec332.eflux.tileentity.energy.machine.TEGrinder;
-import elec332.eflux.tileentity.energy.machine.furnace.T1Furnace;
-import elec332.eflux.tileentity.energy.machine.grinder.TileGrinder;
+import elec332.eflux.tileentity.energy.machine.TileFurnace;
+import elec332.eflux.tileentity.energy.machine.TileGrinder;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -17,13 +16,12 @@ import net.minecraft.tileentity.TileEntity;
  * Created by Elec332 on 4-4-2015.
  */
 public enum EnumMachines {
-    GRINDER(TEGrinder.class),
     TESTCABLE(BasicCable.class),
     CAPACITOR(Capacitor.class),
     COAL_GENERATOR(CoalGenerator.class),
     ASSEMBLY_TABLE(AssemblyTable.class),
-    FURNACE_TIER1(T1Furnace.class),
-    GRINDER_TEST_ONEBLOCK(TileGrinder.class),
+    GRINDER(TileGrinder.class),
+    FURNACE(TileFurnace.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////
