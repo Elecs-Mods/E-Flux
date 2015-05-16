@@ -43,11 +43,11 @@ public class WorldGridHolder {
     }
 
     public void addTile(TileEntity tile){
-        TileEntity theTile = (TileEntity) tile;
-        PowerTile powerTile = new PowerTile(theTile);
-        registeredTiles.put(genCoords(theTile), powerTile);
+        EnergyAPIHelper.checkValidity(tile);
+        PowerTile powerTile = new PowerTile(tile);
+        registeredTiles.put(genCoords(tile), powerTile);
         addTile(powerTile);
-        EFlux.logger.info("Tile placed at "+genCoords(theTile).toString());
+        EFlux.logger.info("Tile placed at "+genCoords(tile).toString());
     }
 
     public void addTile(PowerTile powerTile){
@@ -83,7 +83,7 @@ public class WorldGridHolder {
         if (powerTile1.getConnectType() == PowerTile.ConnectType.CONNECTOR && powerTile2.getConnectType() == PowerTile.ConnectType.CONNECTOR){
             return ((IEnergyTransmitter)mainTile).getUniqueIdentifier().equals(((IEnergyTransmitter)powerTile2.getTile()).getUniqueIdentifier());
         } else if (powerTile1.getConnectType() == PowerTile.ConnectType.CONNECTOR){
-            return canConnectFromSide(direction.getOpposite(), )
+            return canConnectFromSide(direction.getOpposite(), powerTile2);
         } else {
             if (powerTile1.getConnectType() == PowerTile.ConnectType.SEND_RECEIVE){
                 if (((IEnergySource) mainTile).canProvidePowerTo(direction))
@@ -116,6 +116,7 @@ public class WorldGridHolder {
     }
 
     public void removeTile(TileEntity tile){
+        EnergyAPIHelper.checkValidity(tile);
         /*PowerTile powerTile = ;
         powerTile.toGo = 3;
         pendingRemovals.add(powerTile);*/

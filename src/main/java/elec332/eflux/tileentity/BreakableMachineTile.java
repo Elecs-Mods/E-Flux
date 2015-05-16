@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends TileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
 
     public abstract ItemStack getRandomRepairItem();
 
@@ -122,17 +122,5 @@ public abstract class BreakableMachineTile extends TileBase implements IEnergyRe
             breakableMachineInventory.getRepairItem().writeToNBT(newTag);
             tagCompound.setTag("itemRep", newTag);
         }
-    }
-
-    @Override
-    public void onTileLoaded() {
-        if (!worldObj.isRemote)
-            MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));
-    }
-
-    @Override
-    public void onTileUnloaded() {
-        if (!worldObj.isRemote)
-            MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
     }
 }
