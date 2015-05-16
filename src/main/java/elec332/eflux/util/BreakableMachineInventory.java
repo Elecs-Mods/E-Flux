@@ -2,6 +2,8 @@ package elec332.eflux.util;
 
 import cpw.mods.fml.relauncher.Side;
 import elec332.core.helper.ItemHelper;
+import elec332.core.main.ElecCore;
+import elec332.core.util.IRunOnce;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerSingleSlot;
 import elec332.eflux.tileentity.BreakableMachineTile;
@@ -30,7 +32,19 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     public Object brokenGui(Side side, EntityPlayer player){
-        Container container = new ContainerSingleSlot(this, player);
+        Container container = new ContainerSingleSlot(this, player){
+            @Override
+            public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, final EntityPlayer p_75144_4_) {
+                ElecCore.tickHandler.registerCall(new IRunOnce() {
+                    @Override
+                    public void run() {
+                        if (canFix())
+                            p_75144_4_.closeScreen();
+                    }
+                });
+                return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
+            }
+        };
         if (side==Side.CLIENT)
             return new GuiStandardFormat(container, new ResourceLocation("nope.png"));
         return container;
@@ -121,10 +135,16 @@ public class BreakableMachineInventory implements IInventory{
 
     @Override
     public void closeInventory() {
+        canFix();
+    }
+
+    public boolean canFix(){
         if (ItemHelper.areItemsEqual(inventoryContent[0], repairItem)) {
             i.setBroken(false);
             inventoryContent[0] = null;
+            return true;
         }
+        return false;
     }
 
     @Override

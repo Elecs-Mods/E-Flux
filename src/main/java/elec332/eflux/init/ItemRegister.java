@@ -2,6 +2,7 @@ package elec332.eflux.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import elec332.core.main.ElecCore;
+import elec332.eflux.items.Breaker;
 import elec332.eflux.items.Components;
 import elec332.eflux.items.MultiMeter;
 import elec332.eflux.items.Wrench;
@@ -24,15 +25,7 @@ public class ItemRegister {
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment)
-            new MultiMeter("Breaker"){  //DEV test item, on right click, breaks the clicked machine
-                @Override
-                public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-                    TileEntity tile = world.getTileEntity(z, y, z);
-                    if (tile instanceof BreakableMachineTile)
-                        ((BreakableMachineTile)tile).setBroken(true);
-                    return false;
-                }
-            };
+            new Breaker();
         multimeter = new MultiMeter("MultiMeter");
         wrench = new Wrench("Wrench");
         Components.init();

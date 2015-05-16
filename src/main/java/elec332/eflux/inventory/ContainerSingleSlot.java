@@ -37,6 +37,12 @@ public class ContainerSingleSlot extends Container {
     }
 
     @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+        bmh.closeInventory();
+    }
+
+    @Override
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;
     }

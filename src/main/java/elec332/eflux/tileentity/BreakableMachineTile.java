@@ -51,6 +51,8 @@ public abstract class BreakableMachineTile extends TileBase implements IEnergyRe
             this.breakableMachineInventory = null;
         else if (!this.broken) onBroken();
         this.broken = broken;
+        notifyNeighboursOfDataChange();
+        syncData();
     }
 
     @Override
