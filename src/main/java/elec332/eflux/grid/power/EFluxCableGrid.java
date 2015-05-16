@@ -5,6 +5,7 @@ import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.world.World;
@@ -33,6 +34,9 @@ public class EFluxCableGrid {
         }
         if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
             acceptors.add(new GridData(p.getLocation(), direction));
+        if (p.getTile() instanceof IEnergyTransmitter)
+            maxTransfer = ((IEnergyTransmitter)p.getTile()).getMaxRPTransfer();
+        else maxTransfer = -1;
         FMLCommonHandler.instance().bus().register(this);
         identifier = UUID.randomUUID();
     }
@@ -43,6 +47,7 @@ public class EFluxCableGrid {
     private List<GridData> providers;
     private List<GridData> specialProviders;
     private List<BlockLoc> locations;
+    private int maxTransfer;
 
     public List<BlockLoc> getLocations(){
         return locations;
@@ -54,6 +59,8 @@ public class EFluxCableGrid {
         if (this.equals(grid))
             return this;
         WorldRegistry.get(grid.world).getWorldPowerGrid().removeGrid(grid);
+        //if (grid.maxTransfer > -1)
+        this.maxTransfer = Math.max(maxTransfer, grid.maxTransfer);
         this.locations.addAll(grid.locations);
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
@@ -75,6 +82,7 @@ public class EFluxCableGrid {
         System.out.println("Locations: "+locations.size());
         System.out.println("Acceptors: "+acceptors.size());
         System.out.println("Providers "+(providers.size()+specialProviders.size()));
+        System.out.println("MaxTransfer: "+maxTransfer);
         System.out.println("STOP");
         processPower();
     }
@@ -101,6 +109,8 @@ public class EFluxCableGrid {
             va[acceptors.indexOf(gridData)] = e;
             requestedPower = requestedPower + e;
         }
+        if (maxTransfer > -1)
+            rp = Math.min(rp, maxTransfer);
         if (totalProvided >= requestedPower){
             for (GridData gridData : acceptors)
                 ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).receivePower(gridData.getDirection(), rp, va[acceptors.indexOf(gridData)]);

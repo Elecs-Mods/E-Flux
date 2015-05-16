@@ -2,10 +2,10 @@ package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.api.energy.IEnergyTile;
-import elec332.eflux.api.energy.IPowerTransmitter;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,7 +42,7 @@ public class WorldGridHolder {
         grids.remove(grid);
     }
 
-    public void addTile(IEnergyTile tile){
+    public void addTile(TileEntity tile){
         TileEntity theTile = (TileEntity) tile;
         PowerTile powerTile = new PowerTile(theTile);
         registeredTiles.put(genCoords(theTile), powerTile);
@@ -57,7 +57,7 @@ public class WorldGridHolder {
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 EFlux.logger.info("Processing tile at "+powerTile.getLocation().toString() + " for side "+direction.toString());
                 TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
-                if (possTile != null && possTile instanceof IEnergyTile) {
+                if (possTile != null && EnergyAPIHelper.isEnergyTile(possTile)) {
                     PowerTile powerTile1 = getPowerTile(genCoords(possTile));
                     if (powerTile1 == null || !powerTile1.hasInit()) {
                         pending.add(powerTile);
@@ -80,8 +80,10 @@ public class WorldGridHolder {
         boolean flag2 = false;
         if (powerTile1.getConnectType() == powerTile2.getConnectType() && (powerTile1.getConnectType() == PowerTile.ConnectType.SEND || powerTile1.getConnectType() == PowerTile.ConnectType.RECEIVE))
             return false; //We don't want to receivers or 2 sources connecting, do we?
-        if (mainTile instanceof IPowerTransmitter){
-            return canConnectFromSide(direction.getOpposite(), powerTile2);
+        if (powerTile1.getConnectType() == PowerTile.ConnectType.CONNECTOR && powerTile2.getConnectType() == PowerTile.ConnectType.CONNECTOR){
+            return ((IEnergyTransmitter)mainTile).getUniqueIdentifier().equals(((IEnergyTransmitter)powerTile2.getTile()).getUniqueIdentifier());
+        } else if (powerTile1.getConnectType() == PowerTile.ConnectType.CONNECTOR){
+            return canConnectFromSide(direction.getOpposite(), )
         } else {
             if (powerTile1.getConnectType() == PowerTile.ConnectType.SEND_RECEIVE){
                 if (((IEnergySource) mainTile).canProvidePowerTo(direction))
@@ -104,7 +106,7 @@ public class WorldGridHolder {
         TileEntity secondTile = powerTile2.getTile();
         boolean flag1 = false;
         boolean flag2 = false;
-        if (secondTile instanceof IPowerTransmitter)
+        if (secondTile instanceof IEnergyTransmitter)
             return true;
         if (secondTile instanceof IEnergyReceiver)
             flag1 = ((IEnergyReceiver) secondTile).canAcceptEnergyFrom(direction);
@@ -113,11 +115,11 @@ public class WorldGridHolder {
         return flag1 || flag2;
     }
 
-    public void removeTile(IEnergyTile tile){
+    public void removeTile(TileEntity tile){
         /*PowerTile powerTile = ;
         powerTile.toGo = 3;
         pendingRemovals.add(powerTile);*/
-        removeTile(getPowerTile(genCoords((TileEntity) tile)));
+        removeTile(getPowerTile(genCoords(tile)));
     }
 
     public void removeTile(PowerTile powerTile){
@@ -147,7 +149,7 @@ public class WorldGridHolder {
                     for (BlockLoc vec : vec3List2) {
                         EFlux.logger.info("Re-adding tile at " + vec.toString());
                         TileEntity tileEntity1 = getTile(vec);
-                        if (tileEntity1 instanceof IEnergyTile)
+                        if (EnergyAPIHelper.isEnergyTile(tileEntity1))
                             if (getPowerTile(vec) != null)
                                 addTile(getPowerTile(vec));
                     }

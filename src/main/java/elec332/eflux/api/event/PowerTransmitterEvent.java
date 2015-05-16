@@ -1,6 +1,6 @@
 package elec332.eflux.api.event;
 
-import elec332.eflux.api.energy.IEnergyTile;
+import elec332.eflux.api.energy.EnergyAPIHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -9,10 +9,11 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 class PowerTransmitterEvent extends WorldEvent {
 
-    public IEnergyTile transmitterTile;
+    public TileEntity transmitterTile;
 
-    public PowerTransmitterEvent(IEnergyTile transmitterTile) {
-        super(((TileEntity)transmitterTile).getWorldObj());
+    public PowerTransmitterEvent(TileEntity transmitterTile) {
+        super((transmitterTile).getWorldObj());
+        EnergyAPIHelper.checkValidity(transmitterTile);
         this.transmitterTile = transmitterTile;
     }
 }

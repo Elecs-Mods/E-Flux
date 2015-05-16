@@ -1,10 +1,7 @@
 package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
-import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.api.energy.IEnergyTile;
-import elec332.eflux.api.energy.IPowerTransmitter;
+import elec332.eflux.api.energy.*;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,12 +11,12 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class PowerTile {  //Wrapper for TileEntities
     public PowerTile(TileEntity tileEntity){
-        if (!(tileEntity instanceof IEnergyTile))
+        if (!EnergyAPIHelper.isEnergyTile(tileEntity))
             throw new IllegalArgumentException();
         this.tile = tileEntity;
         this.location = new BlockLoc(tileEntity);
         this.grids = new EFluxCableGrid[6];
-        if (tileEntity instanceof IPowerTransmitter) {
+        if (tileEntity instanceof IEnergyTransmitter) {
             this.grids[0] = newGrid(ForgeDirection.UNKNOWN);
             this.connectType = ConnectType.CONNECTOR;
         } else if (tileEntity instanceof IEnergyReceiver && tileEntity instanceof IEnergySource)

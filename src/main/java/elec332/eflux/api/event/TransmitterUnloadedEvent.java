@@ -1,12 +1,12 @@
 package elec332.eflux.api.event;
 
-import elec332.eflux.api.energy.IEnergyTile;
+import net.minecraft.tileentity.TileEntity;
 
 /**
  * Created by Elec332 on 16-4-2015.
  */
 public class TransmitterUnloadedEvent extends PowerTransmitterEvent {
-    public TransmitterUnloadedEvent(IEnergyTile transmitterTile) {
+    public TransmitterUnloadedEvent(TileEntity transmitterTile) {
         super(transmitterTile);
     }
 }

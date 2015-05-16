@@ -15,7 +15,6 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TileFurnace extends TileEntityProcessingMachineSingleSlot {
 
-
     @Override
     protected SlotInput getInputSlot() {
         return new SlotFurnaceInput(this, 0, 56, 35);
