@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 
 /**
  * Created by Elec332 on 4-5-2015.
@@ -14,6 +15,12 @@ public class BasicInventory implements IInventory {
     private String inventoryTitle;
     private int slotsCount;
     protected ItemStack[] inventoryContents;
+    private TileEntity tile;
+
+    public BasicInventory(String s, int i, TileEntity tile){
+        this(s, i);
+        this.tile = tile;
+    }
 
     public BasicInventory(String p_i1561_1_, int p_i1561_3_) {
         this.inventoryTitle = p_i1561_1_;
@@ -101,7 +108,10 @@ public class BasicInventory implements IInventory {
         return 64;
     }
 
-    public void markDirty() {}
+    public void markDirty() {
+        if (tile != null)
+            tile.markDirty();
+    }
 
     public boolean isUseableByPlayer(EntityPlayer player) {
         return true;

@@ -59,9 +59,21 @@ public class PowerTile {  //Wrapper for TileEntities
         if (singleGrid()){
             grids[0] = newGrid;
         } else {
+            int q = 0;
+            for (EFluxCableGrid grid : grids){
+                if (grid != null)
+                    q++;
+            }
+            System.out.println("OldSizeBeforeMerge: "+q);
             int i = removeGrid(old);
             System.out.println(i);
             grids[i] = newGrid;
+            q = 0;
+            for (EFluxCableGrid grid : grids){
+                if (grid != null)
+                    q++;
+            }
+            System.out.println("NewSizeAfterMerge "+q);
             System.out.println(grids.length);
         }
     }

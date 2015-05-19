@@ -1,28 +1,36 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.eflux.inventory.slot.SlotFurnaceInput;
-import elec332.eflux.inventory.slot.SlotInput;
 import elec332.eflux.inventory.slot.SlotOutput;
-import elec332.eflux.tileentity.TileEntityProcessingMachineSingleSlot;
+import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public class TileFurnace extends TileEntityProcessingMachineSingleSlot {
+public class TileFurnace extends TileEntityProcessingMachine {
 
-    @Override
-    protected SlotInput getInputSlot() {
+    public TileFurnace() {
+        super(2);
+    }
+
+    private SlotFurnaceInput getInputSlot(){
         return new SlotFurnaceInput(this, 0, 56, 35);
     }
 
     @Override
-    protected SlotOutput getOutputSlot() {
-        return new SlotOutput(inventory, 1, 116, 35);
+    protected Slot[] getInputSlots() {
+        return new Slot[]{getInputSlot()};
+    }
+
+    @Override
+    protected SlotOutput[] getOutputSlots() {
+        return oneOutPutSlot(1);
     }
 
     @Override
@@ -72,5 +80,23 @@ public class TileFurnace extends TileEntityProcessingMachineSingleSlot {
     @Override
     public int requestedRP(ForgeDirection direction) {
         return 5;
+    }
+
+    @Override
+    protected boolean canProcess() {
+        if (inventory.getStackInSlot(0) == null)
+            return false;
+        ItemStack result = getInputSlot().getOutput();
+        return result != null && inventory.canAddItemStackFully(result, 1, true);
+    }
+
+    @Override
+    protected void onProcessDone() {
+        if (inventory.getStackInSlot(1) == null)
+            inventory.setInventorySlotContents(1, getInputSlot().getOutput().copy());
+        else inventory.getStackInSlot(1).stackSize += getInputSlot().getOutput().stackSize;
+        getInputSlot().consumeOnProcess();
+        notifyNeighboursOfDataChange();
+        syncData();
     }
 }

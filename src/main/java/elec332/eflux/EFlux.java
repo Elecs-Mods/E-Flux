@@ -1,5 +1,6 @@
 package elec332.eflux;
 
+import com.google.common.collect.Lists;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -18,13 +19,14 @@ import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
-import elec332.eflux.util.CalculationHelper;
-import elec332.eflux.util.Config;
-import elec332.eflux.util.EventHelper;
+import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.util.*;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
@@ -70,6 +72,8 @@ public class EFlux {
         networkHandler = new NetworkHandler(ModID);
 
         //DEBUG///////////////////
+        logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
+
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));
@@ -100,6 +104,7 @@ public class EFlux {
         configWrapper.refresh();
         EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
         CircuitHandler.register();
+        registerRecipes();
         //register items/blocks
 
     }
@@ -112,5 +117,10 @@ public class EFlux {
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         CommandRegister.instance.init(event);
+    }
+
+    private void registerRecipes(){
+        RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
+        RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));
     }
 }

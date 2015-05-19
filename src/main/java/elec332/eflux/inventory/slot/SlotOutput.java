@@ -1,5 +1,6 @@
 package elec332.eflux.inventory.slot;
 
+import elec332.eflux.util.BasicInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -8,7 +9,7 @@ import net.minecraft.item.ItemStack;
  * Created by Elec332 on 5-5-2015.
  */
 public class SlotOutput extends Slot {
-    public SlotOutput(IInventory inventory, int index, int x, int z) {
+    public SlotOutput(BasicInventory inventory, int index, int x, int z) {
         super(inventory, index, x, z);
     }
 

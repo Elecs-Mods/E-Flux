@@ -2,7 +2,9 @@ package elec332.eflux.recipes;
 
 import elec332.eflux.util.EnumMachines;
 import elec332.eflux.util.IEFluxMachine;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.Slot;
+
+import java.util.List;
 
 /**
  * Created by Elec332 on 13-4-2015.
@@ -22,24 +24,24 @@ public class RecipeRegistry {
         else throw new RuntimeException("There is already a handler for EnumMachine "+machine.toString());
     }
 
-    public boolean hasOutput(IEFluxMachine machine, ItemStack... itemStack){
-        return hasOutput(machine.getMachine(), itemStack);
+    public boolean hasOutput(IEFluxMachine machine, List<Slot> slots){
+        return hasOutput(machine.getMachine(), slots);
     }
 
-    public boolean hasOutput(EnumMachines machine, ItemStack... itemStack){
-        return getRecipeHandler(machine).hasOutput(itemStack);
+    public boolean hasOutput(EnumMachines machine, List<Slot> slots){
+        return getRecipeHandler(machine).hasOutput(slots);
     }
 
-    public ItemStack[] getOutput(IEFluxMachine machine, ItemStack... itemStack){
-        return getOutput(machine.getMachine(), itemStack);
+    public void handleOutput(IEFluxMachine machine, List<Slot> slots){
+        handleOutput(machine.getMachine(), slots);
     }
 
-    public ItemStack[] getOutput(EnumMachines machine, ItemStack... itemStack){
-        return getRecipeHandler(machine).getOutput(itemStack);
+    public void handleOutput(EnumMachines machine, List<Slot> slots){
+        getRecipeHandler(machine).processRecipe(slots);
     }
 
-    public void registerRecipe(EnumMachines machine, Object input, ItemStack... itemStack){
-        getRecipeHandler(machine).registerRecipe(input, itemStack);
+    public void registerRecipe(EnumMachines machine, Object input, Object output){
+        getRecipeHandler(machine).registerRecipe(input, output);
     }
 
     public IRecipeHandler getRecipeHandler(EnumMachines machine){
@@ -91,6 +93,6 @@ public class RecipeRegistry {
     }*/
 
     static {
-        instance.registerHandler(new GrinderRecipeHandler(), EnumMachines.GRINDER);
+        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumMachines.COMPRESSOR);
     }
 }

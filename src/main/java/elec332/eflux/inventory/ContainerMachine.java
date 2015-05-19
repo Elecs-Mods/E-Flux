@@ -1,6 +1,5 @@
 package elec332.eflux.inventory;
 
-import elec332.eflux.inventory.slot.SlotInput;
 import elec332.eflux.inventory.slot.SlotOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -63,7 +62,7 @@ public class ContainerMachine extends BaseContainer {
                     return null;
                 }
                 slot.onSlotChange(itemstack1, itemstack);
-            } else if (!(slot instanceof SlotInput)) {
+            } else if (slotID >= playerInvIndexStart) {
                 for (int i = 0; i < playerInvIndexStart; i++) {
                     Slot slot1 = getSlot(i);
                     if (slot1.isItemValid(itemstack1)) {

@@ -4,57 +4,67 @@ import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Created by Elec332 on 10-5-2015.
+ * Created by Elec332 on 17-5-2015.
  */
-public class TileGrinder extends TileEntityProcessingMachine {
-
-    public TileGrinder() {
-        super(2);
+public class Compressor extends TileEntityProcessingMachine {
+    public Compressor() {
+        super(3);
     }
 
     @Override
     protected Slot[] getInputSlots() {
-        return oneInputSlot(0);
+        return new Slot[]{
+                new Slot(inventory, 0, 56, 17),
+                new Slot(inventory, 1, 56, 53)
+        };
     }
 
     @Override
     protected SlotOutput[] getOutputSlots() {
-        return oneOutPutSlot(1);
+        return oneOutPutSlot(2);
     }
 
     @Override
     public int getRequiredPowerPerTick() {
-        return 400;
+        return 50;
     }
 
-    @Override
-    protected int getMaxStoredPower() {
-        return 9000;
-    }
 
     @Override
     protected int getProcessTime() {
-        return 20;
+        return 70;
+    }
+
+
+    @Override
+    protected int getMaxStoredPower() {
+        return 2000;
     }
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return null;
+        return new ItemStack(Blocks.iron_block);
     }
 
     @Override
     public float getAcceptance() {
-        return 1.0f;
+        return 0.34f;
     }
 
     @Override
     public int getEFForOptimalRP() {
-        return 40;
+        return 10;
+    }
+
+    @Override
+    public EnumMachines getMachine() {
+        return EnumMachines.COMPRESSOR;
     }
 
     /**
@@ -63,16 +73,11 @@ public class TileGrinder extends TileEntityProcessingMachine {
      */
     @Override
     public int requestedRP(ForgeDirection direction) {
-        return 3;
+        return 5;
     }
 
     @Override
     public Object getGuiClient(EntityPlayer player) {
         return basicGui(player);
-    }
-
-    @Override
-    public EnumMachines getMachine() {
-        return EnumMachines.GRINDER;
     }
 }

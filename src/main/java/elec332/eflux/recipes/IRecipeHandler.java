@@ -1,16 +1,18 @@
 package elec332.eflux.recipes;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.Slot;
+
+import java.util.List;
 
 /**
- * Created by Elec332 on 10-5-2015.
+ * Created by Elec332 on 18-5-2015.
  */
 public interface IRecipeHandler {
 
-    public boolean hasOutput(ItemStack... itemStack);
+    public boolean hasOutput(List<Slot> slots);
 
-    public ItemStack[] getOutput(ItemStack... itemStack);
+    public void processRecipe(List<Slot> slots);
 
-    public void registerRecipe(Object input, ItemStack... output);
+    public void registerRecipe(Object input, Object output);
 
 }

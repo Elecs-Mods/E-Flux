@@ -63,7 +63,7 @@ public abstract class CircuitBase extends Item implements ICircuit{
 
     @Override
     public boolean isValid(ItemStack stack) {
-        return stack.getTagCompound().getBoolean("valid");
+        return stack.hasTagCompound() && stack.getTagCompound().getBoolean("valid");
     }
 
     @Override
