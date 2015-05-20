@@ -94,5 +94,6 @@ public class RecipeRegistry {
 
     static {
         instance.registerHandler(new BasicRecipeHandler(2, 1), EnumMachines.COMPRESSOR);
+        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumMachines.ETCHINGMACHINE);
     }
 }

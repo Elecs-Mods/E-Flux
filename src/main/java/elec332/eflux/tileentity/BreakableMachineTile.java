@@ -1,17 +1,13 @@
 package elec332.eflux.tileentity;
 
-import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.event.TransmitterLoadedEvent;
-import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.CalculationHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**

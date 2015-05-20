@@ -6,13 +6,5 @@ package elec332.eflux.inventory;
 public interface ITileWithSlots {
 
     public void addSlots(BaseContainer container);
-
-    public int getProgress();
-
-    public void setProgress(int i);
-
-    public float getProgressScaled();
-
-    public boolean isWorking();
     
 }

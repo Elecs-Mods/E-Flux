@@ -5,6 +5,10 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.items.Components;
+import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.util.EnumMachines;
+import elec332.eflux.util.RecipeItemStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ public class CircuitHandler {
     private static HashMap<EnumCircuit, CircuitHandler> mappings = new HashMap<EnumCircuit, CircuitHandler>();
     private static List<EnumCircuit> registeredTypes = new ArrayList<EnumCircuit>();
     private static boolean init = false;
+    public static Item UnrefinedBoards;
 
     public static ICircuitDataProvider get(ICircuit circuit, int i){
         return get(circuit.getDifficulty()).mapping.get(i);
@@ -34,7 +39,7 @@ public class CircuitHandler {
             throw new IllegalArgumentException();
         CircuitHandler ret = mappings.get(circuit);
         if (ret == null) {
-            ret = new CircuitHandler();
+            ret = new CircuitHandler(circuit);
             mappings.put(circuit, ret);
             registeredTypes.add(circuit);
         }
@@ -43,14 +48,18 @@ public class CircuitHandler {
 
     public static void register(){
         init = true;
+        UnrefinedBoards = new UnrefinedBoards("UnrefinedBoard", registeredTypes.size()).setCreativeTab(EFlux.CreativeTab);
         for (EnumCircuit circuit : registeredTypes)
             get(circuit).registerData();
     }
 
     ////////////////////////////////////////////////////////////////////
-    private CircuitHandler(){
+    private CircuitHandler(EnumCircuit circuit){
+        this.circuit = circuit;
+        mapping = Lists.newArrayList();
     }
-    private List<ICircuitDataProvider> mapping = Lists.newArrayList();
+    private EnumCircuit circuit;
+    private List<ICircuitDataProvider> mapping;
 
     private void registerCircuit(ICircuitDataProvider provider){
         if (!mapping.contains(provider))
@@ -58,7 +67,11 @@ public class CircuitHandler {
     }
 
     private void registerData(){
-        new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.CreativeTab);
+        Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.CreativeTab);
+        Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.CreativeTab);
+        for (int i = 0; i < mapping.size(); i++) {
+            RecipeRegistry.instance.registerRecipe(EnumMachines.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
+        }
     }
 
     static {

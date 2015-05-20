@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * Created by Elec332 on 4-5-2015.
  */
-public class ContainerAssemblyTable extends BaseContainer {
+public class ContainerAssemblyTable extends ContainerMachine {
     public ContainerAssemblyTable(EntityPlayer player, IInventory inv) {
-        super(player);
+        super(null, player, 0);
         this.addSlotToContainer(new Slot(inv, 0, 124, 35));
         inv.openInventory();
         this.circuit = new InventoryCircuit();
@@ -30,7 +30,7 @@ public class ContainerAssemblyTable extends BaseContainer {
             }
         }
         circuit.openInventory();
-        if (inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ICircuit)
+        if (inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ICircuit && ((ICircuit)inv.getStackInSlot(0).getItem()).isCircuit(inv.getStackInSlot(0)))
             circuit.setStack(inv.getStackInSlot(0));
         addPlayerInventoryToContainer();
         syncSlots();
@@ -41,7 +41,7 @@ public class ContainerAssemblyTable extends BaseContainer {
 
     private void syncSlots(){
         ItemStack stack = getSlot(0).inventory.getStackInSlot(0);
-        if (stack!= null && stack.getItem() instanceof ICircuit){
+        if (stack!= null && stack.getItem() instanceof ICircuit && ((ICircuit)stack.getItem()).isCircuit(stack)){
             circuit.setStack(stack);
             int i = ((ICircuit)stack.getItem()).boardSize(stack);
             for (SlotAssembly assembly : assemblies) {
@@ -68,7 +68,6 @@ public class ContainerAssemblyTable extends BaseContainer {
     @Override
     public ItemStack slotClick(int slotID, int var2, int var3, EntityPlayer player) {
         if (slotID  < 10) {
-
             syncSlots();
         }
         return super.slotClick(slotID, var2, var3, player);
@@ -89,6 +88,8 @@ public class ContainerAssemblyTable extends BaseContainer {
         public void setStack(ItemStack stack) {
             if (stack == null || !(stack.getItem() instanceof ICircuit))
                 throw new IllegalArgumentException("Item not instance of ICircuit");
+            if (!stack.hasTagCompound())
+                stack.setTagCompound(new NBTTagCompound());
             this.stack = stack;
             openInventory();
         }

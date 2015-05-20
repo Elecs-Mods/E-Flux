@@ -1,7 +1,10 @@
 package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
-import elec332.eflux.api.energy.*;
+import elec332.eflux.api.energy.EnergyAPIHelper;
+import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;

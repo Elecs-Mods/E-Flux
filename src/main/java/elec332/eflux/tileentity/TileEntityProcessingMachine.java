@@ -5,6 +5,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.inventory.BaseContainer;
 import elec332.eflux.inventory.ContainerMachine;
+import elec332.eflux.inventory.IHasProgressBar;
 import elec332.eflux.inventory.ITileWithSlots;
 import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.recipes.RecipeRegistry;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine{
+public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar{
 
     public TileEntityProcessingMachine(int i){
         this.inventory = new BasicInventory("Inventory", i, this);

@@ -12,16 +12,19 @@ import net.minecraft.item.ItemStack;
 public class ContainerMachine extends BaseContainer {
     public ContainerMachine(ITileWithSlots tileWithSlots, EntityPlayer player, int offset) {
         super(player, offset);
-        this.tileWithSlots = tileWithSlots;
-        tileWithSlots.addSlots(this);
+        if (tileWithSlots != null) {
+            tileWithSlots.addSlots(this);
+            if (tileWithSlots instanceof IHasProgressBar)
+                this.tileWithSlots = (IHasProgressBar) tileWithSlots;
+        }
     }
 
-    private ITileWithSlots tileWithSlots;
+    private IHasProgressBar tileWithSlots;
     private int lastProgressBarStatus = 0;
     private int playerInvIndexStart = 0;
     private int playerInvIndexStop = 0;
 
-    public ITileWithSlots getTileWithSlots() {
+    public IHasProgressBar getTileWithProgressBar() {
         return tileWithSlots;
     }
 
@@ -35,19 +38,22 @@ public class ContainerMachine extends BaseContainer {
     @Override
     public void addCraftingToCrafters(ICrafting iCrafting) {
         super.addCraftingToCrafters(iCrafting);
-        iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
+        if (tileWithSlots != null)
+            iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
     }
 
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (Object obj : this.crafters){
-            ICrafting iCrafting = (ICrafting) obj;
-            if (tileWithSlots.getProgress() != lastProgressBarStatus){
-                iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
+        if (tileWithSlots != null) {
+            for (Object obj : this.crafters) {
+                ICrafting iCrafting = (ICrafting) obj;
+                if (tileWithSlots.getProgress() != lastProgressBarStatus) {
+                    iCrafting.sendProgressBarUpdate(this, 0, tileWithSlots.getProgress());
+                }
             }
+            this.lastProgressBarStatus = tileWithSlots.getProgress();
         }
-        this.lastProgressBarStatus = tileWithSlots.getProgress();
     }
 
     @Override
@@ -75,9 +81,13 @@ public class ContainerMachine extends BaseContainer {
                 }
                 if (slotID >= playerInvIndexStart && slotID < playerInvIndexStop-9) {
                     if (!this.mergeItemStack(itemstack1, playerInvIndexStop-9, playerInvIndexStop, false)) {
+                        if (itemstack1.stackSize < 1)
+                            putStackInSlot(slotID, null);  //Workaround for ghost itemstacks
                         return null;
                     }
                 } else if (slotID >= playerInvIndexStop-9 && slotID < playerInvIndexStop && !this.mergeItemStack(itemstack1, playerInvIndexStart, playerInvIndexStop-9, false)) {
+                    if (itemstack1.stackSize < 1)
+                        putStackInSlot(slotID, null);  //Workaround for ghost itemstacks
                     return null;
                 }
             }
@@ -105,7 +115,8 @@ public class ContainerMachine extends BaseContainer {
     public void updateProgressBar(int id, int value) {
         super.updateProgressBar(id, value);
         if (id == 0){
-            tileWithSlots.setProgress(value);
+            if (tileWithSlots != null)
+                tileWithSlots.setProgress(value);
         }
     }
 }

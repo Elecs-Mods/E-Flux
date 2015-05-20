@@ -7,7 +7,10 @@ import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Elec332 on 17-5-2015.

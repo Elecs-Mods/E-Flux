@@ -17,4 +17,6 @@ public interface ICircuit {
 
     public EnumCircuit getDifficulty();
 
+    public boolean isCircuit(ItemStack stack);
+
 }

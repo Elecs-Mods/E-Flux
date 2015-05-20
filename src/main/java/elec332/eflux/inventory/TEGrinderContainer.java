@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 /**
  * Created by Elec332 on 4-4-2015.
  */
+@Deprecated
 public class TEGrinderContainer extends BaseContainer {
 
     public TEGrinderContainer(TEGrinder theGrinder, EntityPlayer player){

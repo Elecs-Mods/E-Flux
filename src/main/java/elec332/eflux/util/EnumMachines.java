@@ -20,6 +20,7 @@ public enum EnumMachines {
     GRINDER(TileGrinder.class),
     FURNACE(TileFurnace.class),
     COMPRESSOR(Compressor.class),
+    ETCHINGMACHINE(EtchingMachine.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////

@@ -193,7 +193,7 @@ public class WorldGridHolder {
                 try {
                     grids.get(i).onTick();
                 } catch (Throwable t){
-                    throw new RuntimeException(t);
+                    //throw new RuntimeException(t);
                 }
                 EFlux.logger.info(i);
             }

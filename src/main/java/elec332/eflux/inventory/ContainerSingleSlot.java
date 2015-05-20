@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public class ContainerSingleSlot extends Container {
+public class ContainerSingleSlot extends Container {  //Deprecated???
 
     public ContainerSingleSlot(IInventory handler, EntityPlayer player){
        this.bmh = handler;
