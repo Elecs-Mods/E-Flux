@@ -1,9 +1,11 @@
-package elec332.eflux.api.circuit;
+package elec332.eflux.items.circuits;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elec332.core.helper.RegisterHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.ICircuit;
+import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.items.circuits.CircuitHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
