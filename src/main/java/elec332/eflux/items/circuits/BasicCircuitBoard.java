@@ -1,6 +1,5 @@
 package elec332.eflux.items.circuits;
 
-import elec332.eflux.api.circuit.AbstractCircuit;
 import elec332.eflux.api.circuit.EnumCircuit;
 
 /**
