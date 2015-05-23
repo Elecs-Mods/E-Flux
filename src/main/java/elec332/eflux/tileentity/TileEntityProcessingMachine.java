@@ -8,10 +8,12 @@ import elec332.eflux.inventory.ContainerMachine;
 import elec332.eflux.inventory.IHasProgressBar;
 import elec332.eflux.inventory.ITileWithSlots;
 import elec332.eflux.inventory.slot.SlotOutput;
+import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.RecipeRegistry;
 import elec332.eflux.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.IInventoryTile;
+import elec332.eflux.util.RandomUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -19,15 +21,28 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Elec332 on 5-5-2015.
  */
 public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar{
 
-    public TileEntityProcessingMachine(int i){
-        this.inventory = new BasicInventory("Inventory", i, this);
+    public TileEntityProcessingMachine(int i, int upgradeSlots){
+        this.inventory = new BasicInventory("Inventory", i+upgradeSlots, this);
+        this.upgradeSlotsCounter = upgradeSlots;
+        List<Slot> list = Lists.newArrayList();
+        registerMachineSlots(list);
+        this.machineSlots = RandomUtils.copyOf(list);
+        registerStorageSlots(list);
+        int startIndex = list.size();
+        registerUpgradeSlots(list);
+        List<SlotUpgrade> upgradeSlotsList = Lists.newArrayList();
+        for (Slot slot : list.subList(startIndex, list.size())){
+            upgradeSlotsList.add((SlotUpgrade) slot);
+        }
+        this.upgradeSlots = RandomUtils.copyOf(upgradeSlotsList);
+        this.allSLots = list;
     }
 
     @Override
@@ -50,29 +65,48 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     private int progress = 0;
 
     protected BasicInventory inventory;
+    private int upgradeSlotsCounter;
+    private List<Slot> machineSlots;
+    private List<SlotUpgrade> upgradeSlots;
+    private List<Slot> allSLots;
 
     public BasicInventory getInventory() {
         return inventory;
     }
 
-    protected abstract Slot[] getInputSlots();
+    protected abstract void registerMachineSlots(List<Slot> registerList);
 
-    protected abstract SlotOutput[] getOutputSlots();
+    protected void registerStorageSlots(List<Slot> registerList){
+    }
+
+    protected void registerUpgradeSlots(List<Slot> registerList){
+        for (int i = 0; i < upgradeSlotsCounter; i++) {
+            registerList.add(new SlotUpgrade(inventory, registerList.size(), 3, 4 + i * 18));
+        }
+    }
+
+    protected List<Slot> getMachineSlots(){
+        return machineSlots;
+    }
+
+    public List<Slot> getAllSLots() {
+        return allSLots;
+    }
+
+    public List<SlotUpgrade> getUpgradeSlots() {
+        return upgradeSlots;
+    }
 
     public abstract int getRequiredPowerPerTick();
 
     protected abstract int getProcessTime();
 
     protected boolean canProcess() {
-        ArrayList<Slot> slots = Lists.newArrayList(getInputSlots());
-        slots.addAll(Lists.newArrayList(getOutputSlots()));
-        return RecipeRegistry.instance.hasOutput(this, slots);
+        return RecipeRegistry.instance.hasOutput(this, getMachineSlots());
     }
 
     protected void onProcessDone() {
-        ArrayList<Slot> slots = Lists.newArrayList(getInputSlots());
-        slots.addAll(Lists.newArrayList(getOutputSlots()));
-        RecipeRegistry.instance.handleOutput(this, slots);
+        RecipeRegistry.instance.handleOutput(this, getMachineSlots());
     }
 
     @Override
@@ -129,10 +163,8 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
 
     @Override
     public void addSlots(BaseContainer container) {
-        for (Slot slotInput : getInputSlots())
-            container.addSlotToContainer(slotInput);
-        for (SlotOutput slotOutput : getOutputSlots())
-            container.addSlotToContainer(slotOutput);
+        for (Slot slot : getAllSLots())
+            container.addSlotToContainer(slot);
         container.addPlayerInventoryToContainer();
     }
 
@@ -159,11 +191,11 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
         };
     }
 
-    protected SlotOutput[] oneOutPutSlot(int index){
-        return new SlotOutput[]{new SlotOutput(inventory, index, 116, 35)};
+    protected Slot oneOutPutSlot(int index){
+        return new SlotOutput(inventory, index, 116, 35);
     }
 
-    protected Slot[] oneInputSlot(int index){
-        return new Slot[]{new Slot(inventory, index, 56, 35)};
+    protected Slot oneInputSlot(int index){
+        return new Slot(inventory, index, 56, 35);
     }
 }

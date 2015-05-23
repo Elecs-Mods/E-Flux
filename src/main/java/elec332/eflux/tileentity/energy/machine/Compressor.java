@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,25 +8,21 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
+
 /**
  * Created by Elec332 on 17-5-2015.
  */
 public class Compressor extends TileEntityProcessingMachine {
     public Compressor() {
-        super(3);
+        super(3, 4);
     }
 
     @Override
-    protected Slot[] getInputSlots() {
-        return new Slot[]{
-                new Slot(inventory, 0, 56, 17),
-                new Slot(inventory, 1, 56, 53)
-        };
-    }
-
-    @Override
-    protected SlotOutput[] getOutputSlots() {
-        return oneOutPutSlot(2);
+    protected void registerMachineSlots(List<Slot> registerList) {
+        registerList.add(new Slot(inventory, registerList.size(), 56, 17));
+        registerList.add(new Slot(inventory, registerList.size(), 56, 53));
+        registerList.add(oneOutPutSlot(registerList.size()));
     }
 
     @Override

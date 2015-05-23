@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,23 +7,21 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
+
 /**
  * Created by Elec332 on 10-5-2015.
  */
 public class TileGrinder extends TileEntityProcessingMachine {
 
     public TileGrinder() {
-        super(2);
+        super(2, 4);
     }
 
     @Override
-    protected Slot[] getInputSlots() {
-        return oneInputSlot(0);
-    }
-
-    @Override
-    protected SlotOutput[] getOutputSlots() {
-        return oneOutPutSlot(1);
+    protected void registerMachineSlots(List<Slot> registerList) {
+        registerList.add(oneInputSlot(registerList.size()));
+        registerList.add(oneOutPutSlot(registerList.size()));
     }
 
     @Override

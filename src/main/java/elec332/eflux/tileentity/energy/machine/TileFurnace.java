@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.eflux.inventory.slot.SlotFurnaceInput;
-import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,13 +9,15 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.List;
+
 /**
  * Created by Elec332 on 5-5-2015.
  */
 public class TileFurnace extends TileEntityProcessingMachine {
 
     public TileFurnace() {
-        super(2);
+        super(2, 4);
     }
 
     private SlotFurnaceInput getInputSlot(){
@@ -24,13 +25,9 @@ public class TileFurnace extends TileEntityProcessingMachine {
     }
 
     @Override
-    protected Slot[] getInputSlots() {
-        return new Slot[]{getInputSlot()};
-    }
-
-    @Override
-    protected SlotOutput[] getOutputSlots() {
-        return oneOutPutSlot(1);
+    protected void registerMachineSlots(List<Slot> registerList) {
+        registerList.add(getInputSlot());
+        registerList.add(oneOutPutSlot(registerList.size()));
     }
 
     @Override
