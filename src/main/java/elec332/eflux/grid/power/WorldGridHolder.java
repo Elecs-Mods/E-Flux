@@ -47,15 +47,15 @@ public class WorldGridHolder {
         PowerTile powerTile = new PowerTile(tile);
         registeredTiles.put(genCoords(tile), powerTile);
         addTile(powerTile);
-        EFlux.logger.info("Tile placed at "+genCoords(tile).toString());
+        EFlux.systemPrintDebug("Tile placed at " + genCoords(tile).toString());
     }
 
     public void addTile(PowerTile powerTile){
         if(!world.isRemote) {
-            EFlux.logger.info("Processing tile at "+powerTile.getLocation().toString());
+            EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString());
             TileEntity theTile = powerTile.getTile();
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-                EFlux.logger.info("Processing tile at "+powerTile.getLocation().toString() + " for side "+direction.toString());
+                EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString() + " for side " + direction.toString());
                 TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
                 if (possTile != null && EnergyAPIHelper.isEnergyTile(possTile)) {
                     PowerTile powerTile1 = getPowerTile(genCoords(possTile));
@@ -68,7 +68,7 @@ public class WorldGridHolder {
                         powerTile.getGridFromSide(direction).mergeGrids(grid);
                     }
                 } else {
-                    EFlux.logger.info("There is no tile at side "+direction.toString() + " that is valid for connection");
+                    EFlux.systemPrintDebug("There is no tile at side " + direction.toString() + " that is valid for connection");
                 }
             }
         }
@@ -127,16 +127,16 @@ public class WorldGridHolder {
         if (powerTile != null) {
             for (EFluxCableGrid grid : powerTile.getGrids()) {
                 if (grid != null) {
-                    EFlux.logger.info("Removing tile at " + powerTile.getLocation().toString());
+                    EFlux.systemPrintDebug("Removing tile at " + powerTile.getLocation().toString());
                     List<BlockLoc> vec3List = new ArrayList<BlockLoc>();
                     vec3List.addAll(grid.getLocations());
                     vec3List.remove(powerTile.getLocation());
-                    EFlux.logger.info(registeredTiles.keySet().size());
+                    EFlux.systemPrintDebug(registeredTiles.keySet().size());
                     registeredTiles.remove(powerTile.getLocation());
-                    EFlux.logger.info(registeredTiles.keySet().size());
-                    EFlux.logger.info(grids.size());
+                    EFlux.systemPrintDebug(registeredTiles.keySet().size());
+                    EFlux.systemPrintDebug(grids.size());
                     this.grids.remove(grid);
-                    EFlux.logger.info(grids.size());
+                    EFlux.systemPrintDebug(grids.size());
                     List<BlockLoc> vec3List2 = new ArrayList<BlockLoc>();
                     for (BlockLoc vec : vec3List) {
                         if (!vec.equals(powerTile.getLocation())) {
@@ -148,7 +148,7 @@ public class WorldGridHolder {
                         }
                     }
                     for (BlockLoc vec : vec3List2) {
-                        EFlux.logger.info("Re-adding tile at " + vec.toString());
+                        EFlux.systemPrintDebug("Re-adding tile at " + vec.toString());
                         TileEntity tileEntity1 = getTile(vec);
                         if (EnergyAPIHelper.isEnergyTile(tileEntity1))
                             if (getPowerTile(vec) != null)
@@ -160,7 +160,7 @@ public class WorldGridHolder {
     }
 
     public void onServerTickInternal(){
-        EFlux.logger.info("Tick! "+world.provider.dimensionId);
+        EFlux.systemPrintDebug("Tick! " + world.provider.dimensionId);
         if (!pending.isEmpty() && pending.size() == oldInt) {
                /*List<PowerTile> tr = new ArrayList<PowerTile>();
                for (PowerTile powerTile : pending)
@@ -195,7 +195,7 @@ public class WorldGridHolder {
                 } catch (Throwable t){
                     //throw new RuntimeException(t);
                 }
-                EFlux.logger.info(i);
+                EFlux.systemPrintDebug(i);
             }
 
     }

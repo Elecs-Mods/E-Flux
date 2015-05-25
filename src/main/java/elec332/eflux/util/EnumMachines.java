@@ -21,6 +21,8 @@ public enum EnumMachines {
     FURNACE(TileFurnace.class),
     COMPRESSOR(Compressor.class),
     ETCHINGMACHINE(EtchingMachine.class),
+    GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
+    LASER(Laser.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////
@@ -58,9 +60,9 @@ public enum EnumMachines {
         return this.material;
     }
 
-    public BlockMachine getBlock() {
+    /*public BlockMachine getBlock() {
         return blockMachine;
-    }
+    }*/
 
     public void setCreativeTab(CreativeTabs creativeTabs) {
         this.blockMachine.setCreativeTab(creativeTabs);

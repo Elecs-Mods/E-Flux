@@ -22,7 +22,7 @@ public class Compressor extends TileEntityProcessingMachine {
     protected void registerMachineSlots(List<Slot> registerList) {
         registerList.add(new Slot(inventory, registerList.size(), 56, 17));
         registerList.add(new Slot(inventory, registerList.size(), 56, 53));
-        registerList.add(oneOutPutSlot(registerList.size()));
+        oneOutPutSlot(registerList);
     }
 
     @Override

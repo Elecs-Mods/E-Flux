@@ -119,6 +119,11 @@ public class EFlux {
         CommandRegister.instance.init(event);
     }
 
+    public static void systemPrintDebug(Object s){
+        if (Config.DebugLog)
+            System.out.println(s);
+    }
+
     private void registerRecipes(){
         RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
         RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));

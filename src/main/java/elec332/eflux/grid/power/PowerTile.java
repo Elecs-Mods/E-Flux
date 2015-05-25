@@ -1,6 +1,7 @@
 package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
+import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
@@ -67,17 +68,17 @@ public class PowerTile {  //Wrapper for TileEntities
                 if (grid != null)
                     q++;
             }
-            System.out.println("OldSizeBeforeMerge: "+q);
+            EFlux.systemPrintDebug("OldSizeBeforeMerge: " + q);
             int i = removeGrid(old);
-            System.out.println(i);
+            EFlux.systemPrintDebug(i);
             grids[i] = newGrid;
             q = 0;
             for (EFluxCableGrid grid : grids){
                 if (grid != null)
                     q++;
             }
-            System.out.println("NewSizeAfterMerge "+q);
-            System.out.println(grids.length);
+            EFlux.systemPrintDebug("NewSizeAfterMerge " + q);
+            EFlux.systemPrintDebug(grids.length);
         }
     }
 

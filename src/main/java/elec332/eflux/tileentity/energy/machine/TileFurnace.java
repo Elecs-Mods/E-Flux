@@ -27,7 +27,7 @@ public class TileFurnace extends TileEntityProcessingMachine {
     @Override
     protected void registerMachineSlots(List<Slot> registerList) {
         registerList.add(getInputSlot());
-        registerList.add(oneOutPutSlot(registerList.size()));
+        oneOutPutSlot(registerList);
     }
 
     @Override

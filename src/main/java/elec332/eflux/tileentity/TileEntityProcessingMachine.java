@@ -191,11 +191,11 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
         };
     }
 
-    protected Slot oneOutPutSlot(int index){
-        return new SlotOutput(inventory, index, 116, 35);
+    protected void oneOutPutSlot(List<Slot> list){
+        list.add(new SlotOutput(inventory, list.size(), 116, 35));
     }
 
-    protected Slot oneInputSlot(int index){
-        return new Slot(inventory, index, 56, 35);
+    protected void oneInputSlot(List<Slot> list){
+        list.add(new Slot(inventory, list.size(), 56, 35));
     }
 }

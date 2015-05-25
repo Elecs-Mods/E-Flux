@@ -20,8 +20,8 @@ public class TileGrinder extends TileEntityProcessingMachine {
 
     @Override
     protected void registerMachineSlots(List<Slot> registerList) {
-        registerList.add(oneInputSlot(registerList.size()));
-        registerList.add(oneOutPutSlot(registerList.size()));
+        oneInputSlot(registerList);
+        oneOutPutSlot(registerList);
     }
 
     @Override

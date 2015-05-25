@@ -1,6 +1,7 @@
 package elec332.eflux.grid.power;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import elec332.core.main.ElecCore;
 import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -71,19 +72,19 @@ public class EFluxCableGrid {
                 powerTile.replaceGrid(grid, this);
         }
         grid.invalidate();
-        EFlux.logger.info("MERGED");
+        EFlux.systemPrintDebug("MERGED");
         return this;
     }
 
     public void onTick(){
-        System.out.println("START");
+        EFlux.systemPrintDebug("START");
         for (BlockLoc vec:locations)
-            System.out.println(vec.toString());
-        System.out.println("Locations: "+locations.size());
-        System.out.println("Acceptors: "+acceptors.size());
-        System.out.println("Providers "+(providers.size()+specialProviders.size()));
-        System.out.println("MaxTransfer: "+maxTransfer);
-        System.out.println("STOP");
+            EFlux.systemPrintDebug(vec.toString());
+        EFlux.systemPrintDebug("Locations: " + locations.size());
+        EFlux.systemPrintDebug("Acceptors: " + acceptors.size());
+        EFlux.systemPrintDebug("Providers " + (providers.size() + specialProviders.size()));
+        EFlux.systemPrintDebug("MaxTransfer: " + maxTransfer);
+        EFlux.systemPrintDebug("STOP");
         processPower();
     }
 

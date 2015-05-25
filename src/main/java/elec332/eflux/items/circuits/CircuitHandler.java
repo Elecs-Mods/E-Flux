@@ -34,7 +34,7 @@ public class CircuitHandler {
         else throw new UnsupportedOperationException("Cannot register circuits after init");
     }
 
-    private static CircuitHandler get(EnumCircuit circuit) {
+    public static CircuitHandler get(EnumCircuit circuit) {
         if (circuit == null)
             throw new IllegalArgumentException();
         CircuitHandler ret = mappings.get(circuit);
@@ -60,6 +60,7 @@ public class CircuitHandler {
     }
     private EnumCircuit circuit;
     private List<ICircuitDataProvider> mapping;
+    public Item circuitItem;
 
     private void registerCircuit(ICircuitDataProvider provider){
         if (!mapping.contains(provider))
@@ -68,6 +69,7 @@ public class CircuitHandler {
 
     private void registerData(){
         Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.CreativeTab);
+        this.circuitItem = circuit;
         Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.CreativeTab);
         for (int i = 0; i < mapping.size(); i++) {
             RecipeRegistry.instance.registerRecipe(EnumMachines.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
