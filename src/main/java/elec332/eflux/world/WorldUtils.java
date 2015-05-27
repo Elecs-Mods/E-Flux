@@ -1,14 +1,33 @@
 package elec332.eflux.world;
 
 import elec332.core.util.BlockLoc;
+import elec332.eflux.EFlux;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
 
 /**
  * Created by Elec332 on 24-5-2015.
  */
 public class WorldUtils {
+
+    public static ForgeChunkManager.Ticket requestTicket(World world, BlockLoc loc){
+        ForgeChunkManager.Ticket ticket = ForgeChunkManager.requestTicket(EFlux.instance, world, ForgeChunkManager.Type.NORMAL);
+        if (ticket != null){
+            loc.toNBT(ticket.getModData());
+        }
+        return ticket;
+    }
+
+    public static ChunkCoordIntPair fromBlockLoc(BlockLoc loc){
+        return new ChunkCoordIntPair(loc.xCoord >> 4, loc.zCoord >> 4);
+    }
+
+    public static void forceChunk(ForgeChunkManager.Ticket ticket){
+        ForgeChunkManager.forceChunk(ticket, fromBlockLoc(new BlockLoc(ticket.getModData())));
+    }
 
     public static void dropStack(World world, BlockLoc blockLoc, ItemStack stack){
         dropStack(world, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, stack);

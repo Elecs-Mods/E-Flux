@@ -1,7 +1,6 @@
 package elec332.eflux.inventory.slot;
 
 import elec332.eflux.util.BasicInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 

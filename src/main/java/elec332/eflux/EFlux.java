@@ -14,6 +14,7 @@ import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.network.NetworkHandler;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.grid.power.EventHandler;
+import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
@@ -27,10 +28,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -105,6 +109,13 @@ public class EFlux {
         EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
         CircuitHandler.register();
         registerRecipes();
+        EventHelper.registerHandlerForge(new PlayerEventHandler());
+        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
+            @Override
+            public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
+                //Dummy, just load my chunks please.....
+            }
+        });
         //register items/blocks
 
     }

@@ -1,7 +1,6 @@
 package elec332.eflux.grid.power;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import elec332.core.main.ElecCore;
 import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;

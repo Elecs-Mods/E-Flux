@@ -5,6 +5,8 @@ import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +25,8 @@ public enum EnumMachines {
     ETCHINGMACHINE(EtchingMachine.class),
     GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
     LASER(Laser.class),
+    CHUNKMAIN(MainChunkLoaderTile.class),
+    CHUNKSUB(ChunkLoaderSubTile.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////

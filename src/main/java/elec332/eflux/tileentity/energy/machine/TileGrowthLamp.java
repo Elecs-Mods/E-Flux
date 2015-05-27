@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import com.google.common.collect.Lists;
-import elec332.core.main.ElecCore;
 import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.BreakableReceiverTile;

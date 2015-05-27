@@ -18,6 +18,10 @@ public class BlockMachine extends BlockTileBase {
 
     private EnumMachines machine;
 
+    public EnumMachines getMachine(){
+        return machine;
+    }
+
     @Override
     public ItemStack ItemDropped() {
         return new ItemStack(this);

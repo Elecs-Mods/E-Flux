@@ -48,7 +48,8 @@ public class Laser extends BreakableReceiverTile {
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (timeCheck() && !worldObj.isRemote) {
+        if (timeCheck() && !worldObj.isRemote && storedPower >=3000) {
+            storedPower -= 3000;
             List<ItemStack> toDrop = Lists.newArrayList();
             for (BlockLoc blockLoc : getNewBlocksToMine()) {
                 toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, WorldUtils.getBlockMeta(worldObj, blockLoc), 1));
@@ -57,6 +58,8 @@ public class Laser extends BreakableReceiverTile {
             for (ItemStack stack : toDrop){
                 WorldUtils.dropStack(worldObj, myLocation(), stack);
             }
+            syncData();
+            markDirty();
         }
     }
 
