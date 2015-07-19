@@ -25,11 +25,11 @@ public class ChunkLoaderSubTile extends TileBase {
         ElecCore.tickHandler.registerCall(new IRunOnce() {
             @Override
             public void run() {
-                if (entityLiving instanceof EntityPlayer && ChunkLoaderPlayerProperties.get((EntityPlayer) entityLiving).hasHandler()) {
+                if (entityLiving instanceof EntityPlayer && ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).hasHandler()) {
                     if (ChunkLoaderSubTile.this.owner == null)
                         ChunkLoaderSubTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
                     PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+myLocation().toString());
-                    ChunkLoaderPlayerProperties.get((EntityPlayer) entityLiving).getMain().addLoader(ChunkLoaderSubTile.this);
+                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).getMain().addLoader(ChunkLoaderSubTile.this);
                 }
             }
         });
@@ -38,8 +38,8 @@ public class ChunkLoaderSubTile extends TileBase {
     @Override
     public void onBlockRemoved() {
         super.onBlockRemoved();
-        if (owner != null && ChunkLoaderPlayerProperties.get(worldObj.func_152378_a(owner)).hasHandler())
-            ChunkLoaderPlayerProperties.get(worldObj.func_152378_a(owner)).getMain().removeLoader(this);
+        if (owner != null && ChunkLoaderPlayerProperties.get(owner).hasHandler())
+            ChunkLoaderPlayerProperties.get(owner).getMain().removeLoader(this);
     }
 
     @Override

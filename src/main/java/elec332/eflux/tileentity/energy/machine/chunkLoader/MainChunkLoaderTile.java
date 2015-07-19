@@ -3,6 +3,7 @@ package elec332.eflux.tileentity.energy.machine.chunkLoader;
 import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
 import elec332.core.player.PlayerHelper;
+import elec332.core.server.ServerHelper;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.IRunOnce;
 import elec332.core.world.WorldHelper;
@@ -11,6 +12,7 @@ import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.BreakableReceiverTile;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -88,7 +90,8 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
     @Override
     public void writeToItemStack(NBTTagCompound tagCompound) {
         super.writeToItemStack(tagCompound);
-        tagCompound.setString("Owner", owner.toString());
+        if (owner != null)
+            tagCompound.setString("Owner", owner.toString());
         NBTTagList tagList = new NBTTagList();
         for (BlockLoc blockLoc : blockLocations){
             tagList.appendTag(blockLoc.toNBT(new NBTTagCompound()));
@@ -117,15 +120,23 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
         ElecCore.tickHandler.registerCall(new IRunOnce() {
             @Override
             public void run() {
-                if (entityLiving instanceof EntityPlayer && !ChunkLoaderPlayerProperties.get((EntityPlayer) entityLiving).hasHandler()) {
-                    if (MainChunkLoaderTile.this.owner == null)
-                        MainChunkLoaderTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
-                    PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+myLocation().toString());
-                    ChunkLoaderPlayerProperties.get((EntityPlayer) entityLiving).setMainChunkLoader(MainChunkLoaderTile.this);
-                    MainChunkLoaderTile.this.blockLocations.add(myLocation());
-                }
+        if (!ServerHelper.isServer(worldObj))
+            return;
+        if (entityLiving instanceof EntityPlayer && !ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).hasHandler()) {
+            if (MainChunkLoaderTile.this.owner == null)
+                MainChunkLoaderTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
+            PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+myLocation().toString());
+            ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).setMainChunkLoader(MainChunkLoaderTile.this);
+            MainChunkLoaderTile.this.blockLocations.add(myLocation());
+        } /*else {
+            if (entityLiving instanceof EntityPlayer){
+                if (!((EntityPlayer)entityLiving).inventory.addItemStackToInventory(itemStackFromNBTTile()))
+                    WorldHelper.dropStack(worldObj, myLocation(), itemStackFromNBTTile());
+            } else {
+                WorldHelper.dropStack(worldObj, myLocation(), itemStackFromNBTTile());
             }
-        });
+            worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+        }*/}});
     }
 
     public boolean isOwner(EntityPlayer player){
@@ -157,7 +168,7 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
         super.onBlockRemoved();
         handle(false);
         if (owner != null)
-            ChunkLoaderPlayerProperties.get(worldObj.func_152378_a(owner)).setMainChunkLoader(null);
+            ChunkLoaderPlayerProperties.get(owner).setMainChunkLoader(null);
     }
 
     /**

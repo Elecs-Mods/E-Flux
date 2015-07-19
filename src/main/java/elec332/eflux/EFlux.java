@@ -12,9 +12,11 @@ import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.network.NetworkHandler;
+import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.grid.power.EventHandler;
+import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
@@ -29,12 +31,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -101,7 +105,10 @@ public class EFlux {
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent event) throws IOException{
+        File file = new File("");
+
+        ServerHelper.instance.registerExtendedProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
