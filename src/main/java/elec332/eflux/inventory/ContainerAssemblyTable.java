@@ -5,7 +5,7 @@ import elec332.core.helper.ItemHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.inventory.slot.SlotAssembly;
-import elec332.eflux.util.BasicInventory;
+import elec332.core.util.BasicInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

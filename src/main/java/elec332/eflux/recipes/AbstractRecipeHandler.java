@@ -2,7 +2,7 @@ package elec332.eflux.recipes;
 
 import com.google.common.collect.Lists;
 import elec332.eflux.inventory.slot.SlotOutput;
-import elec332.eflux.util.BasicInventory;
+import elec332.core.util.BasicInventory;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;

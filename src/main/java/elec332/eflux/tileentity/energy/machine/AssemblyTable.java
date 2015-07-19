@@ -5,7 +5,7 @@ import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
 import elec332.eflux.tileentity.BreakableMachineTile;
-import elec332.eflux.util.BasicInventory;
+import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

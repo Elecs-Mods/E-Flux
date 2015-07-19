@@ -12,6 +12,7 @@ import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.network.NetworkHandler;
+import elec332.core.util.EventHelper;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.PlayerEventHandler;

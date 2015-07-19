@@ -10,7 +10,7 @@ import elec332.eflux.inventory.ITileWithSlots;
 import elec332.eflux.inventory.slot.SlotOutput;
 import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.RecipeRegistry;
-import elec332.eflux.util.BasicInventory;
+import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.IInventoryTile;
 import elec332.eflux.util.RandomUtils;

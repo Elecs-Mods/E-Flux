@@ -5,7 +5,6 @@ import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.BreakableReceiverTile;
 import elec332.eflux.util.Config;
-import elec332.eflux.world.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.IGrowable;
@@ -40,7 +39,7 @@ public class TileGrowthLamp extends BreakableReceiverTile {
         Collections.shuffle(blockLocations, worldObj.rand);
         BlockLoc randomLoc = blockLocations.get(0);
         if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
-            WorldUtils.scheduleBlockUpdate(worldObj, randomLoc);
+            WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
             //System.out.println("Scheduled block update at " + randomLoc.toString());
             /*try {
                 ElecCore.proxy.addPersonalMessageToPlayer();
@@ -53,7 +52,7 @@ public class TileGrowthLamp extends BreakableReceiverTile {
 
     private boolean isFullyGrownCrop(BlockLoc blockLoc){
         Block block = WorldHelper.getBlockAt(worldObj, blockLoc);
-        int meta = WorldUtils.getBlockMeta(worldObj, blockLoc);
+        int meta = WorldHelper.getBlockMeta(worldObj, blockLoc);
         return block instanceof IGrowable && !((IGrowable) block).func_149851_a(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, worldObj.isRemote) || block instanceof BlockCrops && meta == 7;
     }
 

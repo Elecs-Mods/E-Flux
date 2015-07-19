@@ -7,7 +7,6 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.tileentity.BreakableReceiverTile;
-import elec332.eflux.world.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -52,11 +51,11 @@ public class Laser extends BreakableReceiverTile {
             storedPower -= 3000;
             List<ItemStack> toDrop = Lists.newArrayList();
             for (BlockLoc blockLoc : getNewBlocksToMine()) {
-                toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, WorldUtils.getBlockMeta(worldObj, blockLoc), 1));
+                toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, WorldHelper.getBlockMeta(worldObj, blockLoc), 1));
                 worldObj.setBlockToAir(blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord);
             }
             for (ItemStack stack : toDrop){
-                WorldUtils.dropStack(worldObj, myLocation(), stack);
+                WorldHelper.dropStack(worldObj, myLocation(), stack);
             }
             syncData();
             markDirty();

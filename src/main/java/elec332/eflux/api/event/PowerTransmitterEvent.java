@@ -12,7 +12,7 @@ class PowerTransmitterEvent extends WorldEvent {
     public TileEntity transmitterTile;
 
     public PowerTransmitterEvent(TileEntity transmitterTile) {
-        super((transmitterTile).getWorldObj());
+        super(transmitterTile.getWorldObj());
         EnergyAPIHelper.checkValidity(transmitterTile);
         this.transmitterTile = transmitterTile;
     }
