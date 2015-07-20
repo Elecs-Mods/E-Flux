@@ -2,7 +2,9 @@ package elec332.eflux.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
+import elec332.eflux.tileentity.energy.cable.AdvancedCable;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
+import elec332.eflux.tileentity.energy.cable.NormalCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
@@ -27,6 +29,8 @@ public enum EnumMachines {
     LASER(Laser.class),
     CHUNKMAIN(MainChunkLoaderTile.class),
     CHUNKSUB(ChunkLoaderSubTile.class),
+    NORMALCABLE(NormalCable.class),
+    ADVANCEDCABLE(AdvancedCable.class)
 
     ;
     //___DATA__//////////////////////////////////////////////////////////

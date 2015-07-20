@@ -39,6 +39,8 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
     private boolean active;
     private int neededPower;
     public boolean changed;
+    private int loadedChunks;
+    private boolean recentlyWithoutPower;
 
     private List<ForgeChunkManager.Ticket> tickets;
 
@@ -50,35 +52,48 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
     public void updateEntity() {
         super.updateEntity();
         calculatePower();
-        //if (storedPower >= neededPower && active){
-        //    storedPower -= neededPower;
+        if (storedPower >= neededPower && active){
+            storedPower -= neededPower;
+            if (recentlyWithoutPower)
+                this.changed = true;
             handle(true);
-        //} else handle(false);
+            this.recentlyWithoutPower = false;
+        } else {
+            handle(false);
+            this.recentlyWithoutPower = true;
+        }
     }
 
     private void calculatePower(){
-        this.neededPower = 3; //TODO: Dynamic, per-chunk cost
+        this.neededPower = 12*loadedChunks*33;
     }
 
     public void addLoader(ChunkLoaderSubTile tile){
         getLocations().add(tile.myLocation());
         changed = true;
+        loadedChunks++;
     }
 
     public void removeLoader(ChunkLoaderSubTile tile){
         getLocations().remove(tile.myLocation());
         changed = true;
+        loadedChunks--;
     }
 
-    private void handle(boolean b){
-        if ((changed || !b) && !worldObj.isRemote){
-            for (ForgeChunkManager.Ticket ticket : tickets){
+    private void handle(boolean b) {
+        if ((changed || !b) && !worldObj.isRemote) {
+            if (!b && tickets.isEmpty()) {
+                return;
+            }
+            for (ForgeChunkManager.Ticket ticket : tickets) {
                 ForgeChunkManager.releaseTicket(ticket);
             }
             tickets.clear();
+            //loadedChunks = 0;
             if (b) {
                 for (BlockLoc loc : getLocations()) {
                     ForgeChunkManager.Ticket ticket = WorldHelper.requestTicket(worldObj, loc, EFlux.instance);
+                    //loadedChunks++;
                     tickets.add(ticket);
                     WorldHelper.forceChunk(ticket);
                     PlayerHelper.sendMessageToPlayer(worldObj.func_152378_a(owner), "Put ticket on blockLoc: " + loc.toString());
@@ -125,6 +140,7 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
                     PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + myLocation().toString());
                     ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).setMainChunkLoader(MainChunkLoaderTile.this);
                     MainChunkLoaderTile.this.getLocations().add(myLocation());
+                    MainChunkLoaderTile.this.loadedChunks = MainChunkLoaderTile.this.getLocations().size();
                     MainChunkLoaderTile.this.changed = true;
                 }
             }
@@ -133,6 +149,23 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
 
     public boolean isOwner(EntityPlayer player){
         return player != null && PlayerHelper.getPlayerUUID(player).equals(owner);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        tagCompound.setInteger("chunksLoaded", loadedChunks);
+        tagCompound.setBoolean("powerBool", recentlyWithoutPower);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        if (tagCompound.hasKey("chunksLoaded"))
+            this.loadedChunks = tagCompound.getInteger("chunksLoaded");
+        if (tagCompound.hasKey("powerBool"))
+            this.recentlyWithoutPower = tagCompound.getBoolean("powerBool");
+
     }
 
     @Override
@@ -147,12 +180,12 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
 
     @Override
     public int getEFForOptimalRP() {
-        return 0;
+        return 144;
     }
 
     @Override
     protected int getMaxStoredPower() {
-        return 0;
+        return 20000;
     }
 
     @Override
@@ -185,6 +218,10 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
 
     @Override
     public String[] getProvidedData() {
-        return new String[0];
+        return new String[]{
+                "Stored power: "+storedPower,
+                "In working order: "+!isBroken(),
+                "Loaded chunks: "+loadedChunks
+        };
     }
 }
