@@ -3,6 +3,7 @@ package elec332.eflux.tileentity.energy.machine.chunkLoader;
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.core.main.ElecCore;
 import elec332.core.player.PlayerHelper;
+import elec332.core.server.ServerHelper;
 import elec332.core.util.IRunOnce;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,11 +26,13 @@ public class ChunkLoaderSubTile extends TileBase {
         ElecCore.tickHandler.registerCall(new IRunOnce() {
             @Override
             public void run() {
-                if (entityLiving instanceof EntityPlayer && ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).hasHandler()) {
+                if (!ServerHelper.isServer(worldObj))
+                    return;
+                if (entityLiving instanceof EntityPlayer) {
                     if (ChunkLoaderSubTile.this.owner == null)
                         ChunkLoaderSubTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
                     PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+myLocation().toString());
-                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).getMain().addLoader(ChunkLoaderSubTile.this);
+                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).addLoader(ChunkLoaderSubTile.this);
                 }
             }
         });
@@ -38,8 +41,12 @@ public class ChunkLoaderSubTile extends TileBase {
     @Override
     public void onBlockRemoved() {
         super.onBlockRemoved();
-        if (owner != null && ChunkLoaderPlayerProperties.get(owner).hasHandler())
-            ChunkLoaderPlayerProperties.get(owner).getMain().removeLoader(this);
+        if (owner != null)
+            ChunkLoaderPlayerProperties.get(owner).removeLoader(this);
+    }
+
+    public boolean canPlace(EntityPlayer player){
+        return player != null && (owner == null || PlayerHelper.getPlayerUUID(player).equals(owner));
     }
 
     @Override

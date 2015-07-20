@@ -9,6 +9,7 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -18,38 +19,27 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 public class PlayerEventHandler {
 
-    /*@SubscribeEvent
-    public void onPlayerConstructing(EntityEvent.EntityConstructing event){
-        if (event.entity instanceof EntityPlayerMP || event.entity instanceof EntityClientPlayerMP)
-            event.entity.registerExtendedProperties("EFluxChunks", new ChunkLoaderPlayerProperties());
-    }*/
-
-    @SubscribeEvent
-    public void we(WorldEvent.Unload event){
-        System.out.println("Unload: "+ WorldHelper.getDimID(event.world));
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onBlockPlaced(BlockEvent.PlaceEvent event){
         if (event.placedBlock instanceof BlockMachine && event.player != null){
-            Class<?> clazz = ((BlockMachine)event.placedBlock).getMachine().getTileClass();
-            boolean hasMain = ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID(event.player)).hasHandler();
-
-            //((().isAssignableFrom(ChunkLoaderSubTile.class) && ChunkLoaderPlayerProperties.get(event.player).getMain()==null) ||
-            //    (((BlockMachine)event.placedBlock).getMachine().getTileClass().isAssignableFrom(MainChunkLoaderTile.class)&& ChunkLoaderPlayerProperties.get(event.player).hasHandler())) || event.player == null)
-            if (ChunkLoaderSubTile.class.isAssignableFrom(clazz) && !hasMain || MainChunkLoaderTile.class.isAssignableFrom(clazz) && hasMain){
+            //Class<?> clazz = ((BlockMachine)event.placedBlock).getMachine().getTileClass();
+            TileEntity te = event.world.getTileEntity(event.x, event.y, event.z);
+            //boolean hasMain = ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID(event.player)).hasHandler();
+            /*if (clazz.isAssignableFrom(MainChunkLoaderTile.class) && hasMain || MainChunkLoaderTile.class.isAssignableFrom(clazz) && hasMain){
                 event.setCanceled(true);
-            } else if (clazz.isAssignableFrom(ChunkLoaderSubTile.class) && !hasMain || clazz.isAssignableFrom(MainChunkLoaderTile.class) && hasMain){
+            }*/
+            System.out.println(te);
+            if (te instanceof MainChunkLoaderTile && !((MainChunkLoaderTile) te).canPlace(event.player)){
+                event.setCanceled(true);
+            } else if (te instanceof ChunkLoaderSubTile && !((ChunkLoaderSubTile) te).canPlace(event.player)){
                 event.setCanceled(true);
             }
-
-            //event.world.setBlockToAir(event.x, event.y, event.z);
         }
     }
 
     @SubscribeEvent
     public void onBlockBroken(BlockEvent.BreakEvent event){
-        if (event.world.getTileEntity(event.x, event.y, event.z) instanceof MainChunkLoaderTile && event.getPlayer() != null && !((MainChunkLoaderTile)event.world.getTileEntity(event.x, event.y, event.z)).isOwner(event.getPlayer())){
+        if (event.world.getTileEntity(event.x, event.y, event.z) instanceof MainChunkLoaderTile && !((MainChunkLoaderTile)event.world.getTileEntity(event.x, event.y, event.z)).isOwner(event.getPlayer())){
             event.setCanceled(true);
         }
     }
