@@ -12,7 +12,7 @@ import net.minecraft.util.IIcon;
  * Created by Elec332 on 3-4-2015.
  */
 public class DirectionBlock extends BaseBlock {
-    @SideOnly(Side.CLIENT)
+
     public IIcon[] icons = new IIcon[6];
 
     public DirectionBlock(){
@@ -26,6 +26,7 @@ public class DirectionBlock extends BaseBlock {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister reg) {
         for (int i = 0; i < 6; i ++) {
             this.icons[i] = reg.registerIcon(this.textureName + "_" + i);

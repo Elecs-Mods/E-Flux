@@ -19,7 +19,7 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 public class PlayerEventHandler {
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event){
         if (event.placedBlock instanceof BlockMachine && event.player != null){
             //Class<?> clazz = ((BlockMachine)event.placedBlock).getMachine().getTileClass();
