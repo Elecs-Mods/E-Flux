@@ -20,4 +20,7 @@ public class Config {
         public static int growthLampXZ = 5;
 
     }
+
+    @Configurable(category = "energy", comment = "This defines the conversion for the RF power system")
+    public static int RFConversionNumber = 10;
 }
