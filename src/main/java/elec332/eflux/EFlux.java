@@ -15,6 +15,7 @@ import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.eflux.compat.Compat;
+import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
@@ -94,6 +95,7 @@ public class EFlux {
         configWrapper.registerConfig(new Config());
         configWrapper.refresh();
         Compat.instance.loadList();
+        Compat.instance.addHandler(new RFCompat());
         logger.info("RF API loaded: "+Compat.RF);
         logger.info("RFTools: "+Compat.RFTools);
 
@@ -106,8 +108,6 @@ public class EFlux {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws IOException{
-        File file = new File("");
-
         ServerHelper.instance.registerExtendedProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
@@ -124,6 +124,7 @@ public class EFlux {
                 //Dummy, just load my chunks please.....
             }
         });
+
         //register items/blocks
 
     }
