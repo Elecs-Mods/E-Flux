@@ -33,6 +33,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
@@ -88,6 +89,7 @@ public class EFlux {
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(24, 20, 40, 1000, 0.15f));
+        logger.info(Math.sqrt(Math.abs(Math.cos(10))));
         /////////////////////////
 
 
@@ -124,7 +126,6 @@ public class EFlux {
                 //Dummy, just load my chunks please.....
             }
         });
-
         //register items/blocks
 
     }

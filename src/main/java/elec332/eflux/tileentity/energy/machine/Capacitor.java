@@ -3,6 +3,7 @@ package elec332.eflux.tileentity.energy.machine;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.BreakableReceiverTile;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class Capacitor extends BreakableMachineTile implements ISpecialEnergySource{
+public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySource{
 
     @Override
     public ItemStack getRandomRepairItem() {
@@ -23,11 +24,16 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
     }
 
     @Override
+    protected int getMaxStoredPower() {
+        return 3000;
+    }
+
+    @Override
     public int getEFForOptimalRP() {
         return 20;
     }
 
-    @Override
+    /*@Override
     public int getMaxEF(int rp) {
         return Math.min(20, (300-storedPower)/rp);
     }
@@ -35,7 +41,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
     @Override
     protected void receivePower(int rp, int ef, ForgeDirection direction) {
         storedPower = storedPower+rp*ef;
-    }
+    }*/
 
     /**
      * @param direction the direction from which a connection is requested

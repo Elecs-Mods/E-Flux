@@ -6,6 +6,7 @@ import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.core.util.BasicInventory;
+import elec332.eflux.tileentity.BreakableReceiverTile;
 import elec332.eflux.util.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -17,7 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 4-5-2015.
  */
-public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
+public class AssemblyTable extends BreakableReceiverTile implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
         @Override
@@ -41,10 +42,10 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
         return 50;
     }
 
-    @Override
-    public int getMaxEF(int rp) {
-        return 50;
-    }
+    //@Override
+    ///public int getMaxEF(int rp) {
+    //    return 50;
+    //}
 
     @Override
     public void writeToItemStack(NBTTagCompound tagCompound) {
@@ -77,6 +78,11 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
     @Override
     protected void receivePower(int rp, int ef, ForgeDirection direction) {
 
+    }
+
+    @Override
+    protected int getMaxStoredPower() {
+        return 500;
     }
 
     /**

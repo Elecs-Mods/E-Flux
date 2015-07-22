@@ -30,7 +30,8 @@ public enum EnumMachines {
     CHUNKMAIN(MainChunkLoaderTile.class),
     CHUNKSUB(ChunkLoaderSubTile.class),
     NORMALCABLE(NormalCable.class),
-    ADVANCEDCABLE(AdvancedCable.class)
+    ADVANCEDCABLE(AdvancedCable.class),
+    TESLACOIL(TileTeslaCoil.class)
 
     ;
     //___DATA__//////////////////////////////////////////////////////////

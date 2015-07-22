@@ -19,10 +19,6 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
 
     public abstract float getAcceptance();
 
-    public abstract int getEFForOptimalRP();
-
-    public abstract int getMaxEF(int rp);
-
     public void onBroken(){
         if (!worldObj.isRemote)
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
@@ -79,7 +75,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
             setBroken(true);
         if (rp < requestedRP(direction)*(1-getAcceptance()) || broken)
             return 0;
-        return CalculationHelper.calcRequestedEF(rp, requestedRP(direction), getEFForOptimalRP(), getMaxEF(rp), getAcceptance());
+        return getRequestedEFSafe(rp, direction);
     }
 
     /**
@@ -95,6 +91,8 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
             return 0;
         } else return ef;
     }
+
+    protected abstract int getRequestedEFSafe(int rp, ForgeDirection direction);
 
     protected abstract void receivePower(int rp, int ef, ForgeDirection direction);
 

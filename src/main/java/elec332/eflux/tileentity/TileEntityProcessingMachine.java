@@ -13,7 +13,7 @@ import elec332.eflux.recipes.RecipeRegistry;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.IInventoryTile;
-import elec332.eflux.util.RandomUtils;
+import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -33,7 +33,7 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
         this.upgradeSlotsCounter = upgradeSlots;
         List<Slot> list = Lists.newArrayList();
         registerMachineSlots(list);
-        this.machineSlots = RandomUtils.copyOf(list);
+        this.machineSlots = Utils.copyOf(list);
         registerStorageSlots(list);
         int startIndex = list.size();
         registerUpgradeSlots(list);
@@ -41,7 +41,7 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
         for (Slot slot : list.subList(startIndex, list.size())){
             upgradeSlotsList.add((SlotUpgrade) slot);
         }
-        this.upgradeSlots = RandomUtils.copyOf(upgradeSlotsList);
+        this.upgradeSlots = Utils.copyOf(upgradeSlotsList);
         this.allSLots = list;
     }
 
