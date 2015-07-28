@@ -17,6 +17,12 @@ public interface IMultiBlockTile {
     public void setMultiBlock(IMultiBlock multiBlock, ForgeDirection facing, String structure);
 
     /**
+     * When an multiblock becomes invalid, this method will get called, use it
+     * to set the multiblock to null, and make sure that #isValidMultiBlock() returns false after this method finished processing!
+     */
+    public void invalidateMultiBlock();
+
+    /**
      * This returns if this tile is actually part of an multiblock or not
      *
      * @return weather the multiblock is valid, make sure to read/write the value from/to NBT!

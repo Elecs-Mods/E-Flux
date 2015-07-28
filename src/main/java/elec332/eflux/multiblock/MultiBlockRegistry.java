@@ -87,13 +87,20 @@ public class MultiBlockRegistry extends AbstractWorldRegistryHolder<MultiBlockRe
         }*/
 
         protected void invalidateMultiBlock(IMultiBlock multiBlock){
+            for (BlockLoc loc : multiBlock.getAllMultiBlockLocations()){
+                TileEntity tile = WorldHelper.getTileAt(world, loc);
+                if (tile instanceof IMultiBlockTile){
+                    ((IMultiBlockTile)tile).invalidateMultiBlock();
+                }
+            }
             this.activeMultiBlocks.remove(multiBlock);
+            multiBlock.invalidate();
         }
 
-        protected void tileChunkUnloaded(IMultiBlock multiBlock, IMultiBlockTile tile){
+        /*protected void tileChunkUnloaded(IMultiBlock multiBlock, IMultiBlockTile tile){
             //addUnloadedTile(WorldHelper.fromBlockLoc(new BlockLoc((TileEntity) tile)), tile);
             deactivateMultiBlock(multiBlock);
-        }
+        }*/
 
         protected void deactivateMultiBlock(IMultiBlock multiBlock){
             this.activeMultiBlocks.remove(multiBlock);

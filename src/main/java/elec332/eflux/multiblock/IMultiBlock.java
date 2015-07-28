@@ -84,7 +84,8 @@ public abstract class IMultiBlock {
      * Make sure this gets called when any of the tiles in this multiblock unload
      */
     public void tileEntityChunkUnload(IMultiBlockTile tile){
-        multiBlockRegistry.tileChunkUnloaded(this, tile);
+        //multiBlockRegistry.tileChunkUnloaded(this, tile);
+        multiBlockRegistry.deactivateMultiBlock(this);
         this.multiBlockState = State.paused;
     }
 

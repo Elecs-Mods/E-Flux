@@ -1,7 +1,7 @@
 package elec332.eflux;
 
+import com.google.common.base.Strings;
 import elec332.core.main.ElecCore;
-import elec332.core.util.BlockLoc;
 import elec332.eflux.multiblock.IMultiBlock;
 import elec332.eflux.multiblock.IMultiBlockTile;
 import elec332.eflux.multiblock.MultiBlockRegistry;
@@ -49,30 +49,28 @@ public class TestTile extends TileEntity implements IMultiBlockTile{
     }
 
 
-    private IMultiBlock multiBlock;
+    private IMultiBlock multiBlock = null;
     private ForgeDirection mbFacing = null;
-    private boolean valid;
-    private String structureID;
+    private boolean valid = false;
+    private String structureID = "";
 
     @Override
     public void writeToNBT(NBTTagCompound p_145841_1_) {
         super.writeToNBT(p_145841_1_);
-        if (mbFacing != null) {
-            System.out.println(mbFacing+" "+valid+" "+structureID);
-            p_145841_1_.setString("facing_E", mbFacing.toString());
-            p_145841_1_.setBoolean("valid_E", valid);
-            p_145841_1_.setString("structure_E", structureID);
-        }
+        String s = mbFacing == null?"":mbFacing.toString();
+        p_145841_1_.setString("facing_E", s);
+        p_145841_1_.setBoolean("valid_E", valid);
+        p_145841_1_.setString("structure_E", structureID);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound p_145839_1_) {
         super.readFromNBT(p_145839_1_);
-        if (p_145839_1_.hasKey("facing_E")) {
-            this.mbFacing = ForgeDirection.valueOf(p_145839_1_.getString("facing_E"));
-            this.valid = p_145839_1_.getBoolean("valid_E");
-            this.structureID = p_145839_1_.getString("structure_E");
-        }
+        String s = p_145839_1_.getString("facing_E");
+        if (!Strings.isNullOrEmpty(s))
+            this.mbFacing = ForgeDirection.valueOf(s);
+        this.valid = p_145839_1_.getBoolean("valid_E");
+        this.structureID = p_145839_1_.getString("structure_E");
     }
 
     /**
@@ -87,6 +85,20 @@ public class TestTile extends TileEntity implements IMultiBlockTile{
         this.mbFacing = facing;
         this.valid = true;
         this.structureID = structureID;
+        this.markDirty();
+    }
+
+    /**
+     * When an multiblock becomes invalid, this method will get called, use it
+     * to set the multiblock to null, and make sure that #isValidMultiBlock() returns false after this method finished processing!
+     */
+    @Override
+    public void invalidateMultiBlock() {
+        this.multiBlock = null;
+        this.mbFacing = null;
+        this.valid = false;
+        this.structureID = "";
+        this.markDirty();
     }
 
     /**
