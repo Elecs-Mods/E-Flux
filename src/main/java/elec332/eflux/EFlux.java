@@ -8,6 +8,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import elec332.core.baseclasses.tileentity.BlockTileBase;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
@@ -23,20 +25,24 @@ import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.items.circuits.CircuitHandler;
+import elec332.eflux.multiblock.*;
+import elec332.eflux.multiblock.IMultiBlockStructure;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.RecipeRegistry;
 import elec332.eflux.util.*;
 import elec332.eflux.world.WorldGenOres;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -61,7 +67,7 @@ public class EFlux {
     @Mod.Instance(ModID)
     public static EFlux instance;
     public static Configuration config;
-    public static CreativeTabs CreativeTab;
+    public static CreativeTabs creativeTab;
     public static Logger logger;
     public static ConfigWrapper configWrapper;
     public static Random random;
@@ -71,7 +77,7 @@ public class EFlux {
     public void preInit(FMLPreInitializationEvent event) {
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
-        CreativeTab = new CreativeTabs("EFlux") {
+        creativeTab = new CreativeTabs("EFlux") {
             @Override
             public Item getTabIconItem() {
                 return Item.getItemFromBlock(Blocks.anvil);  //TODO: replace with mod item, once we got a nice one
@@ -91,6 +97,48 @@ public class EFlux {
         logger.info(CalculationHelper.calcRequestedEF(24, 20, 40, 1000, 0.15f));
         logger.info(Math.sqrt(Math.abs(Math.cos(10))));
         /////////////////////////
+
+        final Block yew = new BlockTileBase(Material.rock, TestTile.class, "testblock", ModID).register().setCreativeTab(creativeTab);
+
+        MultiBlockRegistry.instance.registerMultiBlock(new IMultiBlockStructure() {
+            @Override
+            public BlockStructure getStructure() {
+                return new BlockStructure(4, 3, 2, new BlockStructure.IStructureFiller() {
+                    @Override
+                    public BlockData getBlockAtPos(int length, int width, int height) {
+                        /*if (length == 0)
+                            return new BlockData(Blocks.diamond_block);
+                        if (length == 1)
+                            return new BlockData(Blocks.glass);
+                        if (length == 2)
+                            return new BlockData(Blocks.packed_ice);
+                        if (length == 3)
+                            return new BlockData(Blocks.quartz_block);*/
+                        return getTriggerBlock();
+                    }
+                });
+            }
+
+            @Override
+            public BlockStructure.IStructureFiller replaceUponCreated() {
+                return null;
+            }
+
+            @Override
+            public BlockData getTriggerBlock() {
+                return new BlockData(yew);
+            }
+        }, "test", TestMB.class);
+
+        GameRegistry.registerItem(new Item(){
+            @Override
+            public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+                System.out.println("Processing: "+x+","+y+","+z);
+                //System.out.println(ForgeDirection.getOrientation(side));
+                return MultiBlockRegistry.instance.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
+            }
+        }.setCreativeTab(creativeTab), "itemTestMB");
+        GameRegistry.registerTileEntity(TestTile.class, "yewerz");
 
 
         //setting up mod stuff
