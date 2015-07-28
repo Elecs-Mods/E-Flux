@@ -11,6 +11,7 @@ import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.multiblock.MultiBlockPowerInletTile;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +34,8 @@ public enum EnumMachines {
     CHUNKSUB(ChunkLoaderSubTile.class),
     NORMALCABLE(NormalCable.class),
     ADVANCEDCABLE(AdvancedCable.class),
-    TESLACOIL(TileTeslaCoil.class)
+    TESLACOIL(TileTeslaCoil.class),
+    MULTIBLOCKPOWERINLET(MultiBlockPowerInletTile.class),
 
     ;
     //___DATA__//////////////////////////////////////////////////////////
@@ -78,9 +80,9 @@ public enum EnumMachines {
         return this.material;
     }
 
-    /*public BlockMachine getBlock() {
+    public BlockMachine getBlock() {
         return blockMachine;
-    }*/
+    }
 
     public IBlockTextureProvider getTextureProvider() {
         return textureProvider;

@@ -1,6 +1,6 @@
 package elec332.eflux;
 
-import elec332.eflux.multiblock.IMultiBlock;
+import elec332.core.multiblock.IMultiBlock;
 
 /**
  * Created by Elec332 on 27-7-2015.

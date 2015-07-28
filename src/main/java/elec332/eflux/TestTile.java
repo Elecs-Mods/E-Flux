@@ -2,9 +2,9 @@ package elec332.eflux;
 
 import com.google.common.base.Strings;
 import elec332.core.main.ElecCore;
-import elec332.eflux.multiblock.IMultiBlock;
-import elec332.eflux.multiblock.IMultiBlockTile;
-import elec332.eflux.multiblock.MultiBlockRegistry;
+import elec332.core.multiblock.IMultiBlock;
+import elec332.core.multiblock.IMultiBlockTile;
+import elec332.core.multiblock.MultiBlockRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
