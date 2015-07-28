@@ -28,7 +28,7 @@ public class Components extends Item implements IElectricComponent{
     public static Components component, brokenComponent;
 
     private Components(){
-        this.setCreativeTab(EFlux.CreativeTab);
+        this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
     }
 

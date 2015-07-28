@@ -8,6 +8,6 @@ import elec332.eflux.EFlux;
  */
 public class EFluxItemBase extends BaseItem{
     public EFluxItemBase(String name) {
-        super(name, EFlux.CreativeTab, EFlux.ModID);
+        super(name, EFlux.creativeTab, EFlux.ModID);
     }
 }

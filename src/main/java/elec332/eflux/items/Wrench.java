@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class Wrench extends Item implements IRightClickCancel {
     public Wrench(String name) {
-        setCreativeTab(EFlux.CreativeTab);
+        setCreativeTab(EFlux.creativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);
         setTextureName(EFlux.ModID + ":" + name);
         setContainerItem(this);

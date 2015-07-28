@@ -20,13 +20,13 @@ public class BlockRegister {
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment){
-            new DirectionBlock().setCreativeTab(EFlux.CreativeTab);
+            new DirectionBlock().setCreativeTab(EFlux.creativeTab);
         }
 
         for (EnumMachines machine : EnumMachines.values()){
             machine.init();
         }
-        ores = new BlockOres().register().setCreativeTab(EFlux.CreativeTab);
+        ores = new BlockOres().register().setCreativeTab(EFlux.creativeTab);
 
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class EFluxItems extends Item {
 
     public EFluxItems(){
-        this.setCreativeTab(EFlux.CreativeTab);
+        this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
     }
 

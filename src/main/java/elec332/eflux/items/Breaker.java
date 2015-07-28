@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class Breaker extends Item implements IRightClickCancel{
     public Breaker(){
         String name = "Breaker";
-        setCreativeTab(EFlux.CreativeTab);
+        setCreativeTab(EFlux.creativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);
         setTextureName(EFlux.ModID + ":" + name);
         setContainerItem(this);

@@ -24,7 +24,7 @@ public abstract class AbstractCircuit extends Item implements ICircuit {
 
     public AbstractCircuit(String txt, int types) {
         super();
-        this.setCreativeTab(EFlux.CreativeTab);
+        this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
         this.types = types;
         setTextureName(EFlux.ModID+":"+txt);

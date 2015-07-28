@@ -16,7 +16,7 @@ import java.util.List;
 public class UnrefinedBoards extends Item {
     public UnrefinedBoards(String txt, int types) {
         super();
-        this.setCreativeTab(EFlux.CreativeTab);
+        this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
         this.types = types;
         setTextureName(EFlux.ModID+":"+txt);

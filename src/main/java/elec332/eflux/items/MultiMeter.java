@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class MultiMeter extends Item implements IRightClickCancel {
     public MultiMeter(String name) {
-        setCreativeTab(EFlux.CreativeTab);
+        setCreativeTab(EFlux.creativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);
         setTextureName(EFlux.ModID + ":" + name);
         setContainerItem(this);

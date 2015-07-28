@@ -48,7 +48,7 @@ public class CircuitHandler {
 
     public static void register(){
         init = true;
-        UnrefinedBoards = new UnrefinedBoards("UnrefinedBoard", registeredTypes.size()).setCreativeTab(EFlux.CreativeTab);
+        UnrefinedBoards = new UnrefinedBoards("UnrefinedBoard", registeredTypes.size()).setCreativeTab(EFlux.creativeTab);
         for (EnumCircuit circuit : registeredTypes)
             get(circuit).registerData();
     }
@@ -68,9 +68,9 @@ public class CircuitHandler {
     }
 
     private void registerData(){
-        Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.CreativeTab);
+        Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.creativeTab);
         this.circuitItem = circuit;
-        Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.CreativeTab);
+        Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.creativeTab);
         for (int i = 0; i < mapping.size(); i++) {
             RecipeRegistry.instance.registerRecipe(EnumMachines.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
         }

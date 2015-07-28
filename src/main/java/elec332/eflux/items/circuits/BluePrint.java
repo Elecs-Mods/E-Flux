@@ -19,7 +19,7 @@ public class BluePrint extends Item {
     public BluePrint(String txt, int types, EnumCircuit circuit) {
         super();
         this.circuit = circuit;
-        this.setCreativeTab(EFlux.CreativeTab);
+        this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
         this.types = types;
         setTextureName(EFlux.ModID+":"+txt);

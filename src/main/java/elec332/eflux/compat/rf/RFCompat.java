@@ -22,7 +22,7 @@ public class RFCompat extends Compat.ICompatHandler {
 
     @Override
     public void init() {
-        new BlockTileBase(Material.rock, TileRFConverter.class, "RFConverter", EFlux.ModID).register().setCreativeTab(EFlux.CreativeTab);
+        new BlockTileBase(Material.rock, TileRFConverter.class, "RFConverter", EFlux.ModID).register().setCreativeTab(EFlux.creativeTab);
     }
 
 }
