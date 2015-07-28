@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-public abstract class CommonProxy implements IGuiHandler{
+public class CommonProxy implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -23,5 +23,10 @@ public abstract class CommonProxy implements IGuiHandler{
                     return ((IInventoryTile) world.getTileEntity(x, y, z)).getGuiServer(player);
                 else return null;
         }
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return null;
     }
 }
