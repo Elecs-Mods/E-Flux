@@ -2,6 +2,7 @@ package elec332.eflux.inventory;
 
 import com.google.common.collect.Lists;
 import elec332.core.helper.ItemHelper;
+import elec332.core.inventory.ContainerMachine;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.inventory.slot.SlotAssembly;

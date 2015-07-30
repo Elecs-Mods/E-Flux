@@ -17,7 +17,7 @@ public class MultiBlockPowerInletTile extends BreakableReceiverTile implements I
 
     public MultiBlockPowerInletTile(){
         super();
-        this.multiBlockData = new MultiBlockData(this);
+        this.multiBlockData = new MultiBlockData(this, EFlux.multiBlockRegistry);
     }
 
     private MultiBlockData multiBlockData;

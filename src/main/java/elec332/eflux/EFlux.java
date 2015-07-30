@@ -72,6 +72,7 @@ public class EFlux {
     public static ConfigWrapper configWrapper;
     public static Random random;
     public static NetworkHandler networkHandler;
+    public static MultiBlockRegistry multiBlockRegistry;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -100,7 +101,7 @@ public class EFlux {
 
         final Block yew = new BlockTileBase(Material.rock, TestTile.class, "testblock", ModID).register().setCreativeTab(creativeTab);
 
-        MultiBlockRegistry.instance.registerMultiBlock(new IMultiBlockStructure() {
+        multiBlockRegistry.registerMultiBlock(new IMultiBlockStructure() {
             @Override
             public BlockStructure getStructure() {
                 return new BlockStructure(4, 3, 2, new BlockStructure.IStructureFiller() {
@@ -135,7 +136,7 @@ public class EFlux {
             public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
                 System.out.println("Processing: "+x+","+y+","+z);
                 //System.out.println(ForgeDirection.getOrientation(side));
-                return MultiBlockRegistry.instance.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
+                return multiBlockRegistry.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
             }
         }.setCreativeTab(creativeTab), "itemTestMB");
         GameRegistry.registerTileEntity(TestTile.class, "yewerz");

@@ -1,7 +1,8 @@
 package elec332.eflux.client.inventory;
 
-import elec332.eflux.inventory.ContainerMachine;
-import elec332.eflux.inventory.IHasProgressBar;
+import elec332.core.client.inventory.BaseGuiContainer;
+import elec332.core.inventory.ContainerMachine;
+import elec332.core.inventory.IHasProgressBar;
 import net.minecraft.inventory.Container;
 
 /**

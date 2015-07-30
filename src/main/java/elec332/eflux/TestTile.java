@@ -23,7 +23,7 @@ public class TestTile extends TileEntity implements IMultiBlockTile{
             public void run() {
                 //System.out.println("Validate, new: "+init+" Loc: "+new BlockLoc(TestTile.this));
                 //if (!init)
-                IMultiBlock.tileEntityValidate(TestTile.this, multiBlock, MultiBlockRegistry.instance);
+                IMultiBlock.tileEntityValidate(TestTile.this, multiBlock, EFlux.multiBlockRegistry);
                 //init = true;
             }
         });

@@ -1,5 +1,6 @@
 package elec332.eflux.client.inventory;
 
+import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.inventory.TEGrinderContainer;
 import elec332.eflux.tileentity.energy.machine.TEGrinder;

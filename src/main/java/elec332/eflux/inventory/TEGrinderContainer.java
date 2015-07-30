@@ -1,5 +1,6 @@
 package elec332.eflux.inventory;
 
+import elec332.core.inventory.BaseContainer;
 import elec332.eflux.tileentity.energy.machine.TEGrinder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
