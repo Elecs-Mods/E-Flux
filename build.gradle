@@ -16,9 +16,17 @@ buildscript {
 }
 
 repositories {
+	maven {
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
     maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven/"
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
+    maven {
+        name 'ForgeFS'
+        url 'http://files.minecraftforge.net/maven'
     }
 }
 
@@ -42,7 +50,7 @@ modInfo.withReader {
 
 version = "${config.minecraft_version}-${config.mod_version}." + (System.env.DRONE_BUILD_NUMBER ?: "localBuild")
 group= mod.group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = config.fileName
+archivesBaseName = mod.fileName
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
@@ -53,10 +61,10 @@ minecraft {
 }
 
 dependencies {
-	//Not real deps, just handy to have in your dev. env.
-    compile "codechicken:CodeChickenLib:"+config.minecraft_version + "-" + config.ccl_version + ":dev"
+	compile "mcp.mobius.waila:Waila:${config.waila_version}_${config.minecraft_version}"
+	compile "codechicken:CodeChickenLib:"+config.minecraft_version + "-" + config.ccl_version + ":dev"
     compile "codechicken:CodeChickenCore:"+config.minecraft_version + "-" + config.ccc_version + ":dev"
-    compile "codechicken:NotEnoughItems:"+config.minecraft_version + "-" + config.nei_version + ":dev"
+	compile "codechicken:NotEnoughItems:${config.minecraft_version}-${config.nei_version}:dev"
 }
 
 processResources
