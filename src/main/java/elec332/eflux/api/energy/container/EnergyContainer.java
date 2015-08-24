@@ -68,6 +68,14 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
         return (int) (initialTime*fin);
     }
 
+    public boolean drainPower(int toDrain){
+        if (storedPower >= toDrain){
+            storedPower -= toDrain;
+            return true;
+        }
+        return false;
+    }
+
     public void setProgressMachine(IProgressMachine progressMachine) {
         this.progressMachine = progressMachine;
     }
@@ -84,8 +92,16 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
         this.breakableMachine = breakableMachine;
     }
 
+    public void setStoredPower(int storedPower) {
+        this.storedPower = storedPower;
+    }
+
     public int getMaxStoredEnergy() {
         return maxEnergy;
+    }
+
+    public int getStoredPower() {
+        return storedPower;
     }
 
     public float getAcceptance() {

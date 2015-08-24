@@ -52,8 +52,7 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
     public void updateEntity() {
         super.updateEntity();
         calculatePower();
-        if (storedPower >= neededPower && active){
-            storedPower -= neededPower;
+        if (energyContainer.drainPower(neededPower) && active){
             if (recentlyWithoutPower)
                 this.changed = true;
             handle(true);
@@ -207,19 +206,15 @@ public class MainChunkLoaderTile extends BreakableReceiverTile {
         return true;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 33;
     }
 
     @Override
     public String[] getProvidedData() {
         return new String[]{
-                "Stored power: "+storedPower,
+                "Stored power: "+energyContainer.getStoredPower(),
                 "In working order: "+!isBroken(),
                 "Loaded chunks: "+loadedChunks
         };

@@ -31,23 +31,16 @@ public class TileGrowthLamp extends BreakableReceiverTile {
     public void updateEntity() {
         super.updateEntity();
         for (int i = 0; i < 9; i++) {
-
-
-        if (blockLocations.isEmpty()){
-            remakeList();
+            if (blockLocations.isEmpty()) {
+                remakeList();
+            }
+            Collections.shuffle(blockLocations, worldObj.rand);
+            BlockLoc randomLoc = blockLocations.get(0);
+            if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
+                WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
+            }
+            blockLocations.remove(randomLoc);
         }
-        Collections.shuffle(blockLocations, worldObj.rand);
-        BlockLoc randomLoc = blockLocations.get(0);
-        if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
-            WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
-            //System.out.println("Scheduled block update at " + randomLoc.toString());
-            /*try {
-                ElecCore.proxy.addPersonalMessageToPlayer();
-            } catch (Throwable t){
-                return;
-            }*/
-        }
-        blockLocations.remove(randomLoc);}
     }
 
     private boolean isFullyGrownCrop(BlockLoc blockLoc){
@@ -88,11 +81,6 @@ public class TileGrowthLamp extends BreakableReceiverTile {
     }
 
     @Override
-    public int getMaxEF(int rp) {
-        return 10;
-    }
-
-    @Override
     protected int getMaxStoredPower() {
         return 700;
     }
@@ -106,12 +94,8 @@ public class TileGrowthLamp extends BreakableReceiverTile {
         return true;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 7;
     }
 

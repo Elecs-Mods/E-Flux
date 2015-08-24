@@ -1,12 +1,12 @@
 package elec332.eflux.tileentity.energy.machine;
 
+import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
-import elec332.core.util.BasicInventory;
 import elec332.eflux.tileentity.BreakableReceiverTile;
-import elec332.core.baseclasses.tileentity.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -41,10 +41,11 @@ public class AssemblyTable extends BreakableReceiverTile implements IInventoryTi
         return 50;
     }
 
-    //@Override
-    ///public int getMaxEF(int rp) {
-    //    return 50;
-    //}
+    @Override
+    public int getRequestedRP() {
+        return 20;
+    }
+
 
     @Override
     public void writeToItemStack(NBTTagCompound tagCompound) {
@@ -75,11 +76,6 @@ public class AssemblyTable extends BreakableReceiverTile implements IInventoryTi
     }
 
     @Override
-    protected void receivePower(int rp, int ef, ForgeDirection direction) {
-
-    }
-
-    @Override
     protected int getMaxStoredPower() {
         return 500;
     }
@@ -91,15 +87,6 @@ public class AssemblyTable extends BreakableReceiverTile implements IInventoryTi
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
         return direction == ForgeDirection.DOWN;
-    }
-
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
-    @Override
-    public int requestedRP(ForgeDirection direction) {
-        return 20;
     }
 
     @Override

@@ -2,7 +2,6 @@ package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.ISpecialEnergySource;
-import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.BreakableReceiverTile;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -52,18 +51,14 @@ public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySo
         return DirectionHelper.getDirectionFromNumber(getBlockMetadata()) == direction;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 20;
     }
 
     @Override
     public String[] getProvidedData() {
-        return new String[]{"Stored Energy: "+storedPower, "Broken: "+isBroken()};
+        return new String[]{"Stored Energy: "+energyContainer.getStoredPower(), "Broken: "+isBroken()};
     }
 
     /**

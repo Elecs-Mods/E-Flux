@@ -3,12 +3,8 @@ package elec332.eflux.world;
 import elec332.core.util.WorldGenInfo;
 import elec332.core.world.WorldGen;
 import elec332.eflux.init.BlockRegister;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import java.io.File;
 import java.util.Random;

@@ -1,21 +1,21 @@
 package elec332.eflux.tileentity;
 
 import com.google.common.collect.Lists;
-import elec332.eflux.EFlux;
-import elec332.eflux.client.inventory.GuiMachine;
+import elec332.core.baseclasses.tileentity.IInventoryTile;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.IHasProgressBar;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.slot.SlotOutput;
+import elec332.core.util.BasicInventory;
+import elec332.eflux.EFlux;
+import elec332.eflux.api.energy.container.IProgressMachine;
+import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.RecipeRegistry;
-import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
-import elec332.core.baseclasses.tileentity.IInventoryTile;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -26,9 +26,10 @@ import java.util.List;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar{
+public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
 
     public TileEntityProcessingMachine(int i, int upgradeSlots){
+        super();
         this.inventory = new BasicInventory("Inventory", i+upgradeSlots, this);
         this.upgradeSlotsCounter = upgradeSlots;
         List<Slot> list = Lists.newArrayList();
@@ -49,20 +50,9 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     public void updateEntity() {
         super.updateEntity();
         if (!worldObj.isRemote) {
-            if ((canProcess() && storedPower >= getRequiredPowerPerTick())) {
-                this.storedPower = storedPower - getRequiredPowerPerTick();
-                progress++;
-                if (progress >= getProcessTime()) {
-                    this.progress = 0;
-                    onProcessDone();
-                }
-            } else if (progress > 0) {
-                progress = 0;
-            }
+            energyContainer.tick();
         }
     }
-
-    private int progress = 0;
 
     protected BasicInventory inventory;
     private int upgradeSlotsCounter;
@@ -99,59 +89,42 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
 
     public abstract int getRequiredPowerPerTick();
 
-    protected abstract int getProcessTime();
+    public abstract int getProcessTime();
 
-    protected boolean canProcess() {
+    public boolean canProcess() {
         return RecipeRegistry.instance.hasOutput(this, getMachineSlots());
     }
 
-    protected void onProcessDone() {
+    public void onProcessDone() {
         RecipeRegistry.instance.handleOutput(this, getMachineSlots());
     }
 
     @Override
     public int getProgress(){
-        return progress;
+        return energyContainer.getProgress();
     }
 
     @Override
     public float getProgressScaled(int progress) {
-        return (float)progress/getProcessTime();
+        return energyContainer.getProgressScaled(progress);
     }
-
-    /*@Override
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
-
-    @Override
-    public float getProgressScaled() {
-        return (float)this.progress/getProcessTime();
-    }
-
-    @Override
-    public boolean isWorking() {
-        return progress > 0;
-    }*/
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        tagCompound.setInteger("progress", progress);
         this.inventory.writeToNBT(tagCompound);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        this.progress = tagCompound.getInteger("progress");
         this.inventory.readFromNBT(tagCompound);
     }
 
     @Override
     public String[] getProvidedData() {
         return new String[]{
-                "Stored power: "+storedPower,
+                "Stored power: "+energyContainer.getStoredPower(),
                 "In working order: "+!isBroken()
         };
     }

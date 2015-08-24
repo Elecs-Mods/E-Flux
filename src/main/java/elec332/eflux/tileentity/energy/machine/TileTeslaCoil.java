@@ -26,9 +26,8 @@ public class TileTeslaCoil extends BreakableReceiverTile {
             for (EntityLivingBase entity : entities) {
                 float hp = entity.getHealth();
                 int energy = (int) (hp * 120);
-                if (storedPower >= energy){
+                if (energyContainer.drainPower(energy)){
                     smite(entity);
-                    storedPower -= energy;
                 } else break;
             }
         }
@@ -69,12 +68,8 @@ public class TileTeslaCoil extends BreakableReceiverTile {
         return direction == ForgeDirection.DOWN || direction == ForgeDirection.UP;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 40;
     }
 

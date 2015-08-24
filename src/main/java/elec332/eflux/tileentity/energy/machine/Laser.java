@@ -47,8 +47,7 @@ public class Laser extends BreakableReceiverTile {
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (timeCheck() && !worldObj.isRemote && storedPower >=3000) {
-            storedPower -= 3000;
+        if (timeCheck() && !worldObj.isRemote && energyContainer.drainPower(3000)) {
             List<ItemStack> toDrop = Lists.newArrayList();
             for (BlockLoc blockLoc : getNewBlocksToMine()) {
                 toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, WorldHelper.getBlockMeta(worldObj, blockLoc), 1));
@@ -142,12 +141,8 @@ public class Laser extends BreakableReceiverTile {
         return true;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 30;
     }
 

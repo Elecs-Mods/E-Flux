@@ -5,7 +5,6 @@ import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class TileGrinder extends TileEntityProcessingMachine {
     }
 
     @Override
-    protected int getProcessTime() {
+    public int getProcessTime() {
         return 20;
     }
 
@@ -54,12 +53,8 @@ public class TileGrinder extends TileEntityProcessingMachine {
         return 40;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 3;
     }
 

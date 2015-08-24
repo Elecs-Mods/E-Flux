@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class TileFurnace extends TileEntityProcessingMachine {
     }
 
     @Override
-    protected int getProcessTime() {
+    public int getProcessTime() {
         return 20;
     }
 
@@ -70,17 +69,13 @@ public class TileFurnace extends TileEntityProcessingMachine {
         return EnumMachines.FURNACE;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 5;
     }
 
     @Override
-    protected boolean canProcess() {
+    public boolean canProcess() {
         if (inventory.getStackInSlot(0) == null)
             return false;
         ItemStack result = getInputSlot().getOutput();
@@ -88,7 +83,7 @@ public class TileFurnace extends TileEntityProcessingMachine {
     }
 
     @Override
-    protected void onProcessDone() {
+    public void onProcessDone() {
         if (inventory.getStackInSlot(1) == null)
             inventory.setInventorySlotContents(1, getInputSlot().getOutput().copy());
         else inventory.getStackInSlot(1).stackSize += getInputSlot().getOutput().stackSize;

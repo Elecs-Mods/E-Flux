@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class Compressor extends TileEntityProcessingMachine {
 
 
     @Override
-    protected int getProcessTime() {
+    public int getProcessTime() {
         return 70;
     }
 
@@ -62,12 +61,8 @@ public class Compressor extends TileEntityProcessingMachine {
         return EnumMachines.COMPRESSOR;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return 5;
     }
 

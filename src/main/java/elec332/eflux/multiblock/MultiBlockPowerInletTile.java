@@ -1,10 +1,10 @@
 package elec332.eflux.multiblock;
 
-import elec332.eflux.EFlux;
-import elec332.eflux.items.Components;
 import elec332.core.multiblock.IMultiBlock;
 import elec332.core.multiblock.IMultiBlockTile;
 import elec332.core.multiblock.MultiBlockData;
+import elec332.eflux.EFlux;
+import elec332.eflux.items.Components;
 import elec332.eflux.tileentity.BreakableReceiverTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class MultiBlockPowerInletTile extends BreakableReceiverTile implements I
 
     @Override
     protected int getMaxStoredPower() {
-        return getMultiBlock() instanceof EFluxMultiBlockMachine ? ((EFluxMultiBlockMachine)getMultiBlock()).getMaxStoredPower() : storedPower;
+        return getMultiBlock() instanceof EFluxMultiBlockMachine ? ((EFluxMultiBlockMachine)getMultiBlock()).getMaxStoredPower() : energyContainer.getMaxStoredEnergy();
     }
 
     /**
@@ -62,12 +62,8 @@ public class MultiBlockPowerInletTile extends BreakableReceiverTile implements I
         return getFacing() == direction;
     }
 
-    /**
-     * @param direction The requested direction
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int getRequestedRP() {
         return getMultiBlock() instanceof EFluxMultiBlockMachine ? ((EFluxMultiBlockMachine)getMultiBlock()).requestedRP() : 0;
     }
 

@@ -6,7 +6,6 @@ import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
-import elec332.eflux.util.CalculationHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,7 +22,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     private boolean broken = false;
-    private EnergyContainer energyContainer;
+    protected EnergyContainer energyContainer;
 
     public abstract ItemStack getRandomRepairItem();
 
@@ -90,6 +89,11 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     @Override
     public int receivePower(ForgeDirection direction, int rp, int ef) {
         return energyContainer.receivePower(direction, rp, ef);
+    }
+
+    @Override
+    public int requestedRP(ForgeDirection direction) {
+        return energyContainer.requestedRP(direction);
     }
 
     @Override
