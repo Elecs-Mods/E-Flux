@@ -2,6 +2,8 @@ package elec332.eflux.tileentity;
 
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.energy.container.EnergyContainer;
+import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.CalculationHelper;
@@ -13,20 +15,37 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine {
+
+    public BreakableMachineTile(){
+        super();
+        this.energyContainer = new EnergyContainer(getMaxStoredPower(), getEFForOptimalRP(), getAcceptance(), getRequestedRP(), this);
+    }
+
+    private boolean broken = false;
+    private EnergyContainer energyContainer;
 
     public abstract ItemStack getRandomRepairItem();
 
     public abstract float getAcceptance();
+
+    protected abstract int getMaxStoredPower();
+
+    /**
+     * The amount returned here is NOT supposed to change, anf if it does,
+     * do not forget that it will receive a penalty if the machine is not running at optimum RP
+     *
+     * @return the amount of requested EF
+     */
+    public abstract int getEFForOptimalRP();
+
+    public abstract int getRequestedRP();
 
     public void onBroken(){
         if (!worldObj.isRemote)
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
         sendPacket(1, new NBTTagCompound());
     }
-
-    private boolean broken = false;
-    protected int storedPower = 0;
 
     public boolean isBroken() {
         return broken;
@@ -41,7 +60,6 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     public void setBroken(boolean broken) {
         if (!broken)
             this.breakableMachineInventory = null;
-        else if (!this.broken) onBroken();
         this.broken = broken;
         notifyNeighboursOfDataChange();
         syncData();
@@ -64,42 +82,20 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
         return true;
     }
 
-    /**
-     * @param rp        The Redstone Potential in the network
-     * @param direction The requested direction
-     * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
     @Override
     public int getRequestedEF(int rp, ForgeDirection direction) {
-        if (rp > requestedRP(direction)*(1+getAcceptance()))
-            setBroken(true);
-        if (rp < requestedRP(direction)*(1-getAcceptance()) || broken)
-            return 0;
-        return getRequestedEFSafe(rp, direction);
+        return energyContainer.getRequestedEF(rp, direction);
     }
 
-    /**
-     * @param direction the direction where the power will be provided to
-     * @param rp        the RedstonePotential in the network
-     * @param ef        the amount of EnergeticFlux that is being provided
-     * @return The amount of EnergeticFlux that wasn't used
-     */
     @Override
     public int receivePower(ForgeDirection direction, int rp, int ef) {
-        if (!broken) {
-            receivePower(rp, ef, direction);
-            return 0;
-        } else return ef;
+        return energyContainer.receivePower(direction, rp, ef);
     }
-
-    protected abstract int getRequestedEFSafe(int rp, ForgeDirection direction);
-
-    protected abstract void receivePower(int rp, int ef, ForgeDirection direction);
 
     @Override
     public void readItemStackNBT(NBTTagCompound tagCompound) {
         super.readItemStackNBT(tagCompound);
-        this.storedPower = tagCompound.getInteger("power");
+        energyContainer.readFromNBT(tagCompound);
         this.broken = tagCompound.getBoolean("broken");
         if (broken) {
             this.breakableMachineInventory = new BreakableMachineInventory(this, ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("itemRep")));
@@ -109,7 +105,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     @Override
     public void writeToItemStack(NBTTagCompound tagCompound) {
         super.writeToItemStack(tagCompound);
-        tagCompound.setInteger("power", storedPower);
+        energyContainer.writeToNBT(tagCompound);
         tagCompound.setBoolean("broken", broken);
         if (broken) {
             NBTTagCompound newTag = new NBTTagCompound();
