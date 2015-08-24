@@ -12,7 +12,7 @@ import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.RecipeRegistry;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
-import elec332.eflux.util.IInventoryTile;
+import elec332.core.baseclasses.tileentity.IInventoryTile;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -115,6 +115,11 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     }
 
     @Override
+    public float getProgressScaled(int progress) {
+        return (float)progress/getProcessTime();
+    }
+
+    /*@Override
     public void setProgress(int progress) {
         this.progress = progress;
     }
@@ -127,7 +132,7 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     @Override
     public boolean isWorking() {
         return progress > 0;
-    }
+    }*/
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
@@ -169,7 +174,7 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     }
 
     @Override
-    public Container getGuiServer(EntityPlayer player) {
+    public BaseContainer getGuiServer(EntityPlayer player) {
         return new ContainerMachine(this, player, 0);
     }
 

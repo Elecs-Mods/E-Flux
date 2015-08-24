@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 5-4-2015.
  */
+@Deprecated
 public abstract class BaseMultiBlockMachine extends BaseMachineTEWithInventory implements IMultiBlock{
 
     public BaseMultiBlockMachine(int invSize) {

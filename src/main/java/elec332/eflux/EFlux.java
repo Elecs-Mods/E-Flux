@@ -99,38 +99,6 @@ public class EFlux {
         logger.info(Math.sqrt(Math.abs(Math.cos(10))));
         /////////////////////////
 
-        final Block yew = new BlockTileBase(Material.rock, TestTile.class, "testblock", ModID).register().setCreativeTab(creativeTab);
-
-        multiBlockRegistry.registerMultiBlock(new IMultiBlockStructure() {
-            @Override
-            public BlockStructure getStructure() {
-                return new BlockStructure(4, 3, 2, new BlockStructure.IStructureFiller() {
-                    @Override
-                    public BlockData getBlockAtPos(int length, int width, int height) {
-                        /*if (length == 0)
-                            return new BlockData(Blocks.diamond_block);
-                        if (length == 1)
-                            return new BlockData(Blocks.glass);
-                        if (length == 2)
-                            return new BlockData(Blocks.packed_ice);
-                        if (length == 3)
-                            return new BlockData(Blocks.quartz_block);*/
-                        return getTriggerBlock();
-                    }
-                });
-            }
-
-            @Override
-            public BlockStructure.IStructureFiller replaceUponCreated() {
-                return null;
-            }
-
-            @Override
-            public BlockData getTriggerBlock() {
-                return new BlockData(yew);
-            }
-        }, "test", TestMB.class);
-
         GameRegistry.registerItem(new Item(){
             @Override
             public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
@@ -139,7 +107,6 @@ public class EFlux {
                 return multiBlockRegistry.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
             }
         }.setCreativeTab(creativeTab), "itemTestMB");
-        GameRegistry.registerTileEntity(TestTile.class, "yewerz");
 
 
         //setting up mod stuff

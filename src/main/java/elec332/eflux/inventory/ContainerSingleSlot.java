@@ -1,5 +1,6 @@
 package elec332.eflux.inventory;
 
+import elec332.core.inventory.BaseContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -9,10 +10,11 @@ import net.minecraft.inventory.Slot;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public class ContainerSingleSlot extends Container {  //Deprecated???
+public class ContainerSingleSlot extends BaseContainer {  //Deprecated???
 
     public ContainerSingleSlot(IInventory handler, EntityPlayer player){
-       this.bmh = handler;
+        super(player);
+        this.bmh = handler;
         addSlots(player.inventory);
     }
 

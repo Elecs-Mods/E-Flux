@@ -3,12 +3,13 @@ package elec332.eflux.tileentity;
 import elec332.core.baseclasses.tileentity.BaseTileWithInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.util.IEFluxMachine;
-import elec332.eflux.util.IInventoryTile;
+import elec332.core.baseclasses.tileentity.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Elec332 on 4-4-2015.
  */
+@Deprecated
 public abstract class BaseMachineTEWithInventory extends BaseTileWithInventory implements IEFluxMachine, IInventoryTile {
 
     public BaseMachineTEWithInventory(int invSize) {

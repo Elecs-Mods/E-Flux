@@ -2,7 +2,7 @@ package elec332.eflux.proxies;
 
 import cpw.mods.fml.relauncher.Side;
 import elec332.eflux.tileentity.BreakableMachineTile;
-import elec332.eflux.util.IInventoryTile;
+import elec332.core.baseclasses.tileentity.IInventoryTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

@@ -1,6 +1,7 @@
 package elec332.eflux.client.inventory;
 
 import elec332.core.client.inventory.BaseGuiContainer;
+import elec332.core.inventory.BaseContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GuiStandardFormat extends BaseGuiContainer {
 
-    public GuiStandardFormat(Container container, ResourceLocation txtName) {
+    public GuiStandardFormat(BaseContainer container, ResourceLocation txtName) {
         super(container);
         this.txtName = txtName;
     }

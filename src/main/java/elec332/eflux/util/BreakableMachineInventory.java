@@ -2,6 +2,7 @@ package elec332.eflux.util;
 
 import cpw.mods.fml.relauncher.Side;
 import elec332.core.helper.ItemHelper;
+import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
 import elec332.core.util.IRunOnce;
 import elec332.eflux.client.inventory.GuiStandardFormat;
@@ -32,7 +33,7 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     public Object brokenGui(Side side, EntityPlayer player){
-        Container container = new ContainerSingleSlot(this, player){
+        BaseContainer container = new ContainerSingleSlot(this, player){
             @Override
             public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, final EntityPlayer p_75144_4_) {
                 ElecCore.tickHandler.registerCall(new IRunOnce() {
