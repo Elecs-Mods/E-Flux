@@ -48,7 +48,7 @@ public class CoalGenerator extends BaseMachineTEWithInventory implements IEnergy
      */
     @Override
     public boolean canProvidePowerTo(ForgeDirection direction) {
-        return direction == DirectionHelper.getDirectionFromNumber(getBlockMetadata());
+        return direction != DirectionHelper.getDirectionFromNumber(getBlockMetadata());
     }
 
     /**
