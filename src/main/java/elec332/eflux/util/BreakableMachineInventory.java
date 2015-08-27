@@ -5,6 +5,7 @@ import elec332.core.helper.ItemHelper;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
 import elec332.core.util.IRunOnce;
+import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerSingleSlot;
 import elec332.eflux.tileentity.BreakableMachineTile;
@@ -19,13 +20,13 @@ import net.minecraft.util.ResourceLocation;
  */
 public class BreakableMachineInventory implements IInventory{
 
-    public BreakableMachineInventory(BreakableMachineTile tile, ItemStack s){
+    public BreakableMachineInventory(IBreakableMachine tile, ItemStack s){
         this.i = tile;
         this.repairItem = s;
     }
 
     private ItemStack[] inventoryContent = new ItemStack[1];
-    private BreakableMachineTile i;
+    private IBreakableMachine i;
     private ItemStack repairItem;
 
     public ItemStack getRepairItem() {

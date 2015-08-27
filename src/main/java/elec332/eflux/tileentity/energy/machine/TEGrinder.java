@@ -5,8 +5,6 @@ import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
-import elec332.eflux.client.inventory.GuiInventoryGrinder;
-import elec332.eflux.inventory.TEGrinderContainer;
 import elec332.eflux.tileentity.BaseMultiBlockMachine;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,12 +41,12 @@ public class TEGrinder extends BaseMultiBlockMachine implements IEnergyReceiver{
 
     @Override
     public Container getGuiServer(EntityPlayer player) {
-        return new TEGrinderContainer(this, player);
+        return null;//new TEGrinderContainer(this, player);
     }
 
     @Override
     public Object getGuiClient(EntityPlayer player) {
-        return new GuiInventoryGrinder(this, player);
+        return null;//new GuiInventoryGrinder(this, player);
     }
 
     @Override

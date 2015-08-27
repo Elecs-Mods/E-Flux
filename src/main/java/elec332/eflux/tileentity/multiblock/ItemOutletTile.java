@@ -1,4 +1,4 @@
-package elec332.eflux.multiblock;
+package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.multiblock.AbstractMultiBlockTile;
 import elec332.core.world.WorldHelper;

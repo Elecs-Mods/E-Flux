@@ -24,6 +24,7 @@ import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.CommandRegister;
 import elec332.eflux.init.ItemRegister;
+import elec332.eflux.init.MultiBlockRegister;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.RecipeRegistry;
@@ -87,6 +88,7 @@ public class EFlux {
         configWrapper = new ConfigWrapper(config);
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
+        multiBlockRegistry = new MultiBlockRegistry();
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
@@ -101,8 +103,6 @@ public class EFlux {
         GameRegistry.registerItem(new Item(){
             @Override
             public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-                System.out.println("Processing: "+x+","+y+","+z);
-                //System.out.println(ForgeDirection.getOrientation(side));
                 return multiBlockRegistry.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
             }
         }.setCreativeTab(creativeTab), "itemTestMB");
@@ -130,6 +130,7 @@ public class EFlux {
         BlockRegister.instance.init(event);
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+        MultiBlockRegister.init();
         configWrapper.refresh();
         EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
         CircuitHandler.register();

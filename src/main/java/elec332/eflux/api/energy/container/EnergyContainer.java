@@ -48,7 +48,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             if (progressMachine.canProcess() && storedPower >= progressMachine.getRequiredPowerPerTick()) {
                 if (progress == 0)
                     processTime = calculateProcessTime(progressMachine.getProcessTime());
-                this.storedPower = storedPower - progressMachine.getRequiredPowerPerTick();
+                this.storedPower -= progressMachine.getRequiredPowerPerTick();
                 progress++;
                 if (progress >= processTime) {
                     this.progress = 0;
@@ -160,13 +160,14 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
 
     @Override
     public final int receivePower(ForgeDirection direction, int rp, int ef) {
-        if (breakableMachine.isBroken())
+        if (breakableMachine != null && breakableMachine.isBroken())
             return 0;
         int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(direction), efForOptimalRP, (maxEnergy-storedPower)/rp, getAcceptance());
-        this.storedPower = storedPower+rp*calcEF;
+        this.storedPower += rp*calcEF;
         if (storedPower > maxEnergy)
             this.storedPower = maxEnergy;
         this.lastRP = rp;
+        System.out.println("Receiving power @ "+rp+" "+ef+", stored = "+storedPower);
         return 0;
     }
 
