@@ -4,7 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
-import elec332.eflux.tileentity.multiblock.MultiBlockPowerInletTile;
+import elec332.eflux.tileentity.multiblock.TileMultiBlockPowerInlet;
 import elec332.eflux.tileentity.energy.cable.AdvancedCable;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.cable.NormalCable;
@@ -35,10 +35,10 @@ public enum EnumMachines {
     NORMALCABLE(NormalCable.class),
     ADVANCEDCABLE(AdvancedCable.class),
     TESLACOIL(TileTeslaCoil.class),
-    //MULTIBLOCKPOWERINLET(MultiBlockPowerInletTile.class),
+
 
     //Common MultiBlock parts
-    POWERINLET(MultiBlockPowerInletTile.class),
+    POWERINLET(TileMultiBlockPowerInlet.class),
 
     //Machine-specific MultiBlock parts
 

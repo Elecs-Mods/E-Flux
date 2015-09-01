@@ -12,6 +12,7 @@ import elec332.core.util.BasicInventory;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 27-8-2015.
  */
-public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMachine implements ITileWithSlots, IHasProgressBar, IResourceLocationProvider, IProgressMachine{
+public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMachine implements ITileWithSlots, IHasProgressBar, IResourceLocationProvider, IProgressMachine, IEFluxMachine {
 
     public EFluxMultiBlockProcessingMachine(int i, int upgradeSlots) {
         super();
@@ -36,6 +37,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     @Override
     public void init() {
+        super.init();
         this.inventory = new BasicInventory("Inventory", i+upgradeSlotsInt, getSaveDelegate());
         this.upgradeSlotsCounter = upgradeSlotsInt;
         List<Slot> list = Lists.newArrayList();
@@ -90,7 +92,6 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     @Override
     public boolean onAnyBlockActivatedSafe(EntityPlayer player) {
-        System.out.println("activate|safe");
         return openGui(player);
     }
 
@@ -103,7 +104,6 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     @Override
     public Object getMachineGui(EntityPlayer player, boolean client) {
-        System.out.println("opened gui");
         BaseContainer container = new ContainerMachine(this, player, 0);
         if (client)
             return new BaseGuiContainer(container) {
@@ -117,6 +117,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     @Override
     public void invalidate() {
+        super.invalidate();
     }
 
     public BasicInventory getInventory() {

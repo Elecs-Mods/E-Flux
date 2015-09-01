@@ -7,7 +7,6 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.util.BreakableMachineInventory;
-import elec332.eflux.util.IEFluxMachine;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, IEFluxMachine, WailaCompatHandler.IWailaInfoTile{
+public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, WailaCompatHandler.IWailaInfoTile{
 
     public EFluxMultiBlockMachine(){
         super();
@@ -33,10 +32,13 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     private boolean broken;
 
     @Override
+    public void init() {
+    }
+
+    @Override
     public void onTick() {
         if (getWorldObj().getTotalWorldTime() % 32L == 0L) {
             markDirty();
-            getSaveDelegate().syncData();
         }
     }
 
@@ -89,8 +91,11 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
+    public void invalidate() {
+    }
+
+    @Override
     public final boolean onAnyBlockActivated(EntityPlayer player) {
-        System.out.println("activate @ POWER: "+energyContainer.getStoredPower());
         if (broken)
             return openGui(player);
         return onAnyBlockActivatedSafe(player);

@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public class MultiBlockPowerInletTile extends AbstractMultiBlockTile implements IEnergyReceiver {
+public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements IEnergyReceiver {
 
 
-    public MultiBlockPowerInletTile() {
+    public TileMultiBlockPowerInlet() {
         super(EFlux.multiBlockRegistry);
     }
 
@@ -31,11 +31,6 @@ public class MultiBlockPowerInletTile extends AbstractMultiBlockTile implements 
     public void onTileUnloaded() {
         if (!worldObj.isRemote)
             EnergyAPIHelper.postUnloadEvent(this);
-    }
-
-    @Override
-    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        return getMultiBlock() == null ? super.onBlockActivated(player, side, hitX, hitY, hitZ) : getMultiBlock().onAnyBlockActivated(player);
     }
 
     /**

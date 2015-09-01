@@ -25,7 +25,7 @@ public class CoalGenerator extends TileBase implements IEnergySource{
      */
     @Override
     public boolean canProvidePowerTo(ForgeDirection direction) {
-        return true;//direction != DirectionHelper.getDirectionFromNumber(getBlockMetadata());
+        return direction != getTileFacing();
     }
 
     /**

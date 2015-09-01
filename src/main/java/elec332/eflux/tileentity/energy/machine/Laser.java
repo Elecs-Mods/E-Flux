@@ -33,7 +33,6 @@ public class Laser extends BreakableReceiverTile {
     private ForgeDirection facing;
     private int range;
 
-
     @Override
     public void onWrenched(ForgeDirection forgeDirection) {
         super.onWrenched(forgeDirection);

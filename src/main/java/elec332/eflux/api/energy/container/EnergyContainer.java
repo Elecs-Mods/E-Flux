@@ -167,7 +167,6 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
         if (storedPower > maxEnergy)
             this.storedPower = maxEnergy;
         this.lastRP = rp;
-        System.out.println("Receiving power @ "+rp+" "+ef+", stored = "+storedPower);
         return 0;
     }
 

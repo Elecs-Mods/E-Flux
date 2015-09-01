@@ -1,6 +1,7 @@
 package elec332.eflux.inventory.slot;
 
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -10,8 +11,8 @@ import net.minecraft.item.crafting.FurnaceRecipes;
  */
 public class SlotFurnaceInput extends Slot{
 
-    public SlotFurnaceInput (TileEntityProcessingMachine machine, int index, int x, int z) {
-        super(machine.getInventory(), index, x, z);
+    public SlotFurnaceInput (IInventory inventory, int index, int x, int z) {
+        super(inventory, index, x, z);
     }
 
     public boolean isItemValid(ItemStack itemStack) {

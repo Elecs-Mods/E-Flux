@@ -3,7 +3,7 @@ package elec332.eflux.blocks;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -17,9 +17,9 @@ public abstract class BlockWithMeta extends Block {
         this.blockName = blockName;
     }
 
-    private final String blockName;
+    protected final String blockName;
 
-    public final BlockWithMeta register(){
+    public BlockWithMeta register(){
         GameRegistry.registerBlock(this, MetaItemBlock.class, blockName);
         return this;
     }
@@ -31,10 +31,10 @@ public abstract class BlockWithMeta extends Block {
         return meta;
     }
 
-    public static class MetaItemBlock extends ItemBlock{
+    public static class MetaItemBlock extends ItemBlockWithMetadata{
 
         public MetaItemBlock(Block block) {
-            super(block);
+            super(block, block);
             if (!(block instanceof BlockWithMeta))
                 throw new IllegalArgumentException();
         }
@@ -43,5 +43,7 @@ public abstract class BlockWithMeta extends Block {
         public String getUnlocalizedName(ItemStack stack) {
             return ((BlockWithMeta) field_150939_a).getUnlocalizedName(stack);
         }
+
     }
+
 }
