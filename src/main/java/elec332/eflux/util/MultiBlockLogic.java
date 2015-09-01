@@ -32,6 +32,24 @@ public class MultiBlockLogic {
             return null;
         }
 
+        public static int getNewDistanceAfterMining(int oldDistance, ForgeDirection facing){
+            switch (facing){
+                case NORTH:
+                    oldDistance--;
+                    break;
+                case SOUTH:
+                    oldDistance++;
+                    break;
+                case EAST:
+                    oldDistance++;
+                    break;
+                case WEST:
+                    oldDistance--;
+                    break;
+            }
+            return oldDistance;
+        }
+
         private static List<BlockLoc> getNewBlocksToMine(BlockLoc loc, ForgeDirection facing, int distance, int range){
             List<BlockLoc> ret = Lists.newArrayList();
             switch (facing){

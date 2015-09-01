@@ -38,6 +38,7 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
         super.onTick();
         if (isServer() && getWorldObj().getTotalWorldTime() % 99 == 0 && getEnergyContainer().drainPower(3000)){
             List<ItemStack> dugBlocks = MultiBlockLogic.Laser.drill(getWorldObj(), laserController, DirectionHelper.rotateLeft(getMultiBlockFacing()), distance, 1);
+            distance = MultiBlockLogic.Laser.getNewDistanceAfterMining(distance, DirectionHelper.rotateLeft(getMultiBlockFacing()));
             for (ItemStack stack : dugBlocks){
                 MultiBlockLogic.dropStack(getWorldObj(), itemOutlet, getMultiBlockFacing(), stack);
             }
