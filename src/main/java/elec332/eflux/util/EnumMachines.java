@@ -4,14 +4,17 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
-import elec332.eflux.tileentity.multiblock.TileMultiBlockPowerInlet;
 import elec332.eflux.tileentity.energy.cable.AdvancedCable;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.cable.NormalCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
-import elec332.eflux.tileentity.energy.machine.*;
+import elec332.eflux.tileentity.energy.machine.AssemblyTable;
+import elec332.eflux.tileentity.energy.machine.Capacitor;
+import elec332.eflux.tileentity.energy.machine.TileGrowthLamp;
+import elec332.eflux.tileentity.energy.machine.TileTeslaCoil;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.multiblock.TileMultiBlockPowerInlet;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -24,12 +27,7 @@ public enum EnumMachines {
     CAPACITOR(Capacitor.class),
     COAL_GENERATOR(CoalGenerator.class),
     ASSEMBLY_TABLE(AssemblyTable.class),
-    GRINDER(TileGrinder.class),
-    FURNACE(TileFurnace.class),
-    COMPRESSOR(Compressor.class),
-    ETCHINGMACHINE(EtchingMachine.class),
     GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
-    LASER(Laser.class),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
     CHUNKSUB(ChunkLoaderSubTile.class),
     NORMALCABLE(NormalCable.class),

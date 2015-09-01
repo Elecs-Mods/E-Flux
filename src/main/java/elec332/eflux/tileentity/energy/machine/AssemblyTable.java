@@ -6,7 +6,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
-import elec332.eflux.tileentity.BreakableReceiverTile;
+import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 4-5-2015.
  */
-public class AssemblyTable extends BreakableReceiverTile implements IInventoryTile{
+public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
         @Override

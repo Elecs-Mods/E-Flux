@@ -1,15 +1,11 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.multiblock.*;
-import elec332.core.util.DirectionHelper;
+import elec332.core.multiblock.AbstractMultiBlockTile;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.List;
 
 /**
  * Created by Elec332 on 28-7-2015.

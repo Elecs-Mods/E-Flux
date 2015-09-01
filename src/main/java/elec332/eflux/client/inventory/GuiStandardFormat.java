@@ -2,7 +2,6 @@ package elec332.eflux.client.inventory;
 
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
 /**

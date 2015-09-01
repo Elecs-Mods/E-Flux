@@ -1,0 +1,27 @@
+##TAB
+itemGroup.EFlux=EFlux
+
+##ITEMS
+
+
+##BLOCKS
+tile.EFlux.basiccable.name=Basic Cable
+tile.EFlux.normalcable.name=Normal Cable
+tile.EFlux.advancedcable.name=Advanced Cable
+
+tile.EFlux.powerinlet.name=Power Inlet
+
+tile.EFlux.ore.copper.name=Copper Ore
+tile.EFlux.ore.tin.name=Tin Ore
+tile.EFlux.ore.zinc.name=Zinc Ore
+tile.EFlux.ore.silver.name=Silver Ore
+
+eflux.machine.part.0.name=Basic Machine Frame
+eflux.machine.part.1.name=Normal Machine Frame
+eflux.machine.part.2.name=Advanced Machine Frame
+eflux.machine.part.3.name=Item Output
+eflux.machine.part.4.name=Laser Lens
+eflux.machine.part.5.name=Laser Core
+
+
+##MISC

@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.eflux.tileentity.BreakableReceiverTile;
+import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 21-7-2015.
  */
-public class TileTeslaCoil extends BreakableReceiverTile {
+public class TileTeslaCoil extends BreakableMachineTile {
 
     public static final DamageSource teslaCoilDamageSource = new DamageSource("TeslaCoil").setDamageBypassesArmor().setDamageAllowedInCreativeMode();
 

@@ -2,7 +2,6 @@ package elec332.eflux.multiblock;
 
 import elec332.eflux.inventory.slot.SlotFurnaceInput;
 import elec332.eflux.util.EnumMachines;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;

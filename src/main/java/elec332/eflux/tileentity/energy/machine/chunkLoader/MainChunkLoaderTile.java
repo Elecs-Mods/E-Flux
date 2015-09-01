@@ -9,7 +9,7 @@ import elec332.core.util.IRunOnce;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
-import elec332.eflux.tileentity.BreakableReceiverTile;
+import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
-public class MainChunkLoaderTile extends BreakableReceiverTile {
+public class MainChunkLoaderTile extends BreakableMachineTile {
 
     public MainChunkLoaderTile(){
         repairItems = Lists.newArrayList(new ItemStack(Items.ender_eye), new ItemStack(Items.ender_pearl));

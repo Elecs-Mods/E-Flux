@@ -1,8 +1,7 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.ISpecialEnergySource;
-import elec332.eflux.tileentity.BreakableReceiverTile;
+import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySource{
+public class Capacitor extends BreakableMachineTile implements ISpecialEnergySource{
 
     @Override
     public ItemStack getRandomRepairItem() {
@@ -48,7 +47,7 @@ public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySo
      */
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return DirectionHelper.getDirectionFromNumber(getBlockMetadata()) == direction;
+        return true;
     }
 
     @Override
@@ -69,7 +68,9 @@ public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySo
      */
     @Override
     public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
-        return 0;
+        if (reqEF > energyContainer.getStoredPower()/rp)
+            reqEF = energyContainer.getStoredPower()/rp;
+        return Math.min(reqEF, 400/rp);
     }
 
     /**
@@ -78,7 +79,7 @@ public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySo
      */
     @Override
     public boolean canProvidePowerTo(ForgeDirection direction) {
-        return false;
+        return true;
     }
 
     /**
@@ -90,6 +91,8 @@ public class Capacitor extends BreakableReceiverTile implements ISpecialEnergySo
      */
     @Override
     public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
+        if (!execute)
+            return Math.min(400/rp, energyContainer.getStoredPower()/rp);
         return 0;
     }
 }

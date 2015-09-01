@@ -1,16 +1,9 @@
 package elec332.eflux.tileentity.energy.generator;
 
-import elec332.core.baseclasses.tileentity.IInventoryTile;
 import elec332.core.baseclasses.tileentity.TileBase;
-import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
-
-import elec332.eflux.tileentity.BaseMachineTEWithInventory;
-import elec332.eflux.util.EnumMachines;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
