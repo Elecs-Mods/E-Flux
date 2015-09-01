@@ -5,8 +5,8 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.items.Components;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import elec332.eflux.recipes.RecipeRegistry;
-import elec332.eflux.util.EnumMachines;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -72,7 +72,7 @@ public class CircuitHandler {
         this.circuitItem = circuit;
         Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.creativeTab);
         for (int i = 0; i < mapping.size(); i++) {
-            RecipeRegistry.instance.registerRecipe(EnumMachines.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
+            RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
         }
     }
 

@@ -27,6 +27,7 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.init.MultiBlockRegister;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import elec332.eflux.recipes.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
@@ -162,7 +163,7 @@ public class EFlux {
     }
 
     private void registerRecipes(){
-        RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
-        RecipeRegistry.instance.registerRecipe(EnumMachines.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));
+        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
+        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));
     }
 }

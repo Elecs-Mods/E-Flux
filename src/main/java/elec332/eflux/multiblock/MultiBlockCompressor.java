@@ -1,6 +1,6 @@
 package elec332.eflux.multiblock;
 
-import elec332.eflux.util.EnumMachines;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -60,8 +60,8 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    public EnumMachines getMachine() {
-        return EnumMachines.COMPRESSOR;
+    public EnumRecipeMachine getMachine() {
+        return EnumRecipeMachine.COMPRESSOR;
     }
 
     @Override

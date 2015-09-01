@@ -18,7 +18,7 @@ public class RecipeRegistry {
 
     private IRecipeHandler[] recipeHandlers;
 
-    public void registerHandler(IRecipeHandler handler, EnumMachines machine){
+    public void registerHandler(IRecipeHandler handler, EnumRecipeMachine machine){
         if (recipeHandlers[machine.ordinal()] == null)
             recipeHandlers[machine.ordinal()] = handler;
         else throw new RuntimeException("There is already a handler for EnumMachine "+machine.toString());
@@ -28,7 +28,7 @@ public class RecipeRegistry {
         return hasOutput(machine.getMachine(), slots);
     }
 
-    public boolean hasOutput(EnumMachines machine, List<Slot> slots){
+    public boolean hasOutput(EnumRecipeMachine machine, List<Slot> slots){
         return getRecipeHandler(machine).hasOutput(slots);
     }
 
@@ -36,15 +36,15 @@ public class RecipeRegistry {
         handleOutput(machine.getMachine(), slots);
     }
 
-    public void handleOutput(EnumMachines machine, List<Slot> slots){
+    public void handleOutput(EnumRecipeMachine machine, List<Slot> slots){
         getRecipeHandler(machine).processRecipe(slots);
     }
 
-    public void registerRecipe(EnumMachines machine, Object input, Object output){
+    public void registerRecipe(EnumRecipeMachine machine, Object input, Object output){
         getRecipeHandler(machine).registerRecipe(input, output);
     }
 
-    public IRecipeHandler getRecipeHandler(EnumMachines machine){
+    public IRecipeHandler getRecipeHandler(EnumRecipeMachine machine){
         return recipeHandlers[machine.ordinal()];
     }
 
@@ -93,7 +93,7 @@ public class RecipeRegistry {
     }*/
 
     static {
-        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumMachines.COMPRESSOR);
-        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumMachines.ETCHINGMACHINE);
+        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumRecipeMachine.COMPRESSOR);
+        instance.registerHandler(new BasicRecipeHandler(2, 1), EnumRecipeMachine.ETCHINGMACHINE);
     }
 }
