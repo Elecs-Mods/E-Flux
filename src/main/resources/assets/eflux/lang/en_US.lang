@@ -20,8 +20,10 @@ eflux.machine.part.0.name=Basic Machine Frame
 eflux.machine.part.1.name=Normal Machine Frame
 eflux.machine.part.2.name=Advanced Machine Frame
 eflux.machine.part.3.name=Item Output
-eflux.machine.part.4.name=Laser Lens
-eflux.machine.part.5.name=Laser Core
+eflux.machine.part.4.name=Laser Core
+eflux.machine.part.5.name=Heater
+eflux.machine.part.6.name=Monitor
+eflux.machine.part.7.name=Radiator
 
 
 ##MISC
