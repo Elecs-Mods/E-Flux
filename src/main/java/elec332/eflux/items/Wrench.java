@@ -44,7 +44,7 @@ public class Wrench extends Item implements IRightClickCancel {
             if (player.isSneaking()) {
                 world.setBlockToAir(x, y, z);
                 if (!world.isRemote) {
-                    world.spawnEntityInWorld(new EntityItem(world, x, y, z, ((IWrenchable) block).ItemDropped()));
+                    world.spawnEntityInWorld(new EntityItem(world, x, y, z, ((IWrenchable) block).ItemDropped(world, x, y, z)));
                 }
             } else if (!world.isRemote){
                 ((IWrenchable) block).onWrenched(world, x, y, z, ForgeDirection.getOrientation(side));

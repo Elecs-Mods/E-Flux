@@ -1,6 +1,7 @@
 package elec332.eflux.client.blocktextures;
 
 import elec332.core.baseclasses.tileentity.BlockTileBase;
+import elec332.core.util.BlockSide;
 
 /**
  * Created by Elec332 on 24-7-2015.
@@ -23,8 +24,8 @@ public class BlockTextures {
             }
 
             @Override
-            public String getSideTexture(boolean active, BlockTileBase.BlockSide side) {
-                if (side == BlockTileBase.BlockSide.BACK)
+            public String getSideTexture(boolean active, BlockSide side) {
+                if (side == BlockSide.BACK)
                     return defaultBackTexture;
                 return defaultSideTexture;
             }

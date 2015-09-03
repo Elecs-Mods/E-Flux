@@ -3,11 +3,13 @@ package elec332.eflux.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import elec332.core.baseclasses.tileentity.BlockTileBase;
+import elec332.core.util.BlockSide;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 /**
  * Created by Elec332 on 30-4-2015.
@@ -27,7 +29,7 @@ public class BlockMachine extends BlockTileBase {
     }
 
     @Override
-    public ItemStack ItemDropped() {
+    public ItemStack ItemDropped(World world, int x, int y, int z) {
         return new ItemStack(this);
     }
 

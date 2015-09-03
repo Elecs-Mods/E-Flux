@@ -4,6 +4,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import elec332.core.main.ElecCore;
 import elec332.core.multiblock.BlockData;
 import elec332.eflux.EFlux;
+import elec332.eflux.blocks.BlockHeatGlass;
 import elec332.eflux.blocks.BlockMachinePart;
 import elec332.eflux.blocks.BlockOres;
 import elec332.eflux.blocks.DirectionBlock;
@@ -18,8 +19,8 @@ public class BlockRegister {
     private BlockRegister(){
     }
 
-    public static Block ores, machinePart;
-    public static BlockData frameBasic, frameNormal, frameAdvanced, itemOutlet, laserLens, laserCore;
+    public static Block ores, machinePart, machineGlass;
+    public static BlockData frameBasic, frameNormal, frameAdvanced, itemOutlet, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor;
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment){
@@ -31,17 +32,28 @@ public class BlockRegister {
         }
 
         ores = new BlockOres().register().setCreativeTab(EFlux.creativeTab);
-        machinePart = new BlockMachinePart(6).register().setCreativeTab(EFlux.creativeTab);
+        machinePart = new BlockMachinePart(10).register().setCreativeTab(EFlux.creativeTab);
+        machineGlass = new BlockHeatGlass(2).register().setCreativeTab(EFlux.creativeTab);
 
-        frameBasic = newMachineData(0);
-        frameNormal = newMachineData(1);
-        frameAdvanced = newMachineData(2);
-        itemOutlet = newMachineData(3);
-        laserLens = newMachineData(4);
-        laserCore = newMachineData(5);
+        frameBasic = newMachineBlock(0);
+        frameNormal = newMachineBlock(1);
+        frameAdvanced = newMachineBlock(2);
+        itemOutlet = newMachineBlock(3);
+        laserCore = newMachineBlock(4);
+        heater = newMachineBlock(5);
+        heatResistantGlass = newGlassBlock(0);
+        laserLens = newGlassBlock(1);
+        monitor = newMachineBlock(6);
+        radiator = newMachineBlock(7);
+        motor = newMachineBlock(8);
+        precisionMotor = newMachineBlock(9);
     }
 
-    private static BlockData newMachineData(int i){
+    private static BlockData newMachineBlock(int i){
         return new BlockData(machinePart, i);
+    }
+
+    private static BlockData newGlassBlock(int i){
+        return new BlockData(machineGlass, i);
     }
 }

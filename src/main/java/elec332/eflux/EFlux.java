@@ -104,7 +104,7 @@ public class EFlux {
         GameRegistry.registerItem(new Item(){
             @Override
             public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-                return multiBlockRegistry.getStructureRegistry().attemptCreate(world, x, y, z, ForgeDirection.getOrientation(side));
+                return multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, x, y, z, ForgeDirection.getOrientation(side));
             }
         }.setCreativeTab(creativeTab), "itemTestMB");
 

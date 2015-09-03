@@ -39,6 +39,7 @@ public enum EnumMachines {
     POWERINLET(TileMultiBlockPowerInlet.class),
 
     //Machine-specific MultiBlock parts
+    //HEATER,
 
 
     ;
