@@ -52,6 +52,8 @@ public class MultiBlockRegister {
                     public BlockData getBlockAtPos(int length, int width, int height) {
                         if (length == 1){
                             if (height == 0) {
+                                if (width == 0)
+                                    return monitor;
                                 if (width == 1)
                                     return itemOutlet;
                                 if (width == 2)
@@ -73,7 +75,7 @@ public class MultiBlockRegister {
 
             @Override
             public BlockData getTriggerBlock() {
-                return powerInlet;
+                return monitor;
             }
 
         }, "compressor", MultiBlockCompressor.class);

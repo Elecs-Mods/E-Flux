@@ -30,6 +30,8 @@ public final class MachinePartTextureHandler implements SidedBlockRenderingCache
                 if (facingM.ordinal() == side)
                     return renderingCache.getIconDirectly(meta, 1, tileM.monitorSide);
                 return getSidedIcon(iba, x, y, z, side, meta, renderingCache);
+            case 7:
+                return getSidedIcon(iba, x, y, z, side, meta, renderingCache);
             default:
                 return renderingCache.getIconForNormalRendering(meta, side);
         }

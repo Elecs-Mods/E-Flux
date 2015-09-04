@@ -170,7 +170,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
                 if (forgeDirection != ForgeDirection.UP || forgeDirection != ForgeDirection.DOWN || (getBlockType() == BlockRegister.itemOutlet.block && getBlockMetadata() == BlockRegister.itemOutlet.meta))
                 this.facing = forgeDirection;
                 markDirty();
-
+                worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
             }
         }
 
