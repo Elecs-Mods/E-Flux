@@ -13,7 +13,7 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Created by Elec332 on 12-9-2015.
  */
-public class TileScanner extends BreakableMachineTile implements IInventoryTile, ITileWithSlots{
+public class TileScanner extends BreakableMachineTile implements IInventoryTile, ITileWithSlots, ISidedInventory{
 
     public TileScanner(){
         inventory = new BasicInventory("y", 2, this);
@@ -101,5 +101,80 @@ public class TileScanner extends BreakableMachineTile implements IInventoryTile,
         container.addSlotToContainer(new Slot(inventory, 0, 56, 35));
         container.addSlotToContainer(new SlotOutput(inventory, 1, 116, 35));
         container.addPlayerInventoryToContainer();
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        return new int[]{0, 1};
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        return slot == 0 && stack.getItem() == ItemRegister.groundMesh;
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+        return slot == 1;
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return inventory.getSizeInventory();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int amount) {
+        return inventory.decrStackSize(slot, amount);
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        return inventory.getStackInSlotOnClosing(slot);
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        inventory.setInventorySlotContents(slot, stack);
+    }
+
+    @Override
+    public String getInventoryName() {
+        return inventory.getInventoryName();
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return inventory.hasCustomInventoryName();
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return inventory.isUseableByPlayer(player);
+    }
+
+    @Override
+    public void openInventory() {
+        inventory.openInventory();
+    }
+
+    @Override
+    public void closeInventory() {
+        inventory.closeInventory();
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return inventory.isItemValidForSlot(slot, stack);
     }
 }
