@@ -1,4 +1,4 @@
-package elec332.eflux.recipes;
+package elec332.eflux.recipes.old;
 
 import net.minecraft.inventory.Slot;
 

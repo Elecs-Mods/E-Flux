@@ -151,8 +151,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
                 return 0;
             }
             if (rp > requestedRP(direction) * (1 + getAcceptance())) {
-                breakableMachine.setBroken(true);
-                breakableMachine.onBroken();
+                breakMachine();
             }
         }
         return efForOptimalRP; //Math.min(efForOptimalRP, (maxEnergy-storedPower)/rp);
@@ -168,6 +167,13 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             this.storedPower = maxEnergy;
         this.lastRP = rp;
         return 0;
+    }
+
+    public final void breakMachine(){
+        if (breakableMachine != null){
+            breakableMachine.setBroken(true);
+            breakableMachine.onBroken();
+        }
     }
 
 }

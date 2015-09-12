@@ -1,8 +1,11 @@
 package elec332.eflux.proxies;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.eflux.client.render.InsideItemRenderer;
 import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -22,5 +25,10 @@ public class ClientProxy extends CommonProxy{
                     return ((IInventoryTile) world.getTileEntity(x, y, z)).getGuiClient(player);
                 else return null;
         }
+    }
+
+    @Override
+    public void initRenderStuff(){
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
     }
 }

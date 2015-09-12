@@ -14,27 +14,16 @@ public class ContainerSingleSlot extends BaseContainer {  //Deprecated???
     public ContainerSingleSlot(IInventory handler, EntityPlayer player){
         super(player);
         this.bmh = handler;
-        addSlots(player.inventory);
+        addSlots();
     }
 
     private IInventory bmh;
 
-    private void addSlots(InventoryPlayer inventoryPlayer){
+    private void addSlots(){
 
         addSlotToContainer(new Slot(bmh, 0, 66, 53));
 
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 9; ++j)
-            {
-                this.addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-
-        for (int i = 0; i < 9; ++i)
-        {
-            this.addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
-        }
+        addPlayerInventoryToContainer();
     }
 
     @Override

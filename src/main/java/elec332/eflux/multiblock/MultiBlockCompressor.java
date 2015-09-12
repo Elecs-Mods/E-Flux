@@ -1,6 +1,6 @@
 package elec332.eflux.multiblock;
 
-import elec332.eflux.recipes.EnumRecipeMachine;
+import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -12,27 +12,6 @@ import java.util.List;
  * Created by Elec332 on 27-8-2015.
  */
 public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
-
-    public MultiBlockCompressor() {
-        super(3, 4);
-    }
-
-    @Override
-    protected void registerMachineSlots(List<Slot> registerList) {
-        registerList.add(new Slot(inventory, registerList.size(), 56, 17));
-        registerList.add(new Slot(inventory, registerList.size(), 56, 53));
-        oneOutPutSlot(registerList);
-    }
-
-    @Override
-    public int getRequiredPowerPerTick() {
-        return 50;
-    }
-
-    @Override
-    public int getProcessTime() {
-        return 70;
-    }
 
     @Override
     protected int getMaxStoredPower() {
@@ -67,5 +46,20 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
     @Override
     public ResourceLocation getBackgroundImageLocation() {
         return new ResourceLocation("textures/gui/container/furnace.png");
+    }
+
+    @Override
+    public int getRequiredPower(int startup) {
+        return 0;
+    }
+
+    @Override
+    public int getRequiredPowerAfterStartup() {
+        return 0;
+    }
+
+    @Override
+    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot) {
+        return 0;
     }
 }

@@ -1,13 +1,16 @@
 package elec332.eflux.multiblock;
 
-import elec332.eflux.inventory.slot.SlotFurnaceInput;
-import elec332.eflux.recipes.EnumRecipeMachine;
+import elec332.core.player.PlayerHelper;
+import elec332.core.util.BlockLoc;
+import elec332.core.world.WorldHelper;
+import elec332.eflux.init.BlockRegister;
+import elec332.eflux.recipes.old.EnumRecipeMachine;
+import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.List;
 
 /**
  * Created by Elec332 on 28-8-2015.
@@ -15,32 +18,54 @@ import java.util.List;
 public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     public MultiBlockFurnace() {
-        super(2, 4);
-    }
-
-    private SlotFurnaceInput getInputSlot(){
-        return new SlotFurnaceInput(inventory, 0, 56, 35);
+        super();
+        setStartupTime(1200);
     }
 
     @Override
-    protected void registerMachineSlots(List<Slot> registerList) {
-        registerList.add(getInputSlot());
-        oneOutPutSlot(registerList);
+    public void init() {
+        super.init();
+        middle = getBlockLocAtTranslatedPos(1, 1, 1);
+        getWorldObj().setBlock(middle.xCoord, middle.yCoord, middle.zCoord, BlockRegister.renderBlock, 0, 3);
+        ((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
+    }
+
+    private BlockLoc middle;
+
+    @Override
+    public int getRequiredPower(int startup) {
+        return 300;
     }
 
     @Override
-    public int getRequiredPowerPerTick() {
-        return 50;
+    public int getRequiredPowerAfterStartup() {
+        return 200;
+    }
+
+    @Override
+    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot) {
+        return oldProgress+1;
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        getWorldObj().setBlockToAir(middle.xCoord, middle.yCoord, middle.zCoord);
+    }
+
+    @Override
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player) {
+        if (player instanceof EntityPlayerMP)
+            for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
+            }
+
+        return super.onAnyBlockActivatedSafe(player);
     }
 
     @Override
     protected int getMaxStoredPower() {
         return 5000;
-    }
-
-    @Override
-    public int getProcessTime() {
-        return 20;
     }
 
     @Override
@@ -69,24 +94,8 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    public boolean canProcess() {
-        if (inventory.getStackInSlot(0) == null)
-            return false;
-        ItemStack result = getInputSlot().getOutput();
-        return result != null && inventory.canAddItemStackFully(result, 1, true);
-    }
-
-    @Override
-    public void onProcessDone() {
-        if (inventory.getStackInSlot(1) == null)
-            inventory.setInventorySlotContents(1, getInputSlot().getOutput().copy());
-        else inventory.getStackInSlot(1).stackSize += getInputSlot().getOutput().stackSize;
-        getInputSlot().consumeOnProcess();
-        markDirty();
-    }
-
-    @Override
     public ResourceLocation getBackgroundImageLocation() {
         return new ResourceLocation("textures/gui/container/furnace.png");
     }
+
 }

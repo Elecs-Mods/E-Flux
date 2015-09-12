@@ -44,6 +44,7 @@ public class BreakableMachineInventory implements IInventory{
                 });
                 return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
             }
+
         };
         if (side==Side.CLIENT)
             return new GuiStandardFormat(container, new ResourceLocation("nope.png"));

@@ -23,11 +23,11 @@ public class EFluxItems extends Item {
 
     private IIcon[] textures;
     private String[] components = {
-            "coal dust", "carbon plate", "blueprint", "unrefined circuit board", "empty circuit board"
+            "coalDust", "carbonPlate", "blueprint", "unrefinedCircuitBoard", "emptyCircuitBoard", "groundMesh"
     };
 
     protected String getName(){
-        return "GenericItems";
+        return "genericItems";
     }
 
     @Override

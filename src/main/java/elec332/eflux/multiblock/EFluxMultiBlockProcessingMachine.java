@@ -1,81 +1,148 @@
 package elec332.eflux.multiblock;
 
-import com.google.common.collect.Lists;
-import elec332.core.client.inventory.BaseGuiContainer;
+import com.google.common.collect.Maps;
 import elec332.core.client.inventory.IResourceLocationProvider;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.IHasProgressBar;
-import elec332.core.inventory.ITileWithSlots;
-import elec332.core.inventory.slot.SlotOutput;
+import elec332.core.player.InventoryHelper;
 import elec332.core.util.BasicInventory;
-import elec332.eflux.api.energy.container.IProgressMachine;
-import elec332.eflux.inventory.slot.SlotUpgrade;
-import elec332.eflux.recipes.RecipeRegistry;
 import elec332.eflux.util.IEFluxMachine;
-import elec332.eflux.util.Utils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import elec332.eflux.util.RIWInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by Elec332 on 27-8-2015.
  */
-public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMachine implements ITileWithSlots, IHasProgressBar, IResourceLocationProvider, IProgressMachine, IEFluxMachine {
+public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMachine implements IHasProgressBar, IResourceLocationProvider, IEFluxMachine {
 
-    public EFluxMultiBlockProcessingMachine(int i, int upgradeSlots) {
+    public EFluxMultiBlockProcessingMachine() {
         super();
-        this.i = i;
-        this.upgradeSlotsInt = upgradeSlots;
-        getEnergyContainer().setProgressMachine(this);
+        progressMap = Maps.newHashMap();
+        for (int i = 0; i < 64; i++) {
+            progressMap.put(i, 0);
+        }
     }
-
-    private final int i, upgradeSlotsInt;
 
     @Override
     public void init() {
         super.init();
-        this.inventory = new BasicInventory("Inventory", i+upgradeSlotsInt, getSaveDelegate());
-        this.upgradeSlotsCounter = upgradeSlotsInt;
-        List<Slot> list = Lists.newArrayList();
-        registerMachineSlots(list);
-        this.machineSlots = Utils.copyOf(list);
-        registerStorageSlots(list);
-        int startIndex = list.size();
-        registerUpgradeSlots(list);
-        List<SlotUpgrade> upgradeSlotsList = Lists.newArrayList();
-        for (Slot slot : list.subList(startIndex, list.size())){
-            upgradeSlotsList.add((SlotUpgrade) slot);
-        }
-        this.upgradeSlots = Utils.copyOf(upgradeSlotsList);
-        this.allSLots = list;
+        inventory = new BasicInventory("y", 6, getSaveDelegate()){
+            @Override
+            public int getInventoryStackLimit() {
+                return 1;
+            }
+        };//new RIWInventory(0, getSaveDelegate());
+        //setHook();
     }
 
     protected BasicInventory inventory;
-    private int upgradeSlotsCounter;
-    private List<Slot> machineSlots;
-    private List<SlotUpgrade> upgradeSlots;
-    private List<Slot> allSLots;
+    protected int startup;
+    protected int startupTime;
+    protected HashMap<Integer, Integer> progressMap;
 
     @Override
-    public void onTick() {
+    public ItemStack inject(ItemStack stack) {
+        if (stack == null)
+            return null;
+        final int s = stack.stackSize;
+        for (int i = 0; i < s; i++) {
+            ItemStack stack1 = stack.copy();
+            stack1.stackSize = 1;
+            if (!InventoryHelper.addItemToInventory(inventory, stack1))
+                return stack;
+            stack.stackSize--;
+        }
+        return null;
+    }
+
+    @Override
+    public final void onTick() {
         super.onTick();
         if (!getWorldObj().isRemote){
-            getEnergyContainer().tick();
+            if (startup >= 0 && startup < startupTime){
+                if (getEnergyContainer().drainPower(getRequiredPower(startup)) && !isBroken()){
+                    startup++;
+                } else if (startup > 0){
+                    startup--;
+                }
+            } else {
+                if (getEnergyContainer().drainPower(getRequiredPowerAfterStartup()) && !isBroken()) {
+                    if (startup > startupTime)
+                        startup = startupTime;
+                } else {
+                    if (startup > 0)
+                        startup--;
+                }
+            }
+            for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                int q = progressMap.get(i);
+                progressMap.put(i, updateProgressOnItem(q, inventory.getStackInSlot(i), i));
+            }
+            tick(startup);
+        }
+    }
+
+    protected void resetProgressData(int slot){
+        progressMap.put(slot, 0);
+    }
+
+    /*public boolean switchToItemMode(){
+        if (!inventory.isEmpty())
+            return false;
+        inventory = new RIWInventory(0, getSaveDelegate());
+        setHook();
+        return true;
+    }
+
+    public boolean switchToBlockMode(){
+        if (!inventory.isEmpty())
+            return false;
+        inventory = new RIWInventory(1, getSaveDelegate());
+        setHook();
+        return true;
+    }
+
+    private void setHook(){
+        inventory.addHook(this);
+    }
+
+    @Override
+    public void onRIWInventoryChanged() {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            if (inventory.getStackInSlot(i) == null)
+                progressMap.put(i, 0);
         }
     }
 
     @Override
+    public void invalidate() {
+        super.invalidate();
+        inventory.removeHook(this);
+    }*/
+
+    public void setStartupTime(int newTime){
+        this.startupTime = newTime;
+    }
+
+    public abstract int getRequiredPower(int startup);
+
+    public abstract int getRequiredPowerAfterStartup();
+
+    public void tick(int startup){
+    }
+
+    public abstract int updateProgressOnItem(int oldProgress, ItemStack stack, int slot);
+
+    @Override
     public int getProgress(){
-        return getEnergyContainer().getProgress();
+        return startup;
     }
 
     @Override
     public float getProgressScaled(int progress) {
-        return getEnergyContainer().getProgressScaled(progress);
+        return progress/(float)startup;
     }
 
     @Override
@@ -90,80 +157,4 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
         this.inventory.readFromNBT(tagCompound);
     }
 
-    @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player) {
-        return openGui(player);
-    }
-
-    @Override
-    public void addSlots(BaseContainer container) {
-        for (Slot slot : getAllSLots())
-            container.addSlotToContainer(slot);
-        container.addPlayerInventoryToContainer();
-    }
-
-    @Override
-    public Object getMachineGui(EntityPlayer player, boolean client) {
-        BaseContainer container = new ContainerMachine(this, player, 0);
-        if (client)
-            return new BaseGuiContainer(container) {
-                @Override
-                public ResourceLocation getBackgroundImageLocation() {
-                    return EFluxMultiBlockProcessingMachine.this.getBackgroundImageLocation();
-                }
-            };
-        return container;
-    }
-
-    @Override
-    public void invalidate() {
-        super.invalidate();
-    }
-
-    public BasicInventory getInventory() {
-        return inventory;
-    }
-
-    protected abstract void registerMachineSlots(List<Slot> registerList);
-
-    protected void registerStorageSlots(List<Slot> registerList){
-    }
-
-    protected void registerUpgradeSlots(List<Slot> registerList){
-        for (int i = 0; i < upgradeSlotsCounter; i++) {
-            registerList.add(new SlotUpgrade(inventory, registerList.size(), 3, 4 + i * 18));
-        }
-    }
-
-    protected List<Slot> getMachineSlots(){
-        return machineSlots;
-    }
-
-    public List<Slot> getAllSLots() {
-        return allSLots;
-    }
-
-    public List<SlotUpgrade> getUpgradeSlots() {
-        return upgradeSlots;
-    }
-
-    public abstract int getRequiredPowerPerTick();
-
-    public abstract int getProcessTime();
-
-    public boolean canProcess() {
-        return RecipeRegistry.instance.hasOutput(this, getMachineSlots());
-    }
-
-    public void onProcessDone() {
-        RecipeRegistry.instance.handleOutput(this, getMachineSlots());
-    }
-
-    protected void oneOutPutSlot(List<Slot> list){
-        list.add(new SlotOutput(inventory, list.size(), 116, 35));
-    }
-
-    protected void oneInputSlot(List<Slot> list){
-        list.add(new Slot(inventory, list.size(), 56, 35));
-    }
 }

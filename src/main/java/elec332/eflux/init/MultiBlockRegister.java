@@ -3,7 +3,6 @@ package elec332.eflux.init;
 import elec332.core.multiblock.AbstractAdvancedMultiBlockStructure;
 import elec332.core.multiblock.BlockData;
 import elec332.core.multiblock.BlockStructure;
-import elec332.core.multiblock.IMultiBlockStructure;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
@@ -11,7 +10,9 @@ import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachinePart;
 import elec332.eflux.multiblock.MultiBlockCompressor;
 import elec332.eflux.multiblock.MultiBlockFurnace;
+import elec332.eflux.multiblock.MultiBlockGrinder;
 import elec332.eflux.multiblock.MultiBlockLaser;
+import elec332.eflux.tileentity.multiblock.TileMultiBlockItemGate;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -26,6 +27,12 @@ import static elec332.eflux.init.BlockRegister.*;
 public class MultiBlockRegister {
 
     private static final BlockData powerInlet = new BlockData(EnumMachines.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
+    private static final BlockData air = new BlockData(null){
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj) || ((obj instanceof BlockData) && ((BlockData) obj).block == renderBlock);
+        }
+    };
 
     public static void init(){
 
@@ -42,7 +49,8 @@ public class MultiBlockRegister {
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
-                return b1 && b2 && b3 && b4;
+                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
+                return b1 && b2 && b3 && b4 && b5;
             }
 
             @Override
@@ -55,13 +63,13 @@ public class MultiBlockRegister {
                                 if (width == 0)
                                     return monitor;
                                 if (width == 1)
-                                    return itemOutlet;
+                                    return itemGate;
                                 if (width == 2)
                                     return powerInlet;
                             }
                             if (height == 1){
                                 if (width == 1)
-                                    return null;
+                                    return air;
                                 if (width == 2)
                                     return motor;
                             }
@@ -114,7 +122,7 @@ public class MultiBlockRegister {
                                 if (length == 1)
                                     return laserLens;
                                 if (length == 2)
-                                    return null;
+                                    return air;
                                 if (length == 3)
                                     return laserCore;
                                 if(length == 4)
@@ -148,7 +156,10 @@ public class MultiBlockRegister {
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
-                return b1 && b2 && b3 && b4;
+                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
+                boolean b6 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
+                boolean b7 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                return b1 && b2 && b3 && b4 && b5 && b6 && b7;
             }
 
             @Override
@@ -158,19 +169,21 @@ public class MultiBlockRegister {
                     public BlockData getBlockAtPos(int length, int width, int height) {
                         if (height == 0 && length == 1){
                             if (width == 1)
-                                return itemOutlet;
+                                return itemGate;
                             if (width == 2)
                                 return powerInlet;
                         } else if (height == 1){
                             if (width == 1) {
                                 if (length == 1)
-                                    return null;
+                                    return air;
                                 return heater;
                             }
                             if (width == 2 && length == 1)
                                 return heater;
                             if (width == 0 && length == 1)
                                 return heatResistantGlass;
+                        } else if (height == 2 && width == 1 && length == 1){
+                            return itemGate;
                         }
                         return frameBasic;
                     }
@@ -183,5 +196,60 @@ public class MultiBlockRegister {
             }
 
         }, "furnace", MultiBlockFurnace.class);
+
+        EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
+
+            @Override
+            public boolean canCreate(EntityPlayerMP player) {
+                return true;
+            }
+
+            @Override
+            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, ForgeDirection facing) {
+                boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
+                boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
+                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
+                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                return b1 && b2 && b4 && b5;
+            }
+
+            @Override
+            public BlockStructure getStructure() {
+                return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                    @Override
+                    public BlockData getBlockAtPos(int length, int width, int height) {
+                        if (length == 1){
+                            if (height == 0) {
+                                if (width == 0)
+                                    return monitor;
+
+                                if (width == 2)
+                                    return powerInlet;
+                            }
+                            if (height == 1){
+                                if (width == 1)
+                                    return air;
+                            }
+                            if (height == 2){
+                                if (width == 1)
+                                    return itemGate;
+                            }
+                        }
+                        if ((length == 0 || length == 2) && width == 1 && height == 1)
+                            return radiator;
+                        if (length == 2 && height == 0 && width == 0)
+                            return dustStorage;
+                        return frameNormal;
+                    }
+                });
+            }
+
+            @Override
+            public BlockData getTriggerBlock() {
+                return frameNormal;
+            }
+
+        }, "grinder", MultiBlockGrinder.class);
+
     }
 }

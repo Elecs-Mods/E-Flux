@@ -8,10 +8,7 @@ import elec332.eflux.tileentity.energy.cable.AdvancedCable;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.cable.NormalCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
-import elec332.eflux.tileentity.energy.machine.AssemblyTable;
-import elec332.eflux.tileentity.energy.machine.Capacitor;
-import elec332.eflux.tileentity.energy.machine.TileGrowthLamp;
-import elec332.eflux.tileentity.energy.machine.TileTeslaCoil;
+import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import elec332.eflux.tileentity.multiblock.TileMultiBlockPowerInlet;
@@ -33,6 +30,7 @@ public enum EnumMachines {
     NORMALCABLE(NormalCable.class),
     ADVANCEDCABLE(AdvancedCable.class),
     TESLACOIL(TileTeslaCoil.class),
+    SCANNER(TileScanner.class),
 
 
     //Common MultiBlock parts

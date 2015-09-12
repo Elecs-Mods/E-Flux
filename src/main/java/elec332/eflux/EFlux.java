@@ -18,6 +18,7 @@ import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
+import elec332.eflux.compat.waila.WailaCompatHandler;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
@@ -27,11 +28,10 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.init.MultiBlockRegister;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
-import elec332.eflux.recipes.EnumRecipeMachine;
-import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.recipes.old.EnumRecipeMachine;
+import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
-import elec332.eflux.util.EnumMachines;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
@@ -114,6 +114,7 @@ public class EFlux {
         configWrapper.refresh();
         Compat.instance.loadList();
         Compat.instance.addHandler(new RFCompat());
+        Compat.instance.addHandler(new WailaCompatHandler());
         logger.info("RF API loaded: "+Compat.RF);
         logger.info("RFTools: "+Compat.RFTools);
 
@@ -137,6 +138,7 @@ public class EFlux {
         CircuitHandler.register();
         registerRecipes();
         EventHelper.registerHandlerForge(new PlayerEventHandler());
+        proxy.initRenderStuff();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
             @Override
             public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {

@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import elec332.core.api.wrench.IWrenchable;
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.core.client.render.SidedBlockRenderingCache;
-import elec332.core.main.ElecCore;
 import elec332.core.multiblock.BlockData;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
@@ -14,6 +13,8 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.blocktextures.MachinePartTextureHandler;
 import elec332.eflux.init.BlockRegister;
+import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
+import elec332.eflux.tileentity.multiblock.TileMultiBlockItemGate;
 import elec332.eflux.tileentity.multiblock.TileMultiBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -53,11 +54,17 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
 
     private final int types;
     private final SidedBlockRenderingCache textureHandler;
+    private static boolean register;
 
     @Override
     public BlockMachinePart register() {
         super.register();
-        GameRegistry.registerTileEntity(TileEntityBlockMachine.class, blockName);
+        if (!register) {
+            GameRegistry.registerTileEntity(TileEntityBlockMachine.class, blockName);
+            GameRegistry.registerTileEntity(TileMultiBlockItemGate.class, "itemGate");
+            GameRegistry.registerTileEntity(TileEntityDustStorage.class, "dustStorage");
+            register = true;
+        }
         return this;
     }
 
@@ -125,31 +132,44 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
     }
 
     @Override
+    public void onPostBlockPlaced(World world, int x, int y, int z, int side) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileEntityBlockMachine)
+            ((TileEntityBlockMachine) tile).pokeCheckStuff();
+        super.onPostBlockPlaced(world, x, y, z, side);
+    }
+
+    @Override
+    public void onBlockPreDestroy(World world, int x, int y, int z, int side) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileEntityBlockMachine)
+            ((TileEntityBlockMachine) tile).pokeCheckStuff();
+        super.onBlockPreDestroy(world, x, y, z, side);
+    }
+
+    @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileBase) {
+        if (tile instanceof TileEntityBlockMachine) {
+            ((TileEntityBlockMachine) tile).pokeCheckStuff();
+        } else if (tile instanceof TileBase) {
             ((TileBase) tile).onNeighborBlockChange(block);
         } else {
             super.onNeighborBlockChange(world, x, y, z, block);
         }
     }
 
-    @Override
-    public void onNeighborChange(final IBlockAccess world, final int x, final int y, final int z, int tileX, int tileY, int tileZ) {
-        ElecCore.tickHandler.registerCall(new Runnable() {
-            @Override
-            public void run() {
-                onNeighborBlockChange((World) world, x, y, z, null);
-            }
-        });
-    }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
+        if (meta == BlockRegister.itemGate.meta)
+            return new TileMultiBlockItemGate();
+        if (meta == BlockRegister.dustStorage.meta)
+            return new TileEntityDustStorage();
         return new TileEntityBlockMachine();
     }
 
-    public static final class TileEntityBlockMachine extends TileMultiBlockTile{
+    public static class TileEntityBlockMachine extends TileMultiBlockTile{
 
         public TileEntityBlockMachine(){
             super();
@@ -167,15 +187,17 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         @Override
         public void onWrenched(ForgeDirection forgeDirection) {
             if (getMultiBlock() == null) {
-                if (forgeDirection != ForgeDirection.UP || forgeDirection != ForgeDirection.DOWN || (getBlockType() == BlockRegister.itemOutlet.block && getBlockMetadata() == BlockRegister.itemOutlet.meta))
+                if (forgeDirection != ForgeDirection.UP || forgeDirection != ForgeDirection.DOWN || (getBlockType() == BlockRegister.itemGate.block && getBlockMetadata() == BlockRegister.itemGate.meta))
                 this.facing = forgeDirection;
                 markDirty();
-                worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+                syncData();
+                reRenderBlock();
             }
         }
 
-        @Override
-        public void onNeighborBlockChange(Block ignored) {
+        public void pokeCheckStuff() {
+            if (getBlockType() != BlockRegister.monitor.block || getBlockMetadata() != BlockRegister.monitor.meta)
+                return;
             boolean neighbour = false;
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
@@ -192,20 +214,20 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
                             tile.onNeighborBlockChange(getBlockType());
                             if (tile.monitorSide == monitorSide)
                                 monitorSide = 0;
-                            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+                            reRenderBlock();
                         } else if (DirectionHelper.rotateRight(facing) == direction){
                             monitorSide = 2;
                             tile.onNeighborBlockChange(getBlockType());
                             if (tile.monitorSide == monitorSide)
                                 monitorSide = 0;
-                            worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+                            reRenderBlock();
                         }
                     }
                 }
             }
             if (!neighbour){
                 monitorSide = 0;
-                worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+                reRenderBlock();
             }
         }
 

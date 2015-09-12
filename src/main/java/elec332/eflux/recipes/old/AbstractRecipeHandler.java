@@ -1,4 +1,4 @@
-package elec332.eflux.recipes;
+package elec332.eflux.recipes.old;
 
 import com.google.common.collect.Lists;
 import elec332.core.inventory.slot.SlotOutput;

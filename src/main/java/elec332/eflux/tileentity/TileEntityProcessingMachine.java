@@ -12,7 +12,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.inventory.slot.SlotUpgrade;
-import elec332.eflux.recipes.RecipeRegistry;
+import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;

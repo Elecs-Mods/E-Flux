@@ -42,6 +42,10 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         }
     }
 
+    public ItemStack inject(ItemStack stack){
+        return stack;
+    }
+
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
@@ -86,8 +90,10 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
 
     @Override
     public void onBroken() {
-        if (!getWorldObj().isRemote)
+        if (!getWorldObj().isRemote) {
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
+            getSaveDelegate().syncData();
+        }
     }
 
     @Override
