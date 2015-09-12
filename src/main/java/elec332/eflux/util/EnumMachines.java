@@ -22,7 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 public enum EnumMachines {
     TESTCABLE(BasicCable.class),
     CAPACITOR(Capacitor.class),
-    COAL_GENERATOR(CoalGenerator.class),
+    COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
     ASSEMBLY_TABLE(AssemblyTable.class),
     GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
@@ -30,7 +30,7 @@ public enum EnumMachines {
     NORMALCABLE(NormalCable.class),
     ADVANCEDCABLE(AdvancedCable.class),
     TESLACOIL(TileTeslaCoil.class),
-    SCANNER(TileScanner.class),
+    SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
 
 
     //Common MultiBlock parts

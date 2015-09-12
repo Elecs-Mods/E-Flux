@@ -24,6 +24,9 @@ eflux.machine.part.4.name=Laser Core
 eflux.machine.part.5.name=Heater
 eflux.machine.part.6.name=Monitor
 eflux.machine.part.7.name=Radiator
+eflux.machine.part.8.name=Motor
+eflux.machine.part.9.name=Precision Motor
+eflux.machine.part.10.name=DustStorage
 
 
 ##MISC

@@ -58,7 +58,7 @@ public final class MachinePartTextureHandler implements SidedBlockRenderingCache
                 if (side == BlockSide.FRONT)
                     return getTextureLocation("heaterFront");
                 return getTextureLocation("normal");
-            case 6:
+            case 6: //Monitor
                 if (state == 1){
                     switch (side.getDefaultSide()){
                         case 0:
@@ -68,11 +68,19 @@ public final class MachinePartTextureHandler implements SidedBlockRenderingCache
                         case 2:
                             return getTextureLocation("monitorLeftSide");
                     }
+                } else if (side == BlockSide.FRONT){
+                    return getTextureLocation("monitorFull");
                 }
                 return getTextureLocation("normal");
-            case 7:
+            case 7: //Radiator
                 if (side == BlockSide.FRONT)
                     return getTextureLocation("radiator");
+                return getTextureLocation("normal");
+            case 8: //Motor
+                return getTextureLocation("normal");
+            case 9: //Precision Motor
+                return getTextureLocation("normal");
+            case 10: //DustStorage
                 return getTextureLocation("normal");
             default:
                 return getTextureLocation("null");
