@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import elec332.core.api.wrench.IWrenchable;
 import elec332.core.baseclasses.tileentity.TileBase;
 import elec332.core.client.render.SidedBlockRenderingCache;
-import elec332.core.multiblock.BlockData;
+import elec332.core.world.location.BlockData;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
@@ -14,7 +14,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.blocktextures.MachinePartTextureHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
-import elec332.eflux.tileentity.multiblock.TileMultiBlockItemGate;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.tileentity.multiblock.TileMultiBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -61,7 +61,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         super.register();
         if (!register) {
             GameRegistry.registerTileEntity(TileEntityBlockMachine.class, blockName);
-            GameRegistry.registerTileEntity(TileMultiBlockItemGate.class, "itemGate");
+            GameRegistry.registerTileEntity(TileEntityMultiBlockItemGate.class, "itemGate");
             GameRegistry.registerTileEntity(TileEntityDustStorage.class, "dustStorage");
             register = true;
         }
@@ -163,13 +163,13 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         if (meta == BlockRegister.itemGate.meta)
-            return new TileMultiBlockItemGate();
+            return new TileEntityMultiBlockItemGate();
         if (meta == BlockRegister.dustStorage.meta)
             return new TileEntityDustStorage();
         return new TileEntityBlockMachine();
     }
 
-    public static class TileEntityBlockMachine extends TileMultiBlockTile{
+    public static class TileEntityBlockMachine extends TileMultiBlockTile {
 
         public TileEntityBlockMachine(){
             super();

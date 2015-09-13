@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableReceiverTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
+public abstract class TileEntityProcessingMachine extends BreakableMachineTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
 
     public TileEntityProcessingMachine(int i, int upgradeSlots){
         super();
@@ -176,4 +176,5 @@ public abstract class TileEntityProcessingMachine extends BreakableReceiverTile 
     protected void oneInputSlot(List<Slot> list){
         list.add(new Slot(inventory, list.size(), 56, 35));
     }
+
 }

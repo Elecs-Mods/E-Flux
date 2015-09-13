@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Created by Elec332 on 5-9-2015.
  */
-public class TileEntityInsideItemRenderer extends TileMultiBlockTile{
+public class TileEntityInsideItemRenderer extends TileMultiBlockTile {
 
     public TileEntityInsideItemRenderer(){
         this.inventory = new RIWInventory(0);

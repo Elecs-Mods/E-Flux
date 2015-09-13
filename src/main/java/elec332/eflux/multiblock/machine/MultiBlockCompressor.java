@@ -1,5 +1,6 @@
-package elec332.eflux.multiblock;
+package elec332.eflux.multiblock.machine;
 
+import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;

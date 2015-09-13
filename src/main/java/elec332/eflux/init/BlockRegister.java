@@ -2,7 +2,7 @@ package elec332.eflux.init;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import elec332.core.main.ElecCore;
-import elec332.core.multiblock.BlockData;
+import elec332.core.world.location.BlockData;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
 import elec332.eflux.util.EnumMachines;

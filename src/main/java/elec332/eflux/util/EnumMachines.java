@@ -11,7 +11,7 @@ import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
-import elec332.eflux.tileentity.multiblock.TileMultiBlockPowerInlet;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockPowerInlet;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -34,7 +34,7 @@ public enum EnumMachines {
 
 
     //Common MultiBlock parts
-    POWERINLET(TileMultiBlockPowerInlet.class),
+    POWERINLET(TileEntityMultiBlockPowerInlet.class),
 
     //Machine-specific MultiBlock parts
     //HEATER,

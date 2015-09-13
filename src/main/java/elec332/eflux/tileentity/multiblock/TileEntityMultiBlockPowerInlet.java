@@ -1,21 +1,14 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.multiblock.AbstractMultiBlockTile;
-import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.multiblock.EFluxMultiBlockMachine;
+import elec332.eflux.multiblock.MultiBlockInterfaces;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements IEnergyReceiver {
-
-
-    public TileMultiBlockPowerInlet() {
-        super(EFlux.multiBlockRegistry);
-    }
+public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver {
 
     @Override
     public void onTileLoaded() {
@@ -30,22 +23,12 @@ public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements 
     }
 
     /**
-     * Returns the multiblock this tile belongs too, can be null
-     *
-     * @return said multiblock
-     */
-    @Override
-    public EFluxMultiBlockMachine getMultiBlock() {
-        return (EFluxMultiBlockMachine) super.getMultiBlock();
-    }
-
-    /**
      * @param direction the direction from which a connection is requested
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return true;//direction == DirectionHelper.getDirectionFromNumber(getBlockMetadata());
+        return direction == getTileFacing();
     }
 
     /**
@@ -54,7 +37,7 @@ public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements 
      */
     @Override
     public int requestedRP(ForgeDirection direction) {
-        return getMultiBlock() == null ? 0 : getMultiBlock().requestedRP();
+        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().requestedRP();
     }
 
     /**
@@ -64,7 +47,7 @@ public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements 
      */
     @Override
     public int getRequestedEF(int rp, ForgeDirection direction) {
-        return getMultiBlock() == null ? 0 : getMultiBlock().getRequestedEF(rp);
+        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().getRequestedEF(rp);
     }
 
     /**
@@ -75,7 +58,7 @@ public class TileMultiBlockPowerInlet extends AbstractMultiBlockTile implements 
      */
     @Override
     public int receivePower(ForgeDirection direction, int rp, int ef) {
-        return getMultiBlock() == null ? ef : getMultiBlock().receivePower(rp, ef);
+        return getMultiBlockHandler() == null ? ef : getMultiBlockHandler().receivePower(rp, ef);
     }
 
 }

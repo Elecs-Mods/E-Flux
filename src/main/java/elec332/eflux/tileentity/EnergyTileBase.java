@@ -6,7 +6,7 @@ import elec332.eflux.api.energy.EnergyAPIHelper;
 /**
  * Created by Elec332 on 16-5-2015.
  */
-public class EnergyTileBase extends TileBase {
+public abstract class EnergyTileBase extends TileBase {
 
     @Override
     public void onTileLoaded() {
@@ -19,4 +19,5 @@ public class EnergyTileBase extends TileBase {
         if (!worldObj.isRemote)
             EnergyAPIHelper.postUnloadEvent(this);
     }
+
 }

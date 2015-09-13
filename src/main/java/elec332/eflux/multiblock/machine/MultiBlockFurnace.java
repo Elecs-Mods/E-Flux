@@ -1,9 +1,10 @@
-package elec332.eflux.multiblock;
+package elec332.eflux.multiblock.machine;
 
 import elec332.core.player.PlayerHelper;
 import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.init.BlockRegister;
+import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,8 +1,7 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.multiblock.MultiBlockGrinder;
+import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;

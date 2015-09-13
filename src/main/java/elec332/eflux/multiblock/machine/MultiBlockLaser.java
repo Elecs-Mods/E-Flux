@@ -1,9 +1,10 @@
-package elec332.eflux.multiblock;
+package elec332.eflux.multiblock.machine;
 
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.items.circuits.CircuitHandler;
+import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.util.MultiBlockLogic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

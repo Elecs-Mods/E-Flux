@@ -117,4 +117,5 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
             tagCompound.setTag("itemRep", newTag);
         }
     }
+
 }

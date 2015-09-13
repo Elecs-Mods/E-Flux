@@ -1,8 +1,9 @@
-package elec332.eflux.multiblock;
+package elec332.eflux.multiblock.machine;
 
 import elec332.core.player.PlayerHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
+import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.util.DustPile;
 import net.minecraft.entity.player.EntityPlayer;

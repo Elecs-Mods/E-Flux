@@ -15,9 +15,10 @@ import java.util.List;
 /**
  * Created by Elec332 on 4-9-2015.
  */
-public class TileMultiBlockItemGate extends BlockMachinePart.TileEntityBlockMachine implements ISidedInventory{
+//TODO: Interface
+public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlockMachine implements ISidedInventory{
 
-    public TileMultiBlockItemGate(){
+    public TileEntityMultiBlockItemGate(){
         super();
         this.inventory = new BasicInventory("itemGate", 3, this);
     }

@@ -1,18 +1,18 @@
 package elec332.eflux.init;
 
 import elec332.core.multiblock.AbstractAdvancedMultiBlockStructure;
-import elec332.core.multiblock.BlockData;
+import elec332.core.world.location.BlockData;
 import elec332.core.multiblock.BlockStructure;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachinePart;
-import elec332.eflux.multiblock.MultiBlockCompressor;
-import elec332.eflux.multiblock.MultiBlockFurnace;
-import elec332.eflux.multiblock.MultiBlockGrinder;
-import elec332.eflux.multiblock.MultiBlockLaser;
-import elec332.eflux.tileentity.multiblock.TileMultiBlockItemGate;
+import elec332.eflux.multiblock.machine.MultiBlockCompressor;
+import elec332.eflux.multiblock.machine.MultiBlockFurnace;
+import elec332.eflux.multiblock.machine.MultiBlockGrinder;
+import elec332.eflux.multiblock.machine.MultiBlockLaser;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -27,12 +27,12 @@ import static elec332.eflux.init.BlockRegister.*;
 public class MultiBlockRegister {
 
     private static final BlockData powerInlet = new BlockData(EnumMachines.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
-    private static final BlockData air = new BlockData(null){
-        @Override
-        public boolean equals(Object obj) {
-            return super.equals(obj) || ((obj instanceof BlockData) && ((BlockData) obj).block == renderBlock);
-        }
-    };
+    private static final BlockData air = new BlockData(null);//{
+    //    @Override
+    //    public boolean equals(Object obj) {
+    //        return super.equals(obj) || ((obj instanceof BlockData) && ((BlockData) obj).block == renderBlock);
+    //    }
+    //};
 
     public static void init(){
 
@@ -49,7 +49,7 @@ public class MultiBlockRegister {
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
-                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
+                boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
                 return b1 && b2 && b3 && b4 && b5;
             }
 
@@ -156,9 +156,9 @@ public class MultiBlockRegister {
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
-                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
+                boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
                 boolean b6 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
-                boolean b7 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                boolean b7 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
                 return b1 && b2 && b3 && b4 && b5 && b6 && b7;
             }
 
@@ -209,7 +209,7 @@ public class MultiBlockRegister {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
-                boolean b5 = ((TileMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
                 return b1 && b2 && b4 && b5;
             }
 
