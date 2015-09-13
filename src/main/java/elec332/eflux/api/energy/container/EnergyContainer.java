@@ -45,10 +45,9 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
 
     public final void tick(){
         if (progressMachine != null){
-            if (progressMachine.canProcess() && storedPower >= progressMachine.getRequiredPowerPerTick()) {
+            if (progressMachine.canProcess() && drainPower(progressMachine.getRequiredPowerPerTick())) {
                 if (progress == 0)
                     processTime = calculateProcessTime(progressMachine.getProcessTime());
-                this.storedPower -= progressMachine.getRequiredPowerPerTick();
                 progress++;
                 if (progress >= processTime) {
                     this.progress = 0;
@@ -65,7 +64,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
         int devTo = Math.min(lastRP, optimalRP);
         float mul = (float)devTo/dev;
         float fin = 1/(mul/2);
-        return (int) (initialTime*fin);
+        return (int) initialTime;//(initialTime*fin);
     }
 
     public boolean drainPower(int toDrain){

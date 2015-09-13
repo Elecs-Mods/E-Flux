@@ -91,7 +91,7 @@ public class TileGrowthLamp extends BreakableMachineTile {
      */
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return true;
+        return direction == ForgeDirection.UP;
     }
 
     @Override

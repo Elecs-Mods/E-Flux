@@ -19,7 +19,8 @@ import java.util.List;
  * Created by Elec332 on 6-9-2015.
  */
 public class WailaCompatHandler extends AbstractCompatHandler.ICompatHandler {
-    @Override
+    @
+            Override
     public String getName() {
         return "Waila";
     }

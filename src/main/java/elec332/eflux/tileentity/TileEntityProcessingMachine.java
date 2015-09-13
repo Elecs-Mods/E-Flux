@@ -26,10 +26,11 @@ import java.util.List;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableMachineTile implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
+public abstract class TileEntityProcessingMachine extends BreakableMachineTileWithSlots implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
 
     public TileEntityProcessingMachine(int i, int upgradeSlots){
-        super();
+        super(0);
+        energyContainer.setProgressMachine(this);
         this.inventory = new BasicInventory("Inventory", i+upgradeSlots, this);
         this.upgradeSlotsCounter = upgradeSlots;
         List<Slot> list = Lists.newArrayList();
@@ -54,7 +55,6 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTile i
         }
     }
 
-    protected BasicInventory inventory;
     private int upgradeSlotsCounter;
     private List<Slot> machineSlots;
     private List<SlotUpgrade> upgradeSlots;

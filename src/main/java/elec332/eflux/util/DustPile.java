@@ -32,14 +32,14 @@ public class DustPile {
 
     private List<DustPart> content;
     private int total;
-    public boolean scanned;
+    public boolean scanned, clean, pure;
 
     public void addGrindResult(ItemStack stack){
         checkAdd(GrinderRecipes.instance.getGrindResult(stack));
     }
 
     public List<DustPart> getContent(){
-        return ImmutableList.copyOf(content);
+        return content;//ImmutableList.copyOf(content);
     }
 
     private DustPart getPart(String s){
@@ -107,6 +107,8 @@ public class DustPile {
         }
         ret.setBoolean("dusts_scanned", scanned);
         ret.setTag("dusts", list);
+        ret.setBoolean("dusts_clean", clean);
+        ret.setBoolean("dusts_pure", pure);
         return ret;
     }
 
@@ -121,10 +123,20 @@ public class DustPile {
             total += q;
         }
         scanned = tagCompound.getBoolean("dusts_scanned");
+        clean = tagCompound.getBoolean("dusts_clean");
+        pure = tagCompound.getBoolean("dusts_pure");
     }
 
     public void scan(){
         scanned = true;
+        clean = true;
+        pure = true;
+        for (DustPart dustPart : content){
+            if (dustPart.getContent().equals(GrinderRecipes.scrap))
+                clean = false;
+            if (dustPart.getContent().equals(GrinderRecipes.stoneDust))
+                pure = false;
+        }
     }
 
     private void checkAdd(DustPart... dustParts){
@@ -168,6 +180,30 @@ public class DustPile {
             return content;
         }
 
+        @Override
+        public int hashCode() {
+            return nuggetAmount;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof DustPart && content.equals(((DustPart) obj).content) && hashCode() == obj.hashCode();
+        }
+
+    }
+
+    public static boolean sameContents(DustPile pile1, DustPile pile2){
+        return (pile1 == null && pile2 == null) || !(pile1 == null || pile2 == null) && pile1.sameContents(pile2);
+    }
+
+    public boolean sameContents(DustPile otherPile){
+        if (content.size() != otherPile.content.size() || getSize() != otherPile.getSize())
+            return false;
+        for (int i = 0; i < content.size(); i++) {
+            if (!content.get(i).equals(otherPile.content.get(i)))
+                return false;
+        }
+        return true;
     }
 
 }

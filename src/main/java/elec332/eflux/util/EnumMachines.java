@@ -31,6 +31,7 @@ public enum EnumMachines {
     ADVANCEDCABLE(AdvancedCable.class),
     TESLACOIL(TileTeslaCoil.class),
     SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
+    WASHER(TileWasher.class),
 
 
     //Common MultiBlock parts
