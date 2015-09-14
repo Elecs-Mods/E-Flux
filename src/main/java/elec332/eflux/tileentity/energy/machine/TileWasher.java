@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
+import elec332.eflux.init.ItemRegister;
 import elec332.eflux.items.GroundMesh;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
@@ -31,7 +33,33 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     }
 
     private FluidTank waterTank, slibTank;
+    private ItemStack gonnaBeOutputted;
 
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        NBTTagCompound tag = new NBTTagCompound();
+        waterTank.writeToNBT(tag);
+        tagCompound.setTag("wTank", tag);
+        tag = new NBTTagCompound();
+        slibTank.writeToNBT(tag);
+        tagCompound.setTag("sTank", tag);
+        if (gonnaBeOutputted != null){
+            tag = new NBTTagCompound();
+            gonnaBeOutputted.writeToNBT(tag);
+            tagCompound.setTag("GBO", tag);
+        }
+    }
+
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        waterTank.readFromNBT(tagCompound.getCompoundTag("wTank"));
+        slibTank.readFromNBT(tagCompound.getCompoundTag("sTank"));
+        if (tagCompound.hasKey("GBO"))
+            gonnaBeOutputted = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("GBO"));
+    }
 
     @Override
     public ItemStack getRandomRepairItem() {
@@ -60,15 +88,17 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canProcess() {
-        if (!(GroundMesh.isValidMesh(getStackInSlot(0)) && checkFluids() && checkOutput())){
+        if (!((GroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkFluids() && checkOutput())){
             fluid = false;
-            output = false;
+            gonnaBeOutputted = null;
+            stone = 0;
             return false;
         }
         return true;
     }
 
-    private boolean fluid, output;
+    private boolean fluid;
+    private int stone;
 
     private boolean checkFluids(){
         if (!fluid){
@@ -76,72 +106,53 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
                  fluid = true;
                  return true;
              }
+            return false;
         }
         return true;
     }
 
     private boolean checkWater() {
-        int i = 0;
-        DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).stackTagCompound);
-        if (!dustPile.clean)
-            return false;
-        for (DustPile.DustPart dustPart : dustPile.getContent()) {
-            if (dustPart.getContent().equals(GrinderRecipes.stoneDust)) {
-                i += dustPart.getNuggetAmount();
-            }
-        }
+        int i = stone;
         i *= 200;
         return waterTank.getFluidAmount() >= i && slibTank.fill(new FluidStack(FluidRegister.slib, i), false) == i;
     }
 
 
     private boolean checkOutput(){
-        if (!output){
-            if (getStackInSlot(1) == null){
-                output = true;
+        if (gonnaBeOutputted == null){
+            DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).stackTagCompound);
+            stone = dustPile.wash();
+            ItemStack transformed = new ItemStack(ItemRegister.groundMesh);
+            transformed.stackTagCompound = dustPile.toNBT();
+            if (getStackInSlot(1) == null || ItemStack.areItemStackTagsEqual(getStackInSlot(1), transformed)){
+                gonnaBeOutputted = transformed;
+                decrStackSize(0, 1);
                 return true;
             }
-            if (!GroundMesh.isValidMesh(getStackInSlot(1)))
-                return false;
-            if (DustPile.fromNBT(getStackInSlot(0).stackTagCompound).sameContents(DustPile.fromNBT(getStackInSlot(1).stackTagCompound))){
-                output = true;
-                return true;
-            }
+            return false;
         }
         return true;
     }
 
-     @Override
-     public void onProcessDone() {
-         System.out.println("Process");
-        if (getStackInSlot(0) == null)
-            return;
-         System.out.println("Process continue");
+    @Override
+    public void onProcessDone() {
         fluid = false;
-        output = false;
-        int i = 0;
-        ItemStack copy = inventory.getStackInSlot(0).copy();
-        DustPile dustPile = DustPile.fromNBT(copy.stackTagCompound);
-        List<DustPile.DustPart> toRemove = Lists.newArrayList();
-        for (DustPile.DustPart dustPart : dustPile.getContent()) {
-            if (dustPart.getContent().equals(GrinderRecipes.stoneDust)) {
-                i += dustPart.getNuggetAmount();
-                toRemove.add(dustPart);
-            }
-        }
+        int i = stone;
         i *= 200;
         waterTank.drain(i, true);
         slibTank.fill(new FluidStack(FluidRegister.slib, i), true);
-        dustPile.pure = true;
-        dustPile.getContent().removeAll(toRemove);
-        inventory.decrStackSize(0, 1);
-        if (getStackInSlot(1) == null){
-            copy.stackSize = 1;
-            setInventorySlotContents(1, copy);
+        stone = 0;
+        if (gonnaBeOutputted.stackTagCompound != null) {
+            if (getStackInSlot(1) == null) {
+                setInventorySlotContents(1, gonnaBeOutputted.copy());
+            } else {
+                getStackInSlot(1).stackSize++;
+            }
         }
-        getStackInSlot(1).stackSize++;
+        gonnaBeOutputted = null;
         inventory.markDirty();
     }
+
 
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
@@ -161,7 +172,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public int getProcessTime() {
-        return 2;
+        return 200;
     }
 
     @Override

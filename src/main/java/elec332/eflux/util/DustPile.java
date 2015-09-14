@@ -39,7 +39,7 @@ public class DustPile {
     }
 
     public List<DustPart> getContent(){
-        return content;//ImmutableList.copyOf(content);
+        return ImmutableList.copyOf(content);
     }
 
     private DustPart getPart(String s){
@@ -51,6 +51,8 @@ public class DustPile {
     }
 
     public NBTTagCompound getStack(){
+        if (content.isEmpty())
+            return null;
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         final boolean ensureMax = total <= 9;
@@ -96,7 +98,23 @@ public class DustPile {
         return null;
     }
 
+    public int wash(){
+        int i = 0;
+        List<DustPile.DustPart> toRemove = Lists.newArrayList();
+        for (DustPile.DustPart dustPart : content) {
+            if (dustPart.getContent().equals(GrinderRecipes.stoneDust)) {
+                i += dustPart.getNuggetAmount();
+                toRemove.add(dustPart);
+            }
+        }
+        content.removeAll(toRemove);
+        pure = true;
+        return i;
+    }
+
     public NBTTagCompound toNBT(){
+        if (content.isEmpty())
+            return null;
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         for (DustPart dustPart : content){
