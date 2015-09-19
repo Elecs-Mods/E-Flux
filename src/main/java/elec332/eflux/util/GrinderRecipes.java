@@ -18,15 +18,20 @@ public class GrinderRecipes{
     public static final GrinderRecipes instance = new GrinderRecipes();
     private GrinderRecipes(){
         recipes = Lists.newArrayList();
+        recipeIdentifiers = Lists.newArrayList();
     }
 
     private List<OreGrindingRecipe> recipes;
+    private List<String> recipeIdentifiers;
 
     public static final String scrap = "scrap";
     public static final String stoneDust = "stoneDust";
 
     public void addRecipe(OreGrindingRecipe recipe){
-        recipes.add(recipe);
+        if (!recipeIdentifiers.contains(recipe.mainOreOutput)) {
+            recipes.add(recipe);
+            recipeIdentifiers.add(recipe.mainOreOutput);
+        }
     }
 
     public DustPile.DustPart[] getGrindResult(ItemStack stack){
@@ -98,7 +103,18 @@ public class GrinderRecipes{
     }
 
     static {
-        instance.addRecipe(new OreGrindingRecipe("Iron", "Iron").setSecondaryOutput("Tin"));
+        OredictHelper.initLists();
+        instance.addRecipe(new OreGrindingRecipe("Iron", "dustIron").setSecondaryOutput("dustTin"));
+        for (String s : OredictHelper.getAllOres()){
+            addDefaultRecipe(OredictHelper.concatOreName(s));
+        }
+        for (String s : OredictHelper.getAllIngots()){
+            addDefaultRecipe(OredictHelper.concatIngotName(s));
+        }
+    }
+
+    private static void addDefaultRecipe(String s){
+        instance.addRecipe(new OreGrindingRecipe(s, "dust"+s));
     }
 
 }

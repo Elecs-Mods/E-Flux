@@ -2,6 +2,10 @@ package elec332.eflux.tileentity.energy.machine;
 
 import com.google.common.collect.Lists;
 import elec332.core.client.inventory.BaseGuiContainer;
+import elec332.core.inventory.BaseContainer;
+import elec332.core.inventory.slot.SlotOutput;
+import elec332.core.inventory.widget.FluidTankWidget;
+import elec332.core.inventory.widget.WidgetProgressArrow;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
@@ -88,7 +92,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canProcess() {
-        if (!((GroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkFluids() && checkOutput())){
+        if (!((GroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkOutput())){
             fluid = false;
             gonnaBeOutputted = null;
             stone = 0;
@@ -114,7 +118,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     private boolean checkWater() {
         int i = stone;
         i *= 200;
-        return waterTank.getFluidAmount() >= i && slibTank.fill(new FluidStack(FluidRegister.slib, i), false) == i;
+        return waterTank.getFluidAmount() >= i && slibTank.getFluidAmount() + i <= slibTank.getCapacity();
     }
 
 
@@ -124,11 +128,13 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
             stone = dustPile.wash();
             ItemStack transformed = new ItemStack(ItemRegister.groundMesh);
             transformed.stackTagCompound = dustPile.toNBT();
-            if (getStackInSlot(1) == null || ItemStack.areItemStackTagsEqual(getStackInSlot(1), transformed)){
+            if ((getStackInSlot(1) == null || (ItemStack.areItemStackTagsEqual(getStackInSlot(1), transformed) && getStackInSlot(1).stackSize < getInventoryStackLimit())) && checkFluids()){
                 gonnaBeOutputted = transformed;
                 decrStackSize(0, 1);
+                markDirty();
                 return true;
             }
+            stone = 0;
             return false;
         }
         return true;
@@ -156,13 +162,21 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return direction.getOpposite() == getTileFacing();
+        return direction != getTileFacing();
+    }
+
+    @Override
+    public void addSlots(BaseContainer baseContainer) {
+        baseContainer.addSlotToContainer(new Slot(inventory, 0, 51, 34));
+        baseContainer.addSlotToContainer(new SlotOutput(inventory, 1, 109, 34));
+        baseContainer.addPlayerInventoryToContainer();
+        baseContainer.addWidget(new FluidTankWidget(130, 19, 176, 0, 32, 44, slibTank));
+        baseContainer.addWidget(new FluidTankWidget(14, 19, 176, 0, 32, 44, waterTank));
+        baseContainer.addWidget(new WidgetProgressArrow(76, 33, this, true));
     }
 
     @Override
     protected void registerMachineSlots(List<Slot> registerList) {
-        oneInputSlot(registerList);
-        oneOutPutSlot(registerList);
     }
 
     @Override
@@ -173,6 +187,11 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     @Override
     public int getProcessTime() {
         return 200;
+    }
+
+    @Override
+    public float getProgressScaled(int progress) {
+        return progress/200f;
     }
 
     @Override
@@ -218,7 +237,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
         return new BaseGuiContainer(getGuiServer(player)) {
             @Override
             public ResourceLocation getBackgroundImageLocation() {
-                return new EFluxResourceLocation("washer");
+                return new EFluxResourceLocation("gui/washer.png");
             }
         };
     }
