@@ -8,6 +8,7 @@ import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
+import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -25,6 +26,7 @@ public class EFluxCableGrid {
         providers = new ArrayList<GridData>();
         locations = new ArrayList<BlockLoc>();
         specialProviders = new ArrayList<GridData>();
+        identifier = UUID.randomUUID();
         this.world = world;
         locations.add(p.getLocation());
         if (p.getTile() instanceof IEnergySource && ((IEnergySource) p.getTile()).canProvidePowerTo(direction)) {
@@ -34,11 +36,13 @@ public class EFluxCableGrid {
         }
         if (p.getTile() instanceof IEnergyReceiver && ((IEnergyReceiver) p.getTile()).canAcceptEnergyFrom(direction))
             acceptors.add(new GridData(p.getLocation(), direction));
-        if (p.getTile() instanceof IEnergyTransmitter)
-            maxTransfer = ((IEnergyTransmitter)p.getTile()).getMaxRPTransfer();
+        if (p.getTile() instanceof IEnergyTransmitter) {
+            maxTransfer = ((IEnergyTransmitter) p.getTile()).getMaxRPTransfer();
+            if (p.getTile() instanceof AbstractCable)
+                ((AbstractCable) p.getTile()).setGridIdentifier(identifier);
+        }
         else maxTransfer = -1;
         FMLCommonHandler.instance().bus().register(this);
-        identifier = UUID.randomUUID();
     }
 
     private UUID identifier;

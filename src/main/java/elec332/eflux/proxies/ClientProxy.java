@@ -6,10 +6,12 @@ import cpw.mods.fml.relauncher.Side;
 import elec332.core.baseclasses.tileentity.IInventoryTile;
 import elec332.core.util.EventHelper;
 import elec332.eflux.client.render.InsideItemRenderer;
+import elec332.eflux.client.render.RenderHandler;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
@@ -38,12 +40,16 @@ public class ClientProxy extends CommonProxy{
     @Override
     public void initRenderStuff(){
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
+        RenderHandler.init();
     }
 
     @SubscribeEvent
     public void registerBlockTextures(TextureStitchEvent.Post event){
-        if (event.map.getTextureType() == 0){
+        if (event.map.getTextureType() == 1){
             FluidRegister.instance.registerTextures(event.map);
+            render = event.map.registerIcon("yewers");
         }
     }
+
+    public static IIcon render;
 }

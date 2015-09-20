@@ -1,12 +1,10 @@
 package elec332.eflux.tileentity.energy.cable;
 
-import elec332.eflux.api.energy.IEnergyTransmitter;
-import elec332.eflux.tileentity.EnergyTileBase;
-
 /**
  * Created by Elec332 on 20-7-2015.
  */
-public class NormalCable extends EnergyTileBase implements IEnergyTransmitter {
+public class NormalCable extends AbstractCable {
+
     @Override
     public String getUniqueIdentifier() {
         return "mjhg";
@@ -21,4 +19,5 @@ public class NormalCable extends EnergyTileBase implements IEnergyTransmitter {
     public int getMaxRPTransfer() {
         return 20;
     }
+
 }

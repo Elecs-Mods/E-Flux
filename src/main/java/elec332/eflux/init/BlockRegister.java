@@ -46,6 +46,8 @@ public class BlockRegister {
         motor = newMachineBlock(8);
         precisionMotor = newMachineBlock(9);
         dustStorage = newMachineBlock(10);
+
+        new BlockCable("testCable").registerTile().register();
     }
 
     private static BlockData newMachineBlock(int i){

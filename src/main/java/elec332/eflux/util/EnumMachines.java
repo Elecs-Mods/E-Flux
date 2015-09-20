@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
+import elec332.eflux.client.render.RenderHandler;
 import elec332.eflux.tileentity.energy.cable.AdvancedCable;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.cable.NormalCable;
@@ -20,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
  * Created by Elec332 on 4-4-2015.
  */
 public enum EnumMachines {
-    TESTCABLE(BasicCable.class),
+    //TESTCABLE(BasicCable.class, RenderHandler.cable),
     CAPACITOR(Capacitor.class),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
     ASSEMBLY_TABLE(AssemblyTable.class),
