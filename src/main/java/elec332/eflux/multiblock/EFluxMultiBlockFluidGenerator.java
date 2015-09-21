@@ -2,7 +2,10 @@ package elec332.eflux.multiblock;
 
 import elec332.eflux.handler.FluidEnergyProviderHandler;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 /**
  * Created by Elec332 on 13-9-2015.

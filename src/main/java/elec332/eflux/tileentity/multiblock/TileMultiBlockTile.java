@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.multiblock.AbstractMultiBlockTile;
 import elec332.eflux.EFlux;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;

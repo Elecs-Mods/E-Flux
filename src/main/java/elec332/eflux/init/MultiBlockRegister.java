@@ -1,11 +1,11 @@
 package elec332.eflux.init;
 
 import elec332.core.multiblock.AbstractAdvancedMultiBlockStructure;
-import elec332.core.world.location.BlockData;
 import elec332.core.multiblock.BlockStructure;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
+import elec332.core.world.location.BlockData;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachinePart;
 import elec332.eflux.multiblock.machine.MultiBlockCompressor;

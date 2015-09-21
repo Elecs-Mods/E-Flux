@@ -6,7 +6,6 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.render.RenderHandler;
 import elec332.eflux.tileentity.energy.cable.BasicCable;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 

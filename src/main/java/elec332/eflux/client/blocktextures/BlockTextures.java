@@ -1,6 +1,5 @@
 package elec332.eflux.client.blocktextures;
 
-import elec332.core.baseclasses.tileentity.BlockTileBase;
 import elec332.core.util.BlockSide;
 
 /**

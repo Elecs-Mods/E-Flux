@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import com.google.common.collect.Lists;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.slot.SlotOutput;
@@ -13,7 +12,6 @@ import elec332.eflux.items.GroundMesh;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.DustPile;
-import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;

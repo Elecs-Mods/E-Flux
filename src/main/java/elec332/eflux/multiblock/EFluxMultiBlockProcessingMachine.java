@@ -6,7 +6,6 @@ import elec332.core.inventory.IHasProgressBar;
 import elec332.core.player.InventoryHelper;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.util.IEFluxMachine;
-import elec332.eflux.util.RIWInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
