@@ -16,7 +16,7 @@ public class BlockRegister {
     private BlockRegister(){
     }
 
-    public static Block ores, machinePart, machineGlass, renderBlock;
+    public static Block ores, machinePart, machineGlass, renderBlock, cable;
     public static BlockData frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage;
 
     public void init(FMLInitializationEvent event){
@@ -47,7 +47,7 @@ public class BlockRegister {
         precisionMotor = newMachineBlock(9);
         dustStorage = newMachineBlock(10);
 
-        new BlockCable("testCable").registerTile().register();
+        cable = new BlockCable("efluxCable").register();
     }
 
     private static BlockData newMachineBlock(int i){

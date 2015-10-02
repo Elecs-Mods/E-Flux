@@ -1,19 +1,20 @@
 package elec332.eflux.client.render;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import elec332.core.client.render.AbstractBlockRenderer;
+import elec332.core.client.render.RenderHelper;
 
 /**
  * Created by Elec332 on 20-9-2015.
  */
 public class RenderHandler {
 
-    public static void init(){
-        RenderingRegistry.registerBlockHandler(new CableRenderer());
+    public static void dummy(){
     }
 
-    public static final int cable;
+    public static AbstractBlockRenderer cableRenderer;
 
     static {
-        cable = RenderingRegistry.getNextAvailableRenderId();
+        cableRenderer = RenderHelper.registerBlockRenderer(new CableRenderer());
     }
+
 }

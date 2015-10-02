@@ -3,8 +3,12 @@ package elec332.eflux.blocks;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 /**
  * Created by Elec332 on 21-7-2015.
@@ -25,6 +29,14 @@ public abstract class BlockWithMeta extends Block {
     }
 
     public abstract String getUnlocalizedName(ItemStack stack);
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public final void getSubBlocks(Item item, CreativeTabs creativeTab, List list) {
+        getSubBlocks(list, item, creativeTab);
+    }
+
+    public abstract void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab);
 
     @Override
     public int damageDropped(int meta) {

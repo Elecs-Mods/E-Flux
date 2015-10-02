@@ -4,8 +4,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
-import elec332.eflux.tileentity.energy.cable.AdvancedCable;
-import elec332.eflux.tileentity.energy.cable.NormalCable;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
@@ -19,19 +17,15 @@ import net.minecraft.tileentity.TileEntity;
  * Created by Elec332 on 4-4-2015.
  */
 public enum EnumMachines {
-    //TESTCABLE(BasicCable.class, RenderHandler.cable),
     CAPACITOR(Capacitor.class),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
     ASSEMBLY_TABLE(AssemblyTable.class),
     GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
     CHUNKSUB(ChunkLoaderSubTile.class),
-    NORMALCABLE(NormalCable.class),
-    ADVANCEDCABLE(AdvancedCable.class),
     TESLACOIL(TileTeslaCoil.class),
     SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
     WASHER(TileWasher.class),
-
 
     //Common MultiBlock parts
     POWERINLET(TileEntityMultiBlockPowerInlet.class),

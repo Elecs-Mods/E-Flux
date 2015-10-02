@@ -39,9 +39,9 @@ public class BlockOres extends BlockWithMeta {
         return icons[meta];
     }
 
+
     @Override
-    @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item item, CreativeTabs tabs, List list) {
+    public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab) {
         for (int i = 0; i < 4; i++) {
             list.add(new ItemStack(item, 1, i));
         }

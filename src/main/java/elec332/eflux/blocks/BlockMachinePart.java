@@ -90,7 +90,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
 
     @Override
     @SuppressWarnings("unchecked")
-    public void getSubBlocks(Item item, CreativeTabs tabs, List list) {
+    public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab) {
         for (int i = 0; i < types; i++) {
             list.add(new ItemStack(item, 1, i));
         }

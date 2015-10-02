@@ -4,6 +4,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.core.client.render.RenderHelper;
 import elec332.core.util.EventHelper;
 import elec332.eflux.client.render.InsideItemRenderer;
 import elec332.eflux.client.render.RenderHandler;
@@ -40,7 +41,7 @@ public class ClientProxy extends CommonProxy{
     @Override
     public void initRenderStuff(){
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
-        RenderHandler.init();
+        RenderHandler.dummy();
     }
 
     @SubscribeEvent
