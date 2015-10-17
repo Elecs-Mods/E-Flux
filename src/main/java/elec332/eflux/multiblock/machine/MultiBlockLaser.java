@@ -6,8 +6,11 @@ import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.util.MultiBlockLogic;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -83,4 +86,8 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
         return 980000;
     }
 
+    @Override
+    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
+        return tag;
+    }
 }

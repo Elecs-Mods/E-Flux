@@ -15,6 +15,7 @@ public class RenderHandler {
 
     static {
         cableRenderer = RenderHelper.registerBlockRenderer(new CableRenderer());
+        RenderHelper.registerBlockRenderer(new LaserRenderer());
     }
 
 }

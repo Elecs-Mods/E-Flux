@@ -169,7 +169,7 @@ public class WorldGridHolder {
                     addTile(powerTile);
                 pending.removeAll(tr);
                 EFlux.logger.info("TickStuffPendingDone");*/
-                for (PowerTile powerTile : pending){
+                for (PowerTile powerTile = pending.poll(); powerTile != null; powerTile = pending.poll()){
                     addTile(powerTile);
                 }
                 pending.clear();

@@ -30,7 +30,7 @@ public class CoalGenerator extends TileBase implements IEnergySource{
      */
     @Override
     public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
-        return 20; //getStackInSlot(0) != null?20:0;
+        return 200; //getStackInSlot(0) != null?20:0;
     }
 
     @Override

@@ -14,7 +14,7 @@ public class ItemRegister {
     private ItemRegister(){
     }
 
-    public static Item wrench, multimeter, EFluxItems, groundMesh;
+    public static Item wrench, multimeter, EFluxItems, groundMesh, scrap;
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment)
@@ -25,5 +25,7 @@ public class ItemRegister {
         EFluxItems = new EFluxItems();
         RegisterHelper.registerItem(EFluxItems, "GenericItems");
         groundMesh = new GroundMesh().register();
+        /* Hax below */
+        scrap = new EFluxItem("scrap"){}.register();
     }
 }

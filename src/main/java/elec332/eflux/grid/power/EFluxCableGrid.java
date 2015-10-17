@@ -1,6 +1,5 @@
 package elec332.eflux.grid.power;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -42,7 +41,6 @@ public class EFluxCableGrid {
                 ((AbstractCable) p.getTile()).setGridIdentifier(identifier);
         }
         else maxTransfer = -1;
-        FMLCommonHandler.instance().bus().register(this);
     }
 
     private UUID identifier;
@@ -71,8 +69,11 @@ public class EFluxCableGrid {
         this.specialProviders.addAll(grid.specialProviders);
         for (BlockLoc vec : grid.locations){
             PowerTile powerTile = getWorldHolder().getPowerTile(vec);
-            if (powerTile != null)
+            if (powerTile != null) {
                 powerTile.replaceGrid(grid, this);
+            } else {
+                throw new RuntimeException();
+            }
         }
         grid.invalidate();
         EFlux.systemPrintDebug("MERGED");

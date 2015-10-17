@@ -30,16 +30,18 @@ public class TileGrowthLamp extends BreakableMachineTile {
     @Override
     public void updateEntity() {
         super.updateEntity();
-        for (int i = 0; i < 9; i++) {
-            if (blockLocations.isEmpty()) {
-                remakeList();
+        if (energyContainer.drainPower(120)) {
+            for (int i = 0; i < 9; i++) {
+                if (blockLocations.isEmpty()) {
+                    remakeList();
+                }
+                Collections.shuffle(blockLocations, worldObj.rand);
+                BlockLoc randomLoc = blockLocations.get(0);
+                if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
+                    WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
+                }
+                blockLocations.remove(randomLoc);
             }
-            Collections.shuffle(blockLocations, worldObj.rand);
-            BlockLoc randomLoc = blockLocations.get(0);
-            if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
-                WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
-            }
-            blockLocations.remove(randomLoc);
         }
     }
 

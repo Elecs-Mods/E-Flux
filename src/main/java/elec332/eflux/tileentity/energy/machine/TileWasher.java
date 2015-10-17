@@ -123,6 +123,8 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     private boolean checkOutput(){
         if (gonnaBeOutputted == null){
             DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).stackTagCompound);
+            if (!dustPile.clean)
+                return false;
             stone = dustPile.wash();
             ItemStack transformed = new ItemStack(ItemRegister.groundMesh);
             transformed.stackTagCompound = dustPile.toNBT();

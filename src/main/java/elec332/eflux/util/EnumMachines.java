@@ -1,6 +1,7 @@
 package elec332.eflux.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import elec332.core.util.BlockSide;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
@@ -17,22 +18,22 @@ import net.minecraft.tileentity.TileEntity;
  * Created by Elec332 on 4-4-2015.
  */
 public enum EnumMachines {
-    CAPACITOR(Capacitor.class),
+
+    CAPACITOR(Capacitor.class, BlockTextures.getCustomProvider("cap_side", "cap_top", "def_cap")),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
-    ASSEMBLY_TABLE(AssemblyTable.class),
-    GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass),
+    ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getCustomTFProvider("at_top", "at_front")),
+    GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass, BlockTextures.getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing")),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
-    CHUNKSUB(ChunkLoaderSubTile.class),
-    TESLACOIL(TileTeslaCoil.class),
+    CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getDefaultProvider("cs_front")),
+    TESLACOIL(TileTeslaCoil.class, BlockTextures.getCustomSidedProvider("teslacoil_side")),
     SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
-    WASHER(TileWasher.class),
+    WASHER(TileWasher.class, BlockTextures.getDefaultProvider("washer_front")),
+    RUBBLESIEVE(TileRubbleSieve.class),
 
     //Common MultiBlock parts
-    POWERINLET(TileEntityMultiBlockPowerInlet.class),
+    POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
 
     //Machine-specific MultiBlock parts
-    //HEATER,
-
 
     ;
     //___Data__//////////////////////////////////////////////////////////
@@ -42,6 +43,11 @@ public enum EnumMachines {
     private int renderID = 0;
     private Material material = Material.rock;
     private IBlockTextureProvider textureProvider;
+
+    private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material, IBlockTextureProvider textureProvider){
+        this(tileClass, renderID, material);
+        this.textureProvider = textureProvider;
+    }
 
     private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material){
         this(tileClass, renderID);

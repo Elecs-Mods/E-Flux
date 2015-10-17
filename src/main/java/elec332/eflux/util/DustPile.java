@@ -3,6 +3,7 @@ package elec332.eflux.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import elec332.eflux.EFlux;
+import elec332.eflux.init.ItemRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -110,6 +111,24 @@ public class DustPile {
         content.removeAll(toRemove);
         pure = true;
         return i;
+    }
+
+    public ItemStack sieve(){
+        ItemStack ret = null;
+        int i = 0;
+        List<DustPile.DustPart> toRemove = Lists.newArrayList();
+        for (DustPile.DustPart dustPart : content) {
+            if (dustPart.getContent().equals(GrinderRecipes.scrap)) {
+                i += dustPart.getNuggetAmount();
+                toRemove.add(dustPart);
+            }
+        }
+        content.removeAll(toRemove);
+        if (i > 0) {
+            ret = new ItemStack(ItemRegister.scrap, i);
+        }
+        clean = true;
+        return ret;
     }
 
     public NBTTagCompound toNBT(){

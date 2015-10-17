@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,18 +55,22 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
 
     private final int types;
     private final SidedBlockRenderingCache textureHandler;
-    private static boolean register;
+    private boolean register;
 
     @Override
     public BlockMachinePart register() {
         super.register();
         if (!register) {
-            GameRegistry.registerTileEntity(TileEntityBlockMachine.class, blockName);
-            GameRegistry.registerTileEntity(TileEntityMultiBlockItemGate.class, "itemGate");
-            GameRegistry.registerTileEntity(TileEntityDustStorage.class, "dustStorage");
+            registerTiles();
             register = true;
         }
         return this;
+    }
+
+    protected void registerTiles(){
+        GameRegistry.registerTileEntity(TileEntityBlockMachine.class, blockName);
+        GameRegistry.registerTileEntity(TileEntityMultiBlockItemGate.class, "itemGate");
+        GameRegistry.registerTileEntity(TileEntityDustStorage.class, "dustStorage");
     }
 
     public int getTypes(){
@@ -249,5 +254,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
             this.facing = ForgeDirection.valueOf(tagCompound.getString("facing"));
             this.monitorSide = tagCompound.getInteger("monS");
         }
+
     }
+
 }

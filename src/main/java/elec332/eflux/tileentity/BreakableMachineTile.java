@@ -1,20 +1,29 @@
 package elec332.eflux.tileentity;
 
+import elec332.core.compat.handlers.WailaCompatHandler;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine {
+public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile {
 
     public BreakableMachineTile(){
         super();
@@ -117,5 +126,27 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
             tagCompound.setTag("itemRep", newTag);
         }
     }
+
+    @Override
+    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config){
+        NBTTagCompound tag = accessor.getNBTData();
+        if (tag != null){
+            currentTip.add("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
+            if (tag.getBoolean("broken")){
+                currentTip.add(SpecialChars.ALIGNCENTER+SpecialChars.ITALIC+"Broken");
+            }
+        }
+        return currentTip;
+    }
+
+    @Override
+    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z){
+        System.out.println("Wrote data to NBT");
+        tag.setInteger("energy", energyContainer.getStoredPower());
+        tag.setInteger("maxEnergy", energyContainer.getMaxStoredEnergy());
+        tag.setBoolean("broken", broken);
+        return tag;
+    }
+
 
 }

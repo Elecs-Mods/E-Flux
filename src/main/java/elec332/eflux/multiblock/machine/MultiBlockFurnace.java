@@ -11,7 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 /**
  * Created by Elec332 on 28-8-2015.
@@ -97,6 +100,11 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     @Override
     public ResourceLocation getBackgroundImageLocation() {
         return new ResourceLocation("textures/gui/container/furnace.png");
+    }
+
+    @Override
+    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
+        return tag;
     }
 
 }

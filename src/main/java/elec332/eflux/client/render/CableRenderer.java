@@ -29,14 +29,14 @@ public class CableRenderer extends AbstractBlockRenderer {
     }
 
     @Override
-    public boolean renderBlockAt(IBlockAccess world, double x, double y, double z, RenderBlocks renderer, float partialTicks, boolean tesr) {
-        TileEntity tile = world.getTileEntity((int) x, (int) y, (int) z);
+    public boolean renderBlockAt(IBlockAccess world, double x, double y, double z, TileEntity tile, RenderBlocks renderer, float partialTicks, boolean tesr) {
+        tile = world.getTileEntity((int) x, (int) y, (int) z);
         if (tile instanceof AbstractCable) {
             BlockLoc tileLoc = new BlockLoc(tile);
             List<ForgeDirection> connections = Lists.newArrayList();
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 TileEntity tile2 = WorldHelper.getTileAt(world, tileLoc.atSide(direction));
-                if (tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier()) || tile instanceof IEnergySource || tile instanceof IEnergyReceiver) {
+                if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || tile2 instanceof IEnergySource || tile2 instanceof IEnergyReceiver) {
                     connections.add(direction);
                 }
             }
