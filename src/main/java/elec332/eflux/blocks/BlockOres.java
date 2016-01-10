@@ -1,14 +1,12 @@
 package elec332.eflux.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import elec332.eflux.EFlux;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -23,21 +21,21 @@ public class BlockOres extends BlockWithMeta {
         setHardness(2.5f);
     }
 
-    private IIcon[] icons = new IIcon[4];
+    //private IIcon[] icons = new IIcon[4];
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister register) {
-        icons[0] = register.registerIcon("oreCopper.png");
-        icons[1] = register.registerIcon("oreTin.png");
-        icons[2] = register.registerIcon("oreZinc.png");
-        icons[3] = register.registerIcon("oreSilver.png");
-    }
+   // @Override
+  //  @SideOnly(Side.CLIENT)
+  //  public void registerBlockIcons(IIconRegister register) {
+       // icons[0] = register.registerIcon("oreCopper.png");
+      //  icons[1] = register.registerIcon("oreTin.png");
+      //  icons[2] = register.registerIcon("oreZinc.png");
+       // icons[3] = register.registerIcon("oreSilver.png");
+   // }
 
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return icons[meta];
-    }
+   // @Override
+  //  public IIcon getIcon(int side, int meta) {
+  //      return icons[meta];
+  //  }
 
 
     @Override
@@ -60,5 +58,10 @@ public class BlockOres extends BlockWithMeta {
                 return getUnlocalizedName() + ".silver";
         }
         return "ERROR_BLOCK_EFLUX";
+    }
+
+    @Override
+    public int getTypes() {
+        return 4;
     }
 }

@@ -18,7 +18,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.*;
 
 import java.util.List;
@@ -122,12 +122,12 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     private boolean checkOutput(){
         if (gonnaBeOutputted == null){
-            DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).stackTagCompound);
+            DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).getTagCompound());
             if (!dustPile.clean)
                 return false;
             stone = dustPile.wash();
             ItemStack transformed = new ItemStack(ItemRegister.groundMesh);
-            transformed.stackTagCompound = dustPile.toNBT();
+            transformed.setTagCompound(dustPile.toNBT());
             if ((getStackInSlot(1) == null || (ItemStack.areItemStackTagsEqual(getStackInSlot(1), transformed) && getStackInSlot(1).stackSize < getInventoryStackLimit())) && checkFluids()){
                 gonnaBeOutputted = transformed;
                 decrStackSize(0, 1);
@@ -148,7 +148,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
         waterTank.drain(i, true);
         slibTank.fill(new FluidStack(FluidRegister.slib, i), true);
         stone = 0;
-        if (gonnaBeOutputted.stackTagCompound != null) {
+        if (gonnaBeOutputted.getTagCompound() != null) {
             if (getStackInSlot(1) == null) {
                 setInventorySlotContents(1, gonnaBeOutputted.copy());
             } else {
@@ -161,7 +161,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
 
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return direction != getTileFacing();
     }
 
@@ -195,12 +195,12 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     }
 
     @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
         return waterTank.fill(resource, doFill);
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
         if (resource == null || !resource.isFluidEqual(slibTank.getFluid())) {
             return null;
         }
@@ -208,22 +208,22 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     }
 
     @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
         return slibTank.drain(maxDrain, doDrain);
     }
 
     @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid) {
+    public boolean canFill(EnumFacing from, Fluid fluid) {
         return fluid == FluidRegistry.WATER;
     }
 
     @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+    public boolean canDrain(EnumFacing from, Fluid fluid) {
         return fluid == FluidRegister.slib;
     }
 
     @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+    public FluidTankInfo[] getTankInfo(EnumFacing from) {
         return new FluidTankInfo[]{waterTank.getInfo(), slibTank.getInfo()};
     }
 
@@ -243,17 +243,17 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side) {
+    public int[] getSlotsForFace(EnumFacing side) {
         return new int[]{0, 1};
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
         return slot == 0 && GroundMesh.isValidMesh(stack);
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
         return slot == 1;
     }
 }

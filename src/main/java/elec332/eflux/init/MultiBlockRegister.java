@@ -5,7 +5,7 @@ import elec332.core.multiblock.BlockStructure;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
-import elec332.core.world.location.BlockData;
+import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachinePart;
 import elec332.eflux.multiblock.machine.MultiBlockCompressor;
@@ -14,9 +14,11 @@ import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import elec332.eflux.multiblock.machine.MultiBlockLaser;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.EnumMachines;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.oredict.OreDictionary;
 
 import static elec332.eflux.init.BlockRegister.*;
@@ -26,11 +28,11 @@ import static elec332.eflux.init.BlockRegister.*;
  */
 public class MultiBlockRegister {
 
-    private static final BlockData powerInlet = new BlockData(EnumMachines.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
-    private static final BlockData air = new BlockData(null);//{
+    private static final BlockStateWrapper powerInlet = new BlockStateWrapper(EnumMachines.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
+    private static final BlockStateWrapper air = new BlockStateWrapper((Block)null);//{
     //    @Override
     //    public boolean equals(Object obj) {
-    //        return super.equals(obj) || ((obj instanceof BlockData) && ((BlockData) obj).block == renderBlock);
+    //        return super.equals(obj) || ((obj instanceof BlockStateWrapper) && ((BlockStateWrapper) obj).block == renderBlock);
     //    }
     //};
 
@@ -44,11 +46,11 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, ForgeDirection facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
-                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
+                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == EnumFacing.DOWN;
                 boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
                 return b1 && b2 && b3 && b4 && b5;
             }
@@ -57,7 +59,7 @@ public class MultiBlockRegister {
             public BlockStructure getStructure() {
                 return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
                     @Override
-                    public BlockData getBlockAtPos(int length, int width, int height) {
+                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                         if (length == 1){
                             if (height == 0) {
                                 if (width == 0)
@@ -82,7 +84,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public BlockData getTriggerBlock() {
+            public BlockStateWrapper getTriggerBlock() {
                 return monitor;
             }
 
@@ -96,7 +98,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, ForgeDirection facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 0, 1))).getTileFacing() == facing;
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 3, 0, 1))).getTileFacing() == facing;
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
@@ -112,7 +114,7 @@ public class MultiBlockRegister {
             public BlockStructure getStructure() {
                 return new BlockStructure(5, 3, 3, new BlockStructure.IStructureFiller() {
                     @Override
-                    public BlockData getBlockAtPos(int length, int width, int height) {
+                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                         if (height == 1){
                             if (width == 0 && (length == 2 || length == 3)){
                                 return monitor;
@@ -137,7 +139,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public BlockData getTriggerBlock() {
+            public BlockStateWrapper getTriggerBlock() {
                 return monitor;
             }
 
@@ -151,13 +153,13 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, ForgeDirection facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
-                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == ForgeDirection.DOWN;
+                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == EnumFacing.DOWN;
                 boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
-                boolean b6 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
+                boolean b6 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == EnumFacing.UP;
                 boolean b7 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
                 return b1 && b2 && b3 && b4 && b5 && b6 && b7;
             }
@@ -166,7 +168,7 @@ public class MultiBlockRegister {
             public BlockStructure getStructure() {
                 return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
                     @Override
-                    public BlockData getBlockAtPos(int length, int width, int height) {
+                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                         if (height == 0 && length == 1){
                             if (width == 1)
                                 return itemGate;
@@ -191,7 +193,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public BlockData getTriggerBlock() {
+            public BlockStateWrapper getTriggerBlock() {
                 return heatResistantGlass;
             }
 
@@ -205,10 +207,10 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, ForgeDirection facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
-                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == ForgeDirection.UP;
+                boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == EnumFacing.UP;
                 boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
                 return b1 && b2 && b4 && b5;
             }
@@ -217,7 +219,7 @@ public class MultiBlockRegister {
             public BlockStructure getStructure() {
                 return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
                     @Override
-                    public BlockData getBlockAtPos(int length, int width, int height) {
+                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                         if (length == 1){
                             if (height == 0) {
                                 if (width == 0)
@@ -245,7 +247,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public BlockData getTriggerBlock() {
+            public BlockStateWrapper getTriggerBlock() {
                 return frameNormal;
             }
 

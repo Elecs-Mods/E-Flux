@@ -1,6 +1,6 @@
 package elec332.eflux.compat.rf;
 
-import elec332.core.baseclasses.tileentity.BlockTileBase;
+import elec332.core.tile.BlockTileBase;
 import elec332.eflux.EFlux;
 import elec332.eflux.compat.Compat;
 import net.minecraft.block.material.Material;

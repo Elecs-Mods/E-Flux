@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Created by Elec332 on 13-9-2015.
@@ -45,8 +46,8 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        return inventory.getStackInSlotOnClosing(slot);
+    public ItemStack removeStackFromSlot(int slot) {
+        return inventory.removeStackFromSlot(slot);
     }
 
     @Override
@@ -55,13 +56,13 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     }
 
     @Override
-    public String getInventoryName() {
-        return inventory.getInventoryName();
+    public String getName() {
+        return inventory.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
-        return inventory.hasCustomInventoryName();
+    public boolean hasCustomName() {
+        return inventory.hasCustomName();
     }
 
     @Override
@@ -75,13 +76,13 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     }
 
     @Override
-    public void openInventory() {
-        inventory.openInventory();
+    public void openInventory(EntityPlayer player) {
+        inventory.openInventory(player);
     }
 
     @Override
-    public void closeInventory() {
-        inventory.closeInventory();
+    public void closeInventory(EntityPlayer player) {
+        inventory.closeInventory(player);
     }
 
     @Override
@@ -89,4 +90,28 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
         return inventory.isItemValidForSlot(slot, stack);
     }
 
+    @Override
+    public int getField(int id) {
+        return inventory.getField(id);
+    }
+
+    @Override
+    public int getFieldCount() {
+        return inventory.getFieldCount();
+    }
+
+    @Override
+    public void setField(int id, int value) {
+        inventory.setField(id, value);
+    }
+
+    @Override
+    public void clear() {
+        inventory.clear();
+    }
+
+    @Override
+    public IChatComponent getDisplayName() {
+        return inventory.getDisplayName();
+    }
 }

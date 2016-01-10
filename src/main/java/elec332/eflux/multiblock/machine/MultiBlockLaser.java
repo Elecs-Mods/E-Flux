@@ -86,8 +86,4 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
         return 980000;
     }
 
-    @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
-        return tag;
-    }
 }

@@ -4,12 +4,12 @@ import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class Capacitor extends BreakableMachineTile implements ISpecialEnergySource{
+public class Capacitor extends BreakableMachineTile implements ISpecialEnergySource {
 
     @Override
     public ItemStack getRandomRepairItem() {
@@ -37,7 +37,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
     }
 
     @Override
-    protected void receivePower(int rp, int ef, ForgeDirection direction) {
+    protected void receivePower(int rp, int ef, EnumFacing direction) {
         storedPower = storedPower+rp*ef;
     }*/
 
@@ -46,18 +46,13 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return true;
     }
 
     @Override
     public int getRequestedRP() {
         return 20;
-    }
-
-    @Override
-    public String[] getProvidedData() {
-        return new String[]{"Stored Energy: "+energyContainer.getStoredPower(), "Broken: "+isBroken()};
     }
 
     /**
@@ -67,7 +62,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
      * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF) {
+    public int provideEnergeticFlux(int rp, EnumFacing direction, int reqEF) {
         if (reqEF > energyContainer.getStoredPower()/rp)
             reqEF = energyContainer.getStoredPower()/rp;
         return Math.min(reqEF, 400/rp);
@@ -78,7 +73,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
      * @return weather the tile can connect and provide power to the given side
      */
     @Override
-    public boolean canProvidePowerTo(ForgeDirection direction) {
+    public boolean canProvidePowerTo(EnumFacing direction) {
         return true;
     }
 
@@ -90,7 +85,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
+    public int provideEnergy(int rp, EnumFacing direction, boolean execute) {
         if (!execute)
             return Math.min(400/rp, energyContainer.getStoredPower()/rp);
         return 0;

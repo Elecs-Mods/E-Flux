@@ -2,6 +2,7 @@ package elec332.eflux.client.render;
 
 import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import elec332.eflux.util.RIWInventory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -17,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 public class InsideItemRenderer extends TileEntitySpecialRenderer{
 
     public InsideItemRenderer(){
-        RenderItem.getInstance().setRenderManager(RenderManager.instance);
+        //RenderItem.getInstance().setRenderManager(RenderManager.instance);
         this.renderDummy = new EntityItem(null);
     }
 
@@ -26,7 +27,7 @@ public class InsideItemRenderer extends TileEntitySpecialRenderer{
     private static final double unit = 0.25D/8;//(1/16.0F)/2;
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f, int what) {
         RIWInventory inventory = ((TileEntityInsideItemRenderer)tile).getInventory();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             if (inventory.getStackInSlot(i) != null)
@@ -137,9 +138,9 @@ public class InsideItemRenderer extends TileEntitySpecialRenderer{
         //if (b)
         //    GL11.glRotatef(90F, -1, 0F, 0F);
         renderDummy.setEntityItemStack(stack);
-        RenderItem.renderInFrame = true;
-        RenderManager.instance.renderEntityWithPosYaw(renderDummy, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-        RenderItem.renderInFrame = false;
+        //RenderItem.renderInFrame = true;
+        //Minecraft.getMinecraft().entityRenderer.itemRenderer.itemRenderer..renderEntityWithPosYaw(renderDummy, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+        //RenderItem.renderInFrame = false;
         GL11.glPopMatrix();
         GL11.glPopMatrix();
     }

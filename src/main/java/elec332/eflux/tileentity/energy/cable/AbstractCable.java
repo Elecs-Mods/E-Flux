@@ -33,9 +33,10 @@ public abstract class AbstractCable extends EnergyTileBase implements IEnergyTra
                 public void run() {
                     reRenderBlock();
                 }
-            });
+            }, worldObj);
             return;
         }
         super.onDataPacket(id, tag);
     }
+
 }

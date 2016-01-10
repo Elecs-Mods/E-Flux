@@ -1,7 +1,7 @@
 package elec332.eflux.init;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import elec332.core.helper.RegisterHelper;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import elec332.core.util.RegisterHelper;
 import elec332.core.main.ElecCore;
 import elec332.eflux.items.*;
 import net.minecraft.item.Item;

@@ -1,8 +1,8 @@
 package elec332.eflux.items.circuits;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import elec332.core.helper.RegisterHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
@@ -27,7 +27,7 @@ public abstract class AbstractCircuit extends Item implements ICircuit {
         this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
         this.types = types;
-        setTextureName(EFlux.ModID+":"+txt);
+        //setTextureName(EFlux.ModID+":"+txt);
         RegisterHelper.registerItem(this, txt);
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractCircuit extends Item implements ICircuit {
             if (component != null && component.getItem() instanceof IElectricComponent && !((IElectricComponent) component.getItem()).isBroken()) {
                 NBTTagCompound tag = new NBTTagCompound();
                 ((IElectricComponent) component.getItem()).getBroken(component).writeToNBT(tag);
-                stack.getTagCompound().getTagList("Items", Constants.NBT.TAG_LIST).func_150304_a(i, tag);
+                stack.getTagCompound().getTagList("Items", 10).set(i, tag);
             }
         }
         return false;

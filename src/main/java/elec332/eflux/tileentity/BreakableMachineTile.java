@@ -7,16 +7,15 @@ import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.SpecialChars;
+import mcp.mobius.waila.api.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -49,12 +48,14 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
 
     public abstract int getRequestedRP();
 
+    @Override
     public void onBroken(){
         if (!worldObj.isRemote)
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
         sendPacket(1, new NBTTagCompound());
     }
 
+    @Override
     public boolean isBroken() {
         return broken;
     }
@@ -65,6 +66,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
         return breakableMachineInventory;
     }
 
+    @Override
     public void setBroken(boolean broken) {
         if (!broken)
             this.breakableMachineInventory = null;
@@ -74,34 +76,34 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (broken) return openBrokenGui(player);
         return onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
     }
 
-    public boolean onBlockActivatedSafe(EntityPlayer player, int side, float hitX, float hitY, float hitZ){
+    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
         return false;
     }
 
     private boolean openBrokenGui(EntityPlayer player){
         //if (breakableMachineInventory == null)
         //    breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
-        player.openGui(EFlux.instance, 1, worldObj, xCoord, yCoord, zCoord);
+        player.openGui(EFlux.instance, 1, worldObj, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
-    public int getRequestedEF(int rp, ForgeDirection direction) {
+    public int getRequestedEF(int rp, EnumFacing direction) {
         return energyContainer.getRequestedEF(rp, direction);
     }
 
     @Override
-    public int receivePower(ForgeDirection direction, int rp, int ef) {
+    public int receivePower(EnumFacing direction, int rp, int ef) {
         return energyContainer.receivePower(direction, rp, ef);
     }
 
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int requestedRP(EnumFacing direction) {
         return energyContainer.requestedRP(direction);
     }
 
@@ -128,7 +130,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config){
+    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             currentTip.add("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
@@ -140,13 +142,20 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z){
-        System.out.println("Wrote data to NBT");
+    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
         tag.setInteger("energy", energyContainer.getStoredPower());
         tag.setInteger("maxEnergy", energyContainer.getMaxStoredEnergy());
         tag.setBoolean("broken", broken);
         return tag;
     }
 
+    @Override
+    public String[] getProvidedData() {
+        return new String[]{
+            "energy: "+energyContainer.getStoredPower(),
+                "maxEnergy: "+energyContainer.getMaxStoredEnergy(),
+                "broken: "+broken
+        };
+    }
 
 }

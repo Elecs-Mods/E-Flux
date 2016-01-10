@@ -3,8 +3,8 @@
  * http://www.teamcofh.com
  */
 @API(apiVersion = CoFHAPIProps.VERSION, owner = "CoFHAPI", provides = "CoFHAPI|energy")
-package cofh.api.energy;
+package cofh.nonexistant.api.energy;
 
-import cofh.api.CoFHAPIProps;
-import cpw.mods.fml.common.API;
+import cofh.nonexistant.api.CoFHAPIProps;
+import net.minecraftforge.fml.common.API;
 

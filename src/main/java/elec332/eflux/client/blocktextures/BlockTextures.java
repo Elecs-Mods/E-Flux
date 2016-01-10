@@ -1,6 +1,6 @@
 package elec332.eflux.client.blocktextures;
 
-import elec332.core.util.BlockSide;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 24-7-2015.
@@ -17,125 +17,118 @@ public class BlockTextures {
 
     public static IBlockTextureProvider getDefaultProvider(final String front){
         return new IBlockTextureProvider() {
-            @Override
-            public String getTopIconName(boolean active) {
-                return defaultTopBottomTexture;
-            }
 
             @Override
-            public String getSideTexture(boolean active, BlockSide side) {
-                if (side == BlockSide.BACK)
-                    return defaultBackTexture;
-                return defaultSideTexture;
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                    case DOWN:
+                        return defaultTopBottomTexture;
+                    case NORTH:
+                        return front;
+                    case SOUTH:
+                        return defaultBackTexture;
+                    case EAST:
+                    case WEST:
+                        return defaultSideTexture;
+                    default:
+                        return "null";
+                }
             }
 
-            @Override
-            public String getFrontTexture(boolean active) {
-                return front;
-            }
-
-            @Override
-            public String getBottomIconName(boolean active) {
-                return defaultTopBottomTexture;
-            }
         };
     }
 
-    public static IBlockTextureProvider getCustomSidedProvider(final String side){
+    public static IBlockTextureProvider getCustomSidedProvider(final String sideTexture){
         return new IBlockTextureProvider() {
-            @Override
-            public String getTopIconName(boolean active) {
-                return defaultTopBottomTexture;
-            }
 
             @Override
-            public String getSideTexture(boolean active, BlockSide side_) {
-                return side;
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                    case DOWN:
+                        return defaultTopBottomTexture;
+                    case NORTH:
+                    case SOUTH:
+                    case EAST:
+                    case WEST:
+                        return sideTexture;
+                    default:
+                        return "null";
+                }
             }
 
-            @Override
-            public String getFrontTexture(boolean active) {
-                return side;
-            }
-
-            @Override
-            public String getBottomIconName(boolean active) {
-                return defaultTopBottomTexture;
-            }
         };
     }
 
-    public static IBlockTextureProvider getCustomProvider(final String side, final String top, final  String bottom){
+    public static IBlockTextureProvider getCustomProvider(final String sideTexture, final String top, final  String bottom){
         return new IBlockTextureProvider() {
-            @Override
-            public String getTopIconName(boolean active) {
-                return top;
-            }
 
             @Override
-            public String getSideTexture(boolean active, BlockSide side_) {
-                return side;
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                        return top;
+                    case DOWN:
+                        return bottom;
+                    case NORTH:
+                    case SOUTH:
+                    case EAST:
+                    case WEST:
+                        return sideTexture;
+                    default:
+                        return "null";
+                }
             }
 
-            @Override
-            public String getFrontTexture(boolean active) {
-                return side;
-            }
-
-            @Override
-            public String getBottomIconName(boolean active) {
-                return bottom;
-            }
         };
     }
 
     public static IBlockTextureProvider getCustomTFProvider(final String top, final String front){
         return new IBlockTextureProvider() {
-            @Override
-            public String getTopIconName(boolean active) {
-                return top;
-            }
 
             @Override
-            public String getSideTexture(boolean active, BlockSide side) {
-                if (side == BlockSide.BACK)
-                    return defaultBackTexture;
-                return defaultSideTexture;
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                        return top;
+                    case DOWN:
+                        return defaultTopBottomTexture;
+                    case NORTH:
+                        return front;
+                    case SOUTH:
+                        return defaultBackTexture;
+                    case EAST:
+                    case WEST:
+                        return defaultSideTexture;
+                    default:
+                        return "null";
+                }
             }
 
-            @Override
-            public String getFrontTexture(boolean active) {
-                return front;
-            }
-
-            @Override
-            public String getBottomIconName(boolean active) {
-                return defaultTopBottomTexture;
-            }
         };
     }
 
     public static IBlockTextureProvider getCustomTBProvider(final String top, final String bottom){
         return new IBlockTextureProvider() {
-            @Override
-            public String getTopIconName(boolean active) {
-                return top;
-            }
 
             @Override
-            public String getSideTexture(boolean active, BlockSide side) {
-                return defaultSideTexture;
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                        return top;
+                    case DOWN:
+                        return bottom;
+                    case NORTH:
+                    case SOUTH:
+                    case EAST:
+                    case WEST:
+                        return defaultSideTexture;
+                    default:
+                        return "null";
+                }
             }
 
-            @Override
-            public String getFrontTexture(boolean active) {
-                return defaultSideTexture;
-            }
-
-            @Override
-            public String getBottomIconName(boolean active) {
-                return bottom;
-            }
         };
     }
 

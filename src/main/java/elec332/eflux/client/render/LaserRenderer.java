@@ -1,18 +1,27 @@
 package elec332.eflux.client.render;
 
+import elec332.core.client.ITessellator;
+import elec332.core.client.RenderBlocks;
 import elec332.core.client.render.AbstractBlockRenderer;
-import elec332.core.client.render.RenderHelper;
-import elec332.eflux.blocks.BlockHeatGlass;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 /**
  * Created by Elec332 on 3-10-2015.
  */
-public class LaserRenderer extends AbstractBlockRenderer {
+public class LaserRenderer extends AbstractBlockRenderer{
+    @Override
+    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderBlocks, ITessellator tessellator, WorldRenderer renderer) {
+
+    }
+
+    @Override
+    public boolean shouldRenderBlock(IBlockAccess iba, IBlockState state, BlockPos pos) {
+        return false;
+    }
+}/* {
 
     public LaserRenderer() {
         super(BlockHeatGlass.LaserIndicator.class);
@@ -43,3 +52,4 @@ public class LaserRenderer extends AbstractBlockRenderer {
         return true;
     }
 }
+        */

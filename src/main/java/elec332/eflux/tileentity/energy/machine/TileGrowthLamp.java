@@ -11,7 +11,8 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ public class TileGrowthLamp extends BreakableMachineTile {
         this.blockLocations = Lists.newArrayList();
     }
 
-    private List<BlockLoc> blockLocations;
+    private List<BlockPos> blockLocations;
 
     @Override
     public void updateEntity() {
@@ -36,8 +37,8 @@ public class TileGrowthLamp extends BreakableMachineTile {
                     remakeList();
                 }
                 Collections.shuffle(blockLocations, worldObj.rand);
-                BlockLoc randomLoc = blockLocations.get(0);
-                if (!worldObj.isAirBlock(randomLoc.xCoord, randomLoc.yCoord, randomLoc.zCoord) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
+                BlockPos randomLoc = blockLocations.get(0);
+                if (!worldObj.isAirBlock(randomLoc) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
                     WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
                 }
                 blockLocations.remove(randomLoc);
@@ -45,13 +46,13 @@ public class TileGrowthLamp extends BreakableMachineTile {
         }
     }
 
-    private boolean isFullyGrownCrop(BlockLoc blockLoc){
+    private boolean isFullyGrownCrop(BlockPos blockLoc){
         Block block = WorldHelper.getBlockAt(worldObj, blockLoc);
         int meta = WorldHelper.getBlockMeta(worldObj, blockLoc);
-        return block instanceof IGrowable && !((IGrowable) block).func_149851_a(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, worldObj.isRemote) || block instanceof BlockCrops && meta == 7;
+        return block instanceof IGrowable && !((IGrowable) block).canGrow(worldObj, blockLoc, WorldHelper.getBlockState(worldObj, blockLoc), worldObj.isRemote) || block instanceof BlockCrops && meta == 7;
     }
 
-    private boolean isValidCrop(BlockLoc blockLoc){
+    private boolean isValidCrop(BlockPos blockLoc){
         Block block = WorldHelper.getBlockAt(worldObj, blockLoc);
         return block instanceof IGrowable && block.getMaterial() != Material.grass;
     }
@@ -61,7 +62,7 @@ public class TileGrowthLamp extends BreakableMachineTile {
         for (int offsetY= -Config.Machines.growthLampY; offsetY <= Config.Machines.growthLampY; offsetY++) {
             for (int offsetZ = -Config.Machines.growthLampXZ; offsetZ <= Config.Machines.growthLampXZ; offsetZ++) {
                 for (int offsetX = -Config.Machines.growthLampXZ; offsetX <= Config.Machines.growthLampXZ; offsetX++) {
-                    blockLocations.add(new BlockLoc(xCoord+offsetX, yCoord+offsetY, zCoord+offsetZ));
+                    blockLocations.add(pos.add(offsetX, offsetY, offsetZ));
                 }
             }
         }
@@ -92,8 +93,8 @@ public class TileGrowthLamp extends BreakableMachineTile {
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return direction == ForgeDirection.UP;
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
+        return direction == EnumFacing.UP;
     }
 
     @Override
@@ -101,8 +102,4 @@ public class TileGrowthLamp extends BreakableMachineTile {
         return 7;
     }
 
-    @Override
-    public String[] getProvidedData() {
-        return new String[0];
-    }
 }

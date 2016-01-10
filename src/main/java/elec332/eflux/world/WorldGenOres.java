@@ -2,6 +2,7 @@ package elec332.eflux.world;
 
 import elec332.core.util.WorldGenInfo;
 import elec332.core.world.WorldGen;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.init.BlockRegister;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -26,7 +27,7 @@ public class WorldGenOres extends WorldGen {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-        switch (world.provider.dimensionId){
+        switch (WorldHelper.getDimID(world)){
             case 0:
                 generateOverworld(world, random, chunkX, chunkZ, copper);
                 generateOverworld(world, random, chunkX, chunkZ, tin);

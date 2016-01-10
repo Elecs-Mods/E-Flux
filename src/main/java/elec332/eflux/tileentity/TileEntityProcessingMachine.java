@@ -1,7 +1,7 @@
 package elec332.eflux.tileentity;
 
 import com.google.common.collect.Lists;
-import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.core.tile.IInventoryTile;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.IHasProgressBar;
@@ -19,7 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
@@ -122,20 +122,12 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
     }
 
     @Override
-    public String[] getProvidedData() {
-        return new String[]{
-                "Stored power: "+energyContainer.getStoredPower(),
-                "In working order: "+!isBroken()
-        };
-    }
-
-    @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player);
     }
 
     public boolean openGui(EntityPlayer player){
-        player.openGui(EFlux.instance, 0, worldObj, xCoord, yCoord, zCoord);
+        openGui(player, EFlux.instance, 0);
         return true;
     }
 
@@ -156,7 +148,7 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return true;
     }
 

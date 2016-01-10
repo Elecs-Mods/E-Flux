@@ -1,6 +1,7 @@
 package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -8,7 +9,7 @@ import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.*;
 
@@ -54,9 +55,9 @@ public class WorldGridHolder {
         if(!world.isRemote) {
             EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString());
             TileEntity theTile = powerTile.getTile();
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+            for (EnumFacing direction : EnumFacing.VALUES) {
                 EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString() + " for side " + direction.toString());
-                TileEntity possTile = world.getTileEntity(theTile.xCoord + direction.offsetX, theTile.yCoord + direction.offsetY, theTile.zCoord + direction.offsetZ);
+                TileEntity possTile = WorldHelper.getTileAt(world, theTile.getPos().offset(direction));
                 if (possTile != null && EnergyAPIHelper.isEnergyTile(possTile)) {
                     PowerTile powerTile1 = getPowerTile(genCoords(possTile));
                     if (powerTile1 == null || !powerTile1.hasInit()) {
@@ -74,7 +75,7 @@ public class WorldGridHolder {
         }
     }
 
-    private boolean canConnect(PowerTile powerTile1, ForgeDirection direction, PowerTile powerTile2){
+    private boolean canConnect(PowerTile powerTile1, EnumFacing direction, PowerTile powerTile2){
         TileEntity mainTile = powerTile1.getTile();
         boolean flag1 = false;
         boolean flag2 = false;
@@ -102,7 +103,7 @@ public class WorldGridHolder {
         }
     }
 
-    private boolean canConnectFromSide(ForgeDirection direction, PowerTile powerTile2){
+    private boolean canConnectFromSide(EnumFacing direction, PowerTile powerTile2){
         TileEntity secondTile = powerTile2.getTile();
         boolean flag1 = false;
         boolean flag2 = false;
@@ -149,8 +150,9 @@ public class WorldGridHolder {
                     }
                     for (BlockLoc vec : vec3List2) {
                         EFlux.systemPrintDebug("Re-adding tile at " + vec.toString());
-                        TileEntity tileEntity1 = getTile(vec);
-                        if (EnergyAPIHelper.isEnergyTile(tileEntity1))
+                        //TileEntity tileEntity1 = null;//getTile(vec);
+
+                        //if (EnergyAPIHelper.isEnergyTile(tileEntity1))
                             if (getPowerTile(vec) != null)
                                 addTile(getPowerTile(vec));
                     }
@@ -160,7 +162,7 @@ public class WorldGridHolder {
     }
 
     public void onServerTickInternal(){
-        EFlux.systemPrintDebug("Tick! " + world.provider.dimensionId);
+       // EFlux.systemPrintDebug("Tick! " + world.provider.dimensionId);
         if (!pending.isEmpty() && pending.size() == oldInt) {
                /*List<PowerTile> tr = new ArrayList<PowerTile>();
                for (PowerTile powerTile : pending)
@@ -208,7 +210,7 @@ public class WorldGridHolder {
         return new BlockLoc(tileEntity);
     }
 
-    private TileEntity getTile(BlockLoc vec){
-        return world.getTileEntity(vec.xCoord, vec.yCoord, vec.zCoord);
-    }
+    //private TileEntity getTile(BlockLoc vec){
+    //    return world.getTileEntity(vec.xCoord, vec.yCoord, vec.zCoord);
+    //}
 }

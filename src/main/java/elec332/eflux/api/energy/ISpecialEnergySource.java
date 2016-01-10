@@ -1,6 +1,6 @@
 package elec332.eflux.api.energy;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 28-4-2015.
@@ -17,5 +17,5 @@ public interface ISpecialEnergySource extends IEnergySource{  //Backup, DO NOT U
      *
      * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
      */
-    public int provideEnergeticFlux(int rp, ForgeDirection direction, int reqEF);
+    public int provideEnergeticFlux(int rp, EnumFacing direction, int reqEF);
 }

@@ -28,7 +28,7 @@ public class ContainerSingleSlot extends BaseContainer {  //Deprecated???
     @Override
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
-        bmh.closeInventory();
+        bmh.closeInventory(player);
     }
 
     @Override

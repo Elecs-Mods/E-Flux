@@ -27,31 +27,5 @@ public class WailaCompatHandler extends AbstractCompatHandler.ICompatHandler {
 
     @Override
     public void init() {
-        ModuleRegistrar.instance().registerStackProvider(new IWailaDataProvider() {
-            @Override
-            public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
-                return new ItemStack((Item)null);
-            }
-
-            @Override
-            public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-                return null;
-            }
-
-            @Override
-            public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-                return null;
-            }
-
-            @Override
-            public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-                return null;
-            }
-
-            @Override
-            public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-                return null;
-            }
-        }, BlockRenderItemInWorld.class);
     }
 }

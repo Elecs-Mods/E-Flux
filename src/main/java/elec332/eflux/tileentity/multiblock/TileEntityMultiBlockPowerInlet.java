@@ -3,7 +3,7 @@ package elec332.eflux.tileentity.multiblock;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 28-7-2015.
@@ -27,7 +27,7 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return direction == getTileFacing();
     }
 
@@ -36,7 +36,7 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      * @return The Redstone Potential at which the machine wishes to operate
      */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int requestedRP(EnumFacing direction) {
         return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().requestedRP();
     }
 
@@ -46,7 +46,7 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
      */
     @Override
-    public int getRequestedEF(int rp, ForgeDirection direction) {
+    public int getRequestedEF(int rp, EnumFacing direction) {
         return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().getRequestedEF(rp);
     }
 
@@ -57,7 +57,7 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      * @return The amount of EnergeticFlux that wasn't used
      */
     @Override
-    public int receivePower(ForgeDirection direction, int rp, int ef) {
+    public int receivePower(EnumFacing direction, int rp, int ef) {
         return getMultiBlockHandler() == null ? ef : getMultiBlockHandler().receivePower(rp, ef);
     }
 

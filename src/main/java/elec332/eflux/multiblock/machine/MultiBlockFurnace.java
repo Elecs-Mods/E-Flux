@@ -1,6 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
-import elec332.core.player.PlayerHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.init.BlockRegister;
@@ -30,7 +30,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     public void init() {
         super.init();
         middle = getBlockLocAtTranslatedPos(1, 1, 1);
-        getWorldObj().setBlock(middle.xCoord, middle.yCoord, middle.zCoord, BlockRegister.renderBlock, 0, 3);
+        getWorldObj().setBlockState(middle, BlockRegister.renderBlock.getStateFromMeta(0), 3);
         ((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
     }
 
@@ -54,7 +54,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     @Override
     public void invalidate() {
         super.invalidate();
-        getWorldObj().setBlockToAir(middle.xCoord, middle.yCoord, middle.zCoord);
+        getWorldObj().setBlockToAir(middle);
     }
 
     @Override
@@ -100,11 +100,6 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     @Override
     public ResourceLocation getBackgroundImageLocation() {
         return new ResourceLocation("textures/gui/container/furnace.png");
-    }
-
-    @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
-        return tag;
     }
 
 }

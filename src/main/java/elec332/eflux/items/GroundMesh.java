@@ -29,7 +29,7 @@ public class GroundMesh extends EFluxItem {
     }
 
     public static boolean isValidMesh(ItemStack stack){
-        return !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.stackTagCompound == null) && stack.stackTagCompound.getBoolean("dusts_scanned");
+        return !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) && stack.getTagCompound().getBoolean("dusts_scanned");
     }
 
 }

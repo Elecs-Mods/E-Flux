@@ -1,8 +1,11 @@
 package elec332.eflux.proxies;
 
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.relauncher.Side;
-import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.core.world.WorldHelper;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import elec332.core.tile.IInventoryTile;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -14,13 +17,14 @@ public class CommonProxy implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = WorldHelper.getTileAt(world, new BlockPos(x, y, z));
         switch (ID){
             case 1:
-                if (world.getTileEntity(x, y, z) instanceof BreakableMachineTile)
-                    return ((BreakableMachineTile) world.getTileEntity(x, y, z)).getBreakableMachineInventory().brokenGui(Side.SERVER, player);
+                if (tile instanceof BreakableMachineTile)
+                    return ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.SERVER, player);
             default:
-                if (world.getTileEntity(x, y, z) instanceof IInventoryTile)
-                    return ((IInventoryTile) world.getTileEntity(x, y, z)).getGuiServer(player);
+                if (tile instanceof IInventoryTile)
+                    return ((IInventoryTile) tile).getGuiServer(player);
                 else return null;
         }
     }

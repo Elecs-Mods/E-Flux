@@ -1,6 +1,7 @@
 package elec332.eflux.grid.power;
 
 import elec332.core.util.BlockLoc;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
@@ -8,8 +9,9 @@ import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.UUID;
  */
 public class EFluxCableGrid {
 
-    public EFluxCableGrid(World world, PowerTile p, ForgeDirection direction){
+    public EFluxCableGrid(World world, PowerTile p, EnumFacing direction){
         acceptors = new ArrayList<GridData>();
         providers = new ArrayList<GridData>();
         locations = new ArrayList<BlockLoc>();
@@ -56,7 +58,7 @@ public class EFluxCableGrid {
     }
 
     public EFluxCableGrid mergeGrids(EFluxCableGrid grid){
-        if (this.world.provider.dimensionId != grid.world.provider.dimensionId)
+        if (WorldHelper.getDimID(world) != WorldHelper.getDimID(grid.world))
             throw new RuntimeException();
         if (this.equals(grid))
             return this;
@@ -103,7 +105,7 @@ public class EFluxCableGrid {
         for (GridData gridData : acceptors)
             rp = Math.max(rp, ((IEnergyReceiver) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).requestedRP(gridData.getDirection()));
         for (GridData gridData : providers)
-            totalProvided = totalProvided + ((IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection(), true);
+            totalProvided += ((IEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection(), true);
         for (GridData gridData : specialProviders) {
             int s = ((ISpecialEnergySource) getWorldHolder().getPowerTile(gridData.getLoc()).getTile()).provideEnergy(rp, gridData.getDirection(), false);
             vs[specialProviders.indexOf(gridData)] = s;
@@ -220,19 +222,19 @@ public class EFluxCableGrid {
     }
 
     public class GridData {
-        public GridData(BlockLoc blockLoc, ForgeDirection direction){
+        public GridData(BlockLoc blockLoc, EnumFacing direction){
             this.loc = blockLoc;
             this.direction = direction;
         }
 
         private BlockLoc loc;
-        private ForgeDirection direction;
+        private EnumFacing direction;
 
         public BlockLoc getLoc() {
             return loc;
         }
 
-        public ForgeDirection getDirection() {
+        public EnumFacing getDirection() {
             return direction;
         }
 

@@ -3,7 +3,7 @@ package elec332.eflux.tileentity.multiblock;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 13-9-2015.
@@ -27,7 +27,7 @@ public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<M
      * @return weather the tile can connect and provide power to the given side
      */
     @Override
-    public boolean canProvidePowerTo(ForgeDirection direction) {
+    public boolean canProvidePowerTo(EnumFacing direction) {
         return direction == getTileFacing();
     }
 
@@ -39,7 +39,7 @@ public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<M
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
+    public int provideEnergy(int rp, EnumFacing direction, boolean execute) {
         return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().provideEnergy(rp, execute);
     }
 

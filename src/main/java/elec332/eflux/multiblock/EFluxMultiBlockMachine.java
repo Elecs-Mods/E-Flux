@@ -1,6 +1,7 @@
 package elec332.eflux.multiblock;
 
-import cpw.mods.fml.relauncher.Side;
+import mcp.mobius.waila.api.ITaggedList;
+import net.minecraftforge.fml.relauncher.Side;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.EnergyContainer;
@@ -11,7 +12,6 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -141,16 +141,16 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
 
     @Override
     public final int requestedRP(){
-        return energyContainer.requestedRP(ForgeDirection.UNKNOWN);
+        return energyContainer.requestedRP(null);
     }
 
     @Override
     public final int getRequestedEF(int rp) {
-        return energyContainer.getRequestedEF(rp, ForgeDirection.UNKNOWN);
+        return energyContainer.getRequestedEF(rp, null);
     }
 
     @Override
     public final int receivePower(int rp, int ef) {
-        return energyContainer.receivePower(ForgeDirection.UNKNOWN, rp, ef);
+        return energyContainer.receivePower(null, rp, ef);
     }
 }

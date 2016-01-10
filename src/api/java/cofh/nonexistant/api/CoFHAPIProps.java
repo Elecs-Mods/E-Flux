@@ -1,4 +1,4 @@
-package cofh.api;
+package cofh.nonexistant.api;
 
 public class CoFHAPIProps {
 

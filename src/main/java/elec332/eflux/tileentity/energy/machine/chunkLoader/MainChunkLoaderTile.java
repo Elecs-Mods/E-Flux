@@ -2,7 +2,7 @@ package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
 import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
-import elec332.core.player.PlayerHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.IRunOnce;
@@ -10,13 +10,16 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.BreakableMachineTile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
-public class MainChunkLoaderTile extends BreakableMachineTile {
+public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader{
 
     public MainChunkLoaderTile(){
         repairItems = Lists.newArrayList(new ItemStack(Items.ender_eye), new ItemStack(Items.ender_pearl));
@@ -41,16 +44,36 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
     public boolean changed;
     private int loadedChunks;
     private boolean recentlyWithoutPower;
+/*
+    @Override
+    public void validate() {
+        System.out.println("validating: "+toString());
+        super.validate();
+    }
+
+    @Override
+    public void invalidate() {
+        System.out.println("Invalidating: "+toString());
+        super.invalidate();
+    }
+
+    @Override
+    public boolean isInvalid() {
+        System.out.println("Invalid: "+super.isInvalid()+" for "+toString());
+        return super.isInvalid();
+    }*/
 
     private List<ForgeChunkManager.Ticket> tickets;
 
     private List<BlockLoc> getLocations(){
-        return ChunkLoaderPlayerProperties.get(owner).getLocations();
+        return ChunkLoaderPlayerProperties.get(this.owner).getLocations();
     }
 
     @Override
     public void updateEntity() {
         super.updateEntity();
+        if (worldObj.isRemote)
+            return;
         calculatePower();
         if (energyContainer.drainPower(neededPower) && active){
             if (recentlyWithoutPower)
@@ -95,9 +118,10 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
                     //loadedChunks++;
                     tickets.add(ticket);
                     WorldHelper.forceChunk(ticket);
-                    PlayerHelper.sendMessageToPlayer(worldObj.func_152378_a(owner), "Put ticket on blockLoc: " + loc.toString());
+                    PlayerHelper.sendMessageToPlayer(worldObj.getPlayerEntityByUUID(owner), "Put ticket on blockLoc: " + loc.toString());
                 }
             }
+            loadedChunks = tickets.size();
             changed = false;
         }
     }
@@ -106,13 +130,14 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
     public void writeToItemStack(NBTTagCompound tagCompound) {
         super.writeToItemStack(tagCompound);
         if (owner != null)
-            tagCompound.setString("Owner", owner.toString());
+            tagCompound.setString("Owner_MCT", owner.toString());
     }
 
     @Override
     public void readItemStackNBT(NBTTagCompound tagCompound) {
         super.readItemStackNBT(tagCompound);
-        this.owner = UUID.fromString(tagCompound.getString("Owner"));
+        if (tagCompound.hasKey("Owner_MCT"))
+            this.owner = UUID.fromString(tagCompound.getString("Owner_MCT"));
     }
 
     @Override
@@ -128,22 +153,31 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
     @Override
     public void onBlockPlacedBy(final EntityLivingBase entityLiving, ItemStack stack) {
         super.onBlockPlacedBy(entityLiving, stack);
-        ElecCore.tickHandler.registerCall(new IRunOnce() {
-            @Override
-            public void run() {
-                if (!ServerHelper.isServer(worldObj))
-                    return;
-                if (entityLiving instanceof EntityPlayer && !ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).hasHandler()) {
-                    if (MainChunkLoaderTile.this.owner == null)
-                        MainChunkLoaderTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
-                    PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + myLocation().toString());
-                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).setMainChunkLoader(MainChunkLoaderTile.this);
-                    MainChunkLoaderTile.this.getLocations().add(myLocation());
-                    MainChunkLoaderTile.this.loadedChunks = MainChunkLoaderTile.this.getLocations().size();
-                    MainChunkLoaderTile.this.changed = true;
-                }
-            }
-        });
+       // ElecCore.tickHandler.registerCall(
+        //    new Runnable() {
+        //        @Override
+        //        public void run() {
+                    if (!ServerHelper.isServer(worldObj))
+                        return;
+                    if (entityLiving instanceof EntityPlayer) {
+                        UUID uuid = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
+                        if (!ChunkLoaderPlayerProperties.get(uuid).hasHandler()) {
+                            if (MainChunkLoaderTile.this.owner == null)
+                                MainChunkLoaderTile.this.owner = uuid;
+                            PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + myLocation().toString());                            ChunkLoaderPlayerProperties.get(MainChunkLoaderTile.this.owner).setMainChunkLoader(MainChunkLoaderTile.this);
+                            MainChunkLoaderTile.this.getLocations().add(myLocation());
+                            MainChunkLoaderTile.this.loadedChunks = MainChunkLoaderTile.this.getLocations().size();
+                            MainChunkLoaderTile.this.changed = true;
+                            markDirty();
+                        }
+                    }
+            //    }
+           // }, worldObj);
+    }
+
+    @Override
+    public boolean canUpdate() {
+        return !worldObj.isRemote;
     }
 
     public boolean isOwner(EntityPlayer player){
@@ -168,7 +202,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         return isOwner(player) && super.onBlockActivated(player, side, hitX, hitY, hitZ);
     }
 
@@ -202,7 +236,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return true;
     }
 
@@ -215,6 +249,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile {
     public String[] getProvidedData() {
         return new String[]{
                 "Stored power: "+energyContainer.getStoredPower(),
+                "Max stored power: "+energyContainer.getMaxStoredEnergy(),
                 "In working order: "+!isBroken(),
                 "Loaded chunks: "+loadedChunks
         };

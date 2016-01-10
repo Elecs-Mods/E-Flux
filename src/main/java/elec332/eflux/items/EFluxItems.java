@@ -1,13 +1,11 @@
 package elec332.eflux.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import elec332.eflux.EFlux;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class EFluxItems extends Item {
         this.setHasSubtypes(true);
     }
 
-    private IIcon[] textures;
+    //private IIcon[] textures;
     private String[] components = {
             "coalDust", "carbonPlate", "blueprint", "unrefinedCircuitBoard", "emptyCircuitBoard", "groundMesh"
     };
@@ -35,13 +33,13 @@ public class EFluxItems extends Item {
         return "item."+EFlux.ModID+"."+getName()+"."+components[stack.getItemDamage()];
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister){
-        textures = new IIcon[components.length];
-        for(int i = 0; i < components.length; i++){
-            textures[i] = iconRegister.registerIcon(EFlux.ModID+":"+getName()+"."+components[i]);
-        }
-    }
+   // @SideOnly(Side.CLIENT)
+   // public void registerIcons(IIconRegister iconRegister){
+   //     textures = new IIcon[components.length];
+   //     for(int i = 0; i < components.length; i++){
+   //         textures[i] = iconRegister.registerIcon(EFlux.ModID+":"+getName()+"."+components[i]);
+   //     }
+   // }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -52,9 +50,9 @@ public class EFluxItems extends Item {
         }
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int meta) {
-        return textures[meta];
-    }
+   // @Override
+   // @SideOnly(Side.CLIENT)
+   // public IIcon getIconFromDamage(int meta) {
+   //     return textures[meta];
+   // }
 }

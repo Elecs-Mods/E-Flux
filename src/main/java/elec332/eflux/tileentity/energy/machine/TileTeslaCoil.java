@@ -6,7 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
@@ -64,8 +64,8 @@ public class TileTeslaCoil extends BreakableMachineTile {
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return direction == ForgeDirection.DOWN || direction == ForgeDirection.UP;
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
+        return direction == EnumFacing.DOWN || direction == EnumFacing.UP;
     }
 
     @Override
@@ -73,8 +73,4 @@ public class TileTeslaCoil extends BreakableMachineTile {
         return 40;
     }
 
-    @Override
-    public String[] getProvidedData() {
-        return new String[0];
-    }
 }

@@ -4,5 +4,5 @@
 @API(owner = EFluxAPIProps.owner, provides = EFluxAPIProps.provides, apiVersion = EFluxAPIProps.apiVersion)
 package elec332.eflux.api.event;
 
-import cpw.mods.fml.common.API;
+import net.minecraftforge.fml.common.API;
 import elec332.eflux.api.EFluxAPIProps;

@@ -1,16 +1,17 @@
 package elec332.eflux;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.core.config.ConfigWrapper;
-import elec332.core.helper.MCModInfo;
+import elec332.core.util.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
@@ -40,7 +41,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -100,8 +101,8 @@ public class EFlux {
 
         GameRegistry.registerItem(new Item(){
             @Override
-            public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-                return multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, x, y, z, ForgeDirection.getOrientation(side));
+            public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+                return multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, side);
             }
         }.setCreativeTab(creativeTab), "itemTestMB");
 
@@ -116,7 +117,7 @@ public class EFlux {
         logger.info("RFTools: "+Compat.RFTools);
 
 
-        MCModInfo.CreateMCModInfo(event, "Created by Elec332",
+        MCModInfo.createMCModInfo(event, "Created by Elec332",
                 "E-Flux",
                 "website link", "logo",
                 new String[]{"Elec332"});

@@ -1,8 +1,11 @@
 package elec332.eflux.init;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import elec332.core.world.location.BlockStateWrapper;
+import elec332.eflux.items.ChunkLoaderItemBlock;
+import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import elec332.core.main.ElecCore;
-import elec332.core.world.location.BlockData;
+import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
 import elec332.eflux.util.EnumMachines;
@@ -17,14 +20,22 @@ public class BlockRegister {
     }
 
     public static Block ores, machinePart, machineGlass, renderBlock, cable;
-    public static BlockData frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage;
+    public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage;
 
     public void init(FMLInitializationEvent event){
         if (ElecCore.developmentEnvironment){
-            new DirectionBlock().setCreativeTab(EFlux.creativeTab);
+            new DirectionBlock(Material.rock).setCreativeTab(EFlux.creativeTab);
         }
 
         for (EnumMachines machine : EnumMachines.values()){
+            switch (machine){
+                case CHUNKMAIN:
+                    machine.itemBlockClass = ChunkLoaderItemBlock.class;
+                    break;
+                case CHUNKSUB:
+                    machine.itemBlockClass = ChunkLoaderItemBlock.class;
+                    break;
+            }
             machine.init();
         }
 
@@ -50,11 +61,11 @@ public class BlockRegister {
         cable = new BlockCable("efluxCable").register();
     }
 
-    private static BlockData newMachineBlock(int i){
-        return new BlockData(machinePart, i);
+    private static BlockStateWrapper newMachineBlock(int i){
+        return new BlockStateWrapper(machinePart, i);
     }
 
-    private static BlockData newGlassBlock(int i){
-        return new BlockData(machineGlass, i);
+    private static BlockStateWrapper newGlassBlock(int i){
+        return new BlockStateWrapper(machineGlass, i);
     }
 }

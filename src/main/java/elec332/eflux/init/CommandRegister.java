@@ -1,6 +1,6 @@
 package elec332.eflux.init;
 
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 /**
  * Created by Elec332 on 24-2-2015.

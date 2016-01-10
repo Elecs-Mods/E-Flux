@@ -1,17 +1,27 @@
 package elec332.eflux.blocks;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import elec332.core.client.IIconRegistrar;
+import elec332.core.client.model.*;
+import elec332.core.client.model.map.BakedModelMetaRotationMap;
+import elec332.core.client.model.map.IBakedModelMetaRotationMap;
+import elec332.core.client.model.model.IBlockModel;
+import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.tile.TileBase;
+import elec332.core.world.location.BlockStateWrapper;
+import elec332.eflux.client.EFluxResourceLocation;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.Explosion;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import elec332.core.api.wrench.IWrenchable;
-import elec332.core.baseclasses.tileentity.TileBase;
-import elec332.core.client.render.SidedBlockRenderingCache;
-import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
-import elec332.core.world.location.BlockData;
 import elec332.eflux.EFlux;
-import elec332.eflux.client.blocktextures.MachinePartTextureHandler;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
@@ -19,42 +29,42 @@ import elec332.eflux.tileentity.multiblock.TileMultiBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
 /**
  * Created by Elec332 on 28-8-2015.
  */
-public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvider, IWrenchable{
+public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvider, IWrenchable, INoJsonBlock {
 
     public BlockMachinePart(int types){
-        this(types, "BlockMachinePart", new SidedBlockRenderingCache(new MachinePartTextureHandler(), types, 2));
+        this(types, "BlockMachinePart");
     }
 
-    public BlockMachinePart(int types, String name, SidedBlockRenderingCache renderingCache) {
+    public BlockMachinePart(int types, String name) {
         super(Material.rock, name, EFlux.ModID);
         this.types = types;
-        this.textureHandler = renderingCache;
         setResistance(5.0f);
         setHardness(2.5f);
     }
 
     private final int types;
-    private final SidedBlockRenderingCache textureHandler;
+    @SideOnly(Side.CLIENT)
+    private IBakedModelMetaRotationMap<IBlockModel> rotationMap;
+    @SideOnly(Side.CLIENT)
+    private TextureAtlasSprite normal, itemOutlet, laserCore, heater, monitorF, monitorR, monitorL, radiator;
     private boolean register;
 
     @Override
@@ -73,24 +83,9 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         GameRegistry.registerTileEntity(TileEntityDustStorage.class, "dustStorage");
     }
 
+    @Override
     public int getTypes(){
-        return this.types;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister register) {
-        textureHandler.registerTextures(register);
-    }
-
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        return textureHandler.getIconForInventoryRendering(meta, side);
-    }
-
-    @Override
-    public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int side) {
-        return textureHandler.getIconForWorldRendering(iba, x, y, z, side);
+        return 11;
     }
 
     @Override
@@ -107,60 +102,62 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(x, y, z);
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileBase)
             return ((TileBase) tile).onBlockActivated(player, side, hitX, hitY, hitZ);
-        return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack stack) {
-        TileEntity tile = world.getTileEntity(x, y, z);
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entityLiving, ItemStack stack) {
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityBlockMachine) {
             ((TileEntityBlockMachine) tile).onBlockPlacedBy(entityLiving, stack);
         } else {
-            super.onBlockPlacedBy(world, x, y, z, entityLiving, stack);
+            super.onBlockPlacedBy(world, pos, state, entityLiving, stack);
         }
     }
 
     @Override
-    public ItemStack ItemDropped(World world, int x, int y, int z) {
-        return new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
+    public ItemStack ItemDropped(World world, BlockPos pos) {
+        return new ItemStack(this, 1, WorldHelper.getBlockMeta(world, pos));
     }
 
     @Override
-    public void onWrenched(World world, int i, int i1, int i2, ForgeDirection forgeDirection) {
-        TileEntity tile = world.getTileEntity(i, i1, i2);
+    public void onWrenched(World world, BlockPos pos, EnumFacing forgeDirection) {
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileBase)
             ((TileBase) tile).onWrenched(forgeDirection);
     }
 
     @Override
-    public void onPostBlockPlaced(World world, int x, int y, int z, int side) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileEntityBlockMachine)
-            ((TileEntityBlockMachine) tile).pokeCheckStuff();
-        super.onPostBlockPlaced(world, x, y, z, side);
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        pokeCheck(worldIn, pos);
+        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
     }
 
     @Override
-    public void onBlockPreDestroy(World world, int x, int y, int z, int side) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileEntityBlockMachine)
-            ((TileEntityBlockMachine) tile).pokeCheckStuff();
-        super.onBlockPreDestroy(world, x, y, z, side);
+    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
+        pokeCheck(worldIn, pos);
+        super.onBlockDestroyedByPlayer(worldIn, pos, state);
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        TileEntity tile = world.getTileEntity(x, y, z);
+    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+        pokeCheck(worldIn, pos);
+        super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityBlockMachine) {
             ((TileEntityBlockMachine) tile).pokeCheckStuff();
         } else if (tile instanceof TileBase) {
             ((TileBase) tile).onNeighborBlockChange(block);
         } else {
-            super.onNeighborBlockChange(world, x, y, z, block);
+            super.onNeighborBlockChange(world, pos, state, block);
         }
     }
 
@@ -174,14 +171,96 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         return new TileEntityBlockMachine();
     }
 
+    /**
+     * This method is used when a model is requested to render the block in a world.
+     *
+     * @param state The current BlockState.
+     * @param iba   The IBlockAccess the block is in.
+     * @param pos   The position of the block.
+     * @return The model to render for this block for the given arguments.
+     */
+    @Override
+    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+        TileEntityBlockMachine tile = (TileEntityBlockMachine)WorldHelper.getTileAt(iba, pos);
+        int meta = (int) Math.pow(WorldHelper.getBlockMeta(state), tile.monitorSide + 1);
+        if (meta > 10)
+            meta = 0;
+        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(tile.getTileFacing()));
+    }
+
+    /**
+     * This method is used when a model is requested when its not placed, so for an item.
+     *
+     * @return The model to render when the block is not placed.
+     */
+    @Override
+    public IBakedModel getBlockModel(Item item, int meta) {
+        return rotationMap.forMeta(meta);
+    }
+
+
+    /**
+     * A helper method to prevent you from having to hook into the event,
+     * use this to make your quads. (This always comes AFTER the textures are loaded)
+     *
+     * @param quadBakery     The QuadBakery.
+     * @param modelBakery
+     * @param templateBakery
+     */
+    @Override
+    public void registerModels(final ElecQuadBakery quadBakery, ElecModelBakery modelBakery, final ElecTemplateBakery templateBakery) {
+        rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
+        rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(2, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(3, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(itemOutlet))));
+        rotationMap.setModelsForRotation(4, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(laserCore))));
+        rotationMap.setModelsForRotation(5, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(heater))));
+        rotationMap.setModelsForRotation(6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorF))));
+        rotationMap.setModelsForRotation(7, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(radiator))));
+        rotationMap.setModelsForRotation(8, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(9, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(10, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(6*6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorR))));
+        rotationMap.setModelsForRotation(6*6*6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorL))));
+    }
+
+    /**
+     * Use this to register your textures.
+     *
+     * @param iconRegistrar The IIconRegistrar.
+     */
+    @Override
+    public void registerTextures(IIconRegistrar iconRegistrar) {
+        normal = iconRegistrar.registerSprite(getTextureLocation("normal"));
+        itemOutlet = iconRegistrar.registerSprite(getTextureLocation("itemOutletFront"));
+        laserCore = iconRegistrar.registerSprite(getTextureLocation("laserCoreFront"));
+        heater = iconRegistrar.registerSprite(getTextureLocation("heaterFront"));
+        monitorF = iconRegistrar.registerSprite(getTextureLocation("monitorFull"));
+        monitorR = iconRegistrar.registerSprite(getTextureLocation("monitorRightSide"));
+        monitorL = iconRegistrar.registerSprite(getTextureLocation("monitorLeftSide"));
+        radiator = iconRegistrar.registerSprite(getTextureLocation("radiator"));
+    }
+
+    protected ResourceLocation getTextureLocation(String s){
+        return new EFluxResourceLocation("blocks/machinepart/"+s);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected TextureAtlasSprite[] forSpecialFront(TextureAtlasSprite front){
+        return new TextureAtlasSprite[]{
+                normal, normal, front, normal, normal, normal
+        };
+    }
+
     public static class TileEntityBlockMachine extends TileMultiBlockTile {
 
         public TileEntityBlockMachine(){
             super();
         }
 
-        private ForgeDirection facing;
-        public int monitorSide;
+        private EnumFacing facing;
+        private int monitorSide;
 
         @Override
         public void onBlockPlacedBy(EntityLivingBase entityLiving, ItemStack stack) {
@@ -190,9 +269,9 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         }
 
         @Override
-        public void onWrenched(ForgeDirection forgeDirection) {
+        public void onWrenched(EnumFacing forgeDirection) {
             if (getMultiBlock() == null) {
-                if (forgeDirection != ForgeDirection.UP || forgeDirection != ForgeDirection.DOWN || (getBlockType() == BlockRegister.itemGate.block && getBlockMetadata() == BlockRegister.itemGate.meta))
+                if ((forgeDirection != EnumFacing.UP && forgeDirection != EnumFacing.DOWN) || (getBlockType() == BlockRegister.itemGate.block && getBlockMetadata() == BlockRegister.itemGate.meta))
                 this.facing = forgeDirection;
                 markDirty();
                 syncData();
@@ -204,13 +283,13 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
             if (getBlockType() != BlockRegister.monitor.block || getBlockMetadata() != BlockRegister.monitor.meta)
                 return;
             boolean neighbour = false;
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-                if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+            for (EnumFacing direction : EnumFacing.VALUES) {
+                if (direction == EnumFacing.UP || direction == EnumFacing.DOWN)
                     continue;
-                BlockLoc toCheck = myLocation().atSide(direction);
+                BlockPos toCheck = pos.offset(direction);
                 Block block = WorldHelper.getBlockAt(worldObj, toCheck);
                 int meta = WorldHelper.getBlockMeta(worldObj, toCheck);
-                if (new BlockData(block, meta).equals(BlockRegister.monitor)) {
+                if (new BlockStateWrapper(block, meta).equals(BlockRegister.monitor)) {
                     neighbour = true;
                     TileEntityBlockMachine tile = (TileEntityBlockMachine) WorldHelper.getTileAt(worldObj, toCheck);
                     if (monitorSide == 0 && tile.getTileFacing() == facing){
@@ -237,7 +316,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         }
 
         @Override
-        public ForgeDirection getTileFacing() {
+        public EnumFacing getTileFacing() {
             return facing;
         }
 
@@ -251,10 +330,16 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         @Override
         public void readFromNBT(NBTTagCompound tagCompound) {
             super.readFromNBT(tagCompound);
-            this.facing = ForgeDirection.valueOf(tagCompound.getString("facing"));
+            this.facing = EnumFacing.valueOf(tagCompound.getString("facing").toUpperCase());
             this.monitorSide = tagCompound.getInteger("monS");
         }
 
+    }
+
+    private void pokeCheck(World world, BlockPos pos){
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
+        if (tile instanceof TileEntityBlockMachine)
+            ((TileEntityBlockMachine) tile).pokeCheckStuff();
     }
 
 }

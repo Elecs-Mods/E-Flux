@@ -1,6 +1,6 @@
 package elec332.eflux.items;
 
-import elec332.core.helper.RegisterHelper;
+import elec332.core.util.RegisterHelper;
 import net.minecraft.item.Item;
 
 /**

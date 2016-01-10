@@ -1,6 +1,6 @@
 package elec332.eflux.api.energy;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 16-4-2015.
@@ -13,7 +13,7 @@ public interface IEnergySource extends IEnergyTile{
      *
      * @return weather the tile can connect and provide power to the given side
      */
-    public boolean canProvidePowerTo(ForgeDirection direction);
+    public boolean canProvidePowerTo(EnumFacing direction);
 
     /**
      * @param rp
@@ -26,6 +26,6 @@ public interface IEnergySource extends IEnergyTile{
      *
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
-    public int provideEnergy(int rp, ForgeDirection direction, boolean execute);
+    public int provideEnergy(int rp, EnumFacing direction, boolean execute);
 
 }

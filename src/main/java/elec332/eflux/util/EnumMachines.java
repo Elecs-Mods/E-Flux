@@ -1,7 +1,7 @@
 package elec332.eflux.util;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import elec332.core.util.BlockSide;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
@@ -39,6 +39,7 @@ public enum EnumMachines {
     //___Data__//////////////////////////////////////////////////////////
 
     private Class<? extends TileEntity> tileClass;
+    public Class<? extends ItemBlock> itemBlockClass;
     private BlockMachine blockMachine;
     private int renderID = 0;
     private Material material = Material.rock;
@@ -62,6 +63,7 @@ public enum EnumMachines {
     private EnumMachines(Class<? extends TileEntity> tileClass){
         this.tileClass = tileClass;
         this.textureProvider = BlockTextures.getDefaultProvider();
+        this.itemBlockClass = ItemBlock.class;
     }
 
     private EnumMachines (Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
@@ -72,7 +74,7 @@ public enum EnumMachines {
     public void init(){
         GameRegistry.registerTileEntity(this.tileClass, this.toString());
         this.blockMachine = new BlockMachine(this);
-        blockMachine.register();
+        GameRegistry.registerBlock(blockMachine, itemBlockClass, blockMachine.blockName);
     }
 
     public Class<? extends TileEntity> getTileClass(){

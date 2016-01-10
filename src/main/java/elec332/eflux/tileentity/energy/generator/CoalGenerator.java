@@ -1,23 +1,24 @@
 package elec332.eflux.tileentity.energy.generator;
 
-import elec332.core.baseclasses.tileentity.TileBase;
+import elec332.core.tile.BaseTileWithInventory;
+import elec332.core.tile.TileBase;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 29-4-2015.
  */
-public class CoalGenerator extends TileBase implements IEnergySource{
+public class CoalGenerator extends TileBase implements IEnergySource {
 
     /**
      * @param direction the direction from which a connection is requested
      * @return weather the tile can connect and provide power to the given side
      */
     @Override
-    public boolean canProvidePowerTo(ForgeDirection direction) {
+    public boolean canProvidePowerTo(EnumFacing direction) {
         return direction != getTileFacing();
     }
 
@@ -29,7 +30,7 @@ public class CoalGenerator extends TileBase implements IEnergySource{
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergy(int rp, ForgeDirection direction, boolean execute) {
+    public int provideEnergy(int rp, EnumFacing direction, boolean execute) {
         return 200; //getStackInSlot(0) != null?20:0;
     }
 

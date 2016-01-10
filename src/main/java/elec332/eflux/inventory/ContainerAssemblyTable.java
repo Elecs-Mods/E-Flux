@@ -1,7 +1,7 @@
 package elec332.eflux.inventory;
 
 import com.google.common.collect.Lists;
-import elec332.core.helper.ItemHelper;
+import elec332.core.util.ItemHelper;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.api.circuit.ICircuit;
@@ -23,14 +23,14 @@ public class ContainerAssemblyTable extends ContainerMachine {
     public ContainerAssemblyTable(EntityPlayer player, IInventory inv) {
         super(null, player, 0);
         this.addSlotToContainer(new Slot(inv, 0, 124, 35));
-        inv.openInventory();
+        inv.openInventory(player);
         this.circuit = new InventoryCircuit();
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 assemblies.add((SlotAssembly) this.addSlotToContainer(new SlotAssembly(circuit, j + i * 3, 30 + j * 18, 17 + i * 18)));
             }
         }
-        circuit.openInventory();
+        circuit.openInventory(player);
         if (inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ICircuit && ((ICircuit)inv.getStackInSlot(0).getItem()).isCircuit(inv.getStackInSlot(0)))
             circuit.setStack(inv.getStackInSlot(0));
         addPlayerInventoryToContainer();
@@ -77,8 +77,8 @@ public class ContainerAssemblyTable extends ContainerMachine {
     @Override
     public void onContainerClosed(EntityPlayer p_75134_1_) {
         super.onContainerClosed(p_75134_1_);
-        getSlot(1).inventory.closeInventory();
-        getSlot(0).inventory.closeInventory();
+        getSlot(1).inventory.closeInventory(p_75134_1_);
+        getSlot(0).inventory.closeInventory(p_75134_1_);
     }
 
     private class InventoryCircuit extends BasicInventory implements IInventory{
@@ -92,11 +92,11 @@ public class ContainerAssemblyTable extends ContainerMachine {
             if (!stack.hasTagCompound())
                 stack.setTagCompound(new NBTTagCompound());
             this.stack = stack;
-            openInventory();
+            checkOpen();
         }
 
         public void removeStack(){
-            closeInventory();
+            checkClose();
             this.stack = null;
         }
 
@@ -104,13 +104,21 @@ public class ContainerAssemblyTable extends ContainerMachine {
         private boolean formed = false;
 
         @Override
-        public void openInventory() {
+        public void openInventory(EntityPlayer player) {
+            checkOpen();
+        }
+
+        protected void checkOpen(){
             if (stack != null)
                 readFromNBT(stack.getTagCompound());
         }
 
         @Override
-        public void closeInventory() {
+        public void closeInventory(EntityPlayer player) {
+            checkClose();
+        }
+
+        protected void checkClose(){
             if (stack != null) {
                 NBTTagCompound tag = new NBTTagCompound();
                 writeToNBT(tag);

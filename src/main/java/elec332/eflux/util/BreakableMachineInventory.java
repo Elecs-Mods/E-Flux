@@ -1,7 +1,8 @@
 package elec332.eflux.util;
 
-import cpw.mods.fml.relauncher.Side;
-import elec332.core.helper.ItemHelper;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.relauncher.Side;
+import elec332.core.util.ItemHelper;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
 import elec332.core.util.IRunOnce;
@@ -41,7 +42,7 @@ public class BreakableMachineInventory implements IInventory{
                         if (canFix())
                             p_75144_4_.closeScreen();
                     }
-                });
+                }, p_75144_4_.worldObj);
                 return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
             }
 
@@ -85,7 +86,7 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+    public ItemStack removeStackFromSlot(int p_70304_1_) {
         if(this.inventoryContent[p_70304_1_] != null) {
             ItemStack itemstack = this.inventoryContent[p_70304_1_];
             this.inventoryContent[p_70304_1_] = null;
@@ -105,13 +106,21 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return "BrokenMachine";
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
+    public boolean hasCustomName() {
         return true;
+    }
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
     }
 
     @Override
@@ -130,12 +139,12 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     @Override
-    public void openInventory() {
+    public void openInventory(EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory() {
+    public void closeInventory(EntityPlayer player) {
         canFix();
     }
 
@@ -151,5 +160,25 @@ public class BreakableMachineInventory implements IInventory{
     @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
         return ItemHelper.areItemsEqual(p_94041_2_, repairItem);
+    }
+
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
     }
 }

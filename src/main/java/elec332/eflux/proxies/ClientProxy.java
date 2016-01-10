@@ -1,20 +1,19 @@
 package elec332.eflux.proxies;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import elec332.core.baseclasses.tileentity.IInventoryTile;
-import elec332.core.client.render.RenderHelper;
+import elec332.core.world.WorldHelper;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import elec332.core.tile.IInventoryTile;
 import elec332.core.util.EventHelper;
 import elec332.eflux.client.render.InsideItemRenderer;
 import elec332.eflux.client.render.RenderHandler;
-import elec332.eflux.init.FluidRegister;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
+//import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -27,13 +26,14 @@ public class ClientProxy extends CommonProxy{
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = WorldHelper.getTileAt(world, new BlockPos(x, y, z));
         switch (ID){
             case 1:
-                if (world.getTileEntity(x, y, z) instanceof BreakableMachineTile)
-                    return ((BreakableMachineTile) world.getTileEntity(x, y, z)).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
+                if (tile instanceof BreakableMachineTile)
+                    return ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
             default:
-                if (world.getTileEntity(x, y, z) instanceof IInventoryTile)
-                    return ((IInventoryTile) world.getTileEntity(x, y, z)).getGuiClient(player);
+                if (tile instanceof IInventoryTile)
+                    return ((IInventoryTile) tile).getGuiClient(player);
                 else return null;
         }
     }
@@ -44,13 +44,4 @@ public class ClientProxy extends CommonProxy{
         RenderHandler.dummy();
     }
 
-    @SubscribeEvent
-    public void registerBlockTextures(TextureStitchEvent.Post event){
-        if (event.map.getTextureType() == 1){
-            FluidRegister.instance.registerTextures(event.map);
-            render = event.map.registerIcon("yewers");
-        }
-    }
-
-    public static IIcon render;
 }

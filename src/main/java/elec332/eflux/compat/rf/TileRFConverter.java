@@ -1,12 +1,12 @@
 package elec332.eflux.compat.rf;
 
-import cofh.api.energy.IEnergyProvider;
+import cofh.nonexistant.api.energy.IEnergyProvider;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.tileentity.EnergyTileBase;
 import elec332.eflux.util.Config;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 20-7-2015.
@@ -32,7 +32,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * @return weather the tile can connect and accept power from the given side
      */
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return direction == DirectionHelper.getDirectionFromNumber(getBlockMetadata());
     }
 
@@ -41,7 +41,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * @return The Redstone Potential at which the machine wishes to operate
      */
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int requestedRP(EnumFacing direction) {
         return 0; //This is the only machine that doesn't care about the RP of the network
     }
 
@@ -51,7 +51,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
      */
     @Override
-    public int getRequestedEF(int rp, ForgeDirection direction) {
+    public int getRequestedEF(int rp, EnumFacing direction) {
         return Math.min(400/rp, (6000-storedPower)/rp);
     }
 
@@ -62,7 +62,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      //* @return The amount of EnergeticFlux that wasn't used
      */
     @Override
-    public int receivePower(ForgeDirection direction, int rp, int ef) {
+    public int receivePower(EnumFacing direction, int rp, int ef) {
         storedPower += rp*ef;
         if (storedPower > 6000)
             storedPower = 6000;
@@ -82,7 +82,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * @return Amount of energy that was (or would have been, if simulated) extracted.
      */
     @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+    public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
         int i = getEnergyStored(from);
         int ret = Math.min(i, maxExtract);
         if (!simulate)
@@ -94,7 +94,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * Returns the amount of energy currently stored.
      */
     @Override
-    public int getEnergyStored(ForgeDirection from) {
+    public int getEnergyStored(EnumFacing from) {
         return storedPower/Config.RFConversionNumber;
     }
 
@@ -102,7 +102,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * Returns the maximum amount of energy that can be stored.
      */
     @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
+    public int getMaxEnergyStored(EnumFacing from) {
         return 6000/Config.RFConversionNumber;
     }
 
@@ -110,7 +110,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      * Returns TRUE if the TileEntity can connect on a given side.
      */
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
+    public boolean canConnectEnergy(EnumFacing from) {
         return from == DirectionHelper.getDirectionFromNumber(getBlockMetadata()).getOpposite();
     }
 }

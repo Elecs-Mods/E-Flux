@@ -2,13 +2,15 @@ package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.util.BasicInventory;
 import elec332.eflux.blocks.BlockMachinePart;
+import mcp.mobius.waila.api.ITaggedList;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public void onWrenched(ForgeDirection forgeDirection) {
+    public void onWrenched(EnumFacing forgeDirection) {
         if (getMultiBlock() == null) {
             if (forgeDirection == getTileFacing() && mode == 0) {
                 mode = 1;
@@ -76,18 +78,18 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side) {
-        return ForgeDirection.getOrientation(side) == getTileFacing() ? allSlots(inventory.getSizeInventory()) : new int[0];
+    public int[] getSlotsForFace(EnumFacing side) {
+        return side == getTileFacing() ? allSlots(inventory.getSizeInventory()) : new int[0];
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, int side) {
-        return ForgeDirection.getOrientation(side) == getTileFacing() && isInputMode() && isItemValidForSlot(slot, stack);
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
+        return side == getTileFacing() && isInputMode() && isItemValidForSlot(slot, stack);
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack stack, int side) {
-        return ForgeDirection.getOrientation(side) == getTileFacing() && isOutputMode();
+    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
+        return side == getTileFacing() && isOutputMode();
     }
 
     private int[] allSlots(int i){
@@ -122,7 +124,7 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
+    public ItemStack removeStackFromSlot(int slot) {
         return inventory.getStackInSlot(slot);
     }
 
@@ -132,13 +134,21 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public String getInventoryName() {
-        return inventory.getInventoryName();
+    public String getName() {
+        return inventory.getName();
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
-        return inventory.hasCustomInventoryName();
+    public boolean hasCustomName() {
+        return inventory.hasCustomName();
+    }
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
     }
 
     @Override
@@ -152,18 +162,38 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public void openInventory() {
-        inventory.openInventory();
+    public void openInventory(EntityPlayer player) {
+        inventory.openInventory(player);
     }
 
     @Override
-    public void closeInventory() {
-        inventory.closeInventory();
+    public void closeInventory(EntityPlayer player) {
+        inventory.closeInventory(player);
     }
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return inventory.isItemValidForSlot(slot, stack);
+    }
+
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+
     }
 
 }

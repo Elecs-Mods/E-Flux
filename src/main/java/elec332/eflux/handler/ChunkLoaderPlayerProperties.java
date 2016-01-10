@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         this.blockLocations = Lists.newArrayList();
     }
 
-    public static ChunkLoaderPlayerProperties get(UUID uuid){
+    public static ChunkLoaderPlayerProperties get(@Nonnull UUID uuid){
         return (ChunkLoaderPlayerProperties) ServerHelper.instance.getPlayer(uuid).getExtendedProperty("EFluxChunks");//(ChunkLoaderPlayerProperties) player.getExtendedProperties();
     }
 
@@ -35,7 +36,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
 
     public void setMainChunkLoader(MainChunkLoaderTile tile){
         main = tile;
-        world = tile == null ? null : tile.getWorldObj();
+        world = tile == null ? null : tile.getWorld();
         hasHandler = (tile != null);
     }
 

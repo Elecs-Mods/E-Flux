@@ -1,122 +1,98 @@
 package elec332.eflux.client.render;
 
 import com.google.common.collect.Lists;
+import elec332.core.client.ITessellator;
+import elec332.core.client.RenderBlocks;
 import elec332.core.client.render.AbstractBlockRenderer;
-import elec332.core.client.render.RenderHelper;
-import elec332.core.util.BlockLoc;
+import elec332.core.client.RenderHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.init.BlockRegister;
+import elec332.eflux.blocks.BlockCable;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
 /**
- * Created by Elec332 on 20-9-2015.
+ * Created by Elec332 on 10-12-2015.
  */
 public class CableRenderer extends AbstractBlockRenderer {
 
-    public CableRenderer() {
-        super(BlockRegister.cable);
-    }
-
     @Override
-    public boolean renderBlockAt(IBlockAccess world, double x, double y, double z, TileEntity tile, RenderBlocks renderer, float partialTicks, boolean tesr) {
-        tile = world.getTileEntity((int) x, (int) y, (int) z);
-        if (tile instanceof AbstractCable) {
-            BlockLoc tileLoc = new BlockLoc(tile);
-            List<ForgeDirection> connections = Lists.newArrayList();
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-                TileEntity tile2 = WorldHelper.getTileAt(world, tileLoc.atSide(direction));
-                if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || tile2 instanceof IEnergySource || tile2 instanceof IEnergyReceiver) {
-                    connections.add(direction);
-                }
+    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderer, ITessellator tessellator, WorldRenderer worldRenderer) {
+
+        TileEntity tile = WorldHelper.getTileAt(iba, pos);
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        List<EnumFacing> connections = Lists.newArrayList();
+
+        for (EnumFacing direction : EnumFacing.VALUES) {
+            TileEntity tile2 = WorldHelper.getTileAt(iba, pos.offset(direction));
+            if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || tile2 instanceof IEnergySource && ((IEnergySource) tile2).canProvidePowerTo(direction.getOpposite()) || tile2 instanceof IEnergyReceiver && ((IEnergyReceiver) tile2).canAcceptEnergyFrom(direction.getOpposite())) {
+                connections.add(direction);
             }
-
-            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-            Tessellator.instance.setColorRGBA_F(1, 1, 1, 1);
-
-            RenderHelper.bindBlockTextures();
-            float thickness = 6 * RenderHelper.renderUnit;
-            float heightStuff = (1 - thickness) / 2;
-            float f1 = thickness + heightStuff;
-
-            IIcon icon = block.getIcon(0, 0);
-            if (!connections.isEmpty()) {
-                boolean flip = renderer.flipTexture;
-                for (ForgeDirection direction : connections) {
-                    switch (direction) {
-                        case UP:
-                            renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, 1, f1);
-                            break;
-                        case DOWN:
-                            renderer.setRenderBounds(heightStuff, 0, heightStuff, f1, f1, f1);
-                            break;
-                        case NORTH:
-                            renderer.setRenderBounds(heightStuff, heightStuff, 0, f1, f1, f1);
-                            break;
-                        case EAST:
-                            renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, 1, f1, f1);
-                            break;
-                        case SOUTH:
-                            renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, f1, 1);
-                            break;
-                        case WEST:
-                            renderer.setRenderBounds(0, heightStuff, heightStuff, f1, f1, f1);
-                            break;
-                        default:
-                            break;
-                    }
-                    renderer.renderFaceYNeg(block, x, y, z, icon);
-                    renderer.renderFaceYPos(block, x, y, z, icon);
-                    renderer.renderFaceZPos(block, x, y, z, icon);
-                    renderer.renderFaceXNeg(block, x, y, z, icon);
-                    renderer.flipTexture = true;
-                    renderer.renderFaceZNeg(block, x, y, z, icon);
-                    renderer.renderFaceXPos(block, x, y, z, icon);
-                    renderer.flipTexture = false;
-                }
-                renderer.flipTexture = flip;
-            } else {
-                renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, f1, f1);
-                renderer.renderFaceYNeg(block, x, y, z, icon);
-                renderer.renderFaceYPos(block, x, y, z, icon);
-                renderer.renderFaceZNeg(block, x, y, z, icon);
-                renderer.renderFaceZPos(block, x, y, z, icon);
-                renderer.renderFaceXNeg(block, x, y, z, icon);
-                renderer.renderFaceXPos(block, x, y, z, icon);
-            }
-            return true;
         }
-        return false;
+
+        float thickness = 6 * RenderHelper.renderUnit;
+        float heightStuff = (1 - thickness) / 2;
+        float f1 = thickness + heightStuff;
+        TextureAtlasSprite icon = ((BlockCable) state.getBlock()).getTextureFor(state);
+
+        if (!connections.isEmpty()) {
+            for (EnumFacing direction : connections) {
+                switch (direction) {
+                    case UP:
+                        renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, 1, f1);
+                        break;
+                    case DOWN:
+                        renderer.setRenderBounds(heightStuff, 0, heightStuff, f1, f1, f1);
+                        break;
+                    case NORTH:
+                        renderer.setRenderBounds(heightStuff, heightStuff, 0, f1, f1, f1);
+                        break;
+                    case EAST:
+                        renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, 1, f1, f1);
+                        break;
+                    case SOUTH:
+                        renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, f1, 1);
+                        break;
+                    case WEST:
+                        renderer.setRenderBounds(0, heightStuff, heightStuff, f1, f1, f1);
+                        break;
+                    default:
+                        break;
+                }
+                renderer.renderFaceYNeg(x, y, z, icon);
+                renderer.renderFaceYPos(x, y, z, icon);
+                renderer.renderFaceZPos(x, y, z, icon);
+                renderer.renderFaceXNeg(x, y, z, icon);
+                renderer.flipTexture = true;
+                renderer.renderFaceZNeg(x, y, z, icon);
+                renderer.renderFaceXPos(x, y, z, icon);
+                renderer.flipTexture = false;
+            }
+        } else {
+            renderer.setRenderBounds(heightStuff, heightStuff, heightStuff, f1, f1, f1);
+            renderer.renderFaceYNeg(x, y, z, icon);
+            renderer.renderFaceYPos(x, y, z, icon);
+            renderer.renderFaceZNeg(x, y, z, icon);
+            renderer.renderFaceZPos(x, y, z, icon);
+            renderer.renderFaceXNeg(x, y, z, icon);
+            renderer.renderFaceXPos(x, y, z, icon);
+        }
     }
 
     @Override
-    protected void renderItem(ItemStack stack, ItemRenderType renderType, RenderBlocks renderer) {
-
-    }
-
-    @Override
-    protected boolean isISBRH() {
-        return true;
-    }
-
-    @Override
-    protected boolean isItemRenderer() {
-        return true;
-    }
-
-    @Override
-    protected boolean isTESR() {
-        return false;
+    public boolean shouldRenderBlock(IBlockAccess iba, IBlockState state, BlockPos pos) {
+        return WorldHelper.getTileAt(iba, pos) instanceof AbstractCable && state.getBlock() instanceof BlockCable;
     }
 
 }

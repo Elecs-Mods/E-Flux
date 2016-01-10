@@ -15,11 +15,11 @@ public class SlotFurnaceInput extends Slot{
     }
 
     public boolean isItemValid(ItemStack itemStack) {
-        return FurnaceRecipes.smelting().getSmeltingResult(itemStack) != null;
+        return FurnaceRecipes.instance().getSmeltingResult(itemStack) != null;
     }
 
     public ItemStack getOutput() {
-        return FurnaceRecipes.smelting().getSmeltingResult(getStack());
+        return FurnaceRecipes.instance().getSmeltingResult(getStack());
     }
 
     public void consumeOnProcess() {

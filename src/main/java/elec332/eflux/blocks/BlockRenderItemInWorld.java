@@ -1,6 +1,6 @@
 package elec332.eflux.blocks;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.eflux.EFlux;
 import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.block.Block;
@@ -16,7 +16,7 @@ public class BlockRenderItemInWorld extends Block implements ITileEntityProvider
 
     public BlockRenderItemInWorld(String blockName) {
         super(Material.wood);
-        this.setBlockName(EFlux.ModID + "." + blockName);
+        //this.setBlockName(EFlux.ModID + "." + blockName);
         this.blockName = blockName;
     }
 
@@ -39,12 +39,7 @@ public class BlockRenderItemInWorld extends Block implements ITileEntityProvider
     }
 
     @Override
-    public int getRenderBlockPass() {
-        return -1;
-    }
-
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+    public int getRenderType() {
+        return 3;
     }
 }

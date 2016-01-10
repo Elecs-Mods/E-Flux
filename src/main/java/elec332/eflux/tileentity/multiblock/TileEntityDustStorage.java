@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Created by Elec332 on 10-9-2015.
@@ -19,7 +21,7 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
     @Override
     public void onNeighborBlockChange(Block block) {
         if (!worldObj.isRemote) {
-            boolean b = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            boolean b = worldObj.isBlockIndirectlyGettingPowered(pos) != 0;
             if (redstone != b) {
                 if (b) {
                     pulse();
@@ -57,17 +59,17 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int s) {
+    public int[] getSlotsForFace(EnumFacing s) {
         return new int[]{0};
     }
 
     @Override
-    public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_) {
+    public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, EnumFacing p_102007_3_) {
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+    public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, EnumFacing p_102008_3_) {
         return true;//((MultiBlockGrinder)getMultiBlock()).extractItem(p_102008_2_);
     }
 
@@ -94,7 +96,7 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+    public ItemStack removeStackFromSlot(int p_70304_1_) {
         return null;
     }
 
@@ -108,16 +110,6 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
     }
 
     @Override
-    public String getInventoryName() {
-        return null;
-    }
-
-    @Override
-    public boolean hasCustomInventoryName() {
-        return false;
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return 1;
     }
@@ -128,11 +120,11 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
     }
 
     @Override
-    public void openInventory() {
+    public void openInventory(EntityPlayer player) {
     }
 
     @Override
-    public void closeInventory() {
+    public void closeInventory(EntityPlayer player) {
     }
 
     @Override
@@ -140,4 +132,47 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
         return false;
     }
 
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    /**
+     * Returns true if this thing is named
+     */
+    @Override
+    public boolean hasCustomName() {
+        return false;
+    }
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
+    }
 }

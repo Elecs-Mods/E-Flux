@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.baseclasses.tileentity.IInventoryTile;
+import elec332.core.tile.IInventoryTile;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
@@ -16,7 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 12-9-2015.
@@ -39,14 +39,14 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
             ItemStack stack = inventory.getStackInSlot(0).copy();
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
             dustPile.scan();
-            stack.stackTagCompound = dustPile.toNBT();
+            stack.setTagCompound(dustPile.toNBT());
             inventory.setInventorySlotContents(0, null);
             inventory.setInventorySlotContents(1, stack);
         }
     }
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player, EFlux.instance, 0);
     }
 
@@ -71,13 +71,8 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
     }
 
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return direction != getTileFacing();
-    }
-
-    @Override
-    public String[] getProvidedData() {
-        return new String[0];
     }
 
     @Override
@@ -103,17 +98,17 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side) {
+    public int[] getSlotsForFace(EnumFacing side) {
         return new int[]{0, 1};
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
         return slot == 0 && stack.getItem() == ItemRegister.groundMesh;
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
         return slot == 1;
     }
 

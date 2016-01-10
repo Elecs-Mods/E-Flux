@@ -1,8 +1,8 @@
 package elec332.eflux.items.circuits;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import elec332.core.helper.RegisterHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -19,7 +19,7 @@ public class UnrefinedBoards extends Item {
         this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
         this.types = types;
-        setTextureName(EFlux.ModID+":"+txt);
+        //setTextureName(EFlux.ModID+":"+txt);
         RegisterHelper.registerItem(this, txt);
     }
 

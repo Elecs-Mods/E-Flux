@@ -1,7 +1,6 @@
 package elec332.eflux.init;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -12,18 +11,13 @@ public class FluidRegister {
 
     public static final FluidRegister instance = new FluidRegister();
     private FluidRegister(){
-        slib = new Fluid("Slib");
+        slib = new Fluid("Slib", new EFluxResourceLocation("slibFluid"), new EFluxResourceLocation("slibFluid"));
     }
 
     public static Fluid slib;
 
     public void init(){
         FluidRegistry.registerFluid(slib);
-    }
-
-    public void registerTextures(IIconRegister iconRegister){
-        IIcon icon = iconRegister.registerIcon("slibFluid");
-        slib.setIcons(icon, icon);
     }
 
 }

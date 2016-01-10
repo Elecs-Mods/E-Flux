@@ -8,7 +8,7 @@ import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 23-4-2015.
@@ -21,7 +21,7 @@ public class PowerTile {  //Wrapper for TileEntities
         this.location = new BlockLoc(tileEntity);
         this.grids = new EFluxCableGrid[6];
         if (tileEntity instanceof IEnergyTransmitter) {
-            this.grids[0] = newGrid(ForgeDirection.UNKNOWN);
+            //this.grids[0] = newGrid(EnumFacing.UNKNOWN);
             this.connectType = ConnectType.CONNECTOR;
         } else if (tileEntity instanceof IEnergyReceiver && tileEntity instanceof IEnergySource)
             this.connectType = ConnectType.SEND_RECEIVE;
@@ -104,11 +104,11 @@ public class PowerTile {  //Wrapper for TileEntities
         return grids;
     }
 
-    public EFluxCableGrid getGridFromSide(ForgeDirection forgeDirection){
+    public EFluxCableGrid getGridFromSide(EnumFacing forgeDirection){
         return singleGrid()?getGrid():getFromSide(forgeDirection);
     }
 
-    private EFluxCableGrid getFromSide(ForgeDirection direction){
+    private EFluxCableGrid getFromSide(EnumFacing direction){
         EFluxCableGrid grid = grids[direction.ordinal()];
         if (grid == null) {
             grid = newGrid(direction);
@@ -122,14 +122,14 @@ public class PowerTile {  //Wrapper for TileEntities
             throw new UnsupportedOperationException("Request grid when tile has multiple grids");
         EFluxCableGrid grid = grids[0];
         if (grid == null){
-            grid = newGrid(ForgeDirection.UNKNOWN);
+            grid = newGrid(null);
             grids[0] = grid;
         }
         return grid;
     }
 
-    private EFluxCableGrid newGrid(ForgeDirection direction){
-        return WorldRegistry.get(tile.getWorldObj()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorldObj(), this, direction));
+    private EFluxCableGrid newGrid(EnumFacing direction){
+        return WorldRegistry.get(tile.getWorld()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorld(), this, direction));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity;
 
-import elec332.core.baseclasses.tileentity.TileBase;
+import elec332.core.tile.TileBase;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 
 /**

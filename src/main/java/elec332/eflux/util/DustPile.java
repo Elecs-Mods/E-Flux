@@ -2,11 +2,13 @@ package elec332.eflux.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import elec332.core.util.NBT;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,14 +45,6 @@ public class DustPile {
         return ImmutableList.copyOf(content);
     }
 
-    private DustPart getPart(String s){
-        for (DustPart dustPart : content){
-            if (dustPart.content.equals(s))
-                return dustPart;
-        }
-        return null;
-    }
-
     public NBTTagCompound getStack(){
         if (content.isEmpty())
             return null;
@@ -82,7 +76,7 @@ public class DustPile {
                     toRemove.add(dustPart);
                 }
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setString("name", dustPart.content);
+                dustPart.toNBT(tag);
                 tag.setInteger("nuggets", add);
                 list.appendTag(tag);
             }
@@ -103,7 +97,7 @@ public class DustPile {
         int i = 0;
         List<DustPile.DustPart> toRemove = Lists.newArrayList();
         for (DustPile.DustPart dustPart : content) {
-            if (dustPart.getContent().equals(GrinderRecipes.stoneDust)) {
+            if (dustPart.getContent().contains(GrinderRecipes.stoneDust)) {
                 i += dustPart.getNuggetAmount();
                 toRemove.add(dustPart);
             }
@@ -118,7 +112,7 @@ public class DustPile {
         int i = 0;
         List<DustPile.DustPart> toRemove = Lists.newArrayList();
         for (DustPile.DustPart dustPart : content) {
-            if (dustPart.getContent().equals(GrinderRecipes.scrap)) {
+            if (dustPart.getContent().contains(GrinderRecipes.scrap)) {
                 i += dustPart.getNuggetAmount();
                 toRemove.add(dustPart);
             }
@@ -138,7 +132,7 @@ public class DustPile {
         NBTTagList list = new NBTTagList();
         for (DustPart dustPart : content){
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("name", dustPart.content);
+            dustPart.toNBT(tag);
             tag.setInteger("nuggets", dustPart.nuggetAmount);
             list.appendTag(tag);
         }
@@ -156,7 +150,7 @@ public class DustPile {
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
             int q = tag.getInteger("nuggets");
-            content.add(new DustPart(tag.getString("name")).addNuggets(q));
+            content.add(DustPart.fromNBT(tag).addNuggets(q));
             total += q;
         }
         scanned = tagCompound.getBoolean("dusts_scanned");
@@ -169,9 +163,9 @@ public class DustPile {
         clean = true;
         pure = true;
         for (DustPart dustPart : content){
-            if (dustPart.getContent().equals(GrinderRecipes.scrap))
+            if (dustPart.getContent().contains(GrinderRecipes.scrap))
                 clean = false;
-            if (dustPart.getContent().equals(GrinderRecipes.stoneDust))
+            if (dustPart.getContent().contains(GrinderRecipes.stoneDust))
                 pure = false;
         }
     }
@@ -197,23 +191,40 @@ public class DustPile {
 
     public static class DustPart{
 
-        protected DustPart(String content){
+        public static DustPart fromNBT(NBTTagCompound tag){
+            NBTTagList list = tag.getTagList("dustPileOreContents", NBT.NBTData.STRING.getID());
+            List<String> content = Lists.newArrayList();
+            for (int i = 0; i < list.tagCount(); i++) {
+                content.add(list.getStringTagAt(i));
+            }
+            return new DustPart(content);
+        }
+
+        protected DustPart(List<String> content){
             this.content = content;
         }
 
         private int nuggetAmount;
-        private final String content;
+        private final List<String> content;
 
         protected DustPart addNuggets(int i){
             nuggetAmount += i;
             return this;
         }
 
+        public void toNBT(NBTTagCompound tag){
+            NBTTagList ores = new NBTTagList();
+            for (String s : content){
+                ores.appendTag(new NBTTagString(s));
+            }
+            tag.setTag("dustPileOreContents", ores);
+        }
+
         public int getNuggetAmount() {
             return nuggetAmount;
         }
 
-        public String getContent() {
+        public List<String> getContent() {
             return content;
         }
 

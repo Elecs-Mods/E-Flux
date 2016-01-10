@@ -1,7 +1,8 @@
 package elec332.eflux.grid;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import elec332.core.world.WorldHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import elec332.core.main.ElecCore;
 import elec332.core.util.IRunOnce;
 import elec332.eflux.EFlux;
@@ -49,12 +50,12 @@ public class WorldRegistry {
         this.gridHolderPower = new WorldGridHolder(world);
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
-        ElecCore.tickHandler.registerCall(new IRunOnce() {
+        ElecCore.tickHandler.registerCall(new Runnable() {
             @Override
             public void run() {
                 MinecraftForge.EVENT_BUS.register(WorldRegistry.this);
             }
-        });
+        }, world);
     }
 
     private WorldGridHolder gridHolderPower;
@@ -76,7 +77,7 @@ public class WorldRegistry {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        if (event.world.provider.dimensionId == world.provider.dimensionId)
+        if (WorldHelper.getDimID(world) == WorldHelper.getDimID(event.world))
             unload();
     }
 }

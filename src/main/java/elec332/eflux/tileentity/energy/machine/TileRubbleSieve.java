@@ -7,7 +7,7 @@ import elec332.eflux.util.DustPile;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 17-10-2015.
@@ -53,13 +53,13 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
                 return false;
             ItemStack copy = stack.copy();
             copy.stackSize = 1;
-            DustPile dustPile = DustPile.fromNBT(copy.stackTagCompound);
+            DustPile dustPile = DustPile.fromNBT(copy.getTagCompound());
             ItemStack rubble = dustPile.sieve();
             ItemStack sis = getStackInSlot(rubble_slot);
             if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit())
                 return false;
             sis = getStackInSlot(normal_output_slot);
-            copy.stackTagCompound = dustPile.toNBT();
+            copy.setTagCompound(dustPile.toNBT());
             if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit())))
                 return false;
             sieving = copy;
@@ -128,19 +128,13 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
     }
 
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
-        return direction != ForgeDirection.UP && direction != ForgeDirection.DOWN;
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
+        return direction != EnumFacing.UP && direction != EnumFacing.DOWN;
     }
 
     @Override
-    public String[] getProvidedData() {
-        return new String[0];
-    }
-
-    @Override
-    public int[] getAccessibleSlotsFromSide(int side) {
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
-        switch (direction){
+    public int[] getSlotsForFace(EnumFacing side) {
+        switch (side){
             case UP:
                 return new int[]{0, 1};
             case DOWN:
@@ -150,23 +144,23 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
         }
     }
 
-    private boolean isInput(int side, int slot){
-        int[] i = getAccessibleSlotsFromSide(side);
+    private boolean isInput(EnumFacing side, int slot){
+        int[] i = getSlotsForFace(side);
         return i.length != 0 && i[0] == 0 && slot >= 0 && slot <= 1;
     }
 
-    private boolean isOutput(int side, int slot){
-        int[] i = getAccessibleSlotsFromSide(side);
+    private boolean isOutput(EnumFacing side, int slot){
+        int[] i = getSlotsForFace(side);
         return i.length != 0 && i[0] == rubble_slot && slot >= 2 && slot <= 3;
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, int side) {
-        return isInput(side, slot) && !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.stackTagCompound == null);
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
+        return isInput(side, slot) && !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null);
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
         return isOutput(side, slot);
     }
 

@@ -2,6 +2,7 @@ package elec332.eflux.util;
 
 import elec332.core.util.BlockLoc;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
  */
 public class Utils {
 
-    public static AxisAlignedBB getAABBAroundBlock(BlockLoc loc, int xOffsetWest, int yOffsetDown, int zOffsetNorth, int xOffsetEast, int yOffsetUp, int zOffsetSouth){
-        return AxisAlignedBB.getBoundingBox(loc.xCoord - xOffsetWest, loc.yCoord - yOffsetDown, loc.zCoord - zOffsetNorth, loc.xCoord + xOffsetEast + 1, loc.yCoord + yOffsetUp + 1, loc.zCoord + zOffsetSouth + 1);
+    public static AxisAlignedBB getAABBAroundBlock(BlockPos loc, int xOffsetWest, int yOffsetDown, int zOffsetNorth, int xOffsetEast, int yOffsetUp, int zOffsetSouth){
+        return new AxisAlignedBB(loc.getX() - xOffsetWest, loc.getY() - yOffsetDown, loc.getZ() - zOffsetNorth, loc.getX() + xOffsetEast + 1, loc.getY() + yOffsetUp + 1, loc.getZ() + zOffsetSouth + 1);
     }
 
     public static <E> List<E> copyOf(List<E> original){

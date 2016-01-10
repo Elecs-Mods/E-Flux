@@ -5,7 +5,7 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.util.CalculationHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 24-8-2015.
@@ -134,17 +134,17 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     @Override
-    public boolean canAcceptEnergyFrom(ForgeDirection direction) {
+    public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return true;
     }
 
     @Override
-    public int requestedRP(ForgeDirection direction) {
+    public int requestedRP(EnumFacing direction) {
         return optimalRP;
     }
 
     @Override
-    public final int getRequestedEF(int rp, ForgeDirection direction) {
+    public final int getRequestedEF(int rp, EnumFacing direction) {
         if (breakableMachine != null) {
             if (rp < requestedRP(direction) * (1 - getAcceptance()) || breakableMachine.isBroken()) {
                 return 0;
@@ -157,7 +157,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     @Override
-    public final int receivePower(ForgeDirection direction, int rp, int ef) {
+    public final int receivePower(EnumFacing direction, int rp, int ef) {
         if (breakableMachine != null && breakableMachine.isBroken())
             return 0;
         int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(direction), efForOptimalRP, (maxEnergy-storedPower)/rp, getAcceptance());

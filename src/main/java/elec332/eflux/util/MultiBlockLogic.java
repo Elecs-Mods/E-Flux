@@ -4,8 +4,9 @@ import com.google.common.collect.Lists;
 import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
@@ -14,25 +15,25 @@ import java.util.List;
  */
 public class MultiBlockLogic {
 
-    public static void dropStack(World world, BlockLoc loc, ForgeDirection direction, ItemStack stack){
-        WorldHelper.dropStack(world, loc.atSide(direction), stack);
+    public static void dropStack(World world, BlockPos loc, EnumFacing direction, ItemStack stack){
+        WorldHelper.dropStack(world, loc.offset(direction), stack);
     }
 
     public static class Laser{
 
-        public static List<ItemStack> drill(World worldObj, BlockLoc loc, ForgeDirection facing, int distance, int range){
+        public static List<ItemStack> drill(World worldObj, BlockLoc loc, EnumFacing facing, int distance, int range){
             if (!worldObj.isRemote){
                 List<ItemStack> toDrop = Lists.newArrayList();
-                for (BlockLoc blockLoc : getNewBlocksToMine(loc, facing, distance, range)) {
-                    toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord, WorldHelper.getBlockMeta(worldObj, blockLoc), 1));
-                    worldObj.setBlockToAir(blockLoc.xCoord, blockLoc.yCoord, blockLoc.zCoord);
+                for (BlockPos blockLoc : getNewBlocksToMine(loc, facing, distance, range)) {
+                    toDrop.addAll(WorldHelper.getBlockAt(worldObj, blockLoc).getDrops(worldObj, blockLoc, WorldHelper.getBlockState(worldObj, blockLoc), 1));
+                    worldObj.setBlockToAir(blockLoc);
                 }
                 return toDrop;
             }
             return null;
         }
 
-        public static int getNewDistanceAfterMining(int oldDistance, ForgeDirection facing){
+        public static int getNewDistanceAfterMining(int oldDistance, EnumFacing facing){
             switch (facing){
                 case NORTH:
                     oldDistance--;
@@ -50,8 +51,8 @@ public class MultiBlockLogic {
             return oldDistance;
         }
 
-        private static List<BlockLoc> getNewBlocksToMine(BlockLoc loc, ForgeDirection facing, int distance, int range){
-            List<BlockLoc> ret = Lists.newArrayList();
+        private static List<BlockPos> getNewBlocksToMine(BlockLoc loc, EnumFacing facing, int distance, int range){
+            List<BlockPos> ret = Lists.newArrayList();
             switch (facing){
                 case NORTH:
                     distance--;
@@ -73,17 +74,19 @@ public class MultiBlockLogic {
             return ret;
         }
 
-        private static void addAllAround(List<BlockLoc> list, axis axis, BlockLoc loc, int distance, int range){
-            BlockLoc blockLoc;
+        private static void addAllAround(List<BlockPos> list, axis axis, BlockPos loc, int distance, int range){
+            BlockPos blockLoc;
             if (axis == MultiBlockLogic.Laser.axis.z){
-                blockLoc = new BlockLoc(loc.xCoord + distance, loc.yCoord, loc.zCoord);
-            } else blockLoc = new BlockLoc(loc.xCoord, loc.yCoord, loc.zCoord+distance);
+                blockLoc = loc.add(distance, 0, 0);
+            } else {
+                blockLoc = loc.add(0, 0, distance);
+            }
             for (int offsetY = -range; offsetY <= range; offsetY++) {
                 for (int otherAxis = -range; otherAxis <= range; otherAxis++) {
                     if (axis == MultiBlockLogic.Laser.axis.x){
-                        list.add(new BlockLoc(blockLoc.xCoord + otherAxis, blockLoc.yCoord+offsetY, blockLoc.zCoord));
+                        list.add(blockLoc.add(otherAxis, offsetY, 0));
                     } else if (axis == MultiBlockLogic.Laser.axis.z){
-                        list.add(new BlockLoc(blockLoc.xCoord, blockLoc.yCoord+offsetY, blockLoc.zCoord+otherAxis));
+                        list.add(blockLoc.add(0, offsetY, otherAxis));
                     }
                 }
             }
