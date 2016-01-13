@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by Elec332 on 17-5-2015.
  */
-public abstract class AbstractRecipeHandler implements IRecipeHandler{
+public abstract class AbstractRecipeHandler implements IRecipeHandler {
 
     protected AbstractRecipeHandler(){
         this.multipleRecipes = new HashMap<AbstractList<RecipeItemStack>, ItemStack[]>();

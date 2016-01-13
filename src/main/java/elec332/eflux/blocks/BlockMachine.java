@@ -44,10 +44,15 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
         this.machine = machine;
     }
 
-    private EnumMachines machine;
+    private final EnumMachines machine;
 
     public EnumMachines getMachine(){
         return this.machine;
+    }
+
+    @Override
+    public int getRenderType() {
+        return machine.getRenderID();
     }
 
     @SideOnly(Side.CLIENT)
@@ -64,6 +69,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      * @return The model to render for this block for the given arguments.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         TileEntity tile = WorldHelper.getTileAt(iba, pos);
         int meta = (tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive()) ? 1 : 0;
@@ -78,6 +84,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      * @return The model to render when the block is not placed.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return rotationMap.get();
     }
@@ -91,6 +98,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      * @param templateBakery
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
         for (int i = 0; i < 2; i++) {
@@ -104,6 +112,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         textures = new TextureAtlasSprite[2][6];
         for (int i = 0; i < 2; i++) {

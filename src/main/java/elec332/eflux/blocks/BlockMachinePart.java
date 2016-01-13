@@ -64,7 +64,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
     @SideOnly(Side.CLIENT)
     private IBakedModelMetaRotationMap<IBlockModel> rotationMap;
     @SideOnly(Side.CLIENT)
-    private TextureAtlasSprite normal, itemOutlet, laserCore, heater, monitorF, monitorR, monitorL, radiator;
+    public static TextureAtlasSprite normal, itemOutlet, laserCore, heater, monitorF, monitorR, monitorL, radiator;
     private boolean register;
 
     @Override
@@ -85,13 +85,13 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
 
     @Override
     public int getTypes(){
-        return 11;
+        return 7;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab) {
-        for (int i = 0; i < types; i++) {
+        for (int i = 0; i < getTypes(); i++) {
             list.add(new ItemStack(item, 1, i));
         }
     }
@@ -180,11 +180,12 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
      * @return The model to render for this block for the given arguments.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         TileEntityBlockMachine tile = (TileEntityBlockMachine)WorldHelper.getTileAt(iba, pos);
         int meta = (int) Math.pow(WorldHelper.getBlockMeta(state), tile.monitorSide + 1);
-        if (meta > 10)
-            meta = 0;
+        //if (meta > getTypes() && meta != 36 && meta != 6*6*6)
+         //   meta = 0;
         return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(tile.getTileFacing()));
     }
 
@@ -194,6 +195,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
      * @return The model to render when the block is not placed.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return rotationMap.forMeta(meta);
     }
@@ -208,19 +210,21 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
      * @param templateBakery
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(final ElecQuadBakery quadBakery, ElecModelBakery modelBakery, final ElecTemplateBakery templateBakery) {
         rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
-        rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
-        rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        //rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        //rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        //rotationMap.setModelsForRotation(2, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        //rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(itemOutlet))));
+        rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(laserCore))));
+        rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(heater))));
         rotationMap.setModelsForRotation(2, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
-        rotationMap.setModelsForRotation(3, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(itemOutlet))));
-        rotationMap.setModelsForRotation(4, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(laserCore))));
-        rotationMap.setModelsForRotation(5, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(heater))));
+        rotationMap.setModelsForRotation(3, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(radiator))));
+        rotationMap.setModelsForRotation(4, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+        rotationMap.setModelsForRotation(5, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
+
         rotationMap.setModelsForRotation(6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorF))));
-        rotationMap.setModelsForRotation(7, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(radiator))));
-        rotationMap.setModelsForRotation(8, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
-        rotationMap.setModelsForRotation(9, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
-        rotationMap.setModelsForRotation(10, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(normal)));
         rotationMap.setModelsForRotation(6*6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorR))));
         rotationMap.setModelsForRotation(6*6*6, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorL))));
     }
@@ -231,6 +235,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         normal = iconRegistrar.registerSprite(getTextureLocation("normal"));
         itemOutlet = iconRegistrar.registerSprite(getTextureLocation("itemOutletFront"));
@@ -242,6 +247,7 @@ public class BlockMachinePart extends BlockWithMeta implements ITileEntityProvid
         radiator = iconRegistrar.registerSprite(getTextureLocation("radiator"));
     }
 
+    @SideOnly(Side.CLIENT)
     protected ResourceLocation getTextureLocation(String s){
         return new EFluxResourceLocation("blocks/machinepart/"+s);
     }

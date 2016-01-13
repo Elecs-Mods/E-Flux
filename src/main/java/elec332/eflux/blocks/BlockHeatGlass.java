@@ -72,16 +72,19 @@ public class BlockHeatGlass extends BlockMachinePart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         return rotationMap.forMetaAndRotation(WorldHelper.getBlockMeta(state), DirectionHelper.getRotationFromFacing(((TileEntityBlockMachine)WorldHelper.getTileAt(iba, pos)).getTileFacing()));
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return rotationMap.forMeta(meta);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
         rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(heatGlass)));
@@ -89,6 +92,7 @@ public class BlockHeatGlass extends BlockMachinePart {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         heatGlass = iconRegistrar.registerSprite(getTextureLocation("heatGlass"));
         lensFront = iconRegistrar.registerSprite(getTextureLocation("laserLensFront"));

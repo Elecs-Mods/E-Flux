@@ -2,7 +2,6 @@ package elec332.eflux.init;
 
 import elec332.core.multiblock.AbstractAdvancedMultiBlockStructure;
 import elec332.core.multiblock.BlockStructure;
-import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.location.BlockStateWrapper;
@@ -15,8 +14,8 @@ import elec332.eflux.multiblock.machine.MultiBlockLaser;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.oredict.OreDictionary;
@@ -29,12 +28,7 @@ import static elec332.eflux.init.BlockRegister.*;
 public class MultiBlockRegister {
 
     private static final BlockStateWrapper powerInlet = new BlockStateWrapper(EnumMachines.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
-    private static final BlockStateWrapper air = new BlockStateWrapper((Block)null);//{
-    //    @Override
-    //    public boolean equals(Object obj) {
-    //        return super.equals(obj) || ((obj instanceof BlockStateWrapper) && ((BlockStateWrapper) obj).block == renderBlock);
-    //    }
-    //};
+    private static final BlockStateWrapper air = new BlockStateWrapper((Block)null);
 
     public static void init(){
 
@@ -46,7 +40,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
@@ -98,7 +92,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 0, 1))).getTileFacing() == facing;
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 3, 0, 1))).getTileFacing() == facing;
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
@@ -153,7 +147,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b3 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
@@ -161,6 +155,7 @@ public class MultiBlockRegister {
                 boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
                 boolean b6 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == EnumFacing.UP;
                 boolean b7 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                System.out.println(""+b1+b2+b3+b4+b5+b6+b7);
                 return b1 && b2 && b3 && b4 && b5 && b6 && b7;
             }
 
@@ -207,7 +202,7 @@ public class MultiBlockRegister {
             }
 
             @Override
-            public boolean areSecondaryConditionsMet(World world, BlockLoc bottomLeft, EnumFacing facing) {
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
                 boolean b1 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 0, 1, 1))).getTileFacing() == DirectionHelper.rotateLeft(facing);
                 boolean b2 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 2, 1, 1))).getTileFacing() == DirectionHelper.rotateRight(facing);
                 boolean b4 = ((BlockMachinePart.TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == EnumFacing.UP;

@@ -77,6 +77,8 @@ public abstract class BlockWithMeta extends Block {
             super(block);
             if (!(block instanceof BlockWithMeta))
                 throw new IllegalArgumentException();
+            this.setHasSubtypes(true);
+            this.setMaxDamage(0);
         }
 
         @Override

@@ -44,19 +44,26 @@ public class BlockRegister {
         machineGlass = new BlockHeatGlass(2).register().setCreativeTab(EFlux.creativeTab);
         renderBlock = new BlockRenderItemInWorld("renderBlock").register().setCreativeTab(EFlux.creativeTab);
 
-        frameBasic = newMachineBlock(0);
-        frameNormal = newMachineBlock(1);
-        frameAdvanced = newMachineBlock(2);
-        itemGate = newMachineBlock(3);
-        laserCore = newMachineBlock(4);
-        heater = newMachineBlock(5);
+        Block frame = new BlockMachineFrame("frameBlock").register().setCreativeTab(EFlux.creativeTab);
+        Block itemInlet = new BlockItemInlet("itemInlet").register().setCreativeTab(EFlux.creativeTab);
+
+        frameBasic = new BlockStateWrapper(frame, 0);
+        frameNormal = new BlockStateWrapper(frame, 1);
+        frameAdvanced = new BlockStateWrapper(frame, 2);
+
+        itemGate = new BlockStateWrapper(itemInlet, 0);
+
+        laserCore = newMachineBlock(0);
+        heater = newMachineBlock(1);
+
         heatResistantGlass = newGlassBlock(0);
         laserLens = newGlassBlock(1);
+
         monitor = newMachineBlock(6);
-        radiator = newMachineBlock(7);
-        motor = newMachineBlock(8);
-        precisionMotor = newMachineBlock(9);
-        dustStorage = newMachineBlock(10);
+        radiator = newMachineBlock(3);
+        motor = newMachineBlock(4);
+        precisionMotor = newMachineBlock(5);
+        dustStorage = newMachineBlock(2);
 
         cable = new BlockCable("efluxCable").register();
     }

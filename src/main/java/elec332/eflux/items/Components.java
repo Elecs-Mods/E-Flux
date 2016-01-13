@@ -78,11 +78,13 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IItemModel getItemModel(Item item, int meta) {
         return models.forMeta(meta);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         models = new BakedModelMetaMap<IItemModel>();
         for (int i = 0; i < components.length; i++) {
@@ -91,6 +93,7 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         textures = new TextureAtlasSprite[components.length];
         for(int i = 0; i < components.length; i++){

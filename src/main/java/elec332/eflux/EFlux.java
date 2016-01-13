@@ -1,6 +1,8 @@
 package elec332.eflux;
 
 import com.google.common.collect.Lists;
+import elec332.eflux.recipes.EFluxFurnaceRecipes;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -144,6 +146,7 @@ public class EFlux {
                 //Dummy, just load my chunks please.....
             }
         });
+        RecipeRegister.registerRecipes();
         //register items/blocks
 
     }
@@ -167,4 +170,12 @@ public class EFlux {
         RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
         RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));
     }
+
+    /*
+     * I normally never do this, but its ugly above.
+     */
+    public EFlux(){
+        FurnaceRecipes.smeltingBase = new EFluxFurnaceRecipes();
+    }
+
 }

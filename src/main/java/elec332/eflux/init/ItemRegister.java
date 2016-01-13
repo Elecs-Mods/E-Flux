@@ -28,4 +28,5 @@ public class ItemRegister {
         /* Hax below */
         scrap = new EFluxItem("scrap"){}.register();
     }
+
 }

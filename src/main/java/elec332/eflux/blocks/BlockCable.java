@@ -57,7 +57,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
         GameRegistry.registerTileEntity(NormalCable.class, "EFluxNormalCable");
         GameRegistry.registerTileEntity(AdvancedCable.class, "EFluxAdvancedCable");
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()){
-            RenderingRegistry.instance().registerRenderer(this, new CableRenderer());
+            registerISBHR();
         }
         return this;
     }
@@ -122,7 +122,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return getUnlocalizedName()+"."+stack.stackSize;
+        return getUnlocalizedName()+"."+stack.getItemDamage();
     }
 
     @Override
@@ -143,6 +143,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/testCable"));
     }
@@ -156,6 +157,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
      * @return The model to render for this block for the given arguments.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         return model;
     }
@@ -164,6 +166,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
      * This method is used when a model is requested when its not placed, so for an item.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return model;
     }
@@ -173,8 +176,14 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
      * use this to make your quads. (This always comes AFTER the textures are loaded)
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         model = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture).setTexture(texture));
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void registerISBHR(){
+        RenderingRegistry.instance().registerRenderer(this, new CableRenderer());
     }
 
 }

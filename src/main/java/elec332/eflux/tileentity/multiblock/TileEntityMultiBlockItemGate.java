@@ -1,6 +1,7 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.util.BasicInventory;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.blocks.BlockMachinePart;
 import mcp.mobius.waila.api.ITaggedList;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 
@@ -59,16 +61,26 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
 
     @Override
     public void onWrenched(EnumFacing forgeDirection) {
-        if (getMultiBlock() == null) {
-            if (forgeDirection == getTileFacing() && mode == 0) {
+        if (getMultiBlock() == null && forgeDirection == getTileFacing()) {
+            if (mode == 0) {
                 mode = 1;
-            } else if (mode != 0){
+            } else {
                 mode = 0;
             }
             markDirty();
+        } else {
+            super.onWrenched(forgeDirection);
         }
-        super.onWrenched(forgeDirection);
         syncData();
+        reRenderBlock();
+    }
+
+    @Override
+    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!worldObj.isRemote){
+            player.addChatComponentMessage(new ChatComponentText("Mode: " + (isOutputMode() ? "output" : "input")));
+        }
+        return super.onBlockActivated(player, side, hitX, hitY, hitZ);
     }
 
     @Override

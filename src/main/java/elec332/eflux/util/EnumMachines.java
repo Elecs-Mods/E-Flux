@@ -22,7 +22,7 @@ public enum EnumMachines {
     CAPACITOR(Capacitor.class, BlockTextures.getCustomProvider("cap_side", "cap_top", "def_cap")),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
     ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getCustomTFProvider("at_top", "at_front")),
-    GROWTHLAMP(TileGrowthLamp.class, 0, Material.glass, BlockTextures.getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing")),
+    GROWTHLAMP(TileGrowthLamp.class, 3, Material.glass, BlockTextures.getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing")),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
     CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getDefaultProvider("cs_front")),
     TESLACOIL(TileTeslaCoil.class, BlockTextures.getCustomSidedProvider("teslacoil_side")),
@@ -41,7 +41,7 @@ public enum EnumMachines {
     private Class<? extends TileEntity> tileClass;
     public Class<? extends ItemBlock> itemBlockClass;
     private BlockMachine blockMachine;
-    private int renderID = 0;
+    private int renderID = 3;
     private Material material = Material.rock;
     private IBlockTextureProvider textureProvider;
 
