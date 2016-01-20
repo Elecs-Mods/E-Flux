@@ -1,5 +1,7 @@
 package elec332.eflux.tileentity.energy.machine;
 
+import elec332.core.api.annotations.RegisterTile;
+import elec332.core.util.InventoryHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
@@ -12,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Created by Elec332 on 17-10-2015.
  */
+@RegisterTile(name = "TileEntityEFluxRubbleSieve")
 public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine{
 
     public TileRubbleSieve() {
@@ -23,6 +26,7 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
     private static final int normal_output_slot = 3;
 
     private ItemStack sieving, tbo;
+    private int r;
 
     @Override
     public void updateEntity() {
@@ -45,16 +49,27 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
     @Override
     public boolean canProcess() {
         if (sieving == null){
+            int slot = 0;
             ItemStack stack = getStackInSlot(0);
             if (stack == null){
                 stack = getStackInSlot(1);
+                slot = 1;
             }
             if (stack == null)
                 return false;
             ItemStack copy = stack.copy();
             copy.stackSize = 1;
             DustPile dustPile = DustPile.fromNBT(copy.getTagCompound());
-            ItemStack rubble = dustPile.sieve();
+            r += dustPile.sieve();
+            ItemStack rubble = null;
+            if (r >= 9){
+                rubble = ItemRegister.scrap.copy();
+                rubble.stackSize = 0;
+                while (r >= 9 && rubble.stackSize < 64){
+                    r -= 9;
+                    rubble.stackSize += 1;
+                }
+            }
             ItemStack sis = getStackInSlot(rubble_slot);
             if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit())
                 return false;
@@ -62,24 +77,31 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
             copy.setTagCompound(dustPile.toNBT());
             if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit())))
                 return false;
+            decrStackSize(slot, 1);
             sieving = copy;
             tbo = rubble;
+            markDirty();
         }
         return true;
     }
 
     @Override
     public void onProcessDone() {
-        ItemStack stack = tbo.copy();
-        if (getStackInSlot(rubble_slot) != null){
-            stack.stackSize += getStackInSlot(rubble_slot).stackSize;
+        ItemStack stack;
+        if (tbo != null) {
+            stack = tbo.copy();
+            if (getStackInSlot(rubble_slot) != null) {
+                stack.stackSize += getStackInSlot(rubble_slot).stackSize;
+            }
+            setInventorySlotContents(rubble_slot, stack);
         }
-        setInventorySlotContents(rubble_slot, stack);
         stack = sieving.copy();
         if (getStackInSlot(normal_output_slot) != null){
             stack.stackSize += getStackInSlot(normal_output_slot).stackSize;
         }
         setInventorySlotContents(normal_output_slot, stack);
+        tbo = null;
+        sieving = null;
     }
 
     @Override
@@ -90,6 +112,12 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
             sieving.writeToNBT(tag);
             tagCompound.setTag("sievingStack", tag);
         }
+        if (tbo != null){
+            NBTTagCompound tag = new NBTTagCompound();
+            tbo.writeToNBT(tag);
+            tagCompound.setTag("tbo", tag);
+        }
+        tagCompound.setInteger("sA", r);
     }
 
     @Override
@@ -97,9 +125,11 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
         super.readFromNBT(tagCompound);
         if (tagCompound.hasKey("sievingStack")){
             sieving = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("sievingStack"));
-        } else {
-            sieving = null;
         }
+        if (tagCompound.hasKey("tbo")){
+            tbo = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("tbo"));
+        }
+        r = tagCompound.getInteger("sA");
     }
 
     @Override

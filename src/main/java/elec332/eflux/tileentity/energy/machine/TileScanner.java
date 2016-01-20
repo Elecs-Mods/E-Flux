@@ -1,11 +1,12 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.tile.IInventoryTile;
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.slot.SlotOutput;
+import elec332.core.tile.IInventoryTile;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
@@ -15,13 +16,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 12-9-2015.
  */
-public class TileScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots{
+@RegisterTile(name = "TileEntityEFluxScanner")
+public class TileScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots {
 
     public TileScanner(){
         super(2);
@@ -38,10 +40,8 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
         if (timeCheck() && inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() == ItemRegister.groundMesh && inventory.getStackInSlot(1) == null && energyContainer.drainPower(150)){
             ItemStack stack = inventory.getStackInSlot(0).copy();
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
-            dustPile.scan();
-            stack.setTagCompound(dustPile.toNBT());
             inventory.setInventorySlotContents(0, null);
-            inventory.setInventorySlotContents(1, stack);
+            inventory.setInventorySlotContents(1, dustPile.scan(stack.stackSize));
         }
     }
 

@@ -1,9 +1,9 @@
 package elec332.eflux.tileentity.multiblock;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.util.BasicInventory;
-import elec332.core.util.PlayerHelper;
-import elec332.eflux.blocks.BlockMachinePart;
-import mcp.mobius.waila.api.ITaggedList;
+import elec332.eflux.multiblock.EFluxMultiBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +20,8 @@ import java.util.List;
  * Created by Elec332 on 4-9-2015.
  */
 //TODO: Interface
-public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlockMachine implements ISidedInventory{
+@RegisterTile(name = "TileEntityEFluxMultiBlockItemGate")
+public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory{
 
     public TileEntityMultiBlockItemGate(){
         super();
@@ -52,9 +53,9 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (!worldObj.isRemote && timeCheck() && getMultiBlock() != null){
+        if (!worldObj.isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                inventory.setInventorySlotContents(i, getMultiBlock().inject(inventory.getStackInSlot(i)));
+                inventory.setInventorySlotContents(i, (getMultiBlock()).inject(inventory.getStackInSlot(i)));
             }
         }
     }
@@ -76,11 +77,16 @@ public class TileEntityMultiBlockItemGate extends BlockMachinePart.TileEntityBlo
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean canFaceUpOrDown() {
+        return true;
+    }
+
+    @Override
+    public boolean onBlockActivatedBy(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldObj.isRemote){
             player.addChatComponentMessage(new ChatComponentText("Mode: " + (isOutputMode() ? "output" : "input")));
         }
-        return super.onBlockActivated(player, side, hitX, hitY, hitZ);
+        return super.onBlockActivatedBy(player, side, hitX, hitY, hitZ);
     }
 
     @Override

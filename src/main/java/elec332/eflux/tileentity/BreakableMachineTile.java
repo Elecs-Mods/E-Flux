@@ -1,13 +1,16 @@
 package elec332.eflux.tileentity;
 
 import elec332.core.compat.handlers.WailaCompatHandler;
+import elec332.core.server.ServerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
-import mcp.mobius.waila.api.*;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -50,9 +53,12 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
 
     @Override
     public void onBroken(){
-        if (!worldObj.isRemote)
+        if (!worldObj.isRemote) {
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
-        sendPacket(1, new NBTTagCompound());
+            for (EntityPlayerMP playerMP : ServerHelper.instance.getAllPlayersWatchingBlock(worldObj, pos)){
+                playerMP.playerNetServerHandler.sendPacket(getDescriptionPacket());
+            }
+        }
     }
 
     @Override
@@ -154,7 +160,8 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
         return new String[]{
             "energy: "+energyContainer.getStoredPower(),
                 "maxEnergy: "+energyContainer.getMaxStoredEnergy(),
-                "broken: "+broken
+                "broken: "+broken,
+                "facing: "+getTileFacing()
         };
     }
 

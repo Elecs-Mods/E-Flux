@@ -54,7 +54,9 @@ public abstract class BlockWithMeta extends Block {
         return new BlockState(this, getProperty());
     }
 
-    public abstract String getUnlocalizedName(ItemStack stack);
+    public String getUnlocalizedName(ItemStack stack){
+        return getUnlocalizedName() + "." + stack.getItemDamage();
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -64,7 +66,11 @@ public abstract class BlockWithMeta extends Block {
 
     public abstract int getTypes();
 
-    public abstract void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab);
+    public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab){
+        for (int i = 0; i < getTypes(); i++) {
+            list.add(new ItemStack(item, 1, i));
+        }
+    }
 
     @Override
     public int damageDropped(IBlockState state) {

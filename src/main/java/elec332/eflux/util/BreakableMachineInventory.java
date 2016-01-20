@@ -1,18 +1,26 @@
 package elec332.eflux.util;
 
-import net.minecraft.util.IChatComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import elec332.core.util.ItemHelper;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
+import elec332.core.util.BasicInventory;
 import elec332.core.util.IRunOnce;
+import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemHelper;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerSingleSlot;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Elec332 on 1-5-2015.
@@ -32,23 +40,150 @@ public class BreakableMachineInventory implements IInventory{
         return repairItem;
     }
 
-    public Object brokenGui(Side side, EntityPlayer player){
+    public Object brokenGui(final Side side, EntityPlayer player){
         BaseContainer container = new ContainerSingleSlot(this, player){
+
             @Override
             public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, final EntityPlayer p_75144_4_) {
-                ElecCore.tickHandler.registerCall(new IRunOnce() {
-                    @Override
-                    public void run() {
-                        if (canFix())
-                            p_75144_4_.closeScreen();
-                    }
-                }, p_75144_4_.worldObj);
+                if (side.isServer()) {
+                    ElecCore.tickHandler.registerCall(new IRunOnce() {
+                        @Override
+                        public void run() {
+                            if (canFix())
+                                p_75144_4_.closeScreen();
+                        }
+                    }, p_75144_4_.worldObj);
+                }
                 return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
             }
 
+
+
         };
         if (side==Side.CLIENT)
-            return new GuiStandardFormat(container, new ResourceLocation("nope.png"));
+            return new GuiStandardFormat(container, new ResourceLocation("nope.png")){
+
+                IInventory fake = new BasicInventory("", 1);
+
+                @Override
+                public void drawScreen(int mouseX, int mouseY, float f) {
+                    fake.setInventorySlotContents(0, getRepairItem());
+                    Slot slot = container.getSlot(0);
+                    Slot fS = new Slot(fake, 0, slot.xDisplayPosition, slot.yDisplayPosition);
+                    drawSlot(fS);
+                    super.drawScreen(mouseX, mouseY, f);
+                }
+
+                private void drawSlot(Slot slotIn)
+                {
+                    int i = slotIn.xDisplayPosition;
+                    int j = slotIn.yDisplayPosition;
+                    ItemStack itemstack = slotIn.getStack();
+                    boolean flag = false;
+                    boolean flag1 = slotIn == this.clickedSlot && this.draggedStack != null && !this.isRightMouseClick;
+                    ItemStack itemstack1 = this.mc.thePlayer.inventory.getItemStack();
+                    String s = null;
+
+                    if (slotIn == this.clickedSlot && this.draggedStack != null && this.isRightMouseClick && itemstack != null)
+                    {
+                        itemstack = itemstack.copy();
+                        itemstack.stackSize /= 2;
+                    }
+                    else if (this.dragSplitting && this.dragSplittingSlots.contains(slotIn) && itemstack1 != null)
+                    {
+                        if (this.dragSplittingSlots.size() == 1)
+                        {
+                            return;
+                        }
+
+                        if (Container.canAddItemToSlot(slotIn, itemstack1, true) && this.inventorySlots.canDragIntoSlot(slotIn))
+                        {
+                            itemstack = itemstack1.copy();
+                            flag = true;
+                            Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack, slotIn.getStack() == null ? 0 : slotIn.getStack().stackSize);
+
+                            if (itemstack.stackSize > itemstack.getMaxStackSize())
+                            {
+                                s = EnumChatFormatting.YELLOW + "" + itemstack.getMaxStackSize();
+                                itemstack.stackSize = itemstack.getMaxStackSize();
+                            }
+
+                            if (itemstack.stackSize > slotIn.getItemStackLimit(itemstack))
+                            {
+                                s = EnumChatFormatting.YELLOW + "" + slotIn.getItemStackLimit(itemstack);
+                                itemstack.stackSize = slotIn.getItemStackLimit(itemstack);
+                            }
+                        }
+                        else
+                        {
+                            this.dragSplittingSlots.remove(slotIn);
+                            this.updateDragSplitting();
+                        }
+                    }
+
+                    this.zLevel = 100.0F;
+                    this.itemRender.zLevel = 100.0F;
+
+                    if (itemstack == null)
+                    {
+                        TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
+
+                        if (textureatlassprite != null)
+                        {
+                            GlStateManager.disableLighting();
+                            this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
+                            this.drawTexturedModalRect(i, j, textureatlassprite, 16, 16);
+                            GlStateManager.enableLighting();
+                            flag1 = true;
+                        }
+                    }
+
+                    if (!flag1)
+                    {
+                        if (flag)
+                        {
+                            drawRect(i, j, i + 16, j + 16, -2130706433);
+                        }
+
+                        GlStateManager.enableDepth();
+                        this.itemRender.renderItemAndEffectIntoGUI(itemstack, i, j);
+                        this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, itemstack, i, j, s);
+                    }
+
+                    this.itemRender.zLevel = 0.0F;
+                    this.zLevel = 0.0F;
+                }
+
+                private void updateDragSplitting()
+                {
+                    ItemStack itemstack = this.mc.thePlayer.inventory.getItemStack();
+
+                    if (itemstack != null && this.dragSplitting)
+                    {
+                        this.dragSplittingRemnant = itemstack.stackSize;
+
+                        for (Slot slot : this.dragSplittingSlots)
+                        {
+                            ItemStack itemstack1 = itemstack.copy();
+                            int i = slot.getStack() == null ? 0 : slot.getStack().stackSize;
+                            Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack1, i);
+
+                            if (itemstack1.stackSize > itemstack1.getMaxStackSize())
+                            {
+                                itemstack1.stackSize = itemstack1.getMaxStackSize();
+                            }
+
+                            if (itemstack1.stackSize > slot.getItemStackLimit(itemstack1))
+                            {
+                                itemstack1.stackSize = slot.getItemStackLimit(itemstack1);
+                            }
+
+                            this.dragSplittingRemnant -= itemstack1.stackSize - i;
+                        }
+                    }
+                }
+
+            };
         return container;
     }
 

@@ -2,14 +2,14 @@ package elec332.eflux.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import elec332.core.util.NBT;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -33,7 +33,7 @@ public class DustPile {
         this.content = Lists.newArrayList();
     }
 
-    private List<DustPart> content;
+    private List<GrinderRecipes.OreDictStack> content;
     private int total;
     public boolean scanned, clean, pure;
 
@@ -41,7 +41,7 @@ public class DustPile {
         checkAdd(GrinderRecipes.instance.getGrindResult(stack));
     }
 
-    public List<DustPart> getContent(){
+    public List<GrinderRecipes.OreDictStack> getContent(){
         return ImmutableList.copyOf(content);
     }
 
@@ -52,31 +52,33 @@ public class DustPile {
         NBTTagList list = new NBTTagList();
         final boolean ensureMax = total <= 9;
         int i = 9;
-        Collections.sort(content, new Comparator<DustPart>() {
+        Collections.sort(content, new Comparator<GrinderRecipes.OreDictStack>() {
             @Override
-            public int compare(DustPart o1, DustPart o2) {
-                return o1.nuggetAmount - o2.nuggetAmount;
+            public int compare(GrinderRecipes.OreDictStack o1, GrinderRecipes.OreDictStack o2) {
+                return o1.amount - o2.amount;
             }
         });
         final float f = 9.0f/(total/2);
-        List<DustPart> toRemove = Lists.newArrayList();
-        for (DustPart dustPart : content){
+        List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
+        for (GrinderRecipes.OreDictStack dustPart : content){
             if (i == 0)
                 break;
-            int q = (int) (f * dustPart.nuggetAmount * EFlux.random.nextFloat() * 3);
-            if (q > dustPart.nuggetAmount || ensureMax){
-                q = dustPart.nuggetAmount;
+            int q = (int) (f * dustPart.amount * EFlux.random.nextFloat() * 3);
+            if (q > dustPart.amount || ensureMax){
+                q = dustPart.amount;
             }
             int add = Math.min(q, i);
             if (add > 1) {
                 i -= add;
                 total -= add;
-                dustPart.nuggetAmount -= add;
-                if (dustPart.nuggetAmount <= 0) {
+                dustPart.amount -= add;
+                if (dustPart.amount <= 0) {
                     toRemove.add(dustPart);
                 }
+                GrinderRecipes.OreDictStack copy = dustPart.copy();
+                copy.amount = add;
                 NBTTagCompound tag = new NBTTagCompound();
-                dustPart.toNBT(tag);
+                copy.writeToNBT(tag);
                 tag.setInteger("nuggets", add);
                 list.appendTag(tag);
             }
@@ -95,10 +97,10 @@ public class DustPile {
 
     public int wash(){
         int i = 0;
-        List<DustPile.DustPart> toRemove = Lists.newArrayList();
-        for (DustPile.DustPart dustPart : content) {
-            if (dustPart.getContent().contains(GrinderRecipes.stoneDust)) {
-                i += dustPart.getNuggetAmount();
+        List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
+        for (GrinderRecipes.OreDictStack dustPart : content) {
+            if (dustPart.name.equals(GrinderRecipes.stoneDust)) {
+                i += dustPart.amount;
                 toRemove.add(dustPart);
             }
         }
@@ -107,33 +109,29 @@ public class DustPile {
         return i;
     }
 
-    public ItemStack sieve(){
-        ItemStack ret = null;
+    public int sieve(){
         int i = 0;
-        List<DustPile.DustPart> toRemove = Lists.newArrayList();
-        for (DustPile.DustPart dustPart : content) {
-            if (dustPart.getContent().contains(GrinderRecipes.scrap)) {
-                i += dustPart.getNuggetAmount();
+        List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
+        for (GrinderRecipes.OreDictStack dustPart : content) {
+            if (dustPart.name.equals(GrinderRecipes.scrap)) {
+                i += dustPart.amount;
                 toRemove.add(dustPart);
             }
         }
         content.removeAll(toRemove);
-        if (i > 0) {
-            ret = new ItemStack(ItemRegister.scrap, i);
-        }
         clean = true;
-        return ret;
+        return i;
     }
 
+    @Nullable
     public NBTTagCompound toNBT(){
         if (content.isEmpty())
             return null;
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
-        for (DustPart dustPart : content){
+        for (GrinderRecipes.OreDictStack dustPart : content){
             NBTTagCompound tag = new NBTTagCompound();
-            dustPart.toNBT(tag);
-            tag.setInteger("nuggets", dustPart.nuggetAmount);
+            dustPart.writeToNBT(tag);
             list.appendTag(tag);
         }
         ret.setBoolean("dusts_scanned", scanned);
@@ -149,34 +147,71 @@ public class DustPile {
         NBTTagList tagList = tagCompound.getTagList("dusts", 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
-            int q = tag.getInteger("nuggets");
-            content.add(DustPart.fromNBT(tag).addNuggets(q));
-            total += q;
+            GrinderRecipes.OreDictStack stack = GrinderRecipes.OreDictStack.readFromNBT(tag);
+            content.add(stack);
+            total += stack.amount;
         }
         scanned = tagCompound.getBoolean("dusts_scanned");
         clean = tagCompound.getBoolean("dusts_clean");
         pure = tagCompound.getBoolean("dusts_pure");
     }
 
-    public void scan(){
+    public ItemStack scan(int stacks){
         scanned = true;
         clean = true;
         pure = true;
-        for (DustPart dustPart : content){
-            if (dustPart.getContent().contains(GrinderRecipes.scrap))
+        for (GrinderRecipes.OreDictStack dustPart : content){
+            if (dustPart.name.equals(GrinderRecipes.scrap))
                 clean = false;
-            if (dustPart.getContent().contains(GrinderRecipes.stoneDust))
+            if (dustPart.name.equals(GrinderRecipes.stoneDust))
                 pure = false;
         }
+
+        ItemStack ret = getContentStack(stacks);
+        if (ret != null)
+            return ret;
+        ret = new ItemStack(ItemRegister.groundMesh);
+        ret.stackSize = stacks;
+        ret.setTagCompound(toNBT());
+        return ret;
     }
 
-    private void checkAdd(DustPart... dustParts){
-        for (DustPart dustPart : dustParts){
-            total += dustPart.nuggetAmount;
+    @Nullable
+    public ItemStack getContentStack(int stacks){
+        if (content.size() == 1 && (content.get(0).amount * stacks) % 9 == 0) {
+            GrinderRecipes.OreDictStack s = content.get(0);
+            int size = (s.amount * stacks) / 9;
+            List<ItemStack> stacks1 = OreDictionary.getOres(s.name);
+            if (!(stacks1 == null || stacks1.isEmpty())) {
+                ItemStack ret = stacks1.get(0).copy();
+                ret.stackSize = size;
+                content.clear();
+                return ret;
+            }
+        }
+        return null;
+    }
+
+    public void add(DustPile pile){
+        if (!(scanned && pile.scanned)){
+            scanned = false;
+        }
+        if (!(pure && pile.pure)){
+            pure = false;
+        }
+        if (!(clean && pile.clean)){
+            clean = false;
+        }
+        checkAdd(pile.content.toArray(new GrinderRecipes.OreDictStack[1]));
+    }
+
+    private void checkAdd(GrinderRecipes.OreDictStack... dustParts){
+        for (GrinderRecipes.OreDictStack dustPart : dustParts){
+            total += dustPart.amount;
             boolean b = false;
-            for (DustPart dustPart_ : content){
-                if (dustPart.content.equals(dustPart_.content)){
-                    dustPart_.nuggetAmount += dustPart.nuggetAmount;
+            for (GrinderRecipes.OreDictStack dustPart_ : content){
+                if (dustPart.name.equals(dustPart_.name)){
+                    dustPart_.amount += dustPart.amount;
                     b = true;
                 }
             }
@@ -187,71 +222,6 @@ public class DustPile {
 
     public int getSize(){
         return total;
-    }
-
-    public static class DustPart{
-
-        public static DustPart fromNBT(NBTTagCompound tag){
-            NBTTagList list = tag.getTagList("dustPileOreContents", NBT.NBTData.STRING.getID());
-            List<String> content = Lists.newArrayList();
-            for (int i = 0; i < list.tagCount(); i++) {
-                content.add(list.getStringTagAt(i));
-            }
-            return new DustPart(content);
-        }
-
-        protected DustPart(List<String> content){
-            this.content = content;
-        }
-
-        private int nuggetAmount;
-        private final List<String> content;
-
-        protected DustPart addNuggets(int i){
-            nuggetAmount += i;
-            return this;
-        }
-
-        public void toNBT(NBTTagCompound tag){
-            NBTTagList ores = new NBTTagList();
-            for (String s : content){
-                ores.appendTag(new NBTTagString(s));
-            }
-            tag.setTag("dustPileOreContents", ores);
-        }
-
-        public int getNuggetAmount() {
-            return nuggetAmount;
-        }
-
-        public List<String> getContent() {
-            return content;
-        }
-
-        @Override
-        public int hashCode() {
-            return nuggetAmount;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof DustPart && content.equals(((DustPart) obj).content) && hashCode() == obj.hashCode();
-        }
-
-    }
-
-    public static boolean sameContents(DustPile pile1, DustPile pile2){
-        return (pile1 == null && pile2 == null) || !(pile1 == null || pile2 == null) && pile1.sameContents(pile2);
-    }
-
-    public boolean sameContents(DustPile otherPile){
-        if (content.size() != otherPile.content.size() || getSize() != otherPile.getSize())
-            return false;
-        for (int i = 0; i < content.size(); i++) {
-            if (!content.get(i).equals(otherPile.content.get(i)))
-                return false;
-        }
-        return true;
     }
 
 }

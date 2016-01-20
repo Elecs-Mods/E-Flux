@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
@@ -10,6 +11,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 /**
  * Created by Elec332 on 13-9-2015.
  */
+@RegisterTile(name = "TileEntityEFluxMultiBlockFluidInlet")
 public class TileEntityMultiBlockFluidInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockFluidHandler> implements IFluidHandler{
 
     @Override

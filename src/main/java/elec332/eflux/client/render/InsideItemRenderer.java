@@ -1,10 +1,6 @@
 package elec332.eflux.client.render;
 
-import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import elec332.eflux.util.RIWInventory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
@@ -28,7 +24,7 @@ public class InsideItemRenderer extends TileEntitySpecialRenderer{
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f, int what) {
-        RIWInventory inventory = ((TileEntityInsideItemRenderer)tile).getInventory();
+        RIWInventory inventory = null;//((TileEntityInsideItemRenderer)tile).getInventory();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             if (inventory.getStackInSlot(i) != null)
                 renderItemStack(inventory.getStackInSlot(i), x, y, z, iFromS(i), sFromS(i));

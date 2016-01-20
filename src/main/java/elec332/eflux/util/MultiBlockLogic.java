@@ -1,12 +1,11 @@
 package elec332.eflux.util;
 
 import com.google.common.collect.Lists;
-import elec332.core.util.BlockLoc;
 import elec332.core.world.WorldHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class MultiBlockLogic {
 
     public static class Laser{
 
-        public static List<ItemStack> drill(World worldObj, BlockLoc loc, EnumFacing facing, int distance, int range){
+        public static List<ItemStack> drill(World worldObj, BlockPos loc, EnumFacing facing, int distance, int range){
             if (!worldObj.isRemote){
                 List<ItemStack> toDrop = Lists.newArrayList();
                 for (BlockPos blockLoc : getNewBlocksToMine(loc, facing, distance, range)) {
@@ -51,7 +50,7 @@ public class MultiBlockLogic {
             return oldDistance;
         }
 
-        private static List<BlockPos> getNewBlocksToMine(BlockLoc loc, EnumFacing facing, int distance, int range){
+        private static List<BlockPos> getNewBlocksToMine(BlockPos loc, EnumFacing facing, int distance, int range){
             List<BlockPos> ret = Lists.newArrayList();
             switch (facing){
                 case NORTH:

@@ -15,7 +15,7 @@ public final class MultiBlockInterfaces {
     public interface IEFluxMultiBlock{
     }
 
-    public interface IEFluxMultiBlockFluidHandler extends IEFluxMultiBlock{
+    public interface IEFluxMultiBlockFluidHandler extends IEFluxMultiBlock {
 
         public int fill(FluidStack resource, boolean doFill);
 

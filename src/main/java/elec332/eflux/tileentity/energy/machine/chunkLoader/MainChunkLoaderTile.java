@@ -1,25 +1,21 @@
 package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
 import com.google.common.collect.Lists;
-import elec332.core.main.ElecCore;
-import elec332.core.util.PlayerHelper;
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.BlockLoc;
-import elec332.core.util.IRunOnce;
+import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.BreakableMachineTile;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.ForgeChunkManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +24,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
+@RegisterTile(name = "TileEntityEFluxChunkLoaderMainTile")
 public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader{
 
     public MainChunkLoaderTile(){

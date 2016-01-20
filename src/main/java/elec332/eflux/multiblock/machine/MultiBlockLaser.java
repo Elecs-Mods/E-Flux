@@ -1,16 +1,16 @@
 package elec332.eflux.multiblock.machine;
 
-import elec332.core.util.BlockLoc;
 import elec332.core.util.DirectionHelper;
+import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.util.MultiBlockLogic;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 import java.util.List;
 
@@ -27,26 +27,60 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
     public void init() {
         super.init();
         this.laserController = getBlockLocAtTranslatedPos(0, 1, 1);
-        this.itemOutlet = getBlockLocAtTranslatedPos(2, 0, 0);
-
+        setItemOutput(4, 1, 0);
         this.distance = 0;
+        this.laser = (TileEntityLaser) getTileAtTranslatedPos(1, 1, 1);
     }
 
-    private BlockLoc laserController;
-    private BlockLoc itemOutlet;
+    private BlockPos laserController;
+    private TileEntityLaser laser;
 
     private int distance;
+    private boolean active;
 
     @Override
     public void onTick() {
         super.onTick();
-        if (isServer() && getWorldObj().getTotalWorldTime() % 99 == 0 && getEnergyContainer().drainPower(3000)){
-            List<ItemStack> dugBlocks = MultiBlockLogic.Laser.drill(getWorldObj(), laserController, DirectionHelper.rotateLeft(getMultiBlockFacing()), distance, 1);
-            distance = MultiBlockLogic.Laser.getNewDistanceAfterMining(distance, DirectionHelper.rotateLeft(getMultiBlockFacing()));
-            for (ItemStack stack : dugBlocks){
-                MultiBlockLogic.dropStack(getWorldObj(), itemOutlet, getMultiBlockFacing(), stack);
+        if (isServer() && getWorldObj().getTotalWorldTime() % 99 == 0){
+            if (getEnergyContainer().drainPower(3000)) {
+                if (!active) {
+                    setActive(true);
+                }
+                List<ItemStack> dugBlocks = MultiBlockLogic.Laser.drill(getWorldObj(), laserController, DirectionHelper.rotateLeft(getMultiBlockFacing()), distance, 1);
+                distance = MultiBlockLogic.Laser.getNewDistanceAfterMining(distance, DirectionHelper.rotateLeft(getMultiBlockFacing()));
+                for (ItemStack stack : dugBlocks) {
+                    ejectStack(stack);
+                }
+                setLaserPos(getLaserLocation());
+            }else if (active){
+                setActive(false);
             }
         }
+    }
+
+    private void setActive(boolean active){
+        this.active = active;
+        laser.sendPacket(2, new NBTHelper().addToTag(active, "a").toNBT());
+    }
+
+    private void setLaserPos(BlockPos pos){
+        laser.sendPacket(3, new NBTHelper().addToTag(pos).toNBT());
+    }
+
+    @Override
+    public void invalidate() {
+        setActive(false);
+        setLaserPos(BlockPos.ORIGIN);
+        super.invalidate();
+    }
+
+    public boolean isActive(){
+        return active;
+    }
+
+    public BlockPos getLaserLocation(){
+        EnumFacing facing = DirectionHelper.rotateLeft(getMultiBlockFacing());
+        return (facing == EnumFacing.EAST || facing == EnumFacing.WEST) ? laserController.add(distance, 0, 0) : ((facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH) ? laserController.add(0, 0, distance) : laserController);
     }
 
     @Override

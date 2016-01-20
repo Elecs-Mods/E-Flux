@@ -1,19 +1,20 @@
 package elec332.eflux.proxies;
 
-import elec332.core.world.WorldHelper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.EventHelper;
-import elec332.eflux.client.render.InsideItemRenderer;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.client.render.RenderHandler;
+import elec332.eflux.client.render.TileEntityLaserRenderer;
 import elec332.eflux.tileentity.BreakableMachineTile;
-import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
+import elec332.eflux.tileentity.basic.TileEntityLaser;
 import net.minecraft.entity.player.EntityPlayer;
-//import net.minecraft.util.IIcon;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
+//import net.minecraft.util.IIcon;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -40,7 +41,8 @@ public class ClientProxy extends CommonProxy{
 
     @Override
     public void initRenderStuff(){
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaser.class, new TileEntityLaserRenderer());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
         RenderHandler.dummy();
     }
 

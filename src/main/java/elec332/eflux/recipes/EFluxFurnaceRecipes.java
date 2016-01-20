@@ -38,6 +38,7 @@ public class EFluxFurnaceRecipes extends FurnaceRecipes {
     }
 
     @Override
+    @SuppressWarnings("all")
     public float getSmeltingExperience(ItemStack stack) {
         if (stack != null) {
             for (IEFluxFurnaceRecipe recipe : recipes) {

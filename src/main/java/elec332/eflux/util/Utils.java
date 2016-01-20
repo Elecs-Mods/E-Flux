@@ -1,6 +1,5 @@
 package elec332.eflux.util;
 
-import elec332.core.util.BlockLoc;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 

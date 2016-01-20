@@ -53,9 +53,6 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     public BlockWithMeta register() {
         super.register();
-        GameRegistry.registerTileEntity(BasicCable.class, "EFluxBasicCable");
-        GameRegistry.registerTileEntity(NormalCable.class, "EFluxNormalCable");
-        GameRegistry.registerTileEntity(AdvancedCable.class, "EFluxAdvancedCable");
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()){
             registerISBHR();
         }
@@ -128,13 +125,6 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     public int getTypes() {
         return 3;
-    }
-
-    @Override
-    public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab) {
-        for (int i = 0; i < 3; i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
     }
 
     /**

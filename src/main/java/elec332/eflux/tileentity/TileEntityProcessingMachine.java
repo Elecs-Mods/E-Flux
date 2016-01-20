@@ -1,12 +1,12 @@
 package elec332.eflux.tileentity;
 
 import com.google.common.collect.Lists;
-import elec332.core.tile.IInventoryTile;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.IHasProgressBar;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.slot.SlotOutput;
+import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.IProgressMachine;
@@ -18,8 +18,10 @@ import elec332.eflux.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -152,6 +154,7 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     protected GuiMachine basicGui(EntityPlayer player){
         return new GuiMachine(getGuiServer(player)) {
             @Override

@@ -34,13 +34,18 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        tagCompound.setTag("dustPile", dustPile.toNBT());
+        NBTTagCompound tag = dustPile.toNBT();
+        if (tag != null) {
+            tagCompound.setTag("dustPile", tag);
+        }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        dustPile.readFromNBT(tagCompound.getCompoundTag("dustPile"));
+        if (tagCompound.hasKey("dustPile")) {
+            dustPile.readFromNBT(tagCompound.getCompoundTag("dustPile"));
+        }
     }
 
     @Override

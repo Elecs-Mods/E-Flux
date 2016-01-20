@@ -8,8 +8,8 @@ import net.minecraft.util.EnumFacing;
 public class BlockTextures {
 
     public static final String defaultSideTexture = "default_side";
-    public static final String defaultTopBottomTexture = "default_top&bottom";
-    public static final String defaultBackTexture = "default_back";
+    public static final String defaultTopBottomTexture = defaultSideTexture;//"default_top&bottom";
+    public static final String defaultBackTexture = defaultSideTexture;//"default_back";
 
     public static IBlockTextureProvider getDefaultProvider(){
         return getDefaultProvider("nope");

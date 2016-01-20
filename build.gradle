@@ -60,6 +60,8 @@ minecraft {
     replace "#ELECCORE_VER#", config.eleccore_version
 	
 	mappings = config.mappings
+	
+	useDepAts = true
 }
 
 dependencies {

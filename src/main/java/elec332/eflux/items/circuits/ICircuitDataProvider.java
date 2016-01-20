@@ -11,4 +11,6 @@ public interface ICircuitDataProvider {
 
     public List<ItemStack> getComponents();
 
+    public String getName();
+
 }

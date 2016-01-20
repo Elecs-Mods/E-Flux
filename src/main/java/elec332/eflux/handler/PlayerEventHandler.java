@@ -1,12 +1,9 @@
 package elec332.eflux.handler;
 
 import elec332.core.world.WorldHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import elec332.eflux.blocks.BlockMachine;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Elec332 on 25-5-2015.

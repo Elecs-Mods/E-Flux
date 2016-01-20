@@ -1,15 +1,14 @@
 package elec332.eflux.grid;
 
-import elec332.core.world.WorldHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import elec332.core.main.ElecCore;
-import elec332.core.util.IRunOnce;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;

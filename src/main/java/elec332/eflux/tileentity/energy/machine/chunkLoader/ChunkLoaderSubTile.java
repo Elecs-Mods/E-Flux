@@ -1,22 +1,23 @@
 package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
-import elec332.core.tile.TileBase;
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.main.ElecCore;
-import elec332.core.util.PlayerHelper;
 import elec332.core.server.ServerHelper;
+import elec332.core.tile.TileBase;
 import elec332.core.util.IRunOnce;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.chunk.storage.*;
 
 import java.util.UUID;
 
 /**
  * Created by Elec332 on 25-5-2015.
  */
+@RegisterTile(name = "TileEntityEFluxChunkLoaderSubTile")
 public class ChunkLoaderSubTile extends TileBase implements IChunkLoader{
 
     private UUID owner;

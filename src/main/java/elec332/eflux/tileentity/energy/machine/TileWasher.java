@@ -1,10 +1,12 @@
 package elec332.eflux.tileentity.energy.machine;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.slot.SlotOutput;
 import elec332.core.inventory.widget.FluidTankWidget;
 import elec332.core.inventory.widget.WidgetProgressArrow;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
@@ -17,8 +19,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.*;
 
 import java.util.List;
@@ -26,7 +28,8 @@ import java.util.List;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public class TileWasher extends TileEntityProcessingMachine implements IFluidHandler{
+@RegisterTile(name = "TileEntityEFluxWasher")
+public class TileWasher extends TileEntityProcessingMachine implements IFluidHandler {
 
     public TileWasher(){
         super(2, 0);
@@ -173,6 +176,41 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
         baseContainer.addWidget(new FluidTankWidget(130, 19, 176, 0, 32, 44, slibTank));
         baseContainer.addWidget(new FluidTankWidget(14, 19, 176, 0, 32, 44, waterTank));
         baseContainer.addWidget(new WidgetProgressArrow(76, 33, this, true));
+    }
+
+    @Override
+    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack stack = ItemStack.copyItemStack(player.inventory.getCurrentItem());
+        if (stack != null && FluidContainerRegistry.isBucket(stack)){
+
+            if (FluidContainerRegistry.isFilledContainer(stack)) {
+                FluidStack fs = FluidContainerRegistry.getFluidForFilledItem(stack);
+                int used = fill(side, fs, false);
+                if (used > 0 && used == fs.amount){
+                    fill(side, fs, true);
+                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    ItemStack d = FluidContainerRegistry.drainFluidContainer(stack);
+                    if (!player.inventory.addItemStackToInventory(d)){
+                        WorldHelper.dropStack(worldObj, pos.offset(side), d);
+                    }
+                }
+            } else if (FluidContainerRegistry.isEmptyContainer(stack)){
+                int i = FluidContainerRegistry.getContainerCapacity(stack);
+                FluidStack fs = drain(side, i, false);
+                if (fs != null && fs.amount == i){
+                    ItemStack add = FluidContainerRegistry.fillFluidContainer(fs, stack);
+                    if (add != null) {
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                        if (!player.inventory.addItemStackToInventory(add)) {
+                            WorldHelper.dropStack(worldObj, pos.offset(side), add);
+                        }
+                    }
+                }
+            }
+            return !worldObj.isRemote;
+        } else {
+            return super.onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
+        }
     }
 
     @Override

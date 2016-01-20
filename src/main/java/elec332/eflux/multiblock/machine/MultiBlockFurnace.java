@@ -1,12 +1,9 @@
 package elec332.eflux.multiblock.machine;
 
-import elec332.core.util.PlayerHelper;
 import elec332.core.util.BlockLoc;
-import elec332.core.world.WorldHelper;
-import elec332.eflux.init.BlockRegister;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
-import elec332.eflux.tileentity.multiblock.TileEntityInsideItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -26,9 +23,9 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     @Override
     public void init() {
         super.init();
-        middle = getBlockLocAtTranslatedPos(1, 1, 1);
-        getWorldObj().setBlockState(middle, BlockRegister.renderBlock.getStateFromMeta(0), 3);
-        ((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
+        //middle = getBlockLocAtTranslatedPos(1, 1, 1);
+        //getWorldObj().setBlockState(middle, BlockRegister.renderBlock.getStateFromMeta(0), 3);
+        //((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
     }
 
     private BlockLoc middle;

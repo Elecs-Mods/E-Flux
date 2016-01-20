@@ -67,6 +67,10 @@ public class CircuitHandler {
             mapping.add(provider);
     }
 
+    public String getname(int i){
+        return mapping.get(i).getName();
+    }
+
     private void registerData(){
         Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.creativeTab);
         this.circuitItem = circuit;
@@ -82,17 +86,32 @@ public class CircuitHandler {
             public List<ItemStack> getComponents() {
                 return Lists.newArrayList(circuit(1), circuit(1), circuit(2));
             }
+
+            @Override
+            public String getName() {
+                return "test1";
+            }
         }, EnumCircuit.SMALL);
         register(new ICircuitDataProvider() {
             @Override
             public List<ItemStack> getComponents() {
                 return Lists.newArrayList(circuit(1), circuit(3), circuit(3));
             }
+
+            @Override
+            public String getName() {
+                return "test2";
+            }
         }, EnumCircuit.SMALL);
         register(new ICircuitDataProvider() {
             @Override
             public List<ItemStack> getComponents() {
                 return Lists.newArrayList(circuit(2), circuit(1), circuit(4));
+            }
+
+            @Override
+            public String getName() {
+                return "test3";
             }
         }, EnumCircuit.SMALL);
     }

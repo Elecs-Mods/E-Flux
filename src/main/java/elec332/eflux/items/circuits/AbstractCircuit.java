@@ -1,11 +1,16 @@
 package elec332.eflux.items.circuits;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import elec332.core.client.IIconRegistrar;
+import elec332.core.client.model.ElecModelBakery;
+import elec332.core.client.model.ElecQuadBakery;
+import elec332.core.client.model.INoJsonItem;
+import elec332.core.client.model.model.IItemModel;
+import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,14 +18,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.b3d.B3DModel;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 /**
  * Created by Elec332 on 19-5-2015.
  */
-public abstract class AbstractCircuit extends Item implements ICircuit {
+public abstract class AbstractCircuit extends Item implements ICircuit, INoJsonItem {
 
     public AbstractCircuit(String txt, int types) {
         super();
@@ -33,9 +42,14 @@ public abstract class AbstractCircuit extends Item implements ICircuit {
 
     private int types;
 
+    @SideOnly(Side.CLIENT)
+    private IItemModel model;
+    @SideOnly(Side.CLIENT)
+    private TextureAtlasSprite texture;
+
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return "item."+ EFlux.ModID+".BasicCircuitBoard."+"UNNAMED";
+        return "item."+ EFlux.ModID+".BasicCircuitBoard."+CircuitHandler.get(getDifficulty()).getname(stack.getItemDamage());
     }
 
     @Override
@@ -114,4 +128,21 @@ public abstract class AbstractCircuit extends Item implements ICircuit {
     private boolean isBoard(ItemStack stack){
         return stack.getItem() == this;
     }
+
+    @Override
+    public IItemModel getItemModel(Item item, int meta) {
+        return model;
+    }
+
+    @Override
+    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+        model = modelBakery.itemModelForTextures(texture);
+    }
+
+    @Override
+    public void registerTextures(IIconRegistrar iconRegistrar) {
+        texture = iconRegistrar.registerSprite(getTexture());
+    }
+
+    protected abstract ResourceLocation getTexture();
 }

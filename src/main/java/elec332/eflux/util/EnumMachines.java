@@ -1,23 +1,23 @@
 package elec332.eflux.util;
 
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.eflux.blocks.BlockMachine;
+import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
-import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockPowerInlet;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 4-4-2015.
  */
-public enum EnumMachines {
+public enum EnumMachines implements IEFluxBlockMachineData {
 
     CAPACITOR(Capacitor.class, BlockTextures.getCustomProvider("cap_side", "cap_top", "def_cap")),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
@@ -28,12 +28,7 @@ public enum EnumMachines {
     TESLACOIL(TileTeslaCoil.class, BlockTextures.getCustomSidedProvider("teslacoil_side")),
     SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
     WASHER(TileWasher.class, BlockTextures.getDefaultProvider("washer_front")),
-    RUBBLESIEVE(TileRubbleSieve.class),
-
-    //Common MultiBlock parts
-    POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
-
-    //Machine-specific MultiBlock parts
+    RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getDefaultProvider("rubbleSieve")),
 
     ;
     //___Data__//////////////////////////////////////////////////////////
@@ -72,37 +67,53 @@ public enum EnumMachines {
     }
 
     public void init(){
-        GameRegistry.registerTileEntity(this.tileClass, this.toString());
         this.blockMachine = new BlockMachine(this);
         GameRegistry.registerBlock(blockMachine, itemBlockClass, blockMachine.blockName);
     }
 
+    @Override
+    public boolean hasTwoStates() {
+        return false;
+    }
+
+    @Override
+    public Class<? extends ItemBlock> getItemBlockClass() {
+        return itemBlockClass;
+    }
+
+    @Override
     public Class<? extends TileEntity> getTileClass(){
         return this.tileClass;
     }
 
+    @Override
     public Material getBlockMaterial(){
         return this.material;
     }
 
+    @Override
     public BlockMachine getBlock() {
         return blockMachine;
     }
 
+    @Override
     public IBlockTextureProvider getTextureProvider() {
         return textureProvider;
     }
 
+    @Override
     public void setCreativeTab(CreativeTabs creativeTabs) {
         this.blockMachine.setCreativeTab(creativeTabs);
     }
 
+    @Override
     public int getRenderID() {
         return renderID;
     }
 
     @Override
-    public String toString() {
+    public String getName() {
         return super.toString().toLowerCase();
     }
+
 }

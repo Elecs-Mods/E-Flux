@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
@@ -8,6 +9,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Created by Elec332 on 13-9-2015.
  */
+@RegisterTile(name = "TileEntityEFluxMultiBlockPowerOutlet")
 public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> implements IEnergySource {
 
     @Override

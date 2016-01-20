@@ -4,5 +4,5 @@
 @API(owner = EFluxAPIProps.owner, provides = EFluxAPIProps.provides, apiVersion = EFluxAPIProps.apiVersion)
 package elec332.eflux.api.energy;
 
-import net.minecraftforge.fml.common.API;
 import elec332.eflux.api.EFluxAPIProps;
+import net.minecraftforge.fml.common.API;

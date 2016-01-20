@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.init.Items;
@@ -9,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Created by Elec332 on 30-4-2015.
  */
+@RegisterTile(name = "TileEntityEFluxCapacitor")
 public class Capacitor extends BreakableMachineTile implements ISpecialEnergySource {
 
     @Override

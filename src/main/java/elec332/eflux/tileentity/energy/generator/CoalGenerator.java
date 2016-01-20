@@ -1,16 +1,17 @@
 package elec332.eflux.tileentity.energy.generator;
 
-import elec332.core.tile.BaseTileWithInventory;
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.tile.TileBase;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Created by Elec332 on 29-4-2015.
  */
+@RegisterTile(name = "TileEntityEFluxCoalGenerator")
 public class CoalGenerator extends TileBase implements IEnergySource {
 
     /**

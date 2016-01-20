@@ -1,24 +1,13 @@
 package elec332.eflux;
 
 import com.google.common.collect.Lists;
-import elec332.eflux.recipes.EFluxFurnaceRecipes;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.core.config.ConfigWrapper;
-import elec332.core.util.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
+import elec332.core.util.MCModInfo;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
@@ -28,6 +17,7 @@ import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
+import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
@@ -40,10 +30,20 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -100,13 +100,6 @@ public class EFlux {
         logger.info(CalculationHelper.calcRequestedEF(24, 20, 40, 1000, 0.15f));
         logger.info(Math.sqrt(Math.abs(Math.cos(10))));
         /////////////////////////
-
-        GameRegistry.registerItem(new Item(){
-            @Override
-            public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-                return multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, side);
-            }
-        }.setCreativeTab(creativeTab), "itemTestMB");
 
 
         //setting up mod stuff

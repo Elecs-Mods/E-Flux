@@ -2,65 +2,39 @@ package elec332.eflux.blocks;
 
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.map.IBakedModelRotationMap;
+import elec332.core.client.model.map.BakedModelMetaRotationMap;
 import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.util.DirectionHelper;
-import elec332.core.world.WorldHelper;
+import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
+import elec332.eflux.blocks.data.IEFluxBlockMachineData;
+import elec332.eflux.client.blocktextures.BlockTextures;
+import elec332.eflux.client.blocktextures.IBlockTextureProvider;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelRotation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Elec332 on 13-1-2016.
  */
-public class BlockItemInlet extends BlockMachinePart {
+public class BlockItemInlet extends BlockMachine {
 
-    public BlockItemInlet(String name) {
-        super(0, name);
+    public BlockItemInlet() {
+        super(DATA);
     }
 
+    private static IEFluxBlockMachineData DATA;
+
+    @Override
     @SideOnly(Side.CLIENT)
-    IBakedModelRotationMap<IBlockModel> rotationMap;
-
-    @Override
-    protected void registerTiles() {
-    }
-
-    @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.TRANSLUCENT;
-    }
-
-    @Override
-    public int getTypes() {
-        return 1;
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return StatCollector.translateToLocal("eflux.machine.blockItemInlet." + stack.getItemDamage());
-    }
-
-    @Override
-    public IBakedModel getBlockModel(Item item, int meta) {
-        return rotationMap.forRotation(ModelRotation.X0_Y0);
-    }
-
-    @Override
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
-        EnumFacing facing = ((TileEntityBlockMachine) WorldHelper.getTileAt(iba, pos)).getTileFacing();
+        EnumFacing facing = getFacing(state);
         if (facing != EnumFacing.UP && facing != EnumFacing.DOWN){
             return rotationMap.forRotation(DirectionHelper.getRotationFromFacing(facing));
         } else if (facing == EnumFacing.UP){
@@ -69,8 +43,45 @@ public class BlockItemInlet extends BlockMachinePart {
         return rotationMap.forRotation(ModelRotation.X90_Y0);
     }
 
+    /**
+     * A helper method to prevent you from having to hook into the event,
+     * use this to make your quads. (This always comes AFTER the textures are loaded)
+     */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        rotationMap = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(normal, normal, itemOutlet, normal, normal, normal), true, true);
+        rotationMap = new BakedModelMetaRotationMap<IBlockModel>(true, true);
+        for (int i = 0; i < 2; i++) {
+            rotationMap.setModelsForRotation(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]), true, true));
+        }
     }
+
+    static {
+        DATA = new AbstractEFluxBlockMachineData() {
+
+            private final IBlockTextureProvider textureProvider = BlockTextures.getDefaultProvider("itemOutletFront");
+
+            @Override
+            public Class<? extends TileEntity> getTileClass() {
+                return TileEntityMultiBlockItemGate.class;
+            }
+
+            @Override
+            public boolean hasTwoStates() {
+                return true;
+            }
+
+            @Override
+            public IBlockTextureProvider getTextureProvider() {
+                return textureProvider;
+            }
+
+            @Override
+            public String getName() {
+                return "itemInlet";
+            }
+
+        };
+    }
+
 }

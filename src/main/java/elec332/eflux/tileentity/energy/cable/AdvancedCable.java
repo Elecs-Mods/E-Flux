@@ -1,8 +1,11 @@
 package elec332.eflux.tileentity.energy.cable;
 
+import elec332.core.api.annotations.RegisterTile;
+
 /**
  * Created by Elec332 on 20-7-2015.
  */
+@RegisterTile(name = "TileEntityEFluxAdvancedCable")
 public class AdvancedCable extends AbstractCable {
 
     @Override

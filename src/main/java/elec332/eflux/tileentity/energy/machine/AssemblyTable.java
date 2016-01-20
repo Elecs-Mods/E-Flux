@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
@@ -12,12 +13,13 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 4-5-2015.
  */
+@RegisterTile(name = "TileEntityEFluxAssemblyTable")
 public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){

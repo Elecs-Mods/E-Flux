@@ -1,14 +1,18 @@
 package elec332.eflux.tileentity.multiblock;
 
+import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
+import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver {
+@RegisterTile(name = "TileEntityEFluxMultiBlockPowerInlet")
+public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
 
     @Override
     public void onTileLoaded() {
@@ -61,4 +65,11 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
         return getMultiBlockHandler() == null ? ef : getMultiBlockHandler().receivePower(rp, ef);
     }
 
+    @Override
+    public String[] getProvidedData() {
+        return new String[]{
+                "Power: "+((EFluxMultiBlockMachine)getMultiBlock()).getStoredPower(),
+                "Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken()
+        };
+    }
 }

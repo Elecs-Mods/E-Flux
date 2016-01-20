@@ -1,17 +1,22 @@
 package elec332.eflux.multiblock;
 
-import mcp.mobius.waila.api.ITaggedList;
-import net.minecraftforge.fml.relauncher.Side;
 import elec332.core.multiblock.AbstractMultiBlock;
+import elec332.core.util.InventoryHelper;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.util.IBreakableMachine;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.BreakableMachineInventory;
+import elec332.eflux.util.MultiBlockLogic;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 
@@ -29,6 +34,11 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     private EnergyContainer energyContainer;
     private BreakableMachineInventory breakableMachineInventory;
     private boolean broken;
+    private TileEntityMultiBlockItemGate gate;
+
+    protected void setItemOutput(int length, int width, int height){
+        this.gate = (TileEntityMultiBlockItemGate) getTileAtTranslatedPos(length, width, height);
+    }
 
     @Override
     public void init() {
@@ -43,6 +53,12 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
 
     public ItemStack inject(ItemStack stack){
         return stack;
+    }
+
+    public void ejectStack(ItemStack stack){
+        if (!InventoryHelper.addItemToInventory(gate, stack)){
+            MultiBlockLogic.dropStack(getWorldObj(), gate.getPos(), gate.getTileFacing(), stack);
+        }
     }
 
     @Override
@@ -72,6 +88,10 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         currentTip.add("Power: "+energyContainer.getStoredPower());
         currentTip.add("Broken: "+broken);
         return super.getWailaBody(itemStack, currentTip, accessor, config);
+    }
+
+    public int getStoredPower(){
+        return energyContainer.getStoredPower();
     }
 
     @Override

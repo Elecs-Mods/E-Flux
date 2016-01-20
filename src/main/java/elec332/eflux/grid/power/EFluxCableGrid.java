@@ -11,7 +11,6 @@ import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,15 +1,26 @@
 package elec332.eflux.init;
 
 import elec332.core.world.location.BlockStateWrapper;
-import elec332.eflux.items.ChunkLoaderItemBlock;
-import net.minecraft.block.material.Material;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import elec332.core.main.ElecCore;
-import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
+import elec332.eflux.blocks.data.IEFluxBlockMachineData;
+import elec332.eflux.client.blocktextures.BlockTextures;
+import elec332.eflux.client.blocktextures.IBlockTextureProvider;
+import elec332.eflux.items.ChunkLoaderItemBlock;
+import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityLaser;
+import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockPowerInlet;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -19,13 +30,11 @@ public class BlockRegister {
     private BlockRegister(){
     }
 
-    public static Block ores, machinePart, machineGlass, renderBlock, cable;
-    public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage;
+    public static Block ores, cable, areaMover;
+    public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet;
+    public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
     public void init(FMLInitializationEvent event){
-        if (ElecCore.developmentEnvironment){
-            new DirectionBlock(Material.rock).setCreativeTab(EFlux.creativeTab);
-        }
 
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){
@@ -39,40 +48,215 @@ public class BlockRegister {
             machine.init();
         }
 
-        ores = new BlockOres().register().setCreativeTab(EFlux.creativeTab);
-        machinePart = new BlockMachinePart(11).register().setCreativeTab(EFlux.creativeTab);
-        machineGlass = new BlockHeatGlass(2).register().setCreativeTab(EFlux.creativeTab);
-        renderBlock = new BlockRenderItemInWorld("renderBlock").register().setCreativeTab(EFlux.creativeTab);
+        for (BlockMachineParts machinePart : BlockMachineParts.values()){
+            machinePart.init();
+        }
 
-        Block frame = new BlockMachineFrame("frameBlock").register().setCreativeTab(EFlux.creativeTab);
-        Block itemInlet = new BlockItemInlet("itemInlet").register().setCreativeTab(EFlux.creativeTab);
+        for (GlassTypes glassType : GlassTypes.values()){
+            glassType.init();
+        }
+
+        ores = new BlockOres().register().setCreativeTab(EFlux.creativeTab);
+        oreCopper = new BlockStateWrapper(ores, 0);
+        oreTin = new BlockStateWrapper(ores, 1);
+        oreSilver = new BlockStateWrapper(ores, 3);
+        oreZinc = new BlockStateWrapper(ores, 2);
+
+        Block frame = new BlockMachineFrame("blockFrame").register().setCreativeTab(EFlux.creativeTab);
+        Block itemInlet = new BlockItemInlet().register().setCreativeTab(EFlux.creativeTab);
 
         frameBasic = new BlockStateWrapper(frame, 0);
         frameNormal = new BlockStateWrapper(frame, 1);
         frameAdvanced = new BlockStateWrapper(frame, 2);
 
-        itemGate = new BlockStateWrapper(itemInlet, 0);
+        itemGate = newBlockStateWrapper(itemInlet);
 
-        laserCore = newMachineBlock(0);
-        heater = newMachineBlock(1);
+        laserCore = BlockMachineParts.LASERCORE.getMultiBlockWrapper();
+        heater = BlockMachineParts.HEATER.getMultiBlockWrapper();
 
-        heatResistantGlass = newGlassBlock(0);
-        laserLens = newGlassBlock(1);
+        heatResistantGlass = GlassTypes.GLASS.getMultiBlockWrapper();
+        laserLens = GlassTypes.LASERLENS.getMultiBlockWrapper();
 
-        monitor = newMachineBlock(6);
-        radiator = newMachineBlock(3);
-        motor = newMachineBlock(4);
-        precisionMotor = newMachineBlock(5);
-        dustStorage = newMachineBlock(2);
+        dustStorage = BlockMachineParts.DUSTSTORAGE.getMultiBlockWrapper();
+        radiator = BlockMachineParts.RADIATOR.getMultiBlockWrapper();
+        motor = BlockMachineParts.MOTOR.getMultiBlockWrapper();
+        precisionMotor = BlockMachineParts.PRECISION_MOTOR.getMultiBlockWrapper();
+        monitor = newBlockStateWrapper(new BlockMonitor().register().setCreativeTab(EFlux.creativeTab));
+        powerInlet = BlockMachineParts.POWERINLET.getMultiBlockWrapper();
+
+        areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
 
         cable = new BlockCable("efluxCable").register();
     }
 
-    private static BlockStateWrapper newMachineBlock(int i){
-        return new BlockStateWrapper(machinePart, i);
+    private BlockStateWrapper newBlockStateWrapper(Block block){
+        return new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
     }
 
-    private static BlockStateWrapper newGlassBlock(int i){
-        return new BlockStateWrapper(machineGlass, i);
+    public enum BlockMachineParts implements IEFluxBlockMachineData {
+
+        LASERCORE(BlockTextures.getDefaultProvider("laserCoreFront")),
+        HEATER(BlockTextures.getDefaultProvider("heaterFront")),
+        DUSTSTORAGE(TileEntityDustStorage.class, BlockTextures.getCustomProvider("dustStorage", "default_side", "default_side")),
+        RADIATOR(BlockTextures.getDefaultProvider("radiator")),
+        MOTOR(BlockTextures.getDefaultProvider("motor")),
+        PRECISION_MOTOR(BlockTextures.getDefaultProvider("precisionMotor")),
+
+        POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
+
+        ;
+
+        private BlockMachineParts(IBlockTextureProvider textureProvider){
+            this(TileEntityBlockMachine.class, textureProvider);
+        }
+
+        private BlockMachineParts(Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
+            this.tileClass = tileClass;
+            this.textureProvider = textureProvider;
+        }
+
+        private final Class<? extends TileEntity> tileClass;
+        private final IBlockTextureProvider textureProvider;
+
+        public void init(){
+            this.block = new BlockMachine(this);
+            GameRegistry.registerBlock(block, getName());
+            this.bsw = new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
+        }
+
+        private Block block;
+        private BlockStateWrapper bsw;
+
+        @Override
+        public boolean hasTwoStates() {
+            return false;
+        }
+
+        @Override
+        public Class<? extends ItemBlock> getItemBlockClass() {
+            return ItemBlock.class;
+        }
+
+        @Override
+        public Class<? extends TileEntity> getTileClass() {
+            return tileClass;
+        }
+
+        @Override
+        public Material getBlockMaterial() {
+            return Material.rock;
+        }
+
+        @Override
+        public Block getBlock() {
+            return block;
+        }
+
+        public BlockStateWrapper getMultiBlockWrapper(){
+            return bsw;
+        }
+
+        @Override
+        public IBlockTextureProvider getTextureProvider() {
+            return textureProvider;
+        }
+
+        @Override
+        public void setCreativeTab(CreativeTabs creativeTabs) {
+            block.setCreativeTab(creativeTabs);
+        }
+
+        @Override
+        public int getRenderID() {
+            return 3;
+        }
+
+        @Override
+        public String getName() {
+            return super.toString().toLowerCase();
+        }
+
     }
+
+    private enum GlassTypes implements IEFluxBlockMachineData {
+        GLASS(TileEntityBlockMachine.class, BlockTextures.getCustomProvider("heatGlass", "heatGlass", "heatGlass")),
+        LASERLENS(TileEntityLaser.class, new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                if (side.getAxis() == EnumFacing.Axis.Z){
+                    return "laserLensFront";
+                }
+                return "heatGlass";
+            }
+        })
+        ;
+
+        private GlassTypes(Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
+            this.textureProvider = textureProvider;
+            this.tileClass = tileClass;
+        }
+
+        private final IBlockTextureProvider textureProvider;
+        private final Class<? extends TileEntity> tileClass;
+
+        public void init(){
+            this.block = new BlockMachineGlass(this);
+            GameRegistry.registerBlock(block, getName());
+            this.bsw = new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
+        }
+
+        private Block block;
+        private BlockStateWrapper bsw;
+
+        @Override
+        public boolean hasTwoStates() {
+            return false;
+        }
+
+        @Override
+        public Class<? extends ItemBlock> getItemBlockClass() {
+            return ItemBlock.class;
+        }
+
+        @Override
+        public Class<? extends TileEntity> getTileClass() {
+            return tileClass;
+        }
+
+        @Override
+        public Material getBlockMaterial() {
+            return Material.glass;
+        }
+
+        @Override
+        public Block getBlock() {
+            return block;
+        }
+
+        public BlockStateWrapper getMultiBlockWrapper(){
+            return bsw;
+        }
+
+        @Override
+        public IBlockTextureProvider getTextureProvider() {
+            return textureProvider;
+        }
+
+        @Override
+        public void setCreativeTab(CreativeTabs creativeTabs) {
+            block.setCreativeTab(creativeTabs);
+        }
+
+        @Override
+        public int getRenderID() {
+            return 3;
+        }
+
+        @Override
+        public String getName() {
+            return super.toString().toLowerCase();
+        }
+
+    }
+
 }

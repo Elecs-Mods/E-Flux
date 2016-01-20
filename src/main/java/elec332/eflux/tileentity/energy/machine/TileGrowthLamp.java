@@ -1,7 +1,7 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import com.google.common.collect.Lists;
-import elec332.core.util.BlockLoc;
+import elec332.core.api.annotations.RegisterTile;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.util.Config;
@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 16-5-2015.
  */
+@RegisterTile(name = "TileEntityEFluxGrowthLamp")
 public class TileGrowthLamp extends BreakableMachineTile {
 
     public TileGrowthLamp(){
