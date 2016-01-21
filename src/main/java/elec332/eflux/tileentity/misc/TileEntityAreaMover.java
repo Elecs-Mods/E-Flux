@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.annotations.RegisterTile;
-import elec332.core.world.WorldHelper;
 import elec332.core.world.schematic.Area;
 import elec332.core.world.schematic.Schematic;
 import elec332.core.world.schematic.SchematicHelper;

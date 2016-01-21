@@ -26,6 +26,8 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
             EnergyAPIHelper.postUnloadEvent(this);
     }
 
+    int latsRP, lastEF;
+
     /**
      * @param direction the direction from which a connection is requested
      * @return weather the tile can connect and accept power from the given side
@@ -62,14 +64,21 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      */
     @Override
     public int receivePower(EnumFacing direction, int rp, int ef) {
+        lastEF = ef;
+        latsRP = rp;
         return getMultiBlockHandler() == null ? ef : getMultiBlockHandler().receivePower(rp, ef);
     }
 
     @Override
     public String[] getProvidedData() {
-        return new String[]{
+        String[] ret = new String[]{
                 "Power: "+((EFluxMultiBlockMachine)getMultiBlock()).getStoredPower(),
-                "Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken()
+                "Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken(),
+                "RP: "+latsRP,
+                "EF: "+lastEF
         };
+        latsRP = 0;
+        lastEF = 0;
+        return ret;
     }
 }

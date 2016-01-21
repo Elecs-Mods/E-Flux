@@ -12,31 +12,20 @@ import net.minecraft.util.EnumFacing;
  */
 public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
 
-    public EnergyContainer(int energy, int efForOptimalRP, float acceptance, int rp, IBreakableMachine breakableMachine){
-        this(energy, efForOptimalRP, acceptance, rp);
+    public EnergyContainer(int energy, IEFluxPowerHandler powerHandler, IBreakableMachine breakableMachine){
+        this(energy, powerHandler);
         this.breakableMachine = breakableMachine;
     }
 
-    public EnergyContainer(int energy, int efForOptimalRP, float acceptance, int rp){
-        this(energy, efForOptimalRP);
-        this.acceptance = acceptance;
-        this.optimalRP = rp;
-        this.breakableMachine = null;
-    }
-
-    public EnergyContainer(int maxEnergy, int efForOptimalRP){
+    public EnergyContainer(int maxEnergy, IEFluxPowerHandler powerHandler){
         this.maxEnergy = maxEnergy;
-        this.efForOptimalRP = efForOptimalRP;
-        this.acceptance = 1.0f;
-        this.optimalRP = 10;
+        this.powerHandler = powerHandler;
         this.breakableMachine = null;
     }
 
+    private IEFluxPowerHandler powerHandler;
     private int maxEnergy;
     private int storedPower;
-    private int efForOptimalRP;
-    private int optimalRP;
-    private float acceptance;
     private IBreakableMachine breakableMachine;
     private int processTime;
     private int progress;
@@ -60,8 +49,8 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     protected int calculateProcessTime(int initialTime){
-        int dev = Math.max(lastRP, optimalRP);
-        int devTo = Math.min(lastRP, optimalRP);
+        int dev = Math.max(lastRP, powerHandler.getOptimalRP());
+        int devTo = Math.min(lastRP, powerHandler.getOptimalRP());
         float mul = (float)devTo/dev;
         float fin = 1/(mul/2);
         return (int) initialTime;//(initialTime*fin);
@@ -72,19 +61,12 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             storedPower -= toDrain;
             return true;
         }
+        storedPower = 0;
         return false;
     }
 
     public void setProgressMachine(IProgressMachine progressMachine) {
         this.progressMachine = progressMachine;
-    }
-
-    public void setStoredMaxEnergy(int maxEnergy) {
-        this.maxEnergy = maxEnergy;
-    }
-
-    public void setAcceptance(float acceptance) {
-        this.acceptance = acceptance;
     }
 
     public void setBreakableMachine(IBreakableMachine breakableMachine) {
@@ -104,7 +86,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     public float getAcceptance() {
-        return acceptance;
+        return powerHandler.getAcceptance();
     }
 
     public IBreakableMachine getBreakableMachine() {
@@ -140,7 +122,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
 
     @Override
     public int requestedRP(EnumFacing direction) {
-        return optimalRP;
+        return powerHandler.getOptimalRP();
     }
 
     @Override
@@ -153,14 +135,14 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
                 breakMachine();
             }
         }
-        return efForOptimalRP; //Math.min(efForOptimalRP, (maxEnergy-storedPower)/rp);
+        return powerHandler.getEFForOptimalRP(); //Math.min(efForOptimalRP, (maxEnergy-storedPower)/rp);
     }
 
     @Override
     public final int receivePower(EnumFacing direction, int rp, int ef) {
         if (breakableMachine != null && breakableMachine.isBroken())
             return 0;
-        int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(direction), efForOptimalRP, (maxEnergy-storedPower)/rp, getAcceptance());
+        int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(direction), powerHandler.getEFForOptimalRP(), (maxEnergy-storedPower)/rp, getAcceptance());
         this.storedPower += rp*calcEF;
         if (storedPower > maxEnergy)
             this.storedPower = maxEnergy;

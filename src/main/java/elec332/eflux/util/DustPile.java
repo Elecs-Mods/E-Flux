@@ -95,6 +95,16 @@ public class DustPile {
         return null;
     }
 
+    public int getAmount(String name){
+        int i = 0;
+        for (GrinderRecipes.OreDictStack dustPart : content) {
+            if (dustPart.name.equals(name)) {
+                i += dustPart.amount;
+            }
+        }
+        return i;
+    }
+
     public int wash(){
         int i = 0;
         List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();

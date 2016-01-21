@@ -45,7 +45,9 @@ public class MultiBlockRegister {
                 boolean b3 = ((TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 2, 1))).getTileFacing() == facing;
                 boolean b4 = ((TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).getTileFacing() == EnumFacing.DOWN;
                 boolean b5 = ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 0))).isOutputMode();
-                return b1 && b2 && b3 && b4 && b5;
+                boolean b6 = ((TileEntityBlockMachine) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).getTileFacing() == EnumFacing.UP;
+                boolean b7= ((TileEntityMultiBlockItemGate) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 1, 2))).isInputMode();
+                return b1 && b2 && b3 && b4 && b5 && b6 && b7;
             }
 
             @Override
@@ -67,6 +69,9 @@ public class MultiBlockRegister {
                                     return air;
                                 if (width == 2)
                                     return motor;
+                            }
+                            if (height == 2 && width == 1){
+                                return itemGate;
                             }
                         }
                         if ((length == 0 || length == 2) && width == 1 && height == 1)

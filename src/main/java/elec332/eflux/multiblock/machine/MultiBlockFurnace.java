@@ -37,11 +37,11 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int getRequiredPowerAfterStartup() {
-        return 200;
+        return 500;
     }
 
     @Override
-    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot) {
+    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float f) {
         return oldProgress+1;
     }
 
@@ -87,7 +87,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    protected int getOptimalRP() {
+    public int getOptimalRP() {
         return 5;
     }
 

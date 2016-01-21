@@ -29,13 +29,16 @@ public class GroundMesh extends EFluxItem implements INoJsonItem {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advancedToolTips) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advancedToolTips) {
         super.addInformation(stack, player, tooltip, advancedToolTips);
-        if (isValidMesh(stack)) {
+        if (!(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null)) {
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
-            for (GrinderRecipes.OreDictStack dustPart : dustPile.getContent()) {
-                tooltip.add(dustPart.name + ": " + dustPart.amount);
+            if (isValidMesh(stack)) {
+                for (GrinderRecipes.OreDictStack dustPart : dustPile.getContent()) {
+                    tooltip.add(dustPart.name + ": " + dustPart.amount);
+                }
+            } else {
+                tooltip.add("Total: " + dustPile.getSize());
             }
         }
     }

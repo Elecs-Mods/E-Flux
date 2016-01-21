@@ -60,12 +60,12 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int getEFForOptimalRP() {
-        return 40;
+        return !hasStartedUp() ? 170 : 53;
     }
 
     @Override
     public int getOptimalRP() {
-        return 3;
+        return 10;
     }
 
     @Override
@@ -85,12 +85,12 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int getRequiredPower(int startup) {
-        return 0;
+        return 1500 - startup * 3;
     }
 
     @Override
     public int getRequiredPowerAfterStartup() {
-        return 0;
+        return 500;
     }
 
     @Override
@@ -105,8 +105,8 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot) {
-        if (startup > 30 && stack != null){
+    public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float startup) {
+        if (startup > .8f && stack != null){
             oldProgress++;
             if (oldProgress > 100){
                 inventory.setInventorySlotContents(slot, null);

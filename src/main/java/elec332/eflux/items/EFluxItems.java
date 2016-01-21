@@ -31,7 +31,7 @@ public class EFluxItems extends Item implements INoJsonItem {
     }
 
     protected String[] components = {
-            "carbonPlate", "scrap"
+            "carbonPlate", "scrap", "carbonMesh"
     };
 
     public List<String> getComponents(){

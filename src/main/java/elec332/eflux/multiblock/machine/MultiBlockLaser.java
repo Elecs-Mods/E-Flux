@@ -107,11 +107,11 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
 
     @Override
     public int getEFForOptimalRP() {
-        return 10; //TESTING change to 60-ish
+        return 54; //TESTING change to 60-ish
     }
 
     @Override
-    protected int getOptimalRP() {
+    public int getOptimalRP() {
         return 30;
     }
 

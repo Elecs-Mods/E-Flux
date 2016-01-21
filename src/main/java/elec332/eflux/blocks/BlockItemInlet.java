@@ -5,7 +5,9 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
 import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.DirectionHelper;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
@@ -35,12 +37,14 @@ public class BlockItemInlet extends BlockMachine {
     @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         EnumFacing facing = getFacing(state);
+        TileEntity tile = WorldHelper.getTileAt(iba, pos);
+        int meta = (getMachine().hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive()) ? 1 : 0;
         if (facing != EnumFacing.UP && facing != EnumFacing.DOWN){
-            return rotationMap.forRotation(DirectionHelper.getRotationFromFacing(facing));
+            return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(facing));
         } else if (facing == EnumFacing.UP){
-            return rotationMap.forRotation(ModelRotation.X270_Y0);
+            return rotationMap.forMetaAndRotation(meta, ModelRotation.X270_Y0);
         }
-        return rotationMap.forRotation(ModelRotation.X90_Y0);
+        return rotationMap.forMetaAndRotation(meta, ModelRotation.X90_Y0);
     }
 
     /**
@@ -59,7 +63,15 @@ public class BlockItemInlet extends BlockMachine {
     static {
         DATA = new AbstractEFluxBlockMachineData() {
 
-            private final IBlockTextureProvider textureProvider = BlockTextures.getDefaultProvider("itemOutletFront");
+            private final IBlockTextureProvider textureProvider = new IBlockTextureProvider() {
+                @Override
+                public String getIconName(EnumFacing side, boolean active) {
+                    if (side == EnumFacing.NORTH){
+                        return active ? "itemInletFront" : "itemOutletFront";
+                    }
+                    return BlockTextures.defaultSideTexture;
+                }
+            };
 
             @Override
             public Class<? extends TileEntity> getTileClass() {

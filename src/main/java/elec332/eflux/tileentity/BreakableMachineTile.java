@@ -5,6 +5,7 @@ import elec332.core.server.ServerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
+import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
@@ -25,11 +26,11 @@ import java.util.List;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile {
+public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile, IEFluxPowerHandler {
 
     public BreakableMachineTile(){
         super();
-        this.energyContainer = new EnergyContainer(getMaxStoredPower(), getEFForOptimalRP(), getAcceptance(), getRequestedRP(), this);
+        this.energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
     }
 
     private boolean broken = false;
@@ -37,17 +38,12 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
 
     public abstract ItemStack getRandomRepairItem();
 
-    public abstract float getAcceptance();
-
     protected abstract int getMaxStoredPower();
 
-    /**
-     * The amount returned here is NOT supposed to change, anf if it does,
-     * do not forget that it will receive a penalty if the machine is not running at optimum RP
-     *
-     * @return the amount of requested EF
-     */
-    public abstract int getEFForOptimalRP();
+    @Override
+    public int getOptimalRP() {
+        return getRequestedRP();
+    }
 
     public abstract int getRequestedRP();
 

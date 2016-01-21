@@ -2,12 +2,50 @@
 itemGroup.EFlux=EFlux
 
 ##ITEMS
+item.EFlux.MultiMeter.name=Multimeter
+item.EFlux.Wrench.name=Wrench
+item.EFlux.groundMesh.name=Ground Mesh
+item.EFlux.genericItems.carbonPlate.name=Carbon Plate
+item.EFlux.genericItems.scrap.name=Scrap
+item.EFlux.genericItems.carbonMesh.name=Carbon Mesh
+item.EFlux.groundMesh.name=Ground Mesh
+item.EFlux.ingots.copper.name=Copper Ingot
+item.EFlux.ingots.tin.name=Tin Ingot
+item.EFlux.ingots.zinc.name=Zinc Ingot
+item.EFlux.ingots.silver.name=Silver Ingot
+item.EFlux.ingots.compressed.name=Compressed Ingot
+item.EFlux.ingots.conductive.name=Conductive Ingot
+item.EFlux.coils.co.name=Copper Coil
+item.EFlux.coils.si.name=Silver Coil
+item.EFlux.coils.cond.name=Conductive Coil
+item.EFlux.itemAreaMover.name=Area Mover
+item.EFlux.multiBlockCreator.name=MultiBlock Toolkit
+
+item.EFlux.dusts.dustIron.name=Iron Dust
+item.EFlux.dusts.dustGold.name=Gold Dust
+item.EFlux.dusts.dustCopper.name=Copper Dust
+item.EFlux.dusts.dustZinc.name=Zinc Dust
+item.EFlux.dusts.dustSilver.name=Silver Dust
+item.EFlux.dusts.dustCoal.name=Coal Dust
+item.EFlux.dusts.dustStone.name=Stone Dust
+item.EFlux.dusts.dustTin.name=Tin Dust
+item.EFlux.dusts.dustConductive.name=Conductive Dust
 
 
 ##BLOCKS
 tile.EFlux.efluxCable.0.name=Basic Cable
 tile.EFlux.efluxCable.1.name=Normal Cable
 tile.EFlux.efluxCable.2.name=Advanced Cable
+
+tile.EFlux.lasercore.name=Laser Core
+tile.EFlux.heater.name=Heater
+tile.EFlux.duststorage.name=Dust Storage
+tile.EFlux.radiator.name=Radiator
+tile.EFlux.motor.name=Motor
+tile.EFlux.precision_motor.name=Precision Motor
+tile.EFlux.glass.name=Heat-Resistant Glass
+tile.EFlux.laserlens.name=Laser Lens
+
 
 tile.EFlux.powerinlet.name=Power Inlet
 
@@ -16,22 +54,17 @@ tile.EFlux.ore.tin.name=Tin Ore
 tile.EFlux.ore.zinc.name=Zinc Ore
 tile.EFlux.ore.silver.name=Silver Ore
 
-eflux.machine.blockFrame.0.name=Basic Machine Frame
-eflux.machine.blockFrame.1.name=Normal Machine Frame
-eflux.machine.blockFrame.2.name=Advanced Machine Frame
+tile.EFlux.blockFrame.0.name=Basic Machine Frame
+tile.EFlux.blockFrame.1.name=Normal Machine Frame
+tile.EFlux.blockFrame.2.name=Advanced Machine Frame
 
-eflux.machine.blockIteminlet.0.name=Item Gate
+tile.EFlux.itemInlet.name=Item Gate
 
-eflux.machine.part.0.name=Laser Core
-eflux.machine.part.1.name=Heater
-eflux.machine.part.2.name=DustStorage
-eflux.machine.part.3.name=Radiator
-eflux.machine.part.4.name=Motor
-eflux.machine.part.5.name=Precision Motor
-eflux.machine.part.6.name=Monitor
+tile.EFluxMonitor.name=Monitor
 
-eflux.machine.glass.0.name=Heat-Resistant Glass
-eflux.machine.glass.1.name=Laser Lens
+tile.EFlux.areaMover.0.name=Area Mover (Tier 1)
+tile.EFlux.areaMover.1.name=Area Mover (Tier 2)
+tile.EFlux.areaMover.2.name=Area Mover (Tier 3)
 
 tile.EFlux.capacitor.name=Capacitor
 tile.EFlux.coal_generator.name=Coal Generator

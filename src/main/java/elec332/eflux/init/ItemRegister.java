@@ -3,6 +3,7 @@ package elec332.eflux.init;
 import elec332.eflux.EFlux;
 import elec332.eflux.items.*;
 import elec332.eflux.util.GrinderRecipes;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,7 +23,7 @@ public class ItemRegister {
     public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator;
     @SuppressWarnings("all")
     private static Item EFluxItems, ingot, coil, dusts;
-    public static ItemStack copperIngot, tinIngot, zincIngot, silverIngot, copperCoil, silverCoil, conductiveCoil, compressedIngot, carbonPlate, scrap, conductiveIngot;
+    public static ItemStack copperIngot, tinIngot, zincIngot, silverIngot, copperCoil, silverCoil, conductiveCoil, compressedIngot, carbonPlate, scrap, conductiveIngot, carbonMesh;
     public static ItemStack dustIron, dustGold, dustCopper, dustZinc, dustSilver, dustCoal, dustStone, dustTin, dustConductive;
 
     public void init(FMLInitializationEvent event){
@@ -39,6 +40,7 @@ public class ItemRegister {
         GameRegistry.registerItem(EFluxItems, "GenericItems");
         carbonPlate = new ItemStack(EFluxItems, 1, 0);
         scrap = new ItemStack(EFluxItems, 1, 1);
+        carbonMesh = new ItemStack(EFluxItems, 1, 2);
 
         ingot = new EFluxItemsIngot();
         GameRegistry.registerItem(ingot, "EFluxIngot");
@@ -79,6 +81,8 @@ public class ItemRegister {
         OreDictionary.registerOre("ingotSilver", silverIngot);
         OreDictionary.registerOre("ingotZinc", zincIngot);
         OreDictionary.registerOre("ingotConductive", conductiveIngot);
+
+        OreDictionary.registerOre("vanillaCoal", Items.coal);
 
     }
 

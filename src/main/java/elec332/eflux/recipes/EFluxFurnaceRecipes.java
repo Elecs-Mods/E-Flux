@@ -13,7 +13,7 @@ import java.util.List;
 public class EFluxFurnaceRecipes extends FurnaceRecipes {
 
     @Nonnull
-    public EFluxFurnaceRecipes getInstance(){
+    public static EFluxFurnaceRecipes getInstance(){
         return (EFluxFurnaceRecipes) FurnaceRecipes.instance();
     }
 

@@ -1,6 +1,5 @@
 package elec332.eflux.client.render;
 
-import elec332.core.client.ElecTessellator;
 import elec332.core.client.ITessellator;
 import elec332.core.client.RenderHelper;
 import elec332.eflux.client.EFluxResourceLocation;

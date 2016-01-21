@@ -7,16 +7,18 @@ import elec332.core.util.IRunOnce;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemHelper;
 import elec332.eflux.api.util.IBreakableMachine;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerSingleSlot;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
@@ -61,7 +63,7 @@ public class BreakableMachineInventory implements IInventory{
 
         };
         if (side==Side.CLIENT)
-            return new GuiStandardFormat(container, new ResourceLocation("nope.png")){
+            return new GuiStandardFormat(container, new EFluxResourceLocation("gui/GuiNull.png")){
 
                 IInventory fake = new BasicInventory("", 1);
 
@@ -70,7 +72,20 @@ public class BreakableMachineInventory implements IInventory{
                     fake.setInventorySlotContents(0, getRepairItem());
                     Slot slot = container.getSlot(0);
                     Slot fS = new Slot(fake, 0, slot.xDisplayPosition, slot.yDisplayPosition);
+                    RenderHelper.enableGUIStandardItemLighting();
+                    GlStateManager.pushMatrix();
+                    int i = this.guiLeft;
+                    int j = this.guiTop;
+                    GlStateManager.translate((float)i, (float)j, 0.0F);
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    GlStateManager.enableRescaleNormal();
+                    this.theSlot = null;
+                    int k = 240;
+                    int l = 240;
+                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) k / 1.0F, (float) l / 1.0F);
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     drawSlot(fS);
+                    GlStateManager.popMatrix();
                     super.drawScreen(mouseX, mouseY, f);
                 }
 
@@ -284,7 +299,7 @@ public class BreakableMachineInventory implements IInventory{
     }
 
     public boolean canFix(){
-        if (ItemHelper.areItemsEqual(inventoryContent[0], repairItem)) {
+        if (InventoryHelper.areEqualNoSize(inventoryContent[0], repairItem) && inventoryContent[0].stackSize == repairItem.stackSize) {
             i.setBroken(false);
             inventoryContent[0] = null;
             return true;
@@ -304,7 +319,6 @@ public class BreakableMachineInventory implements IInventory{
 
     @Override
     public void setField(int id, int value) {
-
     }
 
     @Override

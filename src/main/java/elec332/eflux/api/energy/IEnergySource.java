@@ -28,4 +28,11 @@ public interface IEnergySource extends IEnergyTile{
      */
     public int provideEnergy(int rp, EnumFacing direction, boolean execute);
 
+    /**
+     * Checks if the provider also conducts power.
+     *
+     * @return Whether the
+     */
+    //public boolean isConductor();
+
 }

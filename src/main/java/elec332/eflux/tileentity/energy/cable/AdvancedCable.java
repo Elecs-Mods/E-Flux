@@ -15,7 +15,7 @@ public class AdvancedCable extends AbstractCable {
 
     @Override
     public int getMaxEFTransfer() {
-        return 100;
+        return 200;
     }
 
     @Override

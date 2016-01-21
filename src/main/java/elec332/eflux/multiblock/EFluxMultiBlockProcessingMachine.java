@@ -19,7 +19,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     public EFluxMultiBlockProcessingMachine() {
         super();
         progressMap = Maps.newHashMap();
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < getSlots(); i++) {
             progressMap.put(i, 0);
         }
     }
@@ -27,13 +27,17 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     @Override
     public void init() {
         super.init();
-        inventory = new BasicInventory("y", 6, getSaveDelegate()){
+        inventory = new BasicInventory("y", getSlots(), getSaveDelegate()){
             @Override
             public int getInventoryStackLimit() {
                 return 1;
             }
         };//new RIWInventory(0, getSaveDelegate());
         //setHook();
+    }
+
+    public int getSlots(){
+        return 6;
     }
 
     protected BasicInventory inventory;
@@ -68,23 +72,42 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
                 }
             } else {
                 if (getEnergyContainer().drainPower(getRequiredPowerAfterStartup()) && !isBroken()) {
-                    if (startup > startupTime)
+                    if (startup > startupTime) {
                         startup = startupTime;
+                    }
                 } else {
-                    if (startup > 0)
+                    if (startup > 0) {
                         startup--;
+                    }
                 }
             }
-            for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                int q = progressMap.get(i);
-                progressMap.put(i, updateProgressOnItem(q, inventory.getStackInSlot(i), i));
+            if (!isBroken()) {
+                for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                    int q = progressMap.get(i);
+                    progressMap.put(i, updateProgressOnItem(q, inventory.getStackInSlot(i), i, (float)startup / (float)startupTime));
+                    if (progressMap.get(i) > getMaxProgress()) {
+                        onProcessComplete(inventory.getStackInSlot(i), i);
+                        resetProgressData(i);
+                    }
+                }
             }
             tick(startup);
         }
     }
 
+    public int getMaxProgress(){
+        return 100;
+    }
+
     protected void resetProgressData(int slot){
         progressMap.put(slot, 0);
+    }
+
+    public void onProcessComplete(ItemStack stack, int slot){
+    }
+
+    public boolean hasStartedUp(){
+        return startup >= startupTime;
     }
 
     /*public boolean switchToItemMode(){
@@ -132,7 +155,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     public void tick(int startup){
     }
 
-    public abstract int updateProgressOnItem(int oldProgress, ItemStack stack, int slot);
+    public abstract int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float startup);
 
     @Override
     public int getProgress(){

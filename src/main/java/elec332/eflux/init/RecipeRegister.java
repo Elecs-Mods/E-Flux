@@ -2,6 +2,9 @@ package elec332.eflux.init;
 
 import elec332.core.java.JavaHelper;
 import elec332.core.util.OredictHelper;
+import elec332.eflux.EFlux;
+import elec332.eflux.recipes.CompressorRecipes;
+import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.IEFluxFurnaceRecipe;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
@@ -16,13 +19,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import static elec332.eflux.EFlux.random;
 import static elec332.eflux.init.BlockRegister.*;
 import static elec332.eflux.init.ItemRegister.*;
-import static elec332.eflux.init.ItemRegister.areaMover;
 import static elec332.eflux.util.EnumMachines.*;
-import static net.minecraft.init.Items.*;
 import static net.minecraft.init.Blocks.*;
-import static elec332.eflux.EFlux.random;
+import static net.minecraft.init.Items.*;
 
 /**
  * Created by Elec332 on 13-1-2016.
@@ -80,7 +82,9 @@ public class RecipeRegister {
         registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ender_eye, 'L', CHUNKSUB.getBlock(), 'I', iron_ingot, 'S', silverIngot);
         registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ender_eye, 'I', iron_ingot, 'M', multimeter, 'Z', zincIngot, 'R', redstone);
 
-        CraftingManager.getInstance().addShapelessRecipe(dustConductive, dustGold, dustSilver, dustTin);
+        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(dustConductive.getItem(), 3, dustConductive.getItemDamage()), dustGold, dustSilver, dustTin);
+
+        registerShapedRecipe(carbonMesh, "CCC", "CCC", "CCC", 'C', dustCoal);
 
     }
 
@@ -99,6 +103,8 @@ public class RecipeRegister {
     }
 
     private static void registerEFluxRecipes(){
+        CompressorRecipes.getInstance().registerRecipe(carbonMesh, carbonPlate, false);
+        GrinderRecipes.instance.addRecipe("vanillaCoal", new GrinderRecipes.OreDictStack("dustCoal", 18));
         GrinderRecipes.instance.addRecipe(new GrinderRecipes.IGrinderRecipe() {
 
             @Override
@@ -196,6 +202,30 @@ public class RecipeRegister {
             }
 
         });
+        EFluxFurnaceRecipes.getInstance().registerRecipe(new IEFluxFurnaceRecipe() {
+
+            @Override
+            public boolean accepts(ItemStack input) {
+                if (!(input.getItem() != groundMesh && input.getTagCompound() != null)){
+                    return false;
+                }
+                DustPile dustPile = DustPile.fromNBT(input.getTagCompound());
+                return dustPile.scanned && dustPile.pure && dustPile.clean && dustPile.getAmount("dustGold") == 3 && dustPile.getAmount("dustTin") == 3 && dustPile.getAmount("dustSilver") == 3 && dustPile.getSize() == 9;
+            }
+
+            @Override
+            public ItemStack getOutput(ItemStack stack) {
+                ItemStack ret = conductiveIngot.copy();
+                ret.stackSize = 1 + (EFlux.random.nextFloat() > .7 ? 1 : 0);
+                return ret;
+            }
+
+            @Override
+            public float getExperience(ItemStack input) {
+                return 0.9f;
+            }
+
+        });
     }
 
     private static void registerSmelting(ItemStack in, Item item){
@@ -212,25 +242,6 @@ public class RecipeRegister {
 
     private static void registerShapedRecipe(ItemStack stack, Object... params){
         GameRegistry.addShapedRecipe(stack, params);
-    }
-
-    private static class DustSmeltingRecipe implements IEFluxFurnaceRecipe {
-
-        @Override
-        public boolean accepts(ItemStack input) {
-            return input.getItem() == ItemRegister.groundMesh;
-        }
-
-        @Override
-        public ItemStack getOutput(ItemStack stack) {
-            return null;
-        }
-
-        @Override
-        public float getExperience(ItemStack input) {
-            return 0.3f;
-        }
-
     }
 
 }

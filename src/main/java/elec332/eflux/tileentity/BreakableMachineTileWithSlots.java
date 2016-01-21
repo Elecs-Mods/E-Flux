@@ -3,6 +3,7 @@ package elec332.eflux.tileentity;
 import elec332.core.util.BasicInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
@@ -28,6 +29,12 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
+    }
+
+    @Override
+    public void onBlockRemoved() {
+        InventoryHelper.dropInventoryItems(worldObj, pos, this);
+        super.onBlockRemoved();
     }
 
     @Override

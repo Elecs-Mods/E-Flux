@@ -2,7 +2,6 @@ package elec332.eflux.recipes.old;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import elec332.eflux.recipes.old.AbstractRecipeHandler;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.item.ItemStack;
 

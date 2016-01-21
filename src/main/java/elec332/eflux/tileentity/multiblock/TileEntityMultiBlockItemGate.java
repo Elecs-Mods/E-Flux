@@ -1,13 +1,14 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BasicInventory;
-import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 //TODO: Interface
 @RegisterTile(name = "TileEntityEFluxMultiBlockItemGate")
-public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory{
+public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IActivatableMachine {
 
     public TileEntityMultiBlockItemGate(){
         super();
@@ -30,19 +31,42 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
 
     private BasicInventory inventory;
     private int mode;
+    private boolean hasFilter;
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
-        tagCompound.setInteger("mode", mode);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         inventory.readFromNBT(tagCompound);
+    }
+
+    @Override
+    public void writeToItemStack(NBTTagCompound tagCompound) {
+        super.writeToItemStack(tagCompound);
+        tagCompound.setInteger("mode", mode);
+        tagCompound.setBoolean("f", hasFilter);
+    }
+
+    @Override
+    public void readItemStackNBT(NBTTagCompound tagCompound) {
+        super.readItemStackNBT(tagCompound);
         mode = tagCompound.getInteger("mode");
+        hasFilter = tagCompound.getBoolean("f");
+    }
+
+    @Override
+    public void onBlockRemoved() {
+        InventoryHelper.dropInventoryItems(worldObj, pos, this);
+        super.onBlockRemoved();
+    }
+
+    public boolean hasFilter() {
+        return hasFilter;
     }
 
     @Override
@@ -214,4 +238,8 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
 
     }
 
+    @Override
+    public boolean isActive() {
+        return isInputMode();
+    }
 }

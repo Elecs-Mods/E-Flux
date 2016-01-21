@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.annotations.RegisterTile;
-import elec332.core.util.InventoryHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;

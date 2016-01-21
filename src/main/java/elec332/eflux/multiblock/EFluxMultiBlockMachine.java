@@ -2,9 +2,9 @@ package elec332.eflux.multiblock;
 
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.InventoryHelper;
-import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.container.EnergyContainer;
+import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.BreakableMachineInventory;
@@ -12,10 +12,8 @@ import elec332.eflux.util.MultiBlockLogic;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
@@ -23,11 +21,11 @@ import java.util.List;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor {
+public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor, IEFluxPowerHandler {
 
     public EFluxMultiBlockMachine(){
         super();
-        energyContainer = new EnergyContainer(getMaxStoredPower(), getEFForOptimalRP(), getAcceptance(), getOptimalRP(), this);
+        energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
         this.broken = false;
     }
 
@@ -55,8 +53,12 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         return stack;
     }
 
+    public boolean canAddToOutput(ItemStack stack){
+        return InventoryHelper.addItemToInventory(gate, stack);
+    }
+
     public void ejectStack(ItemStack stack){
-        if (!InventoryHelper.addItemToInventory(gate, stack)){
+        if (!canAddToOutput(stack)){
             MultiBlockLogic.dropStack(getWorldObj(), gate.getPos(), gate.getTileFacing(), stack);
         }
     }
@@ -150,12 +152,6 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     protected abstract int getMaxStoredPower();
-
-    protected abstract int getEFForOptimalRP();
-
-    protected abstract float getAcceptance();
-
-    protected abstract int getOptimalRP();
 
     public abstract ItemStack getRandomRepairItem();
 
