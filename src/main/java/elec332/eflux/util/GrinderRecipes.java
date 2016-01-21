@@ -1,6 +1,8 @@
 package elec332.eflux.util;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import elec332.core.util.OredictHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,6 +81,13 @@ public class GrinderRecipes{
 
     }
 
+    public void addRecipe(String input, OreDictStack output){
+        if (Strings.isNullOrEmpty(input) || output == null){
+            throw new IllegalArgumentException();
+        }
+        addRecipe(new DefaultRecipe(input, output.copy()));
+    }
+
     public void addRecipe(IGrinderRecipe recipe){
         recipes.add(recipe);
     }
@@ -112,6 +121,30 @@ public class GrinderRecipes{
             parts.add(new OreDictStack(scrap, max));
         }
         return parts.toArray(new OreDictStack[parts.size()]);
+    }
+
+    private class DefaultRecipe implements IGrinderRecipe {
+
+        public DefaultRecipe(String in, OreDictStack out){
+            this.in = in;
+            this.out = out;
+        }
+
+        private final String in;
+        private final OreDictStack out;
+
+        @Override
+        public boolean accepts(ItemStack stack) {
+            return OredictHelper.getOreNames(stack).contains(in);
+        }
+
+        @Override
+        public OreDictStack[] getOutput(ItemStack stack, int total) {
+            OreDictStack o = out.copy();
+            //o.amount = Math.min(o.amount, total);
+            return new OreDictStack[]{o};
+        }
+
     }
 
     /*private GrinderRecipes(){
