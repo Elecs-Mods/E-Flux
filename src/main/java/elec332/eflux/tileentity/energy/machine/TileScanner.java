@@ -85,7 +85,7 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
         return new BaseGuiContainer(getGuiServer(player)) {
             @Override
             public ResourceLocation getBackgroundImageLocation() {
-                return new EFluxResourceLocation("nope");
+                return new EFluxResourceLocation("gui/GuiNull.png");
             }
         };
     }
