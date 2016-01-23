@@ -1,12 +1,13 @@
 package elec332.eflux.blocks;
 
 import com.google.common.collect.Lists;
-import elec332.core.client.ITextureLoader;
 import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.RenderingRegistry;
+import elec332.core.client.model.map.BakedModelMetaMap;
+import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.world.WorldHelper;
@@ -21,7 +22,6 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import elec332.core.client.RenderHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.tileentity.energy.cable.AdvancedCable;
@@ -29,7 +29,6 @@ import elec332.eflux.tileentity.energy.cable.BasicCable;
 import elec332.eflux.tileentity.energy.cable.NormalCable;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -52,9 +51,9 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     }
 
     @SideOnly(Side.CLIENT)
-    private TextureAtlasSprite texture;
+    private TextureAtlasSprite[] textures;
     @SideOnly(Side.CLIENT)
-    private IBlockModel model;
+    private IBakedModelMetaMap<IBlockModel> models;
 
     @Override
     public BlockWithMeta register() {
@@ -67,7 +66,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
 
     @SideOnly(Side.CLIENT)
     public TextureAtlasSprite getTextureFor(IBlockState state){
-        return texture;
+        return textures[getMetaFromState(state)];
     }
 
     @Override
@@ -170,7 +169,10 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
-        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/testCable"));
+        textures = new TextureAtlasSprite[getTypes()];
+        textures[0] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/basicCable"));
+        textures[1] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/normalCable"));
+        textures[2] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/advancedCable"));
     }
 
     /**
@@ -184,7 +186,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
-        return model;
+        return models.forMeta(getMetaFromState(state));
     }
 
     /**
@@ -193,7 +195,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
-        return model;
+        return models.forMeta(meta);
     }
 
     /**
@@ -203,7 +205,10 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        model = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture).setTexture(texture));
+        models = new BakedModelMetaMap<IBlockModel>();
+        for (int i = 0; i < textures.length; i++) {
+            models.setModelForMeta(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]).setTexture(textures[i])));
+        }
     }
 
     @SideOnly(Side.CLIENT)
