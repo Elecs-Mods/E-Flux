@@ -77,5 +77,6 @@ tile.EFlux.scanner.name=Scanner
 tile.EFlux.washer.name=Washer
 tile.EFlux.rubblesieve.name=Rubble Sieve
 
+tile.EFlux.RFConverter.name=RF Converter
 
 ##MISC

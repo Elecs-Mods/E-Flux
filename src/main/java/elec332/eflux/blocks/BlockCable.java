@@ -1,5 +1,6 @@
 package elec332.eflux.blocks;
 
+import com.google.common.collect.Lists;
 import elec332.core.client.ITextureLoader;
 import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
@@ -8,11 +9,16 @@ import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.world.WorldHelper;
+import elec332.eflux.api.energy.IEnergyReceiver;
+import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.CableRenderer;
+import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -84,12 +90,41 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     }
 
     @Override
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
+        setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getCollisionBoundingBox(worldIn, pos, state);
+    }
+
+    @Override
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos) {
+        return super.getSelectedBoundingBox(worldIn, pos);
+    }
+
+    @Override
     @SuppressWarnings("all")
     public void setBlockBoundsBasedOnState(IBlockAccess iba, BlockPos pos) {
+        List<EnumFacing> connections = Lists.newArrayList();
+        TileEntity tile = WorldHelper.getTileAt(iba, pos);
+        if (tile != null) {
+            for (EnumFacing direction : EnumFacing.VALUES) {
+                TileEntity tile2 = WorldHelper.getTileAt(iba, pos.offset(direction));
+                if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || tile2 instanceof IEnergySource && ((IEnergySource) tile2).canProvidePowerTo(direction.getOpposite()) || tile2 instanceof IEnergyReceiver && ((IEnergyReceiver) tile2).canAcceptEnergyFrom(direction.getOpposite())) {
+                    connections.add(direction);
+                }
+            }
+        }
         float thickness = 6 * RenderHelper.renderUnit;
         float heightStuff = (1 - thickness)/2;
         float f1 = thickness + heightStuff;
-        setBlockBounds(heightStuff, heightStuff, heightStuff, f1, f1, f1);
+
+        float yMin = connections.contains(EnumFacing.DOWN) ? 0 : heightStuff;
+        float yMax = connections.contains(EnumFacing.UP) ? 1 : f1;
+        float xMin = connections.contains(EnumFacing.WEST) ? 0 : heightStuff;
+        float xMax = connections.contains(EnumFacing.EAST) ? 1 : f1;
+        float zMin = connections.contains(EnumFacing.NORTH) ? 0 : heightStuff;
+        float zMax = connections.contains(EnumFacing.SOUTH) ? 1 : f1;
+
+        setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
     }
 
     @Override

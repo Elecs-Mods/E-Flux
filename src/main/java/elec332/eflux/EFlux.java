@@ -129,6 +129,7 @@ public class EFlux {
         registerRecipes();
         EventHelper.registerHandlerForge(new PlayerEventHandler());
         proxy.initRenderStuff();
+        Compat.instance.init();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
             @Override
             public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {

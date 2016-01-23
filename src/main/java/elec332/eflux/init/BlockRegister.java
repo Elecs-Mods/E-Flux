@@ -44,6 +44,9 @@ public class BlockRegister {
                 case CHUNKSUB:
                     machine.itemBlockClass = ChunkLoaderItemBlock.class;
                     break;
+                case COAL_GENERATOR:
+                    machine.hasTwoStates = true;
+                    break;
             }
             machine.init();
         }
@@ -179,16 +182,8 @@ public class BlockRegister {
     }
 
     private enum GlassTypes implements IEFluxBlockMachineData {
-        GLASS(TileEntityBlockMachine.class, BlockTextures.getCustomProvider("heatGlass", "heatGlass", "heatGlass")),
-        LASERLENS(TileEntityLaser.class, new IBlockTextureProvider() {
-            @Override
-            public String getIconName(EnumFacing side, boolean active) {
-                if (side.getAxis() == EnumFacing.Axis.Z){
-                    return "laserLensFront";
-                }
-                return "heatGlass";
-            }
-        })
+        GLASS(TileEntityBlockMachine.class, BlockTextures.getHeatGlassProvider()),
+        LASERLENS(TileEntityLaser.class, BlockTextures.getLaserLensProvider())
         ;
 
         private GlassTypes(Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){

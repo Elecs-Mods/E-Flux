@@ -45,4 +45,5 @@ public class MultiBlockDieselGenerator extends EFluxMultiBlockFluidGenerator {
     public int maxStoredPower() {
         return 10000;
     }
+
 }

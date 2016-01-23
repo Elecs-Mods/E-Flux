@@ -19,22 +19,23 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  */
 public enum EnumMachines implements IEFluxBlockMachineData {
 
-    CAPACITOR(Capacitor.class, BlockTextures.getCustomProvider("cap_side", "cap_top", "def_cap")),
-    COAL_GENERATOR(CoalGenerator.class, BlockTextures.getDefaultProvider("coalGeneratorFront")),
-    ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getCustomTFProvider("at_top", "at_front")),
-    GROWTHLAMP(TileGrowthLamp.class, 3, Material.glass, BlockTextures.getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing")),
-    CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getDefaultProvider("chunkmain_front")),
-    CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getDefaultProvider("cs_front")),
-    TESLACOIL(TileTeslaCoil.class, BlockTextures.getCustomSidedProvider("teslacoil_side")),
-    SCANNER(TileScanner.class, BlockTextures.getDefaultProvider("scannerFront")),
-    WASHER(TileWasher.class, BlockTextures.getDefaultProvider("washer_front")),
-    RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getDefaultProvider("rubbleSieve")),
+    CAPACITOR(Capacitor.class, BlockTextures.getCapacitorProvider()),
+    COAL_GENERATOR(CoalGenerator.class, BlockTextures.getCoalGenProvider()),
+    ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
+    GROWTHLAMP(TileGrowthLamp.class, 3, Material.glass, BlockTextures.getGrowthLampProvider()),
+    CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getChunkMainProvider()),
+    CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getChunkSubProvider()),
+    TESLACOIL(TileTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
+    SCANNER(TileScanner.class, BlockTextures.getScannerProvider()),
+    WASHER(TileWasher.class, BlockTextures.getWasherProvider()),
+    RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
 
     ;
     //___Data__//////////////////////////////////////////////////////////
 
     private Class<? extends TileEntity> tileClass;
     public Class<? extends ItemBlock> itemBlockClass;
+    public boolean hasTwoStates = false;
     private BlockMachine blockMachine;
     private int renderID = 3;
     private Material material = Material.rock;
@@ -73,7 +74,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
 
     @Override
     public boolean hasTwoStates() {
-        return false;
+        return hasTwoStates;
     }
 
     @Override

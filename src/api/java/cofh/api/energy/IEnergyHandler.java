@@ -1,4 +1,4 @@
-package cofh.nonexistant.api.energy;
+package cofh.api.energy;
 
 import net.minecraft.util.EnumFacing;
 

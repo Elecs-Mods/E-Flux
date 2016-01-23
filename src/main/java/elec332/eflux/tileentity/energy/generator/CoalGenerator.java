@@ -4,7 +4,9 @@ import elec332.core.api.annotations.RegisterTile;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
+import elec332.core.tile.IActivatableMachine;
 import elec332.core.tile.IInventoryTile;
+import elec332.core.tile.IRandomDisplayTickProviderTile;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BasicInventory;
 import elec332.core.world.WorldHelper;
@@ -14,6 +16,7 @@ import elec332.eflux.api.event.TransmitterLoadedEvent;
 import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -23,14 +26,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 /**
  * Created by Elec332 on 29-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCoalGenerator")
-public class CoalGenerator extends TileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots{
+public class CoalGenerator extends TileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile {
 
     public CoalGenerator(){
         inventory = new BasicInventory("", 1){
@@ -43,6 +51,7 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void updateEntity() {
         if (burnTime > 0){
             ltp = sppt;
@@ -57,10 +66,18 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
                     inventory.decrStackSize(0, 1);
                     this.burnTime = burnTime;
                     sppt = 150;
+                    if (!active) {
+                        active = true;
+                        reRenderBlock();
+                    }
                 } else {
                     inventory.setInventorySlotContents(0, null);
                     WorldHelper.dropStack(worldObj, pos.offset(getTileFacing()), stack.copy());
                 }
+            }
+            if (active && !(burnTime > 0)){
+                active = false;
+                reRenderBlock();
             }
         }
         if (worldObj.getTotalWorldTime() % 5 == 0){
@@ -77,6 +94,7 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
     private int ltp, sppt, burnTime, outA;
     private byte[] dirData;
     private BasicInventory inventory;
+    private boolean active;
 
     /**
      * @param direction the direction from which a connection is requested
@@ -124,6 +142,7 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
         inventory.readFromNBT(tagCompound);
         sppt = tagCompound.getInteger("ibt");
         burnTime = tagCompound.getInteger("bt");
+        active = tagCompound.getBoolean("aC");
     }
 
     @Override
@@ -132,6 +151,7 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
         inventory.writeToNBT(tagCompound);
         tagCompound.setInteger("ibt", sppt);
         tagCompound.setInteger("bt", burnTime);
+        tagCompound.setBoolean("aC", active);
     }
 
     @Override
@@ -249,6 +269,42 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
             }
         });
         container.addPlayerInventoryToContainer();
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState state, Random random) {
+        if (this.active) {
+            EnumFacing enumfacing = getTileFacing();
+            double d0 = (double)pos.getX() + 0.5D;
+            double d1 = (double)pos.getY() + random.nextDouble() * 6.0D / 16.0D;
+            double d2 = (double)pos.getZ() + 0.5D;
+            double d3 = 0.52D;
+            double d4 = random.nextDouble() * 0.6D - 0.3D;
+
+            switch (enumfacing) {
+                case WEST:
+                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    break;
+                case EAST:
+                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    break;
+                case NORTH:
+                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
+                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
+                    break;
+                case SOUTH:
+                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
+                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
+            }
+        }
     }
 
 }

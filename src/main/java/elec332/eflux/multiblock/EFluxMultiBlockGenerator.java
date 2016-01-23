@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implements MultiBlockInterfaces.IEFluxMultiBlockPowerProvider{
+public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implements MultiBlockInterfaces.IEFluxMultiBlockPowerProvider {
 
     public EFluxMultiBlockGenerator(){
         storedPower = 0;

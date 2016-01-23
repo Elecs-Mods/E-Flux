@@ -1,7 +1,6 @@
 package elec332.eflux.compat.rf;
 
-import cofh.nonexistant.api.energy.IEnergyProvider;
-import elec332.core.util.DirectionHelper;
+import cofh.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.tileentity.EnergyTileBase;
 import elec332.eflux.util.Config;
@@ -11,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Created by Elec332 on 20-7-2015.
  */
-public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, IEnergyProvider{
+public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, IEnergyProvider {
 
     private int storedPower;
 
@@ -33,7 +32,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction == DirectionHelper.getDirectionFromNumber(getBlockMetadata());
+        return direction == getTileFacing();
     }
 
     /**
@@ -111,6 +110,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public boolean canConnectEnergy(EnumFacing from) {
-        return from == DirectionHelper.getDirectionFromNumber(getBlockMetadata()).getOpposite();
+        return from == getTileFacing().getOpposite();
     }
+
 }

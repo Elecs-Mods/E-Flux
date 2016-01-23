@@ -132,4 +132,96 @@ public class BlockTextures {
         };
     }
 
+    //Impl
+
+    public static IBlockTextureProvider getCoalGenProvider(){
+        return new IBlockTextureProvider() {
+
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                switch (side){
+                    case UP:
+                    case DOWN:
+                        return defaultTopBottomTexture;
+                    case NORTH:
+                        return active ? "coalGeneratorFrontA" : "coalGeneratorFront";
+                    case SOUTH:
+                        return defaultBackTexture;
+                    case EAST:
+                    case WEST:
+                        return defaultSideTexture;
+                    default:
+                        return "null";
+                }
+            }
+
+        };
+    }
+
+    public static IBlockTextureProvider getCapacitorProvider(){
+        return getCustomProvider("cap_side", "cap_top", "def_cap");
+    }
+
+    public static IBlockTextureProvider getAssemblyTableProvider(){
+        return getCustomTFProvider("at_top", "at_front");
+    }
+
+    public static IBlockTextureProvider getGrowthLampProvider(){
+        return getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing");
+    }
+
+    public static IBlockTextureProvider getChunkMainProvider(){
+        return getDefaultProvider("chunkmain_front");
+    }
+
+    public static IBlockTextureProvider getChunkSubProvider(){
+        return getDefaultProvider("cs_front");
+    }
+
+    public static IBlockTextureProvider getTeslaCoilProvider(){
+        return getCustomSidedProvider("teslacoil_side");
+    }
+
+    public static IBlockTextureProvider getScannerProvider(){
+        return getDefaultProvider("scannerFront");
+    }
+
+    public static IBlockTextureProvider getWasherProvider(){
+        return getDefaultProvider("washer_front");
+    }
+
+    public static IBlockTextureProvider getRubbleSieveProvider(){
+        return getDefaultProvider("rubbleSieve");
+    }
+
+    public static IBlockTextureProvider getHeatGlassProvider(){
+        return getCustomProvider("heatGlass", "heatGlass", "heatGlass");
+    }
+
+    public static IBlockTextureProvider getLaserLensProvider(){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                if (side.getAxis() == EnumFacing.Axis.Z){
+                    return "laserLensFront";
+                }
+                return "heatGlass";
+            }
+        };
+    }
+
+    public static IBlockTextureProvider getRFConverterProvider(){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                if (side == EnumFacing.NORTH){
+                    return "powerinlet_front";
+                } else if (side == EnumFacing.SOUTH){
+                    return "precisionMotor";
+                }
+                return defaultSideTexture;
+            }
+        };
+    }
+
 }
