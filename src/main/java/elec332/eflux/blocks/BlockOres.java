@@ -75,6 +75,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      * @return The model to render for this block for the given arguments.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         return models.forMeta(state.getValue(getProperty()));
     }
@@ -85,6 +86,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      * @return The model to render when the block is not placed.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return models.forMeta(meta);
     }
@@ -94,6 +96,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      * use this to make your quads. (This always comes AFTER the textures are loaded)
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         models = new BakedModelMetaMap<IBlockModel>();
         for (int i = 0; i < getTypes(); i++) {
@@ -107,10 +110,12 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         textures = new TextureAtlasSprite[getTypes()];
         for (int i = 0; i < getTypes(); i++) {
             textures[i] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/ore/"+nameForType(i)+"_ore"));
         }
     }
+
 }

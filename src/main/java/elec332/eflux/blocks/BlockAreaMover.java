@@ -50,6 +50,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      * @return The model to render for this block for the given arguments.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
         return model;
     }
@@ -60,6 +61,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      * @return The model to render when the block is not placed.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(Item item, int meta) {
         return model;
     }
@@ -69,6 +71,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      * use this to make your quads. (This always comes AFTER the textures are loaded)
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         model = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures));
     }
@@ -79,6 +82,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         textures = new TextureAtlasSprite[6];
         for (int i = 0; i < 6; i++) {
