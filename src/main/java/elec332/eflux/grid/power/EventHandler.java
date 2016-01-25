@@ -13,12 +13,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onEnergyTileAdded(TransmitterLoadedEvent event){
-        WorldRegistry.get(event.world).getWorldPowerGrid().addTile(event.transmitterTile);
+        WorldRegistry.get(event.world).getWorldPowerGrid().addTile(event.transmitterTile, event.world, event.pos);
     }
 
     @SubscribeEvent
     public void onEnergyTileRemoved(TransmitterUnloadedEvent event){
-        WorldRegistry.get(event.world).getWorldPowerGrid().removeTile(event.transmitterTile);
+        WorldRegistry.get(event.world).getWorldPowerGrid().removeTile(event.transmitterTile, event.world, event.pos);
     }
 
     @SubscribeEvent

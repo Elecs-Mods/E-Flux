@@ -1,5 +1,6 @@
 package elec332.eflux.grid;
 
+import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -10,7 +11,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
 public class WorldRegistry {
 
     private static WeakHashMap<World, WorldRegistry> mappings = new WeakHashMap<World, WorldRegistry>();
-    private static List<World> worlds = new ArrayList<World>();
+    private static List<World> worlds = Lists.newArrayList();
 
     public static WorldRegistry get(World world) {
         if (world == null)

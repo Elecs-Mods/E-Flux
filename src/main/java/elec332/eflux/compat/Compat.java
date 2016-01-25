@@ -17,9 +17,9 @@ public class Compat extends AbstractCompatHandler{
     public void loadList(){
         RF = compatEnabled("CoFHAPI|energy", ModType.API);
         RFTools = compatEnabled("RFTools");
+        MCMP = compatEnabled(ModType.MOD, CompatEnabled.TRUE, "mcmultipart");
     }
 
-    public static boolean RF;
-    public static boolean RFTools;
+    public static boolean RF, RFTools, MCMP;
 
 }

@@ -1,24 +1,26 @@
 package elec332.eflux.grid.power;
 
-import elec332.core.util.BlockLoc;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.grid.WorldRegistry;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 /**
  * Created by Elec332 on 23-4-2015.
  */
 public class PowerTile {  //Wrapper for TileEntities
-    public PowerTile(TileEntity tileEntity){
+
+    public PowerTile(Object tileEntity, World world, BlockPos pos){
         if (!EnergyAPIHelper.isEnergyTile(tileEntity))
             throw new IllegalArgumentException();
         this.tile = tileEntity;
-        this.location = new BlockLoc(tileEntity);
+        this.world = world;
+        this.location = new BlockPos(pos);
         this.grids = new EFluxCableGrid[6];
         if (tileEntity instanceof IEnergyTransmitter) {
             //this.grids[0] = newGrid(EnumFacing.UNKNOWN);
@@ -32,11 +34,11 @@ public class PowerTile {  //Wrapper for TileEntities
         this.hasInit = true;
     }
 
-    private TileEntity tile;
+    private Object tile;
+    private World world;
     private boolean hasInit = false;
-    private BlockLoc location;
+    private BlockPos location;
     private EFluxCableGrid[] grids;
-    public int toGo;
     private ConnectType connectType;
 
     private boolean singleGrid(){
@@ -47,11 +49,11 @@ public class PowerTile {  //Wrapper for TileEntities
         return connectType;
     }
 
-    public BlockLoc getLocation() {
+    public BlockPos getLocation() {
         return location;
     }
 
-    public TileEntity getTile() {
+    public Object getTile() {
         return tile;
     }
 
@@ -129,7 +131,7 @@ public class PowerTile {  //Wrapper for TileEntities
     }
 
     private EFluxCableGrid newGrid(EnumFacing direction){
-        return WorldRegistry.get(tile.getWorld()).getWorldPowerGrid().registerGrid(new EFluxCableGrid(tile.getWorld(), this, direction));
+        return WorldRegistry.get(world).getWorldPowerGrid().registerGrid(new EFluxCableGrid(world, this, direction));
     }
 
     @Override

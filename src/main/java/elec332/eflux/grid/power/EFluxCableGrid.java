@@ -1,6 +1,6 @@
 package elec332.eflux.grid.power;
 
-import elec332.core.util.BlockLoc;
+import com.google.common.collect.Lists;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -9,10 +9,10 @@ import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,10 +22,10 @@ import java.util.UUID;
 public class EFluxCableGrid {
 
     public EFluxCableGrid(World world, PowerTile p, EnumFacing direction){
-        acceptors = new ArrayList<GridData>();
-        providers = new ArrayList<GridData>();
-        locations = new ArrayList<BlockLoc>();
-        specialProviders = new ArrayList<GridData>();
+        acceptors = Lists.newArrayList();
+        providers = Lists.newArrayList();
+        locations = Lists.newArrayList();
+        specialProviders = Lists.newArrayList();
         identifier = UUID.randomUUID();
         this.world = world;
         locations.add(p.getLocation());
@@ -49,10 +49,10 @@ public class EFluxCableGrid {
     private List<GridData> acceptors;
     private List<GridData> providers;
     private List<GridData> specialProviders;
-    private List<BlockLoc> locations;
+    private List<BlockPos> locations;
     private int maxTransfer;
 
-    public List<BlockLoc> getLocations(){
+    public List<BlockPos> getLocations(){
         return locations;
     }
 
@@ -61,14 +61,14 @@ public class EFluxCableGrid {
             throw new RuntimeException();
         if (this.equals(grid))
             return this;
-        WorldRegistry.get(grid.world).getWorldPowerGrid().removeGrid(grid);
+        getWorldHolder().removeGrid(grid);
         //if (grid.maxTransfer > -1)
         this.maxTransfer = Math.max(maxTransfer, grid.maxTransfer);
         this.locations.addAll(grid.locations);
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
         this.specialProviders.addAll(grid.specialProviders);
-        for (BlockLoc vec : grid.locations){
+        for (BlockPos vec : grid.locations){
             PowerTile powerTile = getWorldHolder().getPowerTile(vec);
             if (powerTile != null) {
                 powerTile.replaceGrid(grid, this);
@@ -83,7 +83,7 @@ public class EFluxCableGrid {
 
     public void onTick(){
         EFlux.systemPrintDebug("START");
-        for (BlockLoc vec:locations)
+        for (BlockPos vec : locations)
             EFlux.systemPrintDebug(vec.toString());
         EFlux.systemPrintDebug("Locations: " + locations.size());
         EFlux.systemPrintDebug("Acceptors: " + acceptors.size());
@@ -221,15 +221,16 @@ public class EFluxCableGrid {
     }
 
     public class GridData {
-        public GridData(BlockLoc blockLoc, EnumFacing direction){
+
+        public GridData(BlockPos blockLoc, EnumFacing direction){
             this.loc = blockLoc;
             this.direction = direction;
         }
 
-        private BlockLoc loc;
+        private BlockPos loc;
         private EnumFacing direction;
 
-        public BlockLoc getLoc() {
+        public BlockPos getLoc() {
             return loc;
         }
 
@@ -247,4 +248,5 @@ public class EFluxCableGrid {
             return obj instanceof GridData && ((GridData) obj).loc.equals(loc) && ((GridData) obj).direction.equals(direction);
         }
     }
+
 }

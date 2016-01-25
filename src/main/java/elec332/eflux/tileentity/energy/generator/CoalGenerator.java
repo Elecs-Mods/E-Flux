@@ -7,15 +7,13 @@ import elec332.core.inventory.ITileWithSlots;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.tile.IRandomDisplayTickProviderTile;
-import elec332.core.tile.TileBase;
 import elec332.core.util.BasicInventory;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.api.event.TransmitterLoadedEvent;
-import elec332.eflux.api.event.TransmitterUnloadedEvent;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
+import elec332.eflux.tileentity.EnergyTileBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -28,7 +26,6 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,7 +35,7 @@ import java.util.Random;
  * Created by Elec332 on 29-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCoalGenerator")
-public class CoalGenerator extends TileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile {
+public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile {
 
     public CoalGenerator(){
         inventory = new BasicInventory("", 1){
@@ -122,18 +119,6 @@ public class CoalGenerator extends TileBase implements IEnergySource, IInventory
         int ret = (int) ((ltp/(float)outA)/rp);
         ltp -= ret;
         return ret;
-    }
-
-    @Override
-    public void onTileLoaded() {
-        if (!worldObj.isRemote)
-            MinecraftForge.EVENT_BUS.post(new TransmitterLoadedEvent(this));
-    }
-
-    @Override
-    public void onTileUnloaded() {
-        if (!worldObj.isRemote)
-            MinecraftForge.EVENT_BUS.post(new TransmitterUnloadedEvent(this));
     }
 
     @Override
