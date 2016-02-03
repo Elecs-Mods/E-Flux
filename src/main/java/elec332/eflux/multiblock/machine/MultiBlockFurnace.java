@@ -1,14 +1,25 @@
 package elec332.eflux.multiblock.machine;
 
+import com.google.common.collect.Lists;
 import elec332.core.util.BlockLoc;
 import elec332.core.util.PlayerHelper;
+import elec332.eflux.EFlux;
+import elec332.eflux.client.FurnaceRenderTile;
+import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
 
 /**
  * Created by Elec332 on 28-8-2015.
@@ -18,14 +29,58 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     public MultiBlockFurnace() {
         super();
         setStartupTime(1200);
+
     }
 
     @Override
     public void init() {
         super.init();
+        setItemOutput(1, 1, 0);
+        setTile();
         //middle = getBlockLocAtTranslatedPos(1, 1, 1);
         //getWorldObj().setBlockState(middle, BlockRegister.renderBlock.getStateFromMeta(0), 3);
         //((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
+    }
+
+    @SideOnly(Side.CLIENT)
+    private TileEntity frt;
+
+    private void setTile(){
+        if (getWorldObj().isRemote && frt == null){
+            //System.out.println("Set renderer");
+            FurnaceRenderTile frt = new FurnaceRenderTile();
+            frt.setWorldObj(getWorldObj());
+            frt.setPos(getBlockLocAtTranslatedPos(1, 1, 1));
+            frt.setMultiBlock(this, getMultiBlockFacing(), "unknown");
+            this.frt = frt;
+            //getWorldObj().setTileEntity(frt.getPos(), frt);
+            Minecraft.getMinecraft().renderGlobal.updateTileEntities(Collections.<TileEntity>emptyList(), Lists.newArrayList((TileEntity)frt));
+        }
+    }
+
+    private void removeTile(){
+        if (getWorldObj().isRemote && frt != null) {
+            //System.out.println("Removed renderer");
+            Minecraft.getMinecraft().renderGlobal.updateTileEntities(Lists.newArrayList(frt), Collections.<TileEntity>emptyList());
+            frt = null;
+        }
+    }
+
+    @Override
+    public int getSlots() {
+        return 8;
+    }
+
+    @Override
+    public void tileEntityInvalidate() {
+        super.tileEntityInvalidate();
+        removeTile();
+    }
+
+    @Override
+    public void tileEntityValidate() {
+        super.tileEntityValidate();
+        setTile();
     }
 
     private BlockLoc middle;
@@ -42,13 +97,32 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float f) {
-        return oldProgress+1;
+        return oldProgress+(startup > .4f*startupTime ? (int)(EFlux.random.nextFloat()*2.2f*((float)startup/(float)startupTime)) : 0);
+    }
+
+    @Override
+    public void onProcessComplete(ItemStack stack, int slot) {
+        inventory.decrStackSize(slot, 1);
+        ItemStack out = FurnaceRecipes.instance().getSmeltingResult(stack);
+        if (out == null){
+            out = ItemRegister.scrap.copy();
+        }
+        if (!canAddToOutput(out)){
+            setBroken(true);
+            onBroken();
+        }
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        getWorldObj().setBlockToAir(middle);
+        removeTile();
+    }
+
+    @Override
+    public void tick(int startup) {
+        super.tick(startup);
+        getSaveDelegate().syncData();
     }
 
     @Override
@@ -78,7 +152,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int getEFForOptimalRP() {
-        return 7;
+        return hasStartedUp() ? 30 : 22;
     }
 
     @Override
@@ -88,7 +162,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int getOptimalRP() {
-        return 5;
+        return 15;
     }
 
     @Override

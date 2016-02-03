@@ -30,6 +30,7 @@ public class MultiBlockRegister {
     private static final BlockStateWrapper air = new BlockStateWrapper((Block)null);
 
     public static void init(){
+        BlockStructures.init();
 
         EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
 
@@ -52,33 +53,7 @@ public class MultiBlockRegister {
 
             @Override
             public BlockStructure getStructure() {
-                return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
-                    @Override
-                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
-                        if (length == 1){
-                            if (height == 0) {
-                                if (width == 0)
-                                    return monitor;
-                                if (width == 1)
-                                    return itemGate;
-                                if (width == 2)
-                                    return powerInlet;
-                            }
-                            if (height == 1){
-                                if (width == 1)
-                                    return air;
-                                if (width == 2)
-                                    return motor;
-                            }
-                            if (height == 2 && width == 1){
-                                return itemGate;
-                            }
-                        }
-                        if ((length == 0 || length == 2) && width == 1 && height == 1)
-                            return radiator;
-                        return frameNormal;
-                    }
-                });
+                return BlockStructures.compressor;
             }
 
             @Override
@@ -111,32 +86,7 @@ public class MultiBlockRegister {
 
             @Override
             public BlockStructure getStructure() {
-                return new BlockStructure(5, 3, 3, new BlockStructure.IStructureFiller() {
-                    @Override
-                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
-                        if (height == 1){
-                            if (width == 0 && (length == 2 || length == 3)){
-                                return monitor;
-                            } else if (width == 1){
-                                if (length == 0)
-                                    return heatResistantGlass;
-                                if (length == 1)
-                                    return laserLens;
-                                if (length == 2)
-                                    return air;
-                                if (length == 3)
-                                    return laserCore;
-                                if(length == 4)
-                                    return powerInlet;
-                            } else if (width == 2 && length > 0 && length < 4){
-                                return radiator;
-                            }
-                        } else if (height == 0 && width == 1 && length == 4){
-                            return itemGate;
-                        }
-                        return frameAdvanced;
-                    }
-                });
+                return BlockStructures.laser;
             }
 
             @Override
@@ -167,30 +117,7 @@ public class MultiBlockRegister {
 
             @Override
             public BlockStructure getStructure() {
-                return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
-                    @Override
-                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
-                        if (height == 0 && length == 1){
-                            if (width == 1)
-                                return itemGate;
-                            if (width == 2)
-                                return powerInlet;
-                        } else if (height == 1){
-                            if (width == 1) {
-                                if (length == 1)
-                                    return air;
-                                return heater;
-                            }
-                            if (width == 2 && length == 1)
-                                return heater;
-                            if (width == 0 && length == 1)
-                                return heatResistantGlass;
-                        } else if (height == 2 && width == 1 && length == 1){
-                            return itemGate;
-                        }
-                        return frameBasic;
-                    }
-                });
+                return BlockStructures.furnace;
             }
 
             @Override
@@ -218,33 +145,7 @@ public class MultiBlockRegister {
 
             @Override
             public BlockStructure getStructure() {
-                return new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
-                    @Override
-                    public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
-                        if (length == 1){
-                            if (height == 0) {
-                                if (width == 0)
-                                    return monitor;
-
-                                if (width == 2)
-                                    return powerInlet;
-                            }
-                            if (height == 1){
-                                if (width == 1)
-                                    return air;
-                            }
-                            if (height == 2){
-                                if (width == 1)
-                                    return itemGate;
-                            }
-                        }
-                        if ((length == 0 || length == 2) && width == 1 && height == 1)
-                            return radiator;
-                        if (length == 2 && height == 0 && width == 0)
-                            return dustStorage;
-                        return frameNormal;
-                    }
-                });
+                return BlockStructures.grinder;
             }
 
             @Override
@@ -255,4 +156,118 @@ public class MultiBlockRegister {
         }, "grinder", MultiBlockGrinder.class);
 
     }
+
+    public static class BlockStructures{
+
+        public static BlockStructure compressor, laser, furnace, grinder;
+
+        private static void init(){
+            compressor = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (length == 1){
+                        if (height == 0) {
+                            if (width == 0)
+                                return monitor;
+                            if (width == 1)
+                                return itemGate;
+                            if (width == 2)
+                                return powerInlet;
+                        }
+                        if (height == 1){
+                            if (width == 1)
+                                return air;
+                            if (width == 2)
+                                return motor;
+                        }
+                        if (height == 2 && width == 1){
+                            return itemGate;
+                        }
+                    }
+                    if ((length == 0 || length == 2) && width == 1 && height == 1)
+                        return radiator;
+                    return frameNormal;
+                }
+            });
+            laser = new BlockStructure(5, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (height == 1){
+                        if (width == 0 && (length == 2 || length == 3)){
+                            return monitor;
+                        } else if (width == 1){
+                            if (length == 0)
+                                return heatResistantGlass;
+                            if (length == 1)
+                                return laserLens;
+                            if (length == 2)
+                                return air;
+                            if (length == 3)
+                                return laserCore;
+                            if(length == 4)
+                                return powerInlet;
+                        } else if (width == 2 && length > 0 && length < 4){
+                            return radiator;
+                        }
+                    } else if (height == 0 && width == 1 && length == 4){
+                        return itemGate;
+                    }
+                    return frameAdvanced;
+                }
+            });
+            furnace = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (height == 0 && length == 1){
+                        if (width == 1)
+                            return itemGate;
+                        if (width == 2)
+                            return powerInlet;
+                    } else if (height == 1){
+                        if (width == 1) {
+                            if (length == 1)
+                                return air;
+                            return heater;
+                        }
+                        if (width == 2 && length == 1)
+                            return heater;
+                        if (width == 0 && length == 1)
+                            return heatResistantGlass;
+                    } else if (height == 2 && width == 1 && length == 1){
+                        return itemGate;
+                    }
+                    return frameBasic;
+                }
+            });
+            grinder = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (length == 1){
+                        if (height == 0) {
+                            if (width == 0)
+                                return monitor;
+
+                            if (width == 2)
+                                return powerInlet;
+                        }
+                        if (height == 1){
+                            if (width == 1)
+                                return air;
+                        }
+                        if (height == 2){
+                            if (width == 1)
+                                return itemGate;
+                        }
+                    }
+                    if ((length == 0 || length == 2) && width == 1 && height == 1)
+                        return radiator;
+                    if (length == 2 && height == 0 && width == 0)
+                        return dustStorage;
+                    return frameNormal;
+                }
+            });
+        }
+
+    }
+
 }

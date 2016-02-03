@@ -6,6 +6,7 @@ import elec332.core.inventory.IHasProgressBar;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
 import elec332.eflux.util.IEFluxMachine;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -84,7 +85,12 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
             if (!isBroken()) {
                 for (int i = 0; i < inventory.getSizeInventory(); i++) {
                     int q = progressMap.get(i);
-                    progressMap.put(i, updateProgressOnItem(q, inventory.getStackInSlot(i), i, (float)startup / (float)startupTime));
+                    ItemStack stack = inventory.getStackInSlot(i);
+                    if (stack == null){
+                        resetProgressData(i);
+                        continue;
+                    }
+                    progressMap.put(i, updateProgressOnItem(q, stack, i, (float)startup / (float)startupTime));
                     if (progressMap.get(i) > getMaxProgress()) {
                         onProcessComplete(inventory.getStackInSlot(i), i);
                         resetProgressData(i);
@@ -171,12 +177,18 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         this.inventory.writeToNBT(tagCompound);
+        tagCompound.setInteger("startup", this.startup);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         this.inventory.readFromNBT(tagCompound);
+        this.startup = tagCompound.getInteger("startup");
+    }
+
+    public IInventory getInventory(){
+        return inventory;
     }
 
 }

@@ -24,7 +24,7 @@ public class TileTeslaCoil extends BreakableMachineTile {
         super.updateEntity();
         if (timeCheck()) {
             @SuppressWarnings("unchecked")
-            List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, Utils.getAABBAroundBlock(myLocation(), 2, 2, 2, 2, 2, 2));
+            List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, Utils.getAABBAroundBlock(getPos(), 2, 2, 2, 2, 2, 2));
             for (EntityLivingBase entity : entities) {
                 float hp = entity.getHealth();
                 int energy = (int) (hp * 120);

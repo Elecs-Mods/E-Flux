@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.ForgeChunkManager;
 
@@ -62,7 +63,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
 
     private List<ForgeChunkManager.Ticket> tickets;
 
-    private List<BlockLoc> getLocations(){
+    private List<BlockPos> getLocations(){
         return ChunkLoaderPlayerProperties.get(this.owner).getLocations();
     }
 
@@ -88,13 +89,13 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
     }
 
     public void addLoader(ChunkLoaderSubTile tile){
-        getLocations().add(tile.myLocation());
+        getLocations().add(tile.getPos());
         changed = true;
         loadedChunks++;
     }
 
     public void removeLoader(ChunkLoaderSubTile tile){
-        getLocations().remove(tile.myLocation());
+        getLocations().remove(tile.getPos());
         changed = true;
         loadedChunks--;
     }
@@ -110,7 +111,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
             tickets.clear();
             //loadedChunks = 0;
             if (b) {
-                for (BlockLoc loc : getLocations()) {
+                for (BlockPos loc : getLocations()) {
                     ForgeChunkManager.Ticket ticket = WorldHelper.requestTicket(worldObj, loc, EFlux.instance);
                     //loadedChunks++;
                     tickets.add(ticket);
@@ -161,8 +162,9 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
                         if (!ChunkLoaderPlayerProperties.get(uuid).hasHandler()) {
                             if (MainChunkLoaderTile.this.owner == null)
                                 MainChunkLoaderTile.this.owner = uuid;
-                            PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + myLocation().toString());                            ChunkLoaderPlayerProperties.get(MainChunkLoaderTile.this.owner).setMainChunkLoader(MainChunkLoaderTile.this);
-                            MainChunkLoaderTile.this.getLocations().add(myLocation());
+                            PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + getPos());
+                            ChunkLoaderPlayerProperties.get(MainChunkLoaderTile.this.owner).setMainChunkLoader(MainChunkLoaderTile.this);
+                            MainChunkLoaderTile.this.getLocations().add(getPos());
                             MainChunkLoaderTile.this.loadedChunks = MainChunkLoaderTile.this.getLocations().size();
                             MainChunkLoaderTile.this.changed = true;
                             markDirty();
@@ -223,7 +225,7 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
         super.onBlockRemoved();
         handle(false);
         if (owner != null) {
-            getLocations().remove(myLocation());
+            getLocations().remove(getPos());
             ChunkLoaderPlayerProperties.get(owner).setMainChunkLoader(null);
         }
     }

@@ -1,7 +1,9 @@
 package elec332.eflux.tileentity.energy.cable;
 
 import elec332.core.main.ElecCore;
+import elec332.core.tile.TileBase;
 import elec332.core.util.NBTHelper;
+import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.tileentity.EnergyTileBase;
 import net.minecraft.nbt.NBTTagCompound;

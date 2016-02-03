@@ -8,6 +8,7 @@ import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.core.util.MCModInfo;
+import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
@@ -30,8 +31,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -71,6 +78,9 @@ public class EFlux {
     public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
 
+    @CapabilityInject(IEnergyReceiver.class)
+    public static Capability<IEnergyReceiver> RECEIVER_CAPABILITY = null;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
@@ -86,6 +96,17 @@ public class EFlux {
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
         multiBlockRegistry = new MultiBlockRegistry();
+        CapabilityManager.INSTANCE.register(IEnergyReceiver.class, new Capability.IStorage<IEnergyReceiver>() {
+            @Override
+            public NBTBase writeNBT(Capability<IEnergyReceiver> capability, IEnergyReceiver instance, EnumFacing side) {
+                return new NBTTagCompound();
+            }
+
+            @Override
+            public void readNBT(Capability<IEnergyReceiver> capability, IEnergyReceiver instance, EnumFacing side, NBTBase nbt) {
+
+            }
+        }, IEnergyReceiver.class);
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
@@ -120,6 +141,7 @@ public class EFlux {
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
         FluidRegister.instance.init();
+        proxy.initRenderStuff();
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         MultiBlockRegister.init();
@@ -128,7 +150,7 @@ public class EFlux {
         CircuitHandler.register();
         registerRecipes();
         EventHelper.registerHandlerForge(new PlayerEventHandler());
-        proxy.initRenderStuff();
+
         Compat.instance.init();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
             @Override

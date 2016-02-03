@@ -86,6 +86,8 @@ public class RecipeRegister {
 
         registerShapedRecipe(carbonMesh, "CCC", "CCC", "CCC", 'C', dustCoal);
 
+        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), book, redstone);
+
     }
 
     private static void registerFurnaceRecipes(){

@@ -55,6 +55,9 @@ public class WorldGridHolder {
         if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)){
             throw new IllegalArgumentException();
         }
+        if (!WorldHelper.chunkLoaded(world, pos)) {
+            return;
+        }
         PowerTile powerTile = new PowerTile(tile, world, pos);
         registeredTiles.put(pos, powerTile);
         addTile(powerTile);
@@ -63,11 +66,14 @@ public class WorldGridHolder {
 
     private void addTile(PowerTile powerTile){
         if(!world.isRemote) {
+            if (!WorldHelper.chunkLoaded(world, powerTile.getLocation())) {
+                return;
+            }
             EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString());
             for (EnumFacing direction : EnumFacing.VALUES) {
                 EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString() + " for side " + direction.toString());
                 BlockPos checkedPos = powerTile.getLocation().offset(direction);
-                Object possTile = getEnergyObjectAt(world, checkedPos);
+                Object possTile = getEnergyObjectAt(world, checkedPos, direction.getOpposite());
                 if (possTile != null && EnergyAPIHelper.isEnergyTile(possTile)) {
                     PowerTile powerTile1 = getPowerTile(checkedPos);
                     if (powerTile1 == null || !powerTile1.hasInit()) {
@@ -85,18 +91,19 @@ public class WorldGridHolder {
         }
     }
 
-    private Object getEnergyObjectAt(World world, BlockPos pos){
+    private Object getEnergyObjectAt(World world, BlockPos pos, EnumFacing side){
+        if (!WorldHelper.chunkLoaded(world, pos)){
+            return null;
+        }
         TileEntity tile = WorldHelper.getTileAt(world, pos);
+        if (tile == null){
+            return null;
+        }
         if (EnergyAPIHelper.isEnergyTile(tile)){
             return tile;
-        } else if (Compat.MCMP && tile instanceof IMultipartContainer){
-            IMultipart part = ((IMultipartContainer) tile).getPartInSlot(PartSlot.CENTER);
-            if (EnergyAPIHelper.isEnergyTile(part)){
-                return part;
-            }
-            //for (IMultipart multipart : ((IMultipartContainer) tile).getParts()){
-            //    if ()
-            //}
+        }
+        if (tile.hasCapability(EFlux.RECEIVER_CAPABILITY, side)){
+            return tile.getCapability(EFlux.RECEIVER_CAPABILITY, side);
         }
         return null;
     }
@@ -176,11 +183,8 @@ public class WorldGridHolder {
                     }
                     for (BlockPos vec : vec3List2) {
                         EFlux.systemPrintDebug("Re-adding tile at " + vec.toString());
-                        //TileEntity tileEntity1 = null;//getTile(vec);
-
-                        //if (EnergyAPIHelper.isEnergyTile(tileEntity1))
-                            if (getPowerTile(vec) != null)
-                                addTile(getPowerTile(vec));
+                        if (getPowerTile(vec) != null)
+                            addTile(getPowerTile(vec));
                     }
                 }
             }
@@ -188,51 +192,25 @@ public class WorldGridHolder {
     }
 
     public void onServerTickInternal(){
-       // EFlux.systemPrintDebug("Tick! " + world.provider.dimensionId);
         if (!pending.isEmpty() && pending.size() == oldInt) {
-               /*List<PowerTile> tr = new ArrayList<PowerTile>();
-               for (PowerTile powerTile : pending)
-                    tr.add(powerTile);
-                for (PowerTile powerTile : tr)
-                    addTile(powerTile);
-                pending.removeAll(tr);
-                EFlux.logger.info("TickStuffPendingDone");*/
-                for (PowerTile powerTile = pending.poll(); powerTile != null; powerTile = pending.poll()){
-                    addTile(powerTile);
-                }
-                pending.clear();
+            for (PowerTile powerTile = pending.poll(); powerTile != null; powerTile = pending.poll()){
+                addTile(powerTile);
             }
-            /*if (!pendingRemovals.isEmpty()){
-                List<PowerTile> tr = new ArrayList<PowerTile>();
-                for (PowerTile powerTile : pendingRemovals){
-                    powerTile.toGo--;
-                    if (getTile(powerTile.getLocation()) == null){
-                        powerTile.toGo = 0;
-                        if (!tr.contains(powerTile))
-                            removeTile(powerTile);
-                    }
-                    if (powerTile.toGo <= 0)
-                        tr.add(powerTile);
-                }
-                pendingRemovals.removeAll(tr);
-            }*/
-            this.oldInt = pending.size();
-            for (int i = 0; i < grids.size(); i++){
-                try {
-                    grids.get(i).onTick();
-                } catch (Throwable t){
-                    //throw new RuntimeException(t);
-                }
-                EFlux.systemPrintDebug(i);
+            pending.clear();
+        }
+        this.oldInt = pending.size();
+        for (int i = 0; i < grids.size(); i++){
+            try {
+                grids.get(i).onTick();
+            } catch (Throwable t){
+                EFlux.logger.error(t);
             }
-
+            EFlux.systemPrintDebug(i);
+        }
     }
 
     public PowerTile getPowerTile(BlockPos loc){
         return registeredTiles.get(loc);
     }
 
-    //private TileEntity getTile(BlockLoc vec){
-    //    return world.getTileEntity(vec.xCoord, vec.yCoord, vec.zCoord);
-    //}
 }

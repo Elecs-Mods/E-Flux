@@ -1,5 +1,6 @@
 package elec332.eflux.grid.power;
 
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -86,7 +87,7 @@ public class PowerTile {  //Wrapper for TileEntities
 
     public void resetGrid(EFluxCableGrid grid){
         removeGrid(grid);
-        if (singleGrid())
+        if (singleGrid() && WorldHelper.chunkLoaded(world, location))
             getGrid();
     }
 

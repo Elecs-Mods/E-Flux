@@ -3,12 +3,13 @@ package elec332.eflux.handler;
 import com.google.common.collect.Lists;
 import elec332.core.server.ElecPlayer;
 import elec332.core.server.ServerHelper;
-import elec332.core.util.BlockLoc;
+import elec332.core.util.NBTHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     private MainChunkLoaderTile main;
     private World world;
     private boolean hasHandler;
-    private List<BlockLoc> blockLocations;
+    private List<BlockPos> blockLocations;
 
     public void setMainChunkLoader(MainChunkLoaderTile tile){
         main = tile;
@@ -44,14 +45,14 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         if (main != null)
             main.addLoader(tile);
         else
-            blockLocations.add(tile.myLocation());
+            blockLocations.add(tile.getPos());
     }
 
     public void removeLoader(ChunkLoaderSubTile tile){
         if (main != null)
             main.removeLoader(tile);
         else
-            blockLocations.remove(tile.myLocation());
+            blockLocations.remove(tile.getPos());
     }
 
     public MainChunkLoaderTile getMain() {
@@ -62,7 +63,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         return hasHandler;
     }
 
-    public List<BlockLoc> getLocations(){
+    public List<BlockPos> getLocations(){
         return this.blockLocations;
     }
 
@@ -71,9 +72,10 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         if (nbtTagCompound.hasKey("mainLoc")) {
             this.hasHandler = nbtTagCompound.getBoolean("handler?");
             this.world = ServerHelper.instance.getMinecraftServer().worldServerForDimension(nbtTagCompound.getInteger("dim"));
-            this.main = (MainChunkLoaderTile) WorldHelper.getTileAt(world, new BlockLoc(nbtTagCompound.getCompoundTag("mainLoc")));
-            for (int i = 0; i < nbtTagCompound.getTagList("locations", 10).tagCount(); i++) {
-                blockLocations.add(new BlockLoc(nbtTagCompound.getTagList("locations", 10).getCompoundTagAt(i)));
+            this.main = (MainChunkLoaderTile) WorldHelper.getTileAt(world, new NBTHelper(nbtTagCompound.getCompoundTag("mainLoc")).getPos());
+            NBTTagList list = nbtTagCompound.getTagList("locations", 10);
+            for (int i = 0; i < list.tagCount(); i++) {
+                blockLocations.add(new NBTHelper(list.getCompoundTagAt(i)).getPos());
             }
         }
     }
@@ -82,11 +84,11 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         if (main != null) {
             nbtTagCompound.setBoolean("handler?", this.hasHandler);
-            nbtTagCompound.setTag("mainLoc", main.myLocation().toNBT(new NBTTagCompound()));
+            nbtTagCompound.setTag("mainLoc", new NBTHelper().addToTag(main.getPos()).toNBT());
             nbtTagCompound.setInteger("dim", WorldHelper.getDimID(world));
             NBTTagList tagList = new NBTTagList();
-            for (BlockLoc blockLoc : blockLocations){
-                tagList.appendTag(blockLoc.toNBT(new NBTTagCompound()));
+            for (BlockPos blockLoc : blockLocations){
+                tagList.appendTag(new NBTHelper().addToTag(blockLoc).toNBT());
             }
             nbtTagCompound.setTag("locations", tagList);
         }

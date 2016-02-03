@@ -20,7 +20,7 @@ public class ItemRegister {
     private ItemRegister(){
     }
 
-    public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator;
+    public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual;
     @SuppressWarnings("all")
     private static Item EFluxItems, ingot, coil, dusts;
     public static ItemStack copperIngot, tinIngot, zincIngot, silverIngot, copperCoil, silverCoil, conductiveCoil, compressedIngot, carbonPlate, scrap, conductiveIngot, carbonMesh;
@@ -68,6 +68,8 @@ public class ItemRegister {
         dustStone = new ItemStack(dusts, 1, 6);
         dustTin = new ItemStack(dusts, 1, 7);
         dustConductive = new ItemStack(dusts, 1, 8);
+
+        manual = new ItemManual().register();
 
         List<String> components = ((EFluxDusts) dusts).getComponents();
         for (int i = 0; i < components.size(); i++) {

@@ -4,7 +4,6 @@ import elec332.core.api.annotations.RegisterTile;
 import elec332.core.main.ElecCore;
 import elec332.core.server.ServerHelper;
 import elec332.core.tile.TileBase;
-import elec332.core.util.IRunOnce;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +24,7 @@ public class ChunkLoaderSubTile extends TileBase implements IChunkLoader{
     @Override
     public void onBlockPlacedBy(final EntityLivingBase entityLiving, ItemStack stack) {
         super.onBlockPlacedBy(entityLiving, stack);
-        ElecCore.tickHandler.registerCall(new IRunOnce() {
+        ElecCore.tickHandler.registerCall(new Runnable() {
             @Override
             public void run() {
                 if (!ServerHelper.isServer(worldObj))
@@ -33,11 +32,11 @@ public class ChunkLoaderSubTile extends TileBase implements IChunkLoader{
                 if (entityLiving instanceof EntityPlayer) {
                     if (ChunkLoaderSubTile.this.owner == null)
                         ChunkLoaderSubTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
-                    PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+myLocation().toString());
+                    PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+getPos());
                     ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).addLoader(ChunkLoaderSubTile.this);
                 }
             }
-        });
+        }, entityLiving.worldObj);
     }
 
     @Override
