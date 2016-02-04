@@ -1,5 +1,6 @@
 package elec332.eflux.client.blocktextures;
 
+import elec332.core.util.EnumHelper;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -132,30 +133,28 @@ public class BlockTextures {
         };
     }
 
+    public static IBlockTextureProvider forMachine(final String machine){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return machine+"/"+machine+"_"+ EnumHelper.getName(side).toLowerCase();
+            }
+        };
+    }
+
+    public static IBlockTextureProvider forActivatableMachine(final String machine){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return machine + "/" + machine + "_" + EnumHelper.getName(side).toLowerCase() + (active ? "_A" : "");
+            }
+        };
+    }
+
     //Impl
 
     public static IBlockTextureProvider getCoalGenProvider(){
-        return new IBlockTextureProvider() {
-
-            @Override
-            public String getIconName(EnumFacing side, boolean active) {
-                switch (side){
-                    case UP:
-                    case DOWN:
-                        return defaultTopBottomTexture;
-                    case NORTH:
-                        return active ? "coalGeneratorFrontA" : "coalGeneratorFront";
-                    case SOUTH:
-                        return defaultBackTexture;
-                    case EAST:
-                    case WEST:
-                        return defaultSideTexture;
-                    default:
-                        return "null";
-                }
-            }
-
-        };
+        return forActivatableMachine("coalGenerator");
     }
 
     public static IBlockTextureProvider getCapacitorProvider(){
@@ -163,51 +162,43 @@ public class BlockTextures {
     }
 
     public static IBlockTextureProvider getAssemblyTableProvider(){
-        return getCustomTFProvider("at_top", "at_front");
+        return forMachine("assemblyTable");
     }
 
     public static IBlockTextureProvider getGrowthLampProvider(){
-        return getCustomTBProvider(BlockTextures.defaultBackTexture, "gl_facing");
+        return forMachine("growthLamp");
     }
 
     public static IBlockTextureProvider getChunkMainProvider(){
-        return getDefaultProvider("chunkmain_front");
+        return forMachine("chunkMain");
     }
 
     public static IBlockTextureProvider getChunkSubProvider(){
-        return getDefaultProvider("cs_front");
+        return forMachine("chunkSub");
     }
 
     public static IBlockTextureProvider getTeslaCoilProvider(){
-        return getCustomSidedProvider("teslacoil_side");
+        return forMachine("teslaCoil");
     }
 
     public static IBlockTextureProvider getScannerProvider(){
-        return getDefaultProvider("scannerFront");
+        return forMachine("scanner");
     }
 
     public static IBlockTextureProvider getWasherProvider(){
-        return getDefaultProvider("washer_front");
+        return forMachine("washer");
     }
 
     public static IBlockTextureProvider getRubbleSieveProvider(){
-        return getDefaultProvider("rubbleSieve");
+        return forMachine("rubbleSieve");
     }
 
     public static IBlockTextureProvider getHeatGlassProvider(){
-        return getCustomProvider("heatGlass", "heatGlass", "heatGlass");
+        return forMachine("heatGlass");
     }
 
     public static IBlockTextureProvider getLaserLensProvider(){
-        return new IBlockTextureProvider() {
-            @Override
-            public String getIconName(EnumFacing side, boolean active) {
-                if (side.getAxis() == EnumFacing.Axis.Z){
-                    return "laserLensFront";
-                }
-                return "heatGlass";
-            }
-        };
+        return forMachine("laserLens");
     }
 
     public static IBlockTextureProvider getRFConverterProvider(){
