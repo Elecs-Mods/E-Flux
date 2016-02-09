@@ -116,22 +116,17 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return true;
-    }
-
-    @Override
-    public int requestedRP(EnumFacing direction) {
+    public int requestedRP() {
         return powerHandler.getOptimalRP();
     }
 
     @Override
-    public final int getRequestedEF(int rp, EnumFacing direction) {
+    public final int getRequestedEF(int rp) {
         if (breakableMachine != null) {
-            if (rp < requestedRP(direction) * (1 - getAcceptance()) || breakableMachine.isBroken()) {
+            if (rp < requestedRP() * (1 - getAcceptance()) || breakableMachine.isBroken()) {
                 return 0;
             }
-            if (rp > requestedRP(direction) * (1 + getAcceptance())) {
+            if (rp > requestedRP() * (1 + getAcceptance())) {
                 breakMachine();
             }
         }
@@ -139,10 +134,10 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     }
 
     @Override
-    public final int receivePower(EnumFacing direction, int rp, int ef) {
+    public final int receivePower( int rp, int ef) {
         if (breakableMachine != null && breakableMachine.isBroken())
             return 0;
-        int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(direction), powerHandler.getEFForOptimalRP(), (maxEnergy-storedPower)/rp, getAcceptance());
+        int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(), powerHandler.getEFForOptimalRP(), (maxEnergy-storedPower)/rp, getAcceptance());
         this.storedPower += rp*calcEF;
         if (storedPower > maxEnergy)
             this.storedPower = maxEnergy;

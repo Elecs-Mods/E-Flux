@@ -11,29 +11,17 @@ import net.minecraftforge.fml.relauncher.Side;
 public abstract class EnergyTileBase extends TileBase {
 
     @Override
-    public void onChunkUnload() {
-        System.out.println("chunkUnload");
+    public void onTileUnloaded() {
         if (!worldObj.isRemote) {
-            ElecCore.tickHandler.registerCall(new Runnable() {
-                @Override
-                public void run() {
-                    if (!worldObj.isRemote)
-                        EnergyAPIHelper.postUnloadEvent(EnergyTileBase.this);
-                }
-            }, Side.SERVER);
+            EnergyAPIHelper.postUnloadEvent(this);
         }
-        super.onChunkUnload();
     }
 
     @Override
     public void onTileLoaded() {
-        try {
-            if (!worldObj.isRemote)
-                EnergyAPIHelper.postLoadEvent(this);
-        } catch (Exception e){
-            e.printStackTrace();
+        if (!worldObj.isRemote) {
+            EnergyAPIHelper.postLoadEvent(EnergyTileBase.this);
         }
-        super.onTileLoaded();
     }
 
 }

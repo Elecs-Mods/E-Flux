@@ -8,7 +8,7 @@ import elec332.eflux.multiblock.MultiBlockInterfaces;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class TileMultiBlockInteraction<M extends MultiBlockInterfaces.IEFluxMultiBlock> extends AbstractMultiBlockTile{
+public abstract class TileMultiBlockInteraction<M extends MultiBlockInterfaces.IEFluxMultiBlock> extends AbstractMultiBlockTile {
 
     public TileMultiBlockInteraction() {
         super(EFlux.multiBlockRegistry);

@@ -1,117 +1,159 @@
 package elec332.eflux.grid.power;
 
-import elec332.core.world.WorldHelper;
-import elec332.eflux.EFlux;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.grid.WorldRegistry;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Elec332 on 23-4-2015.
  */
-public class PowerTile {  //Wrapper for TileEntities
+public class PowerTile {  //Wrapper for TileEntities, prevents the loading of chunks when working with grid data.
 
-    public PowerTile(Object tileEntity, World world, BlockPos pos){
+    public PowerTile(TileEntity tileEntity){
         if (!EnergyAPIHelper.isEnergyTile(tileEntity))
             throw new IllegalArgumentException();
         this.tile = tileEntity;
-        this.world = world;
-        this.location = new BlockPos(pos);
+        this.world = tileEntity.getWorld();
+        this.location = new BlockPos(tileEntity.getPos());
         this.grids = new EFluxCableGrid[6];
-        if (tileEntity instanceof IEnergyTransmitter) {
-            //this.grids[0] = newGrid(EnumFacing.UNKNOWN);
-            this.connectType = ConnectType.CONNECTOR;
-        } else if (tileEntity instanceof IEnergyReceiver && tileEntity instanceof IEnergySource)
-            this.connectType = ConnectType.SEND_RECEIVE;
-        else if (tileEntity instanceof IEnergyReceiver)
-            this.connectType = ConnectType.RECEIVE;
-        else if (tileEntity instanceof IEnergySource)
-            this.connectType = ConnectType.SEND;
+        connectorSides = EnumSet.noneOf(EnumFacing.class);
+        for (EnumFacing facing : EnumFacing.VALUES){
+            if (EnergyAPIHelper.isTransmitter(tileEntity, facing)){
+                connectorSides.add(facing);
+            }
+        }
         this.hasInit = true;
     }
 
-    private Object tile;
+    private TileEntity tile;
     private World world;
     private boolean hasInit = false;
     private BlockPos location;
     private EFluxCableGrid[] grids;
-    private ConnectType connectType;
-
-    private boolean singleGrid(){
-        return this.connectType == ConnectType.CONNECTOR;
-    }
-
-    public ConnectType getConnectType() {
-        return connectType;
-    }
+    private Set<EnumFacing> connectorSides;
 
     public BlockPos getLocation() {
         return location;
     }
 
-    public Object getTile() {
+    public TileEntity getTile() {
         return tile;
+    }
+
+    public World getWorld(){
+        return world;
+    }
+
+    public boolean isReceiver(EnumFacing side){
+        return EnergyAPIHelper.isReceiver(tile, side);
+    }
+
+    public boolean isProvider(EnumFacing side){
+        return EnergyAPIHelper.isProvider(tile, side);
+    }
+
+    public boolean isTransmitter(EnumFacing side){
+        return connectorSides.contains(side);
+    }
+
+    public boolean canProvide(EnumFacing side){
+        return EnergyAPIHelper.canProvide(tile, side);
+    }
+
+    public boolean canReceive(EnumFacing side){
+        return EnergyAPIHelper.canReceive(tile, side);
+    }
+
+    public IEnergyReceiver getReceiver(EnumFacing side){
+        return tile.getCapability(EFluxAPI.RECEIVER_CAPABILITY, side);
+    }
+
+    public IEnergySource getProvider(EnumFacing side){
+        return tile.getCapability(EFluxAPI.PROVIDER_CAPABILITY, side);
+    }
+
+    public IEnergyTransmitter getTransmitter(EnumFacing side){
+        return tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side);
     }
 
     public boolean hasInit() {
         return hasInit;
     }
 
-    public void replaceGrid(EFluxCableGrid old, EFluxCableGrid newGrid){
-        if (singleGrid()){
-            grids[0] = newGrid;
+    public void replaceGrid(EFluxCableGrid old, EFluxCableGrid newGrid) {
+        List<Integer> i = removeGrid(old);
+        if (i != null) {
+            for (Integer j : i) {
+                grids[j] = newGrid;
+            }
         } else {
-            int q = 0;
-            for (EFluxCableGrid grid : grids){
-                if (grid != null)
-                    q++;
-            }
-            EFlux.systemPrintDebug("OldSizeBeforeMerge: " + q);
-            int i = removeGrid(old);
-            EFlux.systemPrintDebug(i);
-            grids[i] = newGrid;
-            q = 0;
-            for (EFluxCableGrid grid : grids){
-                if (grid != null)
-                    q++;
-            }
-            EFlux.systemPrintDebug("NewSizeAfterMerge " + q);
-            EFlux.systemPrintDebug(grids.length);
+            System.out.println("Replace null");
+            new Throwable().printStackTrace();
         }
     }
 
-    public void resetGrid(EFluxCableGrid grid){
-        removeGrid(grid);
-        if (singleGrid() && WorldHelper.chunkLoaded(world, location))
-            getGrid();
-    }
-
-    public int removeGrid(EFluxCableGrid grid){
+    public List<Integer> removeGrid(EFluxCableGrid grid){
         if (grids.length == 0)
             throw new RuntimeException();
+        List<Integer> ret = Lists.newArrayList();
         for (int i = 0; i < grids.length; i++){
             if (grid.equals(grids[i])){
                 grids[i] = null;
-                return i;
+                ret.add(i);
             }
         }
-        return -1;
+        return ret.isEmpty() ? null : ret;
     }
 
-    public EFluxCableGrid[] getGrids() {
-        return grids;
+    public Set<EFluxCableGrid> getGrids() {
+        return Sets.newHashSet(grids);
     }
 
     public EFluxCableGrid getGridFromSide(EnumFacing forgeDirection){
-        return singleGrid()?getGrid():getFromSide(forgeDirection);
+        return getFromSide(forgeDirection);
     }
 
     private EFluxCableGrid getFromSide(EnumFacing direction){
+        if (connectorSides.size() > 0) {
+            Set<EFluxCableGrid> gridL = Sets.newHashSet();
+            boolean doStuff = false;
+            for (EnumFacing facing : connectorSides) {
+                EFluxCableGrid grid = grids[facing.ordinal()];
+                if (grid != null) {
+                    gridL.add(grid);
+                } else {
+                    doStuff = true;
+                }
+            }
+            if (gridL.size() > 1) {
+                throw new RuntimeException();
+            }
+            if (doStuff) {
+                EFluxCableGrid newGrid;
+                if (gridL.size() == 0) {
+                    newGrid = newGrid(direction);
+                } else {
+                    newGrid = gridL.iterator().next();
+                }
+                for (EnumFacing facing : connectorSides) {
+                    grids[facing.ordinal()] = newGrid;
+                }
+                return newGrid;
+            }
+        }
         EFluxCableGrid grid = grids[direction.ordinal()];
         if (grid == null) {
             grid = newGrid(direction);
@@ -120,19 +162,8 @@ public class PowerTile {  //Wrapper for TileEntities
         return grid;
     }
 
-    public EFluxCableGrid getGrid(){
-        if (!singleGrid())
-            throw new UnsupportedOperationException("Request grid when tile has multiple grids");
-        EFluxCableGrid grid = grids[0];
-        if (grid == null){
-            grid = newGrid(null);
-            grids[0] = grid;
-        }
-        return grid;
-    }
-
     private EFluxCableGrid newGrid(EnumFacing direction){
-        return WorldRegistry.get(world).getWorldPowerGrid().registerGrid(new EFluxCableGrid(world, this, direction));
+        return WorldRegistry.get(world).getWorldPowerGrid().registerGrid(new EFluxCableGrid(this, direction));
     }
 
     @Override
@@ -140,7 +171,4 @@ public class PowerTile {  //Wrapper for TileEntities
         return obj instanceof PowerTile && location.equals(((PowerTile)obj).getLocation());
     }
 
-    public enum ConnectType{
-        CONNECTOR, SEND, RECEIVE, SEND_RECEIVE
-    }
 }

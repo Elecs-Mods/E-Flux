@@ -145,15 +145,6 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
         return new ContainerMachine(this, player, 0);
     }
 
-    /**
-     * @param direction the direction from which a connection is requested
-     * @return weather the tile can connect and accept power from the given side
-     */
-    @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return true;
-    }
-
     @SideOnly(Side.CLIENT)
     protected GuiMachine basicGui(EntityPlayer player){
         return new GuiMachine(getGuiServer(player)) {

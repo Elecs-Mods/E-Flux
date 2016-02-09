@@ -10,7 +10,9 @@ import elec332.core.tile.IRandomDisplayTickProviderTile;
 import elec332.core.util.BasicInventory;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.tileentity.EnergyTileBase;
@@ -26,6 +28,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,6 +48,22 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
             }
         };
         dirData = new byte[6];
+        transmitter = new IEnergyTransmitter() {
+            @Override
+            public boolean canConnectTo(IEnergyTransmitter otherTransmitter) {
+                return true;
+            }
+
+            @Override
+            public int getMaxEFTransfer() {
+                return 1000;
+            }
+
+            @Override
+            public int getMaxRPTransfer() {
+                return 50;
+            }
+        };
     }
 
     @Override
@@ -85,6 +104,7 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
                     dirData[i] = 0;
                 }
             }
+            outA = 1;
         }
     }
 
@@ -92,26 +112,16 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
     private byte[] dirData;
     private BasicInventory inventory;
     private boolean active;
-
-    /**
-     * @param direction the direction from which a connection is requested
-     * @return weather the tile can connect and provide power to the given side
-     */
-    @Override
-    public boolean canProvidePowerTo(EnumFacing direction) {
-        return direction != getTileFacing();
-    }
+    private IEnergyTransmitter transmitter;
 
     /**
      * @param rp        the RedstonePotential in the network
-     * @param direction the direction where the power will be provided to
      * @param execute   weather the power is actually drawn from the tile,
      *                  this flag is always true for IEnergySource.
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
      */
     @Override
-    public int provideEnergy(int rp, EnumFacing direction, boolean execute) {
-        dirData[direction.ordinal()] = 1;
+    public int provideEnergy(int rp, boolean execute) {
         if (ltp <= 0){
             ltp = 0;
             return 0;
@@ -290,6 +300,19 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
                     worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
             }
         }
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        boolean ret = ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
+        System.out.println("req: "+facing+" "+capability.getName()+" ret: "+ret);
+        return ret;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return capability == EFluxAPI.PROVIDER_CAPABILITY ? (facing != getTileFacing() ? (T)this : null) : (capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (facing != getTileFacing() ? (T)transmitter : null) : super.getCapability(capability, facing));
     }
 
 }

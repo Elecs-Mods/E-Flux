@@ -139,6 +139,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         return getMachineGui(player, client);
     }
 
+    @SuppressWarnings("unused")
     public Object getMachineGui(EntityPlayer player, boolean client){
         return null;
     }
@@ -157,16 +158,16 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
 
     @Override
     public final int requestedRP(){
-        return energyContainer.requestedRP(null);
+        return energyContainer.requestedRP();
     }
 
     @Override
     public final int getRequestedEF(int rp) {
-        return energyContainer.getRequestedEF(rp, null);
+        return energyContainer.getRequestedEF(rp);
     }
 
     @Override
     public final int receivePower(int rp, int ef) {
-        return energyContainer.receivePower(null, rp, ef);
+        return energyContainer.receivePower(rp, ef);
     }
 }

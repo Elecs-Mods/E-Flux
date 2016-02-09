@@ -3,6 +3,7 @@ package elec332.eflux.tileentity;
 import elec332.core.compat.handlers.WailaCompatHandler;
 import elec332.core.server.ServerHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
@@ -20,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.List;
 
@@ -73,7 +75,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
         if (!broken)
             this.breakableMachineInventory = null;
         this.broken = broken;
-        notifyNeighboursOfDataChange();
+        notifyNeighborsOfChange();
         syncData();
     }
 
@@ -88,25 +90,23 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     private boolean openBrokenGui(EntityPlayer player){
-        //if (breakableMachineInventory == null)
-        //    breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
         player.openGui(EFlux.instance, 1, worldObj, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
-    public int getRequestedEF(int rp, EnumFacing direction) {
-        return energyContainer.getRequestedEF(rp, direction);
+    public int getRequestedEF(int rp) {
+        return energyContainer.getRequestedEF(rp);
     }
 
     @Override
-    public int receivePower(EnumFacing direction, int rp, int ef) {
-        return energyContainer.receivePower(direction, rp, ef);
+    public int receivePower(int rp, int ef) {
+        return energyContainer.receivePower(rp, ef);
     }
 
     @Override
-    public int requestedRP(EnumFacing direction) {
-        return energyContainer.requestedRP(direction);
+    public int requestedRP() {
+        return energyContainer.requestedRP();
     }
 
     @Override
@@ -159,6 +159,21 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
                 "broken: "+broken,
                 "facing: "+getTileFacing()
         };
+    }
+
+    protected boolean canAcceptEnergyFrom(EnumFacing direction) {
+        return true;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return (capability == EFluxAPI.RECEIVER_CAPABILITY && canAcceptEnergyFrom(facing)) || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return capability == EFluxAPI.RECEIVER_CAPABILITY ? (canAcceptEnergyFrom(facing) ? (T)this : null) : super.getCapability(capability, facing);
     }
 
 }

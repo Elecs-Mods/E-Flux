@@ -6,8 +6,7 @@ import elec332.core.client.RenderBlocks;
 import elec332.core.client.RenderHelper;
 import elec332.core.client.render.AbstractBlockRenderer;
 import elec332.core.world.WorldHelper;
-import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.blocks.BlockCable;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.block.state.IBlockState;
@@ -36,7 +35,7 @@ public class CableRenderer extends AbstractBlockRenderer {
 
         for (EnumFacing direction : EnumFacing.VALUES) {
             TileEntity tile2 = WorldHelper.getTileAt(iba, pos.offset(direction));
-            if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || tile2 instanceof IEnergySource && ((IEnergySource) tile2).canProvidePowerTo(direction.getOpposite()) || tile2 instanceof IEnergyReceiver && ((IEnergyReceiver) tile2).canAcceptEnergyFrom(direction.getOpposite())) {
+            if ((tile2 instanceof AbstractCable && ((AbstractCable) tile2).getUniqueIdentifier().equals(((AbstractCable) tile).getUniqueIdentifier())) || EnergyAPIHelper.isProvider(tile, direction.getOpposite()) || EnergyAPIHelper.isReceiver(tile, direction.getOpposite())){
                 connections.add(direction);
             }
         }

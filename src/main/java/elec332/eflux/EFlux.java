@@ -8,6 +8,7 @@ import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.core.util.MCModInfo;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
@@ -78,11 +79,9 @@ public class EFlux {
     public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
 
-    @CapabilityInject(IEnergyReceiver.class)
-    public static Capability<IEnergyReceiver> RECEIVER_CAPABILITY = null;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        EFluxAPI.dummyLoad();
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
         creativeTab = new CreativeTabs("EFlux") {
@@ -96,17 +95,6 @@ public class EFlux {
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
         multiBlockRegistry = new MultiBlockRegistry();
-        CapabilityManager.INSTANCE.register(IEnergyReceiver.class, new Capability.IStorage<IEnergyReceiver>() {
-            @Override
-            public NBTBase writeNBT(Capability<IEnergyReceiver> capability, IEnergyReceiver instance, EnumFacing side) {
-                return new NBTTagCompound();
-            }
-
-            @Override
-            public void readNBT(Capability<IEnergyReceiver> capability, IEnergyReceiver instance, EnumFacing side, NBTBase nbt) {
-
-            }
-        }, IEnergyReceiver.class);
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));

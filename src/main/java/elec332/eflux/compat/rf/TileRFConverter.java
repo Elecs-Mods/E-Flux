@@ -27,41 +27,29 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
     }
 
     /**
-     * @param direction the direction from which a connection is requested
-     * @return weather the tile can connect and accept power from the given side
-     */
-    @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction == getTileFacing();
-    }
-
-    /**
-     * @param direction The requested direction
      * @return The Redstone Potential at which the machine wishes to operate
      */
     @Override
-    public int requestedRP(EnumFacing direction) {
+    public int requestedRP() {
         return 0; //This is the only machine that doesn't care about the RP of the network
     }
 
     /**
      * @param rp        The Redstone Potential in the network
-     * @param direction The requested direction
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
      */
     @Override
-    public int getRequestedEF(int rp, EnumFacing direction) {
+    public int getRequestedEF(int rp) {
         return Math.min(400/rp, (6000-storedPower)/rp);
     }
 
     /**
-     * @param direction the direction where the power will be provided to
      * @param rp        the RedstonePotential in the network
      * @param ef        the amount of EnergeticFlux that is being provided
      //* @return The amount of EnergeticFlux that wasn't used
      */
     @Override
-    public int receivePower(EnumFacing direction, int rp, int ef) {
+    public int receivePower(int rp, int ef) {
         storedPower += rp*ef;
         if (storedPower > 6000)
             storedPower = 6000;
