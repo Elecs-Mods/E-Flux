@@ -7,6 +7,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.grid.PositionedObjectHolder;
+import mcmultipart.multipart.IMultipartContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -44,45 +45,32 @@ public class WorldGridHolder {
         grids.remove(grid);
     }
 
-    public void onBlockChange(final BlockPos pos, final Set<EnumFacing> notifiedSides){
-        //if (world.isAirBlock(pos) || WorldHelper.getTileAt(world, pos) == null){
-        //    return;
-        //}
-        //ElecCore.tickHandler.registerCall(new Runnable() {
-        //    @Override
-        //    public void run() {
-                System.out.println("blockChange on world: "+WorldHelper.getDimID(world)+" "+pos);
-                for (EnumFacing facing : notifiedSides) {
-                    BlockPos newPos = pos.offset(facing);
-                    //if (world.isAirBlock(newPos) || WorldHelper.getTileAt(world, newPos) == null){
-                    //    return;
-                    //}
-                    PowerTile pt = getPowerTile(newPos);
-                    if (pt != null) {
-                        System.out.println("checking surroundings of : " + newPos);
-                        SurroundingData s = new SurroundingData(newPos);
-                        SurroundingData c = surroundingData.get(newPos);
-                        if (s.isBlockChange(c)){
-                            continue;
-                        }
-                        if (!c.equals(s)) {
-                            if (c.isBlockChange(s)){
-                                continue;
-                            } else {
-                                rebuild(newPos);
-                                return;
-                            }
-                        }
-                        System.out.println("checked surroundings");
+    public void onBlockChange(final BlockPos pos, final Set<EnumFacing> notifiedSides) {
+        EFlux.systemPrintDebug("blockChange on world: " + WorldHelper.getDimID(world) + " " + pos);
+        for (EnumFacing facing : notifiedSides) {
+            BlockPos newPos = pos.offset(facing);
+            PowerTile pt = getPowerTile(newPos);
+            if (pt != null) {
+                EFlux.systemPrintDebug("checking surroundings of : " + newPos);
+                SurroundingData s = new SurroundingData(newPos);
+                SurroundingData c = surroundingData.get(newPos);
+                if (!c.equals(s)) {
+                    if (c.isBlockChange(s)) {
+                        EFlux.systemPrintDebug("BChenge");
+                        continue;
+                    } else {
+                        EFlux.systemPrintDebug("RBuild");
+                        rebuild(newPos);
+                        return;
                     }
                 }
-        //    }
-       // }, world);
-
+                EFlux.systemPrintDebug("checked surroundings");
+            }
+        }
     }
 
     private void rebuild(BlockPos rPos){
-        System.out.println("rebuidling");
+        EFlux.systemPrintDebug("rebuidling");
         Set<EFluxCableGrid> grids = getPowerTile(rPos).getGrids();
         for (EFluxCableGrid grid : grids) {
             if (grid != null) {
@@ -105,25 +93,40 @@ public class WorldGridHolder {
     }
 
     public void addTile(TileEntity tile){
-        if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)){
-            throw new IllegalArgumentException();
-        }
-        if (!WorldHelper.chunkLoaded(world, tile.getPos()) || !EnergyAPIHelper.isEnergyTile(tile)) {
-            return;
-        }
-        if (getPowerTile(tile.getPos()) != null) {
-            throw new IllegalStateException();
-        }
-        PowerTile powerTile = new PowerTile(tile);
-        registeredTiles.put(powerTile, tile.getPos());
-        surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
-        for (EnumFacing facing : EnumFacing.VALUES){
-            BlockPos o = tile.getPos().offset(facing);
-            if (getPowerTile(o) != null) {
-                surroundingData.put(new SurroundingData(o), o);
+        if (!world.isRemote) {
+            if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)) {
+                throw new IllegalArgumentException();
             }
+            if (!WorldHelper.chunkLoaded(world, tile.getPos()) || !EnergyAPIHelper.isEnergyTile(tile)) {
+                return;
+            }
+            if (getPowerTile(tile.getPos()) != null) {
+                if (!(tile instanceof IMultipartContainer)) {
+                    throw new IllegalStateException();
+                } else {
+                    getPowerTile(tile.getPos()).checkConnector();
+                    surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
+                    for (EnumFacing facing : EnumFacing.VALUES) {
+                        BlockPos o = tile.getPos().offset(facing);
+                        if (getPowerTile(o) != null) {
+                            getPowerTile(o).checkConnector();
+                            surroundingData.put(new SurroundingData(o), o);
+                        }
+                    }
+                    return;
+                }
+            }
+            PowerTile powerTile = new PowerTile(tile);
+            registeredTiles.put(powerTile, tile.getPos());
+            surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                BlockPos o = tile.getPos().offset(facing);
+                if (getPowerTile(o) != null) {
+                    surroundingData.put(new SurroundingData(o), o);
+                }
+            }
+            addTile(powerTile);
         }
-        addTile(powerTile);
     }
 
     private void addTile(PowerTile powerTile){
@@ -139,19 +142,14 @@ public class WorldGridHolder {
                     TileEntity tile = WorldHelper.getTileAt(world, checkedPos);
                     if (tile != null && EnergyAPIHelper.isEnergyTile(tile)) {
                         PowerTile powerTile1 = getPowerTile(checkedPos);
-                        System.out.println("CP");
+                        EFlux.systemPrintDebug("CP");
                         if (powerTile1 == null || !powerTile1.hasInit()) {
-                            //if (pending.contains(powerTile)) {
-                            //    addTile(tile);
-                            //    continue;
-                           // } else {
-                                pending.add(powerTile);
-                                break;
-                           // }
+                            pending.add(powerTile);
+                            break;
                         }
-                        System.out.println("G_Check");
+                        EFlux.systemPrintDebug("G_Check");
                         if (canConnect(powerTile, direction, powerTile1)) {
-                            System.out.println("CC");
+                            EFlux.systemPrintDebug("CC");
                             EFluxCableGrid grid = powerTile1.getGridFromSide(direction.getOpposite());
                             powerTile.getGridFromSide(direction).mergeGrids(grid);
                         }
@@ -165,38 +163,47 @@ public class WorldGridHolder {
 
     private boolean canConnect(PowerTile powerTile1, EnumFacing direction, PowerTile powerTile2){
         if (!EnergyAPIHelper.canHandleEnergy(powerTile1.getTile(), direction) || !EnergyAPIHelper.canHandleEnergy(powerTile2.getTile(), direction.getOpposite())){
-            System.out.println("Snap1");
+            EFlux.systemPrintDebug("Snap1");
             return false; //One (or both) cannot connect.
         }
         if (powerTile1.canReceive(direction) != powerTile2.canProvide(direction.getOpposite()) && powerTile1.canProvide(direction) != powerTile2.canReceive(direction.getOpposite())) {
-            System.out.println("Snap2");
+            EFlux.systemPrintDebug("Snap2");
             return false; //We don't want to receivers or 2 sources connecting, do we?
         }
         if (powerTile1.isTransmitter(direction) && powerTile2.isTransmitter(direction.getOpposite())) {
-            System.out.println("Snap3");
+            EFlux.systemPrintDebug("Snap3");
             IEnergyTransmitter transmitter2 = powerTile2.getTransmitter(direction.getOpposite());
             IEnergyTransmitter transmitter1 = powerTile1.getTransmitter(direction);
             return transmitter2.canConnectTo(transmitter1) && transmitter1.canConnectTo(transmitter2);
         } else if (powerTile1.canProvide(direction) && powerTile2.canReceive(direction.getOpposite())){
-            System.out.println("Snap4");
+            EFlux.systemPrintDebug("Snap4");
             return true;
         } else if (powerTile1.canReceive(direction)){
-            System.out.println("Snap5");
+            EFlux.systemPrintDebug("Snap5");
             return powerTile2.canProvide(direction.getOpposite());
         }
-        System.out.println("Snap6");
+        EFlux.systemPrintDebug("Snap6");
         return false;
     }
 
     public void removeTile(TileEntity tile){
-        if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)){
-            throw new IllegalArgumentException();
+        if (!world.isRemote) {
+            if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)) {
+                throw new IllegalArgumentException();
+            }
+            if (WorldHelper.chunkLoaded(world, tile.getPos()) && WorldHelper.getTileAt(world, tile.getPos()) == tile && tile instanceof IMultipartContainer && EnergyAPIHelper.isEnergyTile(tile)) {
+                getPowerTile(tile.getPos()).checkConnector();
+                onBlockChange(tile.getPos(), EnumSet.allOf(EnumFacing.class));
+                surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
+                return;
+            }
+            EFlux.systemPrintDebug("RemTile");
+            removeTile(getPowerTile(tile.getPos()), true);
         }
-        removeTile(getPowerTile(tile.getPos()), true);
     }
 
     void removeTile(PowerTile powerTile, boolean reAdd){
-        if (powerTile != null) {
+        if (!world.isRemote && powerTile != null) {
             surroundingData.remove(powerTile.getLocation());
             registeredTiles.remove(powerTile.getLocation());
             for (EFluxCableGrid grid : powerTile.getGrids()) {
@@ -204,7 +211,7 @@ public class WorldGridHolder {
                     List<BlockPos> vec3List = Lists.newArrayList();
                     vec3List.addAll(grid.getLocations());
                     vec3List.remove(powerTile.getLocation());
-                    registeredTiles.remove(powerTile.getLocation());
+                    //registeredTiles.remove(powerTile.getLocation());
                     this.grids.remove(grid);
                     List<BlockPos> vec3List2 = Lists.newArrayList();
                     for (BlockPos vec : vec3List) {
@@ -225,6 +232,8 @@ public class WorldGridHolder {
                     }
                 }
             }
+        } else {
+            throw new IllegalStateException();
         }
     }
 
@@ -306,9 +315,9 @@ public class WorldGridHolder {
         private FacedSurroundingData(BlockPos pos, EnumFacing side){
             PowerTile thisTile = getPowerTile(pos);
             PowerTile otherTile = getPowerTile(pos.offset(side));
-            if (otherTile != null && otherTile.getTile() != (WorldHelper.chunkLoaded(world, pos.offset(side)) ? WorldHelper.getTileAt(world, pos.offset(side)) : null)){
-                otherTile = null;
-            }
+            //if (otherTile != null && otherTile.getTile() != (WorldHelper.chunkLoaded(world, pos.offset(side)) ? WorldHelper.getTileAt(world, pos.offset(side)) : null)){
+             //   otherTile = null;
+            //}
             if (thisTile == null){
                 throw new RuntimeException();
             }
@@ -319,7 +328,8 @@ public class WorldGridHolder {
                 if (transmitter && thisTile.isTransmitter(side)){
                     IEnergyTransmitter transmitter2 = otherTile.getTransmitter(side.getOpposite());
                     IEnergyTransmitter transmitter1 = thisTile.getTransmitter(side);
-                    transmitterConnect = transmitter2.canConnectTo(transmitter1) && transmitter1.canConnectTo(transmitter2);
+                    //EFlux.systemPrintDebug("ThisN: " + (transmitter1 == null) + ",  OtherN: " + (transmitter2 == null));
+                    transmitterConnect = transmitter1 != null && transmitter2 != null && transmitter2.canConnectTo(transmitter1) && transmitter1.canConnectTo(transmitter2);
                 } else {
                     transmitterConnect = false;
                 }

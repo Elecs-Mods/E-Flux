@@ -1,11 +1,7 @@
 package elec332.eflux.client.manual.pages;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import elec332.core.client.render.GuiDraw;
 import elec332.core.multiblock.BlockStructure;
-import elec332.core.multiblock.IMultiBlockStructure;
-import elec332.core.multiblock.MultiBlockStructureRegistry;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.client.manual.gui.GuiManual;
 import net.minecraft.block.Block;
@@ -14,7 +10,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.oredict.OreDictionary;

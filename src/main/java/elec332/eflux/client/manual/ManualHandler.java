@@ -1,20 +1,8 @@
 package elec332.eflux.client.manual;
 
 import com.google.common.base.Strings;
-import elec332.core.client.render.GuiDraw;
 import elec332.eflux.client.ManualInit;
-import elec332.eflux.client.manual.gui.GuiManual;
-import elec332.eflux.client.manual.pages.PageMultiBlockStructure;
-import elec332.eflux.client.manual.pages.PageText;
-import elec332.eflux.init.BlockRegister;
-import elec332.eflux.init.MultiBlockRegister;
-import elec332.eflux.util.EnumMachines;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

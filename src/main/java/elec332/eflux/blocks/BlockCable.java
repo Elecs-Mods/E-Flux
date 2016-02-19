@@ -2,6 +2,7 @@ package elec332.eflux.blocks;
 
 import com.google.common.collect.Lists;
 import elec332.core.client.IIconRegistrar;
+import elec332.core.client.RenderHelper;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
@@ -11,29 +12,25 @@ import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.CableRenderer;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
+import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import elec332.core.client.RenderHelper;
-import elec332.eflux.EFlux;
-import elec332.eflux.tileentity.energy.cable.AdvancedCable;
-import elec332.eflux.tileentity.energy.cable.BasicCable;
-import elec332.eflux.tileentity.energy.cable.NormalCable;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +72,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
 
     @Override
     public TileEntity createNewTileEntity(World world, int metadata) {
-        switch (metadata){
+        /*switch (metadata){
             case 0:
                 return new BasicCable();
             case 1:
@@ -84,7 +81,8 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
                 return new AdvancedCable();
             default:
                 return null;
-        }
+        }*/
+        return null;
     }
 
     @Override

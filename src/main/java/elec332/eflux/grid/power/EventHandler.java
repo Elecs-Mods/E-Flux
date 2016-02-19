@@ -1,5 +1,6 @@
 package elec332.eflux.grid.power;
 
+import elec332.eflux.EFlux;
 import elec332.eflux.api.event.PowerTransmitterEvent;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraftforge.event.world.BlockEvent;
@@ -13,11 +14,14 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onEnergyTileAdded(PowerTransmitterEvent.Load event){
+        EFlux.systemPrintDebug("AddEvent");
         WorldRegistry.get(event.world).getWorldPowerGrid().addTile(event.transmitterTile);
+        EFlux.systemPrintDebug("PT NonNull: " + (WorldRegistry.get(event.world).getWorldPowerGrid().getPowerTile(event.transmitterTile.getPos()) != null));
     }
 
     @SubscribeEvent
     public void onEnergyTileRemoved(PowerTransmitterEvent.UnLoad event){
+        EFlux.systemPrintDebug("RemEvent");
         WorldRegistry.get(event.world).getWorldPowerGrid().removeTile(event.transmitterTile);
     }
 
@@ -28,8 +32,10 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onNeighborNotify(BlockEvent.NeighborNotifyEvent event){
-        System.out.println("nbnEvent");
-        WorldRegistry.get(event.world).getWorldPowerGrid().onBlockChange(event.pos, event.getNotifiedSides());
+        if (!event.world.isRemote) {
+            EFlux.systemPrintDebug("nbnEvent");
+            WorldRegistry.get(event.world).getWorldPowerGrid().onBlockChange(event.pos, event.getNotifiedSides());
+        }
     }
 
 }

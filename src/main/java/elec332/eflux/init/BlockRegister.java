@@ -17,7 +17,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -25,7 +24,7 @@ import net.minecraftforge.oredict.OreDictionary;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-public class BlockRegister {
+public final class BlockRegister {
     public static final BlockRegister instance = new BlockRegister();
     private BlockRegister(){
     }

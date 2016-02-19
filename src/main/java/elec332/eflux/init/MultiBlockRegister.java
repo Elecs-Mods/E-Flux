@@ -24,7 +24,7 @@ import static elec332.eflux.init.BlockRegister.*;
 /**
  * Created by Elec332 on 27-8-2015.
  */
-public class MultiBlockRegister {
+public final class MultiBlockRegister {
 
     private static final BlockStateWrapper powerInlet = new BlockStateWrapper(BlockMachineParts.POWERINLET.getBlock(), OreDictionary.WILDCARD_VALUE);
     private static final BlockStateWrapper air = new BlockStateWrapper((Block)null);

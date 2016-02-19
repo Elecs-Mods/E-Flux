@@ -9,10 +9,10 @@ import elec332.core.server.ServerHelper;
 import elec332.core.util.EventHelper;
 import elec332.core.util.MCModInfo;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
+import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
@@ -32,15 +32,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -54,11 +50,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)",
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.0.7,)",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class EFlux {
 
@@ -125,9 +122,10 @@ public class EFlux {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws IOException{
-        ServerHelper.instance.registerExtendedProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
+        ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
+        MultiPartRegister.init();
         FluidRegister.instance.init();
         proxy.initRenderStuff();
         new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
@@ -147,6 +145,12 @@ public class EFlux {
             }
         });
         RecipeRegister.registerRecipes();
+        ServerHelper.instance.registerExtendedProperties("EFluxEnderNetwork", new Callable<INBTSerializable<NBTTagCompound>>() {
+            @Override
+            public INBTSerializable<NBTTagCompound> call() throws Exception {
+                return EnderNetworkManager.instance;
+            }
+        });
         //register items/blocks
 
     }

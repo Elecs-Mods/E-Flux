@@ -2,6 +2,7 @@ package elec332.eflux.grid.power;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -30,11 +31,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
         this.location = new BlockPos(tileEntity.getPos());
         this.grids = new EFluxCableGrid[6];
         connectorSides = EnumSet.noneOf(EnumFacing.class);
-        for (EnumFacing facing : EnumFacing.VALUES){
-            if (EnergyAPIHelper.isTransmitter(tileEntity, facing)){
-                connectorSides.add(facing);
-            }
-        }
+        checkConnector();
         this.hasInit = true;
     }
 
@@ -44,6 +41,14 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
     private BlockPos location;
     private EFluxCableGrid[] grids;
     private Set<EnumFacing> connectorSides;
+
+    public void checkConnector(){
+        for (EnumFacing facing : EnumFacing.VALUES){
+            if (EnergyAPIHelper.isTransmitter(tile, facing)){
+                connectorSides.add(facing);
+            }
+        }
+    }
 
     public BlockPos getLocation() {
         return location;
@@ -66,7 +71,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
     }
 
     public boolean isTransmitter(EnumFacing side){
-        return connectorSides.contains(side);
+        return EnergyAPIHelper.isTransmitter(tile, side);//connectorSides.contains(side);
     }
 
     public boolean canProvide(EnumFacing side){
@@ -100,8 +105,8 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
                 grids[j] = newGrid;
             }
         } else {
-            System.out.println("Replace null");
-            new Throwable().printStackTrace();
+            EFlux.systemPrintDebug("Replace null");
+            throw new IllegalStateException();
         }
     }
 
@@ -127,6 +132,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
     }
 
     private EFluxCableGrid getFromSide(EnumFacing direction){
+        checkConnector();
         if (connectorSides.size() > 0) {
             Set<EFluxCableGrid> gridL = Sets.newHashSet();
             boolean doStuff = false;

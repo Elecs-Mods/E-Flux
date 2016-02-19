@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public class FluidRegister {
+public final class FluidRegister {
 
     public static final FluidRegister instance = new FluidRegister();
     private FluidRegister(){

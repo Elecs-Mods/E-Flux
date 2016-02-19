@@ -2,7 +2,6 @@ package elec332.eflux.tileentity.energy.cable;
 
 import elec332.core.main.ElecCore;
 import elec332.core.util.NBTHelper;
-import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.tileentity.EnergyTileBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,13 +50,13 @@ public abstract class AbstractCable extends EnergyTileBase implements IEnergyTra
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == EFluxAPI.TRANSMITTER_CAPABILITY || super.hasCapability(capability, facing);
+        return /*capability == EFluxAPI.TRANSMITTER_CAPABILITY || */super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        return capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (T)this : super.getCapability(capability, facing);
+        return /*capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (T)this : */super.getCapability(capability, facing);
     }
 
 }

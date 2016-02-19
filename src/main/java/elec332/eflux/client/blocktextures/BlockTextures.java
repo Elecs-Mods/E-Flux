@@ -1,5 +1,6 @@
 package elec332.eflux.client.blocktextures;
 
+import elec332.core.util.EnumHelper;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -132,6 +133,24 @@ public class BlockTextures {
         };
     }
 
+    public static IBlockTextureProvider forMachine(final String machine){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return machine+"/"+machine+"_"+ EnumHelper.getName(side).toLowerCase();
+            }
+        };
+    }
+
+    public static IBlockTextureProvider forActivatableMachine(final String machine){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return machine + "/" + machine + "_" + EnumHelper.getName(side).toLowerCase() + (active ? "_A" : "");
+            }
+        };
+    }
+
     //Impl
 
     public static IBlockTextureProvider getCoalGenProvider(){
@@ -223,5 +242,68 @@ public class BlockTextures {
             }
         };
     }
+
+/*
+    public static IBlockTextureProvider getCoalGenProvider(){
+        return forActivatableMachine("coalGenerator");
+    }
+
+    public static IBlockTextureProvider getCapacitorProvider(){
+        return getCustomProvider("cap_side", "cap_top", "def_cap");
+    }
+
+    public static IBlockTextureProvider getAssemblyTableProvider(){
+        return forMachine("assemblyTable");
+    }
+
+    public static IBlockTextureProvider getGrowthLampProvider(){
+        return forMachine("growthLamp");
+    }
+
+    public static IBlockTextureProvider getChunkMainProvider(){
+        return forMachine("chunkMain");
+    }
+
+    public static IBlockTextureProvider getChunkSubProvider(){
+        return forMachine("chunkSub");
+    }
+
+    public static IBlockTextureProvider getTeslaCoilProvider(){
+        return forMachine("teslaCoil");
+    }
+
+    public static IBlockTextureProvider getScannerProvider(){
+        return forMachine("scanner");
+    }
+
+    public static IBlockTextureProvider getWasherProvider(){
+        return forMachine("washer");
+    }
+
+    public static IBlockTextureProvider getRubbleSieveProvider(){
+        return forMachine("rubbleSieve");
+    }
+
+    public static IBlockTextureProvider getHeatGlassProvider(){
+        return forMachine("heatGlass");
+    }
+
+    public static IBlockTextureProvider getLaserLensProvider(){
+        return forMachine("laserLens");
+    }
+
+    public static IBlockTextureProvider getRFConverterProvider(){
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                if (side == EnumFacing.NORTH){
+                    return "powerinlet_front";
+                } else if (side == EnumFacing.SOUTH){
+                    return "precisionMotor";
+                }
+                return defaultSideTexture;
+            }
+        };
+    }*/
 
 }

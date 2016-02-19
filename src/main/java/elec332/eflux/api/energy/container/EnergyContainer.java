@@ -5,7 +5,6 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.util.CalculationHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 
 /**
  * Created by Elec332 on 24-8-2015.

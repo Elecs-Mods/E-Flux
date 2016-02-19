@@ -3,9 +3,11 @@ package elec332.eflux.grid.power;
 import com.google.common.collect.Lists;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.energy.*;
+import elec332.eflux.api.energy.EnergyAPIHelper;
+import elec332.eflux.api.energy.IEnergyTransmitter;
+import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
-import elec332.eflux.tileentity.energy.cable.AbstractCable;
+import elec332.eflux.multipart.cable.PartAbstractCable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -39,9 +41,10 @@ public class EFluxCableGrid {
             acceptors.add(new GridData(p.getLocation(), direction));
         }
         if (EnergyAPIHelper.isTransmitter(tile, direction)) {
-            maxTransfer = (p.getTransmitter(direction)).getMaxRPTransfer();
-            if (p.getTile() instanceof AbstractCable) {
-                ((AbstractCable) p.getTile()).setGridIdentifier(identifier);
+            IEnergyTransmitter transmitter = p.getTransmitter(direction);
+            maxTransfer = transmitter.getMaxRPTransfer();
+            if (transmitter instanceof PartAbstractCable) {
+                ((PartAbstractCable) transmitter).setGridIdentifier(identifier);
             }
         } else {
             maxTransfer = -1;
@@ -94,6 +97,7 @@ public class EFluxCableGrid {
         EFlux.systemPrintDebug("Acceptors: " + acceptors.size());
         EFlux.systemPrintDebug("Providers " + (providers.size() + specialProviders.size()));
         EFlux.systemPrintDebug("MaxTransfer: " + maxTransfer);
+        EFlux.systemPrintDebug("UUID: " + identifier);
         EFlux.systemPrintDebug("STOP");
         processPower();
     }

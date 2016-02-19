@@ -5,6 +5,7 @@ import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -47,6 +48,7 @@ public class WorldRegistry {
 
     private WorldRegistry(World world) {
         this.gridHolderPower = new WorldGridHolder(world);
+        this.tickables = Lists.newArrayList();
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
         ElecCore.tickHandler.registerCall(new Runnable() {
@@ -57,8 +59,9 @@ public class WorldRegistry {
         }, world);
     }
 
-    private WorldGridHolder gridHolderPower;
-    private World world;
+    private final WorldGridHolder gridHolderPower;
+    private final List<ITickable> tickables;
+    private final World world;
 
     public WorldGridHolder getWorldPowerGrid() {
         return gridHolderPower;
@@ -66,6 +69,14 @@ public class WorldRegistry {
 
     public void tickInternal() {
         gridHolderPower.onServerTickInternal();
+    }
+
+    public void addTickable(ITickable tickable){
+        this.tickables.add(tickable);
+    }
+
+    public void removeTickable(ITickable tickable){
+        this.tickables.remove(tickable);
     }
 
     public void unload() {

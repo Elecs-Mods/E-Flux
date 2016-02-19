@@ -20,28 +20,32 @@ public class EnergyAPIHelper {
         return isReceiver(provider, side) || isTransmitter(provider, side);
     }
 
-    public static boolean isReceiver(ICapabilityProvider provider, EnumFacing side){
-        return provider.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, side);
+    public static boolean isReceiver(ICapabilityProvider provider, EnumFacing side) {
+        return provider != null && provider.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, side);
     }
 
-    public static boolean isProvider(ICapabilityProvider provider, EnumFacing side){
-        return provider.hasCapability(EFluxAPI.PROVIDER_CAPABILITY, side);
+    public static boolean isProvider(ICapabilityProvider provider, EnumFacing side) {
+        return provider != null && provider.hasCapability(EFluxAPI.PROVIDER_CAPABILITY, side);
     }
 
-    public static boolean isTransmitter(ICapabilityProvider provider, EnumFacing side){
-        return provider.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side);
+    public static boolean isTransmitter(ICapabilityProvider provider, EnumFacing side) {
+        return provider != null && provider.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side);
     }
 
-    public static boolean canHandleEnergy(TileEntity tile, EnumFacing side){
-        return isReceiver(tile, side) || isProvider(tile, side) || isTransmitter(tile, side);
+    public static boolean canHandleEnergy(TileEntity tile, EnumFacing side) {
+        return tile != null && (isReceiver(tile, side) || isProvider(tile, side) || isTransmitter(tile, side));
     }
 
     public static void postLoadEvent(TileEntity tile){
-        postIfValid(tile, new PowerTransmitterEvent.Load(tile));
+        if (isEnergyTile(tile)) {
+            postIfValid(tile, new PowerTransmitterEvent.Load(tile));
+        }
     }
 
     public static void postUnloadEvent(TileEntity tile){
-        postIfValid(tile, new PowerTransmitterEvent.UnLoad(tile));
+        if (isEnergyTile(tile)) {
+            postIfValid(tile, new PowerTransmitterEvent.UnLoad(tile));
+        }
     }
 
     private static void postIfValid(TileEntity tile, PowerTransmitterEvent event){
@@ -51,6 +55,9 @@ public class EnergyAPIHelper {
     }
 
     public static boolean isEnergyTile(TileEntity tile){
+        if (tile == null){
+            return false;
+        }
         for (EnumFacing facing : EnumFacing.VALUES){
             if (canHandleEnergy(tile, facing)){
                 return true;

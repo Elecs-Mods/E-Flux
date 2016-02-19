@@ -15,16 +15,19 @@ import java.util.List;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-public class ItemRegister {
+public final class ItemRegister {
     public static final ItemRegister instance = new ItemRegister();
     private ItemRegister(){
     }
 
     public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual;
     @SuppressWarnings("all")
-    private static Item EFluxItems, ingot, coil, dusts;
+    private static Item EFluxItems, ingot, coil, dusts, cable;
     public static ItemStack copperIngot, tinIngot, zincIngot, silverIngot, copperCoil, silverCoil, conductiveCoil, compressedIngot, carbonPlate, scrap, conductiveIngot, carbonMesh;
+    //Dusts
     public static ItemStack dustIron, dustGold, dustCopper, dustZinc, dustSilver, dustCoal, dustStone, dustTin, dustConductive;
+    //MultiParts
+    public static ItemStack cableBasic, cableNormal, cableAdvanced;
 
     public void init(FMLInitializationEvent event){
         //if (ElecCore.developmentEnvironment)
@@ -86,6 +89,13 @@ public class ItemRegister {
 
         OreDictionary.registerOre("vanillaCoal", Items.coal);
 
+    }
+
+    protected void initMultiPartItems(){
+        cable = new ItemCable().register();
+        cableBasic = new ItemStack(cable, 1, 0);
+        cableNormal = new ItemStack(cable, 1, 1);
+        cableAdvanced = new ItemStack(cable, 1, 2);
     }
 
 }

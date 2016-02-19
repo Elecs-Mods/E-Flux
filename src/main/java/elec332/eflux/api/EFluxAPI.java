@@ -32,7 +32,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
     }
 
-    private static void registerWithoutStorageAndDefaultInstance(Class clazz){
+    static void registerWithoutStorageAndDefaultInstance(Class clazz){
         CapabilityManager.INSTANCE.register(clazz, new Capability.IStorage() {
 
             @Override

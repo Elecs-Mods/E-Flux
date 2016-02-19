@@ -20,6 +20,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import static elec332.eflux.EFlux.random;
+import static elec332.eflux.init.BlockRegister.cable;
 import static elec332.eflux.init.BlockRegister.*;
 import static elec332.eflux.init.ItemRegister.*;
 import static elec332.eflux.util.EnumMachines.*;
@@ -29,7 +30,7 @@ import static net.minecraft.init.Items.*;
 /**
  * Created by Elec332 on 13-1-2016.
  */
-public class RecipeRegister {
+public final class RecipeRegister {
 
     public static void registerRecipes(){
         registerCraftingRecipes();
