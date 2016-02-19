@@ -60,6 +60,11 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
     }
 
     @Override
+    public void markObjectDirty() {
+        markDirty();
+    }
+
+    @Override
     public boolean isBroken() {
         return broken;
     }

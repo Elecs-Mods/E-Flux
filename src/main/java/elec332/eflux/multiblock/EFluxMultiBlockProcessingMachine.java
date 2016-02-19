@@ -62,6 +62,11 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     }
 
     @Override
+    public void markObjectDirty() {
+        markDirty();
+    }
+
+    @Override
     public final void onTick() {
         super.onTick();
         if (!getWorldObj().isRemote){

@@ -69,6 +69,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
         storedPower += rp*ef*getRFConversion();
         if (storedPower > 6000)
             storedPower = 6000;
+        markDirty();
         return 0;
     }
 
@@ -90,6 +91,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
         int ret = Math.min(i, maxExtract);
         if (!simulate)
             storedPower -= ret*getRFConversion();
+        markDirty();
         return ret;
     }
 

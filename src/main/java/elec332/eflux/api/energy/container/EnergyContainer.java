@@ -34,12 +34,14 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     public final void tick(){
         if (progressMachine != null){
             if (progressMachine.canProcess() && drainPower(progressMachine.getRequiredPowerPerTick())) {
-                if (progress == 0)
+                if (progress == 0) {
                     processTime = calculateProcessTime(progressMachine.getProcessTime());
+                }
                 progress++;
                 if (progress >= processTime) {
                     this.progress = 0;
                     progressMachine.onProcessDone();
+                    markDirty();
                 }
             } else if (progress > 0) {
                 progress = 0;
@@ -58,9 +60,11 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
     public boolean drainPower(int toDrain){
         if (storedPower >= toDrain){
             storedPower -= toDrain;
+            markDirty();
             return true;
         }
         storedPower = 0;
+        markDirty();
         return false;
     }
 
@@ -74,6 +78,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
 
     public void setStoredPower(int storedPower) {
         this.storedPower = storedPower;
+        markDirty();
     }
 
     public int getMaxStoredEnergy() {
@@ -127,13 +132,14 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             }
             if (rp > requestedRP() * (1 + getAcceptance())) {
                 breakMachine();
+                markDirty();
             }
         }
         return powerHandler.getEFForOptimalRP(); //Math.min(efForOptimalRP, (maxEnergy-storedPower)/rp);
     }
 
     @Override
-    public final int receivePower( int rp, int ef) {
+    public final int receivePower(int rp, int ef) {
         if (breakableMachine != null && breakableMachine.isBroken())
             return 0;
         int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(), powerHandler.getEFForOptimalRP(), (maxEnergy-storedPower)/rp, getAcceptance());
@@ -141,6 +147,7 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
         if (storedPower > maxEnergy)
             this.storedPower = maxEnergy;
         this.lastRP = rp;
+        markDirty();
         return 0;
     }
 
@@ -149,6 +156,10 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             breakableMachine.setBroken(true);
             breakableMachine.onBroken();
         }
+    }
+
+    private void markDirty(){
+        powerHandler.markObjectDirty();
     }
 
 }

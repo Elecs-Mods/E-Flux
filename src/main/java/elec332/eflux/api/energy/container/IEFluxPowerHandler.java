@@ -17,4 +17,6 @@ public interface IEFluxPowerHandler {
 
     public int getOptimalRP();
 
+    public void markObjectDirty();
+
 }
