@@ -29,7 +29,7 @@ public final class BlockRegister {
     private BlockRegister(){
     }
 
-    public static Block ores, cable, areaMover;
+    public static Block ores, oldCable, areaMover;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
@@ -88,7 +88,7 @@ public final class BlockRegister {
 
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
 
-        cable = new BlockCable("efluxCable").register();
+        oldCable = new BlockCable("efluxCable").register();
     }
 
     private BlockStateWrapper newBlockStateWrapper(Block block){

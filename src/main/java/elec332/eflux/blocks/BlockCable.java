@@ -65,10 +65,10 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
         return textures[getMetaFromState(state)];
     }
 
-    @Override
-    public int getRenderType() {
-        return RenderingRegistry.SPECIAL_BLOCK_RENDERER_ID;
-    }
+    //@Override
+    //public int getRenderType() {
+    //    return RenderingRegistry.SPECIAL_BLOCK_RENDERER_ID;
+    //}
 
     @Override
     public TileEntity createNewTileEntity(World world, int metadata) {

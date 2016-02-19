@@ -1,11 +1,15 @@
 package elec332.eflux.compat.rf;
 
 import cofh.api.energy.IEnergyProvider;
+import elec332.core.world.WorldHelper;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.tileentity.EnergyTileBase;
 import elec332.eflux.util.Config;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Created by Elec332 on 20-7-2015.
@@ -26,12 +30,24 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
         this.storedPower = tagCompound.getInteger("power");
     }
 
+    @Override
+    public void update() {
+        EnumFacing tf = getTileFacing();
+        TileEntity tile = WorldHelper.getTileAt(worldObj, pos.offset(tf.getOpposite()));
+        if (tile instanceof cofh.api.energy.IEnergyReceiver){
+            cofh.api.energy.IEnergyReceiver receiver = (cofh.api.energy.IEnergyReceiver) tile;
+            if (receiver.canConnectEnergy(tf)){
+                storedPower -= receiver.receiveEnergy(tf, extractEnergy(tf.getOpposite(), 600, true), false);
+            }
+        }
+    }
+
     /**
      * @return The Redstone Potential at which the machine wishes to operate
      */
     @Override
     public int requestedRP() {
-        return 0; //This is the only machine that doesn't care about the RP of the network
+        return 1; //This is the only machine that doesn't care about the RP of the network
     }
 
     /**
@@ -40,7 +56,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public int getRequestedEF(int rp) {
-        return Math.min(400/rp, (6000-storedPower)/rp);
+        return (int) Math.min(400/rp, ((6000-storedPower)/getRFConversion())/rp);
     }
 
     /**
@@ -50,7 +66,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public int receivePower(int rp, int ef) {
-        storedPower += rp*ef;
+        storedPower += rp*ef*getRFConversion();
         if (storedPower > 6000)
             storedPower = 6000;
         return 0;
@@ -73,7 +89,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
         int i = getEnergyStored(from);
         int ret = Math.min(i, maxExtract);
         if (!simulate)
-            storedPower -= ret*Config.RFConversionNumber;
+            storedPower -= ret*getRFConversion();
         return ret;
     }
 
@@ -82,7 +98,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public int getEnergyStored(EnumFacing from) {
-        return storedPower/Config.RFConversionNumber;
+        return storedPower;
     }
 
     /**
@@ -90,7 +106,7 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
      */
     @Override
     public int getMaxEnergyStored(EnumFacing from) {
-        return 6000/Config.RFConversionNumber;
+        return 6000;
     }
 
     /**
@@ -99,6 +115,21 @@ public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, 
     @Override
     public boolean canConnectEnergy(EnumFacing from) {
         return from == getTileFacing().getOpposite();
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return (capability == EFluxAPI.RECEIVER_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return (capability == EFluxAPI.RECEIVER_CAPABILITY && facing == getTileFacing()) ? (T)this : super.getCapability(capability, facing);
+    }
+
+    private float getRFConversion(){
+        return 1f/Config.RFConversionNumber;
     }
 
 }

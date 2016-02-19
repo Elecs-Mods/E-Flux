@@ -20,7 +20,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import static elec332.eflux.EFlux.random;
-import static elec332.eflux.init.BlockRegister.cable;
 import static elec332.eflux.init.BlockRegister.*;
 import static elec332.eflux.init.ItemRegister.*;
 import static elec332.eflux.util.EnumMachines.*;
@@ -76,9 +75,9 @@ public final class RecipeRegister {
         registerShapedRecipe(precisionMotor.toItemStack(), "SGS", "CMC", "R R", 'S', silverIngot, 'G', gold_ingot, 'C', copperCoil, 'M', motor.toItemStack(), 'R', redstone);
         registerShapedRecipe(dustStorage.toItemStack(), "CBC", "ICI", "FGF", 'C', copperIngot, 'B', iron_bars, 'I', iron_ingot, 'C', chest, 'F', frameNormal.toItemStack(), 'G', itemGate.toItemStack());
 
-        registerShapedRecipe(new ItemStack(cable, 5, 0), "RRR", "SCS", "RRR", 'R', redstone, 'S', silverIngot, 'C', copperIngot);
-        registerShapedRecipe(new ItemStack(cable, 3, 1), "RRR", "CGC", "RRR", 'R', redstone, 'G', gold_ingot, 'C', conductiveIngot);
-        registerShapedRecipe(new ItemStack(cable, 1, 2), "RER", "CSC", "RER", 'R', redstone, 'S', silverIngot, 'C', conductiveIngot, 'E', ender_pearl);
+        registerShapedRecipe(new ItemStack(cableBasic.getItem(), 5, 0), "RRR", "SCS", "RRR", 'R', redstone, 'S', silverIngot, 'C', copperIngot);
+        registerShapedRecipe(new ItemStack(cableNormal.getItem(), 3, 1), "RRR", "CGC", "RRR", 'R', redstone, 'G', gold_ingot, 'C', conductiveIngot);
+        registerShapedRecipe(new ItemStack(cableAdvanced.getItem(), 1, 2), "RER", "CSC", "RER", 'R', redstone, 'S', silverIngot, 'C', conductiveIngot, 'E', ender_pearl);
 
         registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ender_eye, 'L', CHUNKSUB.getBlock(), 'I', iron_ingot, 'S', silverIngot);
         registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ender_eye, 'I', iron_ingot, 'M', multimeter, 'Z', zincIngot, 'R', redstone);
@@ -88,6 +87,10 @@ public final class RecipeRegister {
         registerShapedRecipe(carbonMesh, "CCC", "CCC", "CCC", 'C', dustCoal);
 
         CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), book, redstone);
+
+        for (int i = 0; i < 3; i++) {
+            CraftingManager.getInstance().addShapelessRecipe(new ItemStack(cableBasic.getItem(), 1, i), new ItemStack(oldCable, 1, i));
+        }
 
     }
 

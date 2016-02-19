@@ -14,6 +14,7 @@ import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.multipart.cable.PartNormalCable;
 import mcmultipart.multipart.IMultipart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * Created by Elec332 on 12-2-2016.
@@ -50,6 +53,18 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        for (int i = 0; i < 3; i++) {
+            subItems.add(new ItemStack(itemIn, 1, i));
+        }
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack) {
+        return "item.EFlux.cable." + stack.getItemDamage();
     }
 
     @Override

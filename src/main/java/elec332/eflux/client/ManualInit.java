@@ -5,6 +5,7 @@ import elec332.eflux.client.manual.ManualHandler;
 import elec332.eflux.client.manual.pages.PageMultiBlockStructure;
 import elec332.eflux.client.manual.pages.PageText;
 import elec332.eflux.init.BlockRegister;
+import elec332.eflux.init.ItemRegister;
 import elec332.eflux.init.MultiBlockRegister;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.item.ItemStack;
@@ -20,7 +21,7 @@ public class ManualInit {
 
         ManualHandler.instance.getMainCategory().addPage(new PageText(manualTitle("main")).setText(manualText("main")));
 
-        newCategoryWithTextPage("powerSystem", new ItemStack(BlockRegister.cable)).addPage(PageText.newPageWithText("eflux.manual.text.powerSystem.1")).setLastCategory();
+        newCategoryWithTextPage("powerSystem", ItemRegister.cableAdvanced).addPage(PageText.newPageWithText("eflux.manual.text.powerSystem.1")).setLastCategory();
 
         newCategoryWithTextPage("multiBlocks", BlockRegister.powerInlet.toItemStack());
         newCategoryWithTextPage("multiBlocks/compressor", BlockRegister.monitor.toItemStack()).addPage(new PageMultiBlockStructure(manualTitle("compressor"), MultiBlockRegister.BlockStructures.compressor, 80, 100, compressorManual)).setLastCategory();

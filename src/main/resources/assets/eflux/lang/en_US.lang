@@ -31,6 +31,10 @@ item.EFlux.dusts.dustStone.name=Stone Dust
 item.EFlux.dusts.dustTin.name=Tin Dust
 item.EFlux.dusts.dustConductive.name=Conductive Dust
 
+item.EFlux.cable.0.name=Basic Cable
+item.EFlux.cable.1.name=Normal Cable
+item.EFlux.cable.2.name=Advanced Cable
+
 item.EFlux.manual.name=Manual
 
 
