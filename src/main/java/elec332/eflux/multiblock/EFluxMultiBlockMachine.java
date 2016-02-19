@@ -43,6 +43,11 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
+    public void markObjectDirty() {
+        markDirty();
+    }
+
+    @Override
     public void onTick() {
         if (getWorldObj().getTotalWorldTime() % 32L == 0L) {
             markDirty();
