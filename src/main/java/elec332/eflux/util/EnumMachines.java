@@ -8,6 +8,7 @@ import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.misc.TileEntityFeeder;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
@@ -29,6 +30,8 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     SCANNER(TileScanner.class, BlockTextures.getScannerProvider()),
     WASHER(TileWasher.class, BlockTextures.getWasherProvider()),
     RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
+
+    FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
 
     ;
     //___Data__//////////////////////////////////////////////////////////
