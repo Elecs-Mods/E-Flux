@@ -8,11 +8,13 @@ import elec332.eflux.tileentity.energy.generator.CoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import elec332.eflux.tileentity.misc.TileEntityFeeder;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -33,6 +35,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
 
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
 
+
     ;
     //___Data__//////////////////////////////////////////////////////////
 
@@ -43,6 +46,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     private int renderID = 3;
     private Material material = Material.rock;
     private IBlockTextureProvider textureProvider;
+    public EnumWorldBlockLayer renderingLayer = EnumWorldBlockLayer.SOLID;
 
     private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material, IBlockTextureProvider textureProvider){
         this(tileClass, renderID, material);
@@ -118,6 +122,11 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     @Override
     public String getName() {
         return super.toString().toLowerCase();
+    }
+
+    @Override
+    public EnumWorldBlockLayer getRenderingLayer() {
+        return renderingLayer;
     }
 
 }

@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -178,6 +179,10 @@ public final class BlockRegister {
             return super.toString().toLowerCase();
         }
 
+        @Override
+        public EnumWorldBlockLayer getRenderingLayer() {
+            return EnumWorldBlockLayer.SOLID;
+        }
     }
 
     private enum GlassTypes implements IEFluxBlockMachineData {
@@ -249,6 +254,11 @@ public final class BlockRegister {
         @Override
         public String getName() {
             return super.toString().toLowerCase();
+        }
+
+        @Override
+        public EnumWorldBlockLayer getRenderingLayer() {
+            return EnumWorldBlockLayer.CUTOUT;
         }
 
     }
