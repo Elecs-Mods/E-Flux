@@ -34,7 +34,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
 
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
-
+    SPAWNER(TileEntityEFluxSpawner.class, BlockTextures.getSpawnerProvider()),
 
     ;
     //___Data__//////////////////////////////////////////////////////////

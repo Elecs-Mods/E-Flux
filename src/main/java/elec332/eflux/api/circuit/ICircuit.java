@@ -9,13 +9,13 @@ public interface ICircuit {
 
     public int boardSize(ItemStack stack);
 
-    public ItemStack getRequiredComponent(int i, ItemStack stack);
+    public ItemStack getRequiredComponent(ItemStack stack, int slot);
 
     public void breakRandomComponent(ItemStack stack);
 
     public boolean isValid(ItemStack stack);
 
-    public EnumCircuit getDifficulty();
+    public EnumCircuit getDifficulty(ItemStack stack);
 
     public boolean isCircuit(ItemStack stack);
 

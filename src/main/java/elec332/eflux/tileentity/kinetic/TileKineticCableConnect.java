@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.kinetic;
 
 import com.google.common.collect.Lists;
-import elec332.core.tile.TileBase;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.api.kinetic.IKineticReceiver;
 import elec332.eflux.grid.WorldRegistry;

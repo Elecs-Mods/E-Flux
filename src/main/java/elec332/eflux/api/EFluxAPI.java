@@ -1,5 +1,6 @@
 package elec332.eflux.api;
 
+import elec332.eflux.api.energy.IEnergyMonitor;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
@@ -22,6 +23,8 @@ public class EFluxAPI {
     public static Capability<IEnergySource> PROVIDER_CAPABILITY;
     @CapabilityInject(IEnergyTransmitter.class)
     public static Capability<IEnergyTransmitter> TRANSMITTER_CAPABILITY;
+    @CapabilityInject(IEnergyMonitor.class)
+    public static Capability<IEnergyMonitor> MONITOR_CAPABILITY;
 
     public static void dummyLoad(){
     }
@@ -30,6 +33,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IEnergyReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnergySource.class);
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
+        registerWithoutStorageAndDefaultInstance(IEnergyMonitor.class);
     }
 
     static void registerWithoutStorageAndDefaultInstance(Class clazz){

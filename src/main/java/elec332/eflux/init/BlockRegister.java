@@ -7,6 +7,7 @@ import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.items.ChunkLoaderItemBlock;
+import elec332.eflux.items.ItemEFluxSpawner;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
@@ -46,6 +47,10 @@ public final class BlockRegister {
                     break;
                 case COAL_GENERATOR:
                     machine.hasTwoStates = true;
+                    break;
+                case SPAWNER:
+                    machine.renderingLayer = EnumWorldBlockLayer.CUTOUT;
+                    machine.itemBlockClass = ItemEFluxSpawner.class;
                     break;
             }
             machine.init();

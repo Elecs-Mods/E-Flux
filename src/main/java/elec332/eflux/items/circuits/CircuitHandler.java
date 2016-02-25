@@ -1,90 +1,105 @@
 package elec332.eflux.items.circuits;
 
 import com.google.common.collect.Lists;
-import elec332.eflux.EFlux;
+import com.google.common.collect.Maps;
 import elec332.eflux.api.circuit.EnumCircuit;
-import elec332.eflux.api.circuit.ICircuit;
+import elec332.eflux.init.ItemRegister;
 import elec332.eflux.items.Components;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Elec332 on 4-5-2015.
  */
 public class CircuitHandler {
-    private static HashMap<EnumCircuit, CircuitHandler> mappings = new HashMap<EnumCircuit, CircuitHandler>();
-    private static List<EnumCircuit> registeredTypes = new ArrayList<EnumCircuit>();
-    private static boolean init = false;
-    public static Item UnrefinedBoards;
 
-    public static ICircuitDataProvider get(ICircuit circuit, int i){
-        return get(circuit.getDifficulty()).mapping.get(i);
-    }
+    private static final Map<EnumCircuit, CircuitHandler> mappings;
+    private static final Set<EnumCircuit> registeredTypes;
+    private static boolean init = false;
 
     public static void register(ICircuitDataProvider provider, EnumCircuit circuit){
-        if (!init)
-            get(circuit).registerCircuit(provider);
-        else throw new UnsupportedOperationException("Cannot register circuits after init");
+        if (init) {
+            throw new UnsupportedOperationException("Cannot register circuits after init");
+        }
+        get(circuit).registerCircuit(provider);
     }
 
     public static CircuitHandler get(EnumCircuit circuit) {
-        if (circuit == null)
+        if (circuit == null) {
             throw new IllegalArgumentException();
-        CircuitHandler ret = mappings.get(circuit);
-        if (ret == null) {
-            ret = new CircuitHandler(circuit);
-            mappings.put(circuit, ret);
-            registeredTypes.add(circuit);
         }
-        return ret;
+        return mappings.get(circuit);
     }
 
     public static void register(){
         init = true;
-        UnrefinedBoards = new UnrefinedBoards("UnrefinedBoard", registeredTypes.size()).setCreativeTab(EFlux.creativeTab);
-        for (EnumCircuit circuit : registeredTypes)
+        for (EnumCircuit circuit : registeredTypes) {
             get(circuit).registerData();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////
+
     private CircuitHandler(EnumCircuit circuit){
         this.circuit = circuit;
-        mapping = Lists.newArrayList();
+        mapping = Maps.newHashMap();
+        nameToBluePrintAndBoardMap = Maps.newHashMap();
     }
-    private EnumCircuit circuit;
-    private List<ICircuitDataProvider> mapping;
-    public Item circuitItem;
+
+    private final EnumCircuit circuit;
+    private final Map<String, ICircuitDataProvider> mapping;
+    private final Map<String, Pair<Item, Item>> nameToBluePrintAndBoardMap;
 
     private void registerCircuit(ICircuitDataProvider provider){
-        if (!mapping.contains(provider))
-            mapping.add(provider);
+        String s = provider.getName();
+        if (!mapping.containsKey(s)) {
+            mapping.put(s, provider);
+            nameToBluePrintAndBoardMap.put(s, Pair.of((Item)new BluePrint(s, circuit), (Item)new Circuit(s, circuit)));
+        }
     }
 
-    public String getname(int i){
-        return mapping.get(i).getName();
+    public ICircuitDataProvider fromName(String name){
+        return mapping.get(name);
+    }
+
+    public Item getBluePrintFromName(String name){
+        return nameToBluePrintAndBoardMap.get(name).getLeft();
+    }
+
+    public Item getCircuitFromName(String name){
+        return nameToBluePrintAndBoardMap.get(name).getRight();
+    }
+
+    public ItemStack getUnrefinedCircuit(){
+        return new ItemStack(ItemRegister.smallUnrefinedBoard.getItem(), 1, circuit.ordinal());
     }
 
     private void registerData(){
-        Item circuit = new BasicCircuitBoard(mapping.size()).setCreativeTab(EFlux.creativeTab);
-        this.circuitItem = circuit;
-        Item bluePrint = new BluePrint("BluePrint", mapping.size(), this.circuit).setCreativeTab(EFlux.creativeTab);
-        for (int i = 0; i < mapping.size(); i++) {
-            RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(UnrefinedBoards, this.circuit.ordinal()), new RecipeItemStack(bluePrint, i)), new ItemStack(circuit, 1, i));
+        for (String s : mapping.keySet()) {
+            RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.ETCHINGMACHINE, Lists.newArrayList(new RecipeItemStack(getUnrefinedCircuit()), new RecipeItemStack(getBluePrintFromName(s))), new ItemStack(getCircuitFromName(s)));
         }
     }
 
     static {
+        mappings = Maps.newHashMap();
+        registeredTypes = EnumSet.allOf(EnumCircuit.class);
+        for (EnumCircuit circuit : registeredTypes){
+            mappings.put(circuit, new CircuitHandler(circuit));
+        }
+
+
         register(new ICircuitDataProvider() {
             @Override
-            public List<ItemStack> getComponents() {
-                return Lists.newArrayList(circuit(1), circuit(1), circuit(2));
+            public ItemStack[] getComponents() {
+                return new ItemStack[]{circuit(1), circuit(1), circuit(2)};
             }
 
             @Override
@@ -94,8 +109,8 @@ public class CircuitHandler {
         }, EnumCircuit.SMALL);
         register(new ICircuitDataProvider() {
             @Override
-            public List<ItemStack> getComponents() {
-                return Lists.newArrayList(circuit(1), circuit(3), circuit(3));
+            public ItemStack[] getComponents() {
+                return new ItemStack[]{circuit(1), circuit(3), circuit(3)};
             }
 
             @Override
@@ -105,8 +120,8 @@ public class CircuitHandler {
         }, EnumCircuit.SMALL);
         register(new ICircuitDataProvider() {
             @Override
-            public List<ItemStack> getComponents() {
-                return Lists.newArrayList(circuit(2), circuit(1), circuit(4));
+            public ItemStack[] getComponents() {
+                return new ItemStack[]{circuit(2), circuit(1), circuit(4)};
             }
 
             @Override
@@ -119,4 +134,5 @@ public class CircuitHandler {
     private static ItemStack circuit(int i){
         return new ItemStack(Components.component, 1, i);
     }
+
 }

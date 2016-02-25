@@ -17,7 +17,7 @@ public class EnergyAPIHelper {
     }
 
     public static boolean canReceive(ICapabilityProvider provider, EnumFacing side){
-        return isReceiver(provider, side) || isTransmitter(provider, side);
+        return isReceiver(provider, side) || isTransmitter(provider, side) || isMonitor(provider, side);
     }
 
     public static boolean isReceiver(ICapabilityProvider provider, EnumFacing side) {
@@ -32,8 +32,12 @@ public class EnergyAPIHelper {
         return provider != null && provider.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side);
     }
 
+    public static boolean isMonitor(ICapabilityProvider provider, EnumFacing side){
+        return provider != null && provider.hasCapability(EFluxAPI.MONITOR_CAPABILITY, side);
+    }
+
     public static boolean canHandleEnergy(TileEntity tile, EnumFacing side) {
-        return tile != null && (isReceiver(tile, side) || isProvider(tile, side) || isTransmitter(tile, side));
+        return tile != null && (isReceiver(tile, side) || isProvider(tile, side) || isTransmitter(tile, side) || isMonitor(tile, side));
     }
 
     public static void postLoadEvent(TileEntity tile){

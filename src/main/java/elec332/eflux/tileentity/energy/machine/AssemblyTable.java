@@ -1,6 +1,7 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
@@ -11,6 +12,7 @@ import elec332.eflux.tileentity.BreakableMachineTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -70,12 +72,21 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
 
     @Override
     public Object getGuiClient(EntityPlayer player) {
-        return new GuiStandardFormat(new ContainerAssemblyTable(player, inv), new ResourceLocation("textures/gui/container/crafting_table.png"));
+        return new GuiStandardFormat((BaseContainer)getGuiServer(player), new ResourceLocation("textures/gui/container/crafting_table.png")){
+            @Override
+            protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, int clickType) {
+                if ((!((ContainerAssemblyTable)inventorySlots).canClick) && slotId > 0 && slotId < 10) {
+                    System.out.println("nope   "+((ContainerAssemblyTable)inventorySlots).canClick);
+                    return;
+                }
+                super.handleMouseClick(slotIn, slotId, clickedButton, clickType);
+            }
+        };
     }
 
     @Override
     public Container getGuiServer(EntityPlayer player) {
-        return new ContainerAssemblyTable(player, inv);
+        return new ContainerAssemblyTable(player, inv, energyContainer);
     }
 
     @Override

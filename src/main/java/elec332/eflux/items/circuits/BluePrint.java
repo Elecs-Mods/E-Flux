@@ -6,51 +6,36 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonItem;
 import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * Created by Elec332 on 19-5-2015.
  */
 public class BluePrint extends Item implements INoJsonItem {
 
-    public BluePrint(String txt, int types, EnumCircuit circuit) {
+    public BluePrint(String type, EnumCircuit circuit) {
         super();
         this.circuit = circuit;
         this.setCreativeTab(EFlux.creativeTab);
-        this.setHasSubtypes(true);
-        this.types = types;
-        //setTextureName(EFlux.ModID+":"+txt);
-        RegisterHelper.registerItem(this, txt);
+        GameRegistry.registerItem(this, "BluePrint."+circuit+"."+type);
+        this.type = type;
     }
-
-    private int types;
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return "item."+ EFlux.ModID+".BluePrint."+CircuitHandler.get(circuit).getname(stack.getItemDamage());
+        return "item."+ EFlux.ModID+".BluePrint."+circuit+"."+type;
     }
 
-    public EnumCircuit circuit;
-
-    @Override
-    @SuppressWarnings("unchecked")
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list){
-        for (int i = 0; i < types; i++){
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
+    public final EnumCircuit circuit;
+    private final String type;
 
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite texture;

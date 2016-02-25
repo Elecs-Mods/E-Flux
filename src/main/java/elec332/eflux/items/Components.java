@@ -8,7 +8,6 @@ import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,8 +29,8 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
     public static void init(){
         component = new Components();
         brokenComponent = new BrokenComponents();
-        RegisterHelper.registerItem(component, component.getName());
-        RegisterHelper.registerItem(brokenComponent, brokenComponent.getName());
+        GameRegistry.registerItem(component, component.getName());
+        GameRegistry.registerItem(brokenComponent, brokenComponent.getName());
     }
 
     public static Components component, brokenComponent;

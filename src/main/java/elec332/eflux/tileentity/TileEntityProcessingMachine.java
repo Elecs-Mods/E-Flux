@@ -50,8 +50,8 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (!worldObj.isRemote) {
             energyContainer.tick();
         }

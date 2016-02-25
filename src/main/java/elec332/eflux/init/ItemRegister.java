@@ -2,6 +2,7 @@ package elec332.eflux.init;
 
 import elec332.eflux.EFlux;
 import elec332.eflux.items.*;
+import elec332.eflux.items.circuits.UnrefinedBoard;
 import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -22,12 +23,14 @@ public final class ItemRegister {
 
     public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual;
     @SuppressWarnings("all")
-    private static Item EFluxItems, ingot, coil, dusts, cable;
+    private static Item EFluxItems, ingot, coil, dusts, cable, unrefinedBoard;
     public static ItemStack copperIngot, tinIngot, zincIngot, silverIngot, copperCoil, silverCoil, conductiveCoil, compressedIngot, carbonPlate, scrap, conductiveIngot, carbonMesh;
     //Dusts
     public static ItemStack dustIron, dustGold, dustCopper, dustZinc, dustSilver, dustCoal, dustStone, dustTin, dustConductive;
     //MultiParts
     public static ItemStack cableBasic, cableNormal, cableAdvanced;
+    //Circuit Boards
+    public static ItemStack smallUnrefinedBoard, normalUnrefinedBoard, advancedUnrefinedBoard;
 
     public void init(FMLInitializationEvent event){
         //if (ElecCore.developmentEnvironment)
@@ -88,6 +91,16 @@ public final class ItemRegister {
         OreDictionary.registerOre("ingotConductive", conductiveIngot);
 
         OreDictionary.registerOre("vanillaCoal", Items.coal);
+
+        registerCircuits();
+    }
+
+    private void registerCircuits(){
+        unrefinedBoard = new UnrefinedBoard();
+        GameRegistry.registerItem(unrefinedBoard, "UnrefinedBoard");
+        smallUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 0);
+        normalUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 1);
+        advancedUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 2);
 
     }
 

@@ -26,7 +26,7 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
 
     public FurnaceContentsRenderer(){
         this.renderDummy = new EntityItem(null);
-        RenderingRegistry.instance().registerTextureLoader(this);
+        RenderingRegistry.instance().registerLoader(this);
     }
 
     private final EntityItem renderDummy;

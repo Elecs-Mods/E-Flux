@@ -2,6 +2,7 @@ package elec332.eflux;
 
 import com.google.common.collect.Lists;
 import elec332.core.config.ConfigWrapper;
+import elec332.core.main.ElecCore;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
@@ -57,7 +58,7 @@ import java.util.concurrent.Callable;
  */
 @Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.0.7,)",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
-public class EFlux {
+public class EFlux { //TODO
 
     public static final String ModName = "E-Flux";
     public static final String ModID = "EFlux";
@@ -92,6 +93,8 @@ public class EFlux {
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
         multiBlockRegistry = new MultiBlockRegistry();
+
+        ElecCore.oldBlocks = true;
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));

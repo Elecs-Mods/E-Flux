@@ -65,6 +65,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
         super.onBlockRemoved();
     }
 
+    @SuppressWarnings("unused")
     public boolean hasFilter() {
         return hasFilter;
     }
@@ -75,8 +76,8 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (!worldObj.isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 inventory.setInventorySlotContents(i, (getMultiBlock()).inject(inventory.getStackInSlot(i)));

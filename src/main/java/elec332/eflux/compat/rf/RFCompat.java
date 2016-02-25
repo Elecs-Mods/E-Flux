@@ -34,7 +34,7 @@ public class RFCompat extends Compat.ICompatHandler {
     @Override
     public void init() {
         EFlux.logger.info("Initialising RF compat...");
-        rfConverterBlock = new BlockMachine(DATA).registerTile().register().setCreativeTab(EFlux.creativeTab);
+        rfConverterBlock = new BlockMachine(DATA).registerTile().register().setCreativeTab(EFlux.creativeTab); //TODO
         GameRegistry.addShapedRecipe(new ItemStack(rfConverterBlock), "CFC", "ZCZ", "FRF", 'C', ItemRegister.conductiveIngot, 'F', ItemRegister.conductiveCoil, 'Z', ItemRegister.zincIngot, 'R', BlockRegister.powerInlet.toItemStack());
     }
 

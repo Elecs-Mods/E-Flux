@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.EnergyAPIHelper;
-import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.IEnergySource;
-import elec332.eflux.api.energy.IEnergyTransmitter;
+import elec332.eflux.api.energy.*;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -74,6 +71,10 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
         return EnergyAPIHelper.isTransmitter(tile, side);//connectorSides.contains(side);
     }
 
+    public boolean isMonitor(EnumFacing side){
+        return EnergyAPIHelper.isMonitor(tile, side);
+    }
+
     public boolean canProvide(EnumFacing side){
         return EnergyAPIHelper.canProvide(tile, side);
     }
@@ -92,6 +93,10 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
 
     public IEnergyTransmitter getTransmitter(EnumFacing side){
         return tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side);
+    }
+
+    public IEnergyMonitor getMonitor(EnumFacing side){
+        return tile.getCapability(EFluxAPI.MONITOR_CAPABILITY, side);
     }
 
     public boolean hasInit() {

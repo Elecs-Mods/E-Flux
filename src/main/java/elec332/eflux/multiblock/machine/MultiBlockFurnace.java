@@ -1,7 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
 import com.google.common.collect.Lists;
-import elec332.core.util.BlockLoc;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.FurnaceRenderTile;
@@ -82,8 +81,6 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
         super.tileEntityValidate();
         setTile();
     }
-
-    private BlockLoc middle;
 
     @Override
     public int getRequiredPower(int startup) {

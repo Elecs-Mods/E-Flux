@@ -6,13 +6,13 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonItem;
 import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
+import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,18 +29,19 @@ import java.util.List;
 /**
  * Created by Elec332 on 19-5-2015.
  */
-public abstract class AbstractCircuit extends Item implements ICircuit, INoJsonItem {
+public class Circuit extends Item implements ICircuit, INoJsonItem {
 
-    public AbstractCircuit(String txt, int types) {
+    public Circuit(String txt, EnumCircuit circuit) {
         super();
         this.setCreativeTab(EFlux.creativeTab);
         this.setHasSubtypes(true);
-        this.types = types;
-        //setTextureName(EFlux.ModID+":"+txt);
-        RegisterHelper.registerItem(this, txt);
+        GameRegistry.registerItem(this, circuit+"."+txt);
+        this.name = txt;
+        this.circuit = circuit;
     }
 
-    private int types;
+    private final EnumCircuit circuit;
+    private final String name;
 
     @SideOnly(Side.CLIENT)
     private IItemModel model;
@@ -48,26 +50,17 @@ public abstract class AbstractCircuit extends Item implements ICircuit, INoJsonI
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return "item."+ EFlux.ModID+".BasicCircuitBoard."+CircuitHandler.get(getDifficulty()).getname(stack.getItemDamage());
+        return "item."+EFlux.ModID+".CircuitBoard."+getDifficulty(stack)+"."+name;
     }
 
     @Override
     public int boardSize(ItemStack stack) {
-        return CircuitHandler.get(this, stack.getItemDamage()).getComponents().size();
+        return CircuitHandler.get(getDifficulty(stack)).fromName(name).getComponents().length;
     }
 
     @Override
-    public ItemStack getRequiredComponent(int i, ItemStack stack) {
-        return CircuitHandler.get(this, stack.getItemDamage()).getComponents().get(i);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list){
-        for (int i = 0; i < types; i++){
-            list.add(new ItemStack(item, 1, i));
-        }
+    public ItemStack getRequiredComponent(ItemStack stack, int slot) {
+        return CircuitHandler.get(getDifficulty(stack)).fromName(name).getComponents()[slot];
     }
 
     /*@Override
@@ -113,6 +106,11 @@ public abstract class AbstractCircuit extends Item implements ICircuit, INoJsonI
     }
 
     @Override
+    public EnumCircuit getDifficulty(ItemStack stack) {
+        return circuit;
+    }
+
+    @Override
     public boolean isCircuit(ItemStack stack) {
         return true;
     }
@@ -143,5 +141,8 @@ public abstract class AbstractCircuit extends Item implements ICircuit, INoJsonI
         texture = iconRegistrar.registerSprite(getTexture());
     }
 
-    protected abstract ResourceLocation getTexture();
+    protected ResourceLocation getTexture(){
+        return new EFluxResourceLocation("items/board");
+    }
+
 }

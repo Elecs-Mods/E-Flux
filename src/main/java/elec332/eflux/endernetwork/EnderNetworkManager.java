@@ -18,7 +18,7 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
         networkData = NBTMap.newNBTMap(UUID.class, EnderNetwork.class, new Function<UUID, EnderNetwork>() {
             @Override
             public EnderNetwork apply(UUID input) {
-                return new EnderNetwork();
+                return new EnderNetwork(input);
             }
         });
     }
@@ -28,7 +28,7 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
     public static EnderNetwork get(UUID uuid){
         EnderNetwork ret = instance.networkData.get(uuid);
         if (ret == null){
-            ret = new EnderNetwork();
+            ret = new EnderNetwork(uuid);
             instance.networkData.put(uuid, ret);
         }
         return ret;

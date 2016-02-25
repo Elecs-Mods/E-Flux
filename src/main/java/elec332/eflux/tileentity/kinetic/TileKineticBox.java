@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.kinetic;
 
-import elec332.core.tile.TileBase;
 import elec332.eflux.api.EFluxKinetics;
 import elec332.eflux.api.kinetic.IKineticReceiver;
 import net.minecraft.tileentity.TileEntity;

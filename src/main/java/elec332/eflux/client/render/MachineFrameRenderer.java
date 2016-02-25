@@ -31,7 +31,7 @@ import java.util.Map;
 public class MachineFrameRenderer extends AbstractBlockRenderer implements ITextureLoader {
 
     public MachineFrameRenderer(IBlockModel model){
-        RenderingRegistry.instance().registerTextureLoader(this);
+        RenderingRegistry.instance().registerLoader(this);
         this.defaultModel = BlockMachineFrame.model;
     }
 

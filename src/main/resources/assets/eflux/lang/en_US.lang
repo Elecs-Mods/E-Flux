@@ -37,6 +37,10 @@ item.EFlux.cable.2.name=Advanced Cable
 
 item.EFlux.manual.name=Manual
 
+##CIRCUITS
+item.EFlux.unrefinedcircuitboard.0.name=Small Unrefined Circuit Board
+item.EFlux.unrefinedcircuitboard.1.name=Normal Unrefined Circuit Board
+item.EFlux.unrefinedcircuitboard.2.name=Advanced Unrefined Circuit Board
 
 ##BLOCKS
 tile.EFlux.efluxCable.0.name=Basic Cable

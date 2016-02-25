@@ -8,7 +8,6 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonItem;
 import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.util.RegisterHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -21,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,12 +36,7 @@ public class Wrench extends Item implements IRightClickCancel, INoJsonItem {
         setNoRepair();
         setMaxDamage(72);
         setMaxStackSize(1);
-        RegisterHelper.registerItem(this, name);
-    }
-
-    //@Override
-    public boolean doesContainerItemLeaveCraftingGrid(ItemStack itemStack) {
-        return false;
+        GameRegistry.registerItem(this, name);
     }
 
     @Override

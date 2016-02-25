@@ -52,7 +52,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
     public ClientProxy(){
         MinecraftForge.EVENT_BUS.register(this);
-        RenderingRegistry.instance().registerModelTextureLoader(this);
+        RenderingRegistry.instance().registerLoader(this);
     }
 
     @Override

@@ -60,11 +60,11 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
 
     private void setActive(boolean active){
         this.active = active;
-        laser.sendPacket(2, new NBTHelper().addToTag(active, "a").toNBT());
+        laser.sendPacket(2, new NBTHelper().addToTag(active, "a").serializeNBT());
     }
 
     private void setLaserPos(BlockPos pos){
-        laser.sendPacket(3, new NBTHelper().addToTag(pos).toNBT());
+        laser.sendPacket(3, new NBTHelper().addToTag(pos).serializeNBT());
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(CircuitHandler.get(EnumCircuit.SMALL).circuitItem, 1, 0);
+        return CircuitHandler.get(EnumCircuit.SMALL).getUnrefinedCircuit();
     }
 
     @Override

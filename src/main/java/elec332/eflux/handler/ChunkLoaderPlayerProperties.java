@@ -84,11 +84,11 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     public void writeToNBT(NBTTagCompound nbtTagCompound) {
         if (main != null) {
             nbtTagCompound.setBoolean("handler?", this.hasHandler);
-            nbtTagCompound.setTag("mainLoc", new NBTHelper().addToTag(main.getPos()).toNBT());
+            nbtTagCompound.setTag("mainLoc", new NBTHelper().addToTag(main.getPos()).serializeNBT());
             nbtTagCompound.setInteger("dim", WorldHelper.getDimID(world));
             NBTTagList tagList = new NBTTagList();
             for (BlockPos blockLoc : blockLocations){
-                tagList.appendTag(new NBTHelper().addToTag(blockLoc).toNBT());
+                tagList.appendTag(new NBTHelper().addToTag(blockLoc).serializeNBT());
             }
             nbtTagCompound.setTag("locations", tagList);
         }

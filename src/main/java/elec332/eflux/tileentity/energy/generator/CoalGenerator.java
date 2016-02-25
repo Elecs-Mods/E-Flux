@@ -305,7 +305,7 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         boolean ret = ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
-        System.out.println("req: "+facing+" "+capability.getName()+" ret: "+ret);
+        EFlux.systemPrintDebug("req: " + facing + " " + capability.getName() + " ret: " + ret);
         return ret;
     }
 

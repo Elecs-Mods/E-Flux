@@ -24,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,9 +39,11 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
         setCreativeTab(EFlux.creativeTab);
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
         this.machine = machine;
+        this.layer = machine.getRenderingLayer();
     }
 
     private final IEFluxBlockMachineData machine;
+    private final EnumWorldBlockLayer layer;
 
     public IEFluxBlockMachineData getMachine(){
         return this.machine;
@@ -123,6 +126,11 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
 
     public static EnumFacing getFacing(IBlockState state){
         return state.getValue(BlockStateHelper.FACING_NORMAL.getProperty());
+    }
+
+    @Override
+    public EnumWorldBlockLayer getBlockLayer() {
+        return layer;
     }
 
     @Override

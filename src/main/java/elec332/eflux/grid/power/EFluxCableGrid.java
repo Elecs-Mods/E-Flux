@@ -3,12 +3,10 @@ package elec332.eflux.grid.power;
 import com.google.common.collect.Lists;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.multipart.cable.PartAbstractCable;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -26,21 +24,24 @@ public class EFluxCableGrid {
         providers = Lists.newArrayList();
         locations = Lists.newArrayList();
         specialProviders = Lists.newArrayList();
+        monitors = Lists.newArrayList();
         identifier = UUID.randomUUID();
         this.world = p.getWorld();
         locations.add(p.getLocation());
-        TileEntity tile = p.getTile();
-        if (EnergyAPIHelper.isProvider(tile, direction)) {
+        if (p.isProvider(direction)) {
             if (!(p.getProvider(direction) instanceof ISpecialEnergySource)) {
                 providers.add(new GridData(p.getLocation(), direction));
             } else {
                 specialProviders.add(new GridData(p.getLocation(), direction));
             }
         }
-        if (EnergyAPIHelper.isReceiver(tile, direction)) {
+        if (p.isReceiver(direction)) {
             acceptors.add(new GridData(p.getLocation(), direction));
         }
-        if (EnergyAPIHelper.isTransmitter(tile, direction)) {
+        if (p.isMonitor(direction)){
+            monitors.add(new GridData(p.getLocation(), direction));
+        }
+        if (p.isTransmitter(direction)) {
             IEnergyTransmitter transmitter = p.getTransmitter(direction);
             maxTransfer = transmitter.getMaxRPTransfer();
             if (transmitter instanceof PartAbstractCable) {
@@ -57,6 +58,7 @@ public class EFluxCableGrid {
     private List<GridData> acceptors;
     private List<GridData> providers;
     private List<GridData> specialProviders;
+    private List<GridData> monitors;
     private List<BlockPos> locations;
     private int maxTransfer;
 
@@ -75,6 +77,7 @@ public class EFluxCableGrid {
         this.acceptors.addAll(grid.acceptors);
         this.providers.addAll(grid.providers);
         this.specialProviders.addAll(grid.specialProviders);
+        this.monitors.addAll(grid.monitors);
         for (BlockPos vec : grid.locations){
             PowerTile powerTile = getWorldHolder().getPowerTile(vec);
             if (powerTile != null) {
@@ -152,6 +155,9 @@ public class EFluxCableGrid {
             for (GridData gridData : acceptors) {
                 getPowerTile(gridData).getReceiver(gridData.getDirection()).receivePower(rp, (int) (va[acceptors.indexOf(gridData)] * diff));
             }
+        }
+        for (GridData gridData : monitors){
+            getPowerTile(gridData).getMonitor(gridData.getDirection()).onEnergyTick(rp, totalProvided);
         }
     }
 

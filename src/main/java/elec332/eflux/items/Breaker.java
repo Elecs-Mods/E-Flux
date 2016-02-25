@@ -1,7 +1,6 @@
 package elec332.eflux.items;
 
 import elec332.core.api.wrench.IRightClickCancel;
-import elec332.core.util.RegisterHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.tileentity.BreakableMachineTile;
@@ -12,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 15-5-2015.
@@ -24,11 +24,7 @@ public class Breaker extends Item implements IRightClickCancel{
         //setTextureName(EFlux.ModID + ":" + name);
         setContainerItem(this);
         setMaxStackSize(1);
-        RegisterHelper.registerItem(this, name);
-    }
-
-    public boolean doesContainerItemLeaveCraftingGrid(ItemStack itemStack) {
-        return false;
+        GameRegistry.registerItem(this, name);
     }
 
     @Override

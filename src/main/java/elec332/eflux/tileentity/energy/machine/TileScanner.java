@@ -35,8 +35,8 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (timeCheck() && inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() == ItemRegister.groundMesh && inventory.getStackInSlot(1) == null && energyContainer.drainPower(150)){
             ItemStack stack = inventory.getStackInSlot(0).copy();
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());

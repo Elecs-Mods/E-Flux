@@ -12,7 +12,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 import java.util.WeakHashMap;
 
 /**
@@ -48,7 +50,7 @@ public class WorldRegistry {
 
     private WorldRegistry(World world) {
         this.gridHolderPower = new WorldGridHolder(world);
-        this.tickables = Lists.newArrayList();
+        this.tickables = new ArrayDeque<ITickable>();
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
         ElecCore.tickHandler.registerCall(new Runnable() {
@@ -60,7 +62,7 @@ public class WorldRegistry {
     }
 
     private final WorldGridHolder gridHolderPower;
-    private final List<ITickable> tickables;
+    private final Queue<ITickable> tickables;
     private final World world;
 
     public WorldGridHolder getWorldPowerGrid() {
@@ -69,6 +71,9 @@ public class WorldRegistry {
 
     public void tickInternal() {
         gridHolderPower.onServerTickInternal();
+        for (ITickable tickable = tickables.poll(); tickable != null; tickable = tickables.poll()){
+            tickable.update();
+        }
     }
 
     public void addTickable(ITickable tickable){

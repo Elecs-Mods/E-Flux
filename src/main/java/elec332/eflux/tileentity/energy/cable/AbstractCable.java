@@ -17,7 +17,7 @@ public abstract class AbstractCable extends EnergyTileBase implements IEnergyTra
 
     public void setGridIdentifier(UUID uuid){
         this.gridIdentifier = uuid;
-        sendPacket(9, new NBTHelper().addToTag(uuid.toString(), "uuid").toNBT());
+        sendPacket(9, new NBTHelper().addToTag(uuid.toString(), "uuid").serializeNBT());
     }
 
     private UUID gridIdentifier;

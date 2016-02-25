@@ -67,8 +67,8 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (worldObj.isRemote)
             return;
         calculatePower();

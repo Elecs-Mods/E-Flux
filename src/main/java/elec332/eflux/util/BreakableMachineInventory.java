@@ -3,9 +3,7 @@ package elec332.eflux.util;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
 import elec332.core.util.BasicInventory;
-import elec332.core.util.IRunOnce;
 import elec332.core.util.InventoryHelper;
-import elec332.core.util.ItemHelper;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
@@ -47,11 +45,12 @@ public class BreakableMachineInventory implements IInventory{
             @Override
             public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, final EntityPlayer p_75144_4_) {
                 if (side.isServer()) {
-                    ElecCore.tickHandler.registerCall(new IRunOnce() {
+                    ElecCore.tickHandler.registerCall(new Runnable() {
                         @Override
                         public void run() {
-                            if (canFix())
+                            if (canFix()) {
                                 p_75144_4_.closeScreen();
+                            }
                         }
                     }, p_75144_4_.worldObj);
                 }
@@ -308,7 +307,7 @@ public class BreakableMachineInventory implements IInventory{
 
     @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-        return ItemHelper.areItemsEqual(p_94041_2_, repairItem);
+        return InventoryHelper.areEqualNoSizeNoNBT(p_94041_2_, repairItem);
     }
 
     @Override

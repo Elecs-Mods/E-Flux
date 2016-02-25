@@ -1,6 +1,6 @@
 package elec332.eflux.inventory.slot;
 
-import elec332.core.util.ItemHelper;
+import elec332.core.util.InventoryHelper;
 import elec332.eflux.api.circuit.IElectricComponent;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -22,6 +22,6 @@ public class SlotAssembly extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return i > getSlotIndex() && stack.getItem() instanceof IElectricComponent && ItemHelper.areItemsEqual(stack, validItem);
+        return i > getSlotIndex() && stack.getItem() instanceof IElectricComponent && InventoryHelper.areEqualNoSizeNoNBT(stack, validItem);
     }
 }

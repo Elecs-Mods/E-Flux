@@ -1,8 +1,5 @@
 package elec332.eflux.multipart.cable;
 
-import elec332.eflux.init.ItemRegister;
-import net.minecraft.item.ItemStack;
-
 /**
  * Created by Elec332 on 10-2-2016.
  */

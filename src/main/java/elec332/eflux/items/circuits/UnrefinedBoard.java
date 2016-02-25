@@ -6,8 +6,8 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonItem;
 import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.util.RegisterHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,29 +21,26 @@ import java.util.List;
 /**
  * Created by Elec332 on 19-5-2015.
  */
-public class UnrefinedBoards extends Item implements INoJsonItem{
-    public UnrefinedBoards(String txt, int types) {
+public class UnrefinedBoard extends Item implements INoJsonItem {
+
+    public UnrefinedBoard() {
         super();
         this.setCreativeTab(EFlux.creativeTab);
-        this.setHasSubtypes(true);
-        this.types = types;
-        //setTextureName(EFlux.ModID+":"+txt);
-        RegisterHelper.registerItem(this, txt);
+        types = EnumCircuit.values().length;
+        setHasSubtypes(true);
     }
 
-    private int types;
+    private final int types;
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return "item."+ EFlux.ModID+".UnrefinedCircuit."+"UNNAMED";
+        return "item."+ EFlux.ModID + ".unrefinedcircuitboard."+stack.getItemDamage();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list){
-        for (int i = 0; i < types; i++){
-            list.add(new ItemStack(item, 1, i));
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        for (int i = 0; i < types; i++) {
+            subItems.add(new ItemStack(itemIn, 1, i));
         }
     }
 

@@ -28,8 +28,8 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
     private int r;
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (!worldObj.isRemote){
             energyContainer.tick();
         }

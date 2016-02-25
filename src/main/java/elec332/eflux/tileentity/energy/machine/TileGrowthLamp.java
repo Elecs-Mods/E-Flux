@@ -30,8 +30,8 @@ public class TileGrowthLamp extends BreakableMachineTile {
     private List<BlockPos> blockLocations;
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
+        super.update();
         if (energyContainer.drainPower(120)) {
             for (int i = 0; i < 9; i++) {
                 if (blockLocations.isEmpty()) {
