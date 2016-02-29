@@ -244,21 +244,11 @@ public class BlockTextures {
     }
 
     public static IBlockTextureProvider getFeederProvider(){
-        return new IBlockTextureProvider() {
-            @Override
-            public String getIconName(EnumFacing side, boolean active) {
-                return "todo";
-            }
-        };
+        return forMachine("feeder");
     }
 
     public static IBlockTextureProvider getSpawnerProvider(){
-        return new IBlockTextureProvider() {
-            @Override
-            public String getIconName(EnumFacing side, boolean active) {
-                return "todo";
-            }
-        };
+        return forMachine("spawner");
     }
 
 /*

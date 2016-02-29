@@ -12,10 +12,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Queue;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * Created by Elec332 on 16-4-2015.
@@ -71,7 +68,10 @@ public class WorldRegistry {
 
     public void tickInternal() {
         gridHolderPower.onServerTickInternal();
-        for (ITickable tickable = tickables.poll(); tickable != null; tickable = tickables.poll()){
+        Iterator<ITickable> ti = tickables.iterator();
+        ITickable tickable;
+        while (ti.hasNext()){
+            tickable = ti.next();
             tickable.update();
         }
     }

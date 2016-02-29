@@ -113,7 +113,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
 
     @Override
     public ItemStack slotClick(int slotID, int var2, int var3, EntityPlayer player) {
-        if (!canClick && slotID > 0 && slotID < 10 && (player.worldObj.isRemote || !assemblyTable.drainPower(200))) {
+        if (slotID > 0 && slotID < 10 && (player.worldObj.isRemote || !assemblyTable.drainPower(200)) && !canClick) {
             detectAndSendChanges();
             return null;
         }
