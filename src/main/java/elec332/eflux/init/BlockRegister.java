@@ -37,6 +37,7 @@ public final class BlockRegister {
 
     public void init(FMLInitializationEvent event){
 
+        initLoop:
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){
                 case CHUNKMAIN:
@@ -51,7 +52,8 @@ public final class BlockRegister {
                 case SPAWNER:
                     machine.renderingLayer = EnumWorldBlockLayer.CUTOUT;
                     machine.itemBlockClass = ItemEFluxSpawner.class;
-                    break;
+                case FEEDER:
+                    continue initLoop;
             }
             machine.init();
         }
