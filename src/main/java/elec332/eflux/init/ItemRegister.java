@@ -1,9 +1,13 @@
 package elec332.eflux.init;
 
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.items.*;
+import elec332.eflux.items.circuits.CircuitHandler;
+import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.items.circuits.UnrefinedBoard;
 import elec332.eflux.util.GrinderRecipes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,6 +35,8 @@ public final class ItemRegister {
     public static ItemStack cableBasic, cableNormal, cableAdvanced;
     //Circuit Boards
     public static ItemStack smallUnrefinedBoard, normalUnrefinedBoard, advancedUnrefinedBoard;
+    //Assembled Circuit Boards
+    public static ItemStack shockBoard;
 
     public void init(FMLInitializationEvent event){
         //if (ElecCore.developmentEnvironment)
@@ -101,7 +107,36 @@ public final class ItemRegister {
         smallUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 0);
         normalUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 1);
         advancedUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 2);
+        registerCircuits_();
+    }
 
+    private void registerCircuits_(){
+        CircuitHandler.register(new ICircuitDataProvider() {
+
+            @Override
+            public ItemStack[] getComponents() {
+                return new ItemStack[]{
+                        null, circuit(3), circuit(4), circuit(2), circuit(1), circuit(1), circuit(4), circuit(3), null
+                };
+            }
+
+            @Override
+            public String getName() {
+                return "shock";
+            }
+
+        }, EnumCircuit.SMALL);
+
+        shockBoard = getBoard(EnumCircuit.SMALL, "shock");
+
+    }
+
+    private static ItemStack circuit(int i){
+        return new ItemStack(Components.component, 1, i);
+    }
+
+    private static ItemStack getBoard(EnumCircuit circuit, String name){
+        return new ItemStack(CircuitHandler.get(circuit).getCircuitFromName(name));
     }
 
     protected void initMultiPartItems(){

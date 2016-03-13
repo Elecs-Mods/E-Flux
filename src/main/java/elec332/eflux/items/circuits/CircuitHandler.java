@@ -10,6 +10,7 @@ import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.EnumSet;
@@ -94,45 +95,6 @@ public class CircuitHandler {
         for (EnumCircuit circuit : registeredTypes){
             mappings.put(circuit, new CircuitHandler(circuit));
         }
-
-
-        register(new ICircuitDataProvider() {
-            @Override
-            public ItemStack[] getComponents() {
-                return new ItemStack[]{circuit(1), circuit(1), circuit(2)};
-            }
-
-            @Override
-            public String getName() {
-                return "test1";
-            }
-        }, EnumCircuit.SMALL);
-        register(new ICircuitDataProvider() {
-            @Override
-            public ItemStack[] getComponents() {
-                return new ItemStack[]{circuit(1), circuit(3), circuit(3)};
-            }
-
-            @Override
-            public String getName() {
-                return "test2";
-            }
-        }, EnumCircuit.SMALL);
-        register(new ICircuitDataProvider() {
-            @Override
-            public ItemStack[] getComponents() {
-                return new ItemStack[]{circuit(2), circuit(1), circuit(4)};
-            }
-
-            @Override
-            public String getName() {
-                return "test3";
-            }
-        }, EnumCircuit.SMALL);
-    }
-
-    private static ItemStack circuit(int i){
-        return new ItemStack(Components.component, 1, i);
     }
 
 }

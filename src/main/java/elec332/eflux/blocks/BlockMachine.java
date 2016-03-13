@@ -54,6 +54,11 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
         return machine.getRenderID();
     }
 
+    @Override
+    public boolean isOpaqueCube() {
+        return layer == EnumWorldBlockLayer.SOLID;
+    }
+
     @SideOnly(Side.CLIENT)
     protected TextureAtlasSprite[][] textures;
     @SideOnly(Side.CLIENT)

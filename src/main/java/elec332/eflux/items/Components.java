@@ -13,8 +13,10 @@ import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,14 +74,14 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
     }
 
     @Override
-    public boolean isBroken() {
+    public boolean isBroken(ItemStack stack) {
         return false;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
-        return models.forMeta(meta);
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return models.forMeta(stack.getItemDamage());
     }
 
     @Override
@@ -113,8 +115,10 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
         }
 
         @Override
-        public boolean isBroken() {
+        public boolean isBroken(ItemStack stack) {
             return true;
         }
+
     }
+
 }

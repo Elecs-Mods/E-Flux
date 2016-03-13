@@ -3,6 +3,7 @@ package elec332.eflux.init;
 import elec332.core.java.JavaHelper;
 import elec332.core.util.OredictHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.recipes.CompressorRecipes;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.IEFluxFurnaceRecipe;
@@ -91,6 +92,8 @@ public final class RecipeRegister {
         for (int i = 0; i < 3; i++) {
             CraftingManager.getInstance().addShapelessRecipe(new ItemStack(cableBasic.getItem(), 1, i), new ItemStack(oldCable, 1, i));
         }
+
+        registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', redstone, 'I', new ItemStack(dye, 1, 4), 'C', copperIngot, 'G', new ItemStack(dye, 1, 8), 'D', dustIron);
 
     }
 
@@ -232,6 +235,7 @@ public final class RecipeRegister {
             }
 
         });
+        CircuitHandler.register();
     }
 
     private static void registerSmelting(ItemStack in, Item item){

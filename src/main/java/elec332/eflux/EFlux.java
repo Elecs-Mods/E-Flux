@@ -136,7 +136,6 @@ public class EFlux { //TODO
         MultiBlockRegister.init();
         configWrapper.refresh();
         EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
-        CircuitHandler.register();
         registerRecipes();
         EventHelper.registerHandlerForge(new PlayerEventHandler());
 

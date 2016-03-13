@@ -13,6 +13,7 @@ import elec332.core.world.schematic.SchematicHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -77,7 +78,7 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
     }
 
     @Override
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

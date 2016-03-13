@@ -22,6 +22,6 @@ public class SlotAssembly extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return i > getSlotIndex() && stack.getItem() instanceof IElectricComponent && InventoryHelper.areEqualNoSizeNoNBT(stack, validItem);
+        return i > getSlotIndex() && validItem != null && stack.getItem() instanceof IElectricComponent && InventoryHelper.areEqualNoSizeNoNBT(stack, validItem);
     }
 }

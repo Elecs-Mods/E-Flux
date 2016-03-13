@@ -13,6 +13,7 @@ import elec332.eflux.api.util.IMultiMeterDataProvider;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -63,7 +64,7 @@ public class MultiMeter extends Item implements IRightClickCancel, INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

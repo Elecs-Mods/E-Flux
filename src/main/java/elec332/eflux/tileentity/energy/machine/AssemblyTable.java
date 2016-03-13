@@ -76,7 +76,7 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
             @Override
             protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, int clickType) {
                 if ((!((ContainerAssemblyTable)inventorySlots).canClick) && slotId > 0 && slotId < 10) {
-                    System.out.println("nope   "+((ContainerAssemblyTable)inventorySlots).canClick);
+                    //System.out.println("nope   "+((ContainerAssemblyTable)inventorySlots).canClick);
                     return;
                 }
                 super.handleMouseClick(slotIn, slotId, clickedButton, clickType);

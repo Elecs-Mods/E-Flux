@@ -15,6 +15,7 @@ import elec332.eflux.multipart.cable.PartNormalCable;
 import mcmultipart.multipart.IMultipart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -69,8 +70,8 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
-        return models.forMeta(meta);
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return models.forMeta(stack.getItemDamage());
     }
 
     /**

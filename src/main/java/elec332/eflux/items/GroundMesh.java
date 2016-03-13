@@ -11,9 +11,11 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,7 +56,7 @@ public class GroundMesh extends EFluxItem implements INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

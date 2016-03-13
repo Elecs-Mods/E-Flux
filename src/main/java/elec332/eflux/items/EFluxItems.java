@@ -13,8 +13,10 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -71,8 +73,8 @@ public class EFluxItems extends Item implements INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
-        return models.forMeta(meta);
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return models.forMeta(stack.getItemDamage());
     }
 
     /**

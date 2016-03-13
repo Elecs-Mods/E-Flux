@@ -9,6 +9,7 @@ import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class ItemMultiBlockCreator extends EFluxItem implements INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

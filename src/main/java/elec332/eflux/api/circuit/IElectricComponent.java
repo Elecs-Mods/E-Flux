@@ -9,6 +9,6 @@ public interface IElectricComponent {
 
     public ItemStack getBroken(ItemStack stack);
 
-    public boolean isBroken();
+    public boolean isBroken(ItemStack stack);
 
 }

@@ -30,7 +30,7 @@ public class ItemEFluxSpawner extends ItemBlock implements ILinkableItem {
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity tile = WorldHelper.getTileAt(worldIn, pos);
 
-        if (!(tile instanceof TileEntityMobSpawner) || !hasLink(stack)) {
+        if (!(tile instanceof TileEntityMobSpawner)/* || !hasLink(stack)*/) {
             return false;
         }
 

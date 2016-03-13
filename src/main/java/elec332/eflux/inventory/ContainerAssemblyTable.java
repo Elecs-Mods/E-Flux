@@ -57,8 +57,6 @@ public class ContainerAssemblyTable extends ContainerMachine {
                     for (ICrafting crafting : crafters){
                         crafting.sendProgressBarUpdate(ContainerAssemblyTable.this, 3, canClick ? 1 : 0);
                     }
-                    System.out.println(canClick);
-                    System.out.println("tick");
                 }
             };
             WorldRegistry.get(player.worldObj).addTickable(tickable);

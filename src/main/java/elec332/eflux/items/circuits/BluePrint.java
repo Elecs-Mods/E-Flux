@@ -10,8 +10,10 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,7 +46,7 @@ public class BluePrint extends Item implements INoJsonItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

@@ -1,5 +1,6 @@
 package elec332.eflux.multipart;
 
+import elec332.core.multipart.AbstractMultiPart;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 
 /**

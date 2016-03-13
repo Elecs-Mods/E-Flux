@@ -13,12 +13,14 @@ import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 19-5-2015.
  */
-public class Circuit extends Item implements ICircuit, INoJsonItem {
+public class Circuit extends Item implements ICircuit, INoJsonItem, IElectricComponent {
 
     public Circuit(String txt, EnumCircuit circuit) {
         super();
@@ -63,25 +65,14 @@ public class Circuit extends Item implements ICircuit, INoJsonItem {
         return CircuitHandler.get(getDifficulty(stack)).fromName(name).getComponents()[slot];
     }
 
-    /*@Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-        super.onCreated(stack, world, player);
-        NBTTagList list = new NBTTagList();
-        for (int i = 0; i < boardSize(stack); i++){
-            list.appendTag(new NBTTagCompound());
-        }
-        NBTTagCompound compound = new NBTTagCompound();
-        compound.setTag("items", list);
-        stack.setTagCompound(compound);
-    }*/
-
     private boolean breakComponent(int i, ItemStack stack) {
         if (isBoard(stack)){
             ItemStack component = ItemStack.loadItemStackFromNBT(stack.getTagCompound().getTagList("Items", Constants.NBT.TAG_LIST).getCompoundTagAt(i));
-            if (component != null && component.getItem() instanceof IElectricComponent && !((IElectricComponent) component.getItem()).isBroken()) {
+            if (component != null && component.getItem() instanceof IElectricComponent && !((IElectricComponent) component.getItem()).isBroken(component)) {
                 NBTTagCompound tag = new NBTTagCompound();
                 ((IElectricComponent) component.getItem()).getBroken(component).writeToNBT(tag);
                 stack.getTagCompound().getTagList("Items", 10).set(i, tag);
+                return true;
             }
         }
         return false;
@@ -90,11 +81,12 @@ public class Circuit extends Item implements ICircuit, INoJsonItem {
     @Override
     public void breakRandomComponent(ItemStack stack) {
         try {
-            if (isBoard(stack) && isValid(stack))
+            if (isBoard(stack) && isValid(stack)) {
                 if (!breakComponent(EFlux.random.nextInt(boardSize(stack) - 1), stack)) {
                     breakRandomComponent(stack);
-                    stack.getTagCompound().setBoolean("valid", false);
                 }
+                stack.getTagCompound().setBoolean("valid", false);
+            }
         } catch (StackOverflowError e){
             throw new ReportedException(new CrashReport("Cannot break components on an empty board!", e));
         }
@@ -127,7 +119,7 @@ public class Circuit extends Item implements ICircuit, INoJsonItem {
     }
 
     @Override
-    public IItemModel getItemModel(Item item, int meta) {
+    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 
@@ -143,6 +135,18 @@ public class Circuit extends Item implements ICircuit, INoJsonItem {
 
     protected ResourceLocation getTexture(){
         return new EFluxResourceLocation("items/board");
+    }
+
+    @Override
+    public ItemStack getBroken(ItemStack stack) {
+        ItemStack ret = stack.copy();
+        breakRandomComponent(stack);
+        return ret;
+    }
+
+    @Override
+    public boolean isBroken(ItemStack stack) {
+        return !isValid(stack);
     }
 
 }

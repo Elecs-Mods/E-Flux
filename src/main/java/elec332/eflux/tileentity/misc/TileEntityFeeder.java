@@ -98,6 +98,7 @@ public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileW
     @Override
     public void addSlots(BaseContainer container) {
         container.addSlotToContainer(new SlotItemHandler(invWrapper, 0, 66, 53));
+        container.addPlayerInventoryToContainer();
     }
 
 }

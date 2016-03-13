@@ -244,11 +244,21 @@ public class BlockTextures {
     }
 
     public static IBlockTextureProvider getFeederProvider(){
-        return forMachine("feeder");
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return side.getAxis() == EnumFacing.Axis.Y ? "feeder_TB" : "feeder_sides";
+            }
+        };
     }
 
     public static IBlockTextureProvider getSpawnerProvider(){
-        return forMachine("spawner");
+        return new IBlockTextureProvider() {
+            @Override
+            public String getIconName(EnumFacing side, boolean active) {
+                return "spawner";
+            }
+        };
     }
 
 /*
