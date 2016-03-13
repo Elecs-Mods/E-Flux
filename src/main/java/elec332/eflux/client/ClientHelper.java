@@ -1,6 +1,6 @@
 package elec332.eflux.client;
 
-import elec332.core.util.StatCollector;
+import net.minecraft.util.StatCollector;
 
 /**
  * Created by Elec332 on 1-2-2016.
