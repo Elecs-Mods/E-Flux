@@ -9,9 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
@@ -154,7 +154,7 @@ public class PageMultiBlockStructure extends AbstractManualPage {
             if (i == 0) {
                 list.set(i, stack.getRarity().rarityColor + list.get(i));
             } else {
-                list.set(i, EnumChatFormatting.GRAY + list.get(i));
+                list.set(i, TextFormatting.GRAY + list.get(i));
             }
         }
         if (note != null && !note.isEmpty()) {

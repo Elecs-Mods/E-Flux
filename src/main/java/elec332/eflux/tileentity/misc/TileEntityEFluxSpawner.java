@@ -7,16 +7,23 @@ import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 
 /**
  * Created by Elec332 on 20-2-2016.
@@ -33,9 +40,8 @@ public class TileEntityEFluxSpawner extends TileBase {
     private boolean redstoneActivated;
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         boolean b = false;
-        ItemStack stack = player.inventory.getCurrentItem();
         if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.shockBoard) && ((ICircuit)stack.getItem()).isValid(stack)){
             brainDead = b = true;
         }
@@ -50,7 +56,7 @@ public class TileEntityEFluxSpawner extends TileBase {
             markDirty();
             return true;
         }
-        return super.onBlockActivated(player, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(state, player, hand, stack, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -124,11 +130,119 @@ public class TileEntityEFluxSpawner extends TileBase {
         }
 
         @Override
+        public void updateSpawner() {
+            if (!this.isActivated())
+            {
+                this.prevMobRotation = this.mobRotation;
+            }
+            else
+            {
+                BlockPos blockpos = this.getSpawnerPosition();
+
+                if (this.getSpawnerWorld().isRemote)
+                {
+                    double d3 = (double)((float)blockpos.getX() + this.getSpawnerWorld().rand.nextFloat());
+                    double d4 = (double)((float)blockpos.getY() + this.getSpawnerWorld().rand.nextFloat());
+                    double d5 = (double)((float)blockpos.getZ() + this.getSpawnerWorld().rand.nextFloat());
+                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
+                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
+
+                    if (this.spawnDelay > 0)
+                    {
+                        --this.spawnDelay;
+                    }
+
+                    this.prevMobRotation = this.mobRotation;
+                    this.mobRotation = (this.mobRotation + (double)(1000.0F / ((float)this.spawnDelay + 200.0F))) % 360.0D;
+                }
+                else
+                {
+                    if (this.spawnDelay == -1)
+                    {
+                        this.resetTimer();
+                    }
+
+                    if (this.spawnDelay > 0)
+                    {
+                        --this.spawnDelay;
+                        return;
+                    }
+
+                    boolean flag = false;
+
+                    for (int i = 0; i < this.spawnCount; ++i)
+                    {
+                        NBTTagCompound nbttagcompound = this.randomEntity.func_185277_b();
+                        NBTTagList nbttaglist = nbttagcompound.getTagList("Pos", 6);
+                        World world = this.getSpawnerWorld();
+                        int j = nbttaglist.tagCount();
+                        double d0 = j >= 1 ? nbttaglist.getDoubleAt(0) : (double)blockpos.getX() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)this.spawnRange + 0.5D;
+                        double d1 = j >= 2 ? nbttaglist.getDoubleAt(1) : (double)(blockpos.getY() + world.rand.nextInt(3) - 1);
+                        double d2 = j >= 3 ? nbttaglist.getDoubleAt(2) : (double)blockpos.getZ() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)this.spawnRange + 0.5D;
+                        Entity entity = AnvilChunkLoader.func_186054_a(nbttagcompound, world, d0, d1, d2, false);
+
+                        if (entity == null)
+                        {
+                            return;
+                        }
+
+                        int k = world.getEntitiesWithinAABB(entity.getClass(), (new AxisAlignedBB((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), (double)(blockpos.getX() + 1), (double)(blockpos.getY() + 1), (double)(blockpos.getZ() + 1))).func_186662_g((double)this.spawnRange)).size();
+
+                        if (k >= this.maxNearbyEntities)
+                        {
+                            this.resetTimer();
+                            return;
+                        }
+
+                        EntityLiving entityliving = entity instanceof EntityLiving ? (EntityLiving)entity : null;
+                        entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, world.rand.nextFloat() * 360.0F, 0.0F);
+
+                        if (entityliving == null || entityliving.getCanSpawnHere() && entityliving.isNotColliding())
+                        {
+                            modifyEntity(entity);
+                            if (this.randomEntity.func_185277_b().func_186856_d() == 1 && this.randomEntity.func_185277_b().hasKey("id", 8) && entity instanceof EntityLiving)
+                            {
+                                ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
+                            }
+
+                            AnvilChunkLoader.func_186052_a(entity, world);
+                            world.playAuxSFX(2004, blockpos, 0);
+
+                            if (entityliving != null)
+                            {
+                                entityliving.spawnExplosionParticle();
+                            }
+
+                            flag = true;
+                        }
+                    }
+
+                    if (flag)
+                    {
+                        this.resetTimer();
+                    }
+                }
+            }
+        }
+
+        @Override
         public boolean isActivated() {
             return redstoneAllowed() && playerAllowed();
         }
 
-        @Override
+        private void modifyEntity(Entity entity){
+            if (brainDead && (entity instanceof EntityLiving)){
+                EntityLiving entityLiving = (EntityLiving) entity;
+                makeBrainDead(entityLiving);
+                for (Entity entity1 : entityLiving.func_184188_bt()){
+                    if (entity1 instanceof EntityLiving){
+                        makeBrainDead((EntityLiving) entity1);
+                    }
+                }
+            }
+        }
+
+        /*@Override //Gone in 1.9 :(
         public Entity spawnNewEntity(Entity entityIn, boolean spawn) {
             Entity ret = super.spawnNewEntity(entityIn, spawn);
             if (brainDead && (ret instanceof EntityLiving)){
@@ -139,7 +253,7 @@ public class TileEntityEFluxSpawner extends TileBase {
                 }
             }
             return ret;
-        }
+        }*/
 
         private boolean redstoneAllowed(){
             return !hasRedstone || redstoneActivated;

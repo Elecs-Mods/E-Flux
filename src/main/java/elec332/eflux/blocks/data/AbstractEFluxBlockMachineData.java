@@ -4,7 +4,8 @@ import elec332.eflux.blocks.BlockMachine;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 
 /**
  * Created by Elec332 on 14-1-2016.
@@ -37,13 +38,13 @@ public abstract class AbstractEFluxBlockMachineData implements IEFluxBlockMachin
     }
 
     @Override
-    public int getRenderID() {
-        return 3;
+    public EnumBlockRenderType getRenderType() {
+        return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public EnumWorldBlockLayer getRenderingLayer() {
-        return EnumWorldBlockLayer.SOLID;
+    public BlockRenderLayer getRenderingLayer() {
+        return BlockRenderLayer.SOLID;
     }
 
 }

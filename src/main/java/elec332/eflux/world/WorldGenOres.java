@@ -5,6 +5,7 @@ import elec332.core.world.WorldGen;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.init.BlockRegister;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class WorldGenOres extends WorldGen {
     private static WorldGenInfo copper, tin, zinc, silver;
 
     @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         switch (WorldHelper.getDimID(world)){
             case 0:
                 generateOverworld(world, random, chunkX, chunkZ, copper);

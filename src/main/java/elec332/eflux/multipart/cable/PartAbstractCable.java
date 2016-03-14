@@ -9,15 +9,10 @@ import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multipart.AbstractEnergyMultiPart;
-import mcmultipart.MCMultiPartMod;
-import mcmultipart.client.multipart.ICustomHighlightPart;
-import mcmultipart.microblock.IMicroblock;
-import mcmultipart.multipart.*;
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -26,10 +21,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -47,7 +42,7 @@ import java.util.UUID;
  * Created by Elec332 on 25-1-2016.
  */
 @SuppressWarnings("all")
-public abstract class PartAbstractCable extends AbstractEnergyMultiPart implements IEnergyTransmitter, ISlottedPart, IOccludingPart, ICustomHighlightPart {
+public abstract class PartAbstractCable extends AbstractEnergyMultiPart implements IEnergyTransmitter{//}, ISlottedPart, IOccludingPart, ICustomHighlightPart {
 
     public PartAbstractCable(){
         connectData = EnumSet.noneOf(EnumFacing.class);
@@ -56,13 +51,13 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     public void setGridIdentifier(UUID uuid){
         this.gridIdentifier = uuid;
         //sendPacket(9, new NBTHelper().addToTag(uuid.toString(), "uuid").toNBT());
-        sendUpdatePacket(true);
+//        sendUpdatePacket(true);
     }
 
     private UUID gridIdentifier;
     private Set<EnumFacing> connectData;
     private static final AxisAlignedBB[] HITBOXES;
-    public static final PropertyBool UP = PropertyBool.create("up"), DOWN = PropertyBool.create("down"), NORTH = PropertyBool.create("north"), EAST = PropertyBool.create("east"), SOUTH = PropertyBool.create("south"), WEST = PropertyBool.create("west");
+//    public static final PropertyBool UP = PropertyBool.create("up"), DOWN = PropertyBool.create("down"), NORTH = PropertyBool.create("north"), EAST = PropertyBool.create("east"), SOUTH = PropertyBool.create("south"), WEST = PropertyBool.create("west");
 
     public UUID getGridIdentifier(){
         return this.gridIdentifier;
@@ -78,14 +73,14 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         return stack;
     }
 
-    @Override
+//    @Override
     public void onPartValidated() {
-        super.onPartValidated();
-        checkConnections();
+//        super.onPartValidated();
+//        checkConnections();
     }
 
-    @Override
-    public BlockState createBlockState() {
+/*    @Override
+    public BlockStateContainer createBlockState() {
         return new ExtendedBlockState(MCMultiPartMod.multipart, new IProperty[0], new IUnlistedProperty[]{
                 DOWN, UP, NORTH, SOUTH, WEST, EAST
         });
@@ -161,12 +156,12 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
             this.gridIdentifier = buf.readUuid();
         }
     }
-
+*/
     @Override
     public boolean canConnectTo(IEnergyTransmitter otherTransmitter) {
         return (!(otherTransmitter instanceof PartAbstractCable) || getUniqueIdentifier().equals(((PartAbstractCable) otherTransmitter).getUniqueIdentifier()));
     }
-
+/*
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == EFluxAPI.TRANSMITTER_CAPABILITY && canConnectToSide(facing) || super.hasCapability(capability, facing);
@@ -233,7 +228,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         float zMax = connectData.contains(EnumFacing.SOUTH) ? 1 : f1;
 
         AxisAlignedBB aabb = new AxisAlignedBB(xMin, yMin, zMin, xMax, yMax, zMax);*/
-        GlStateManager.enableBlend();
+/*        GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
         GL11.glLineWidth(2.0F);
@@ -242,11 +237,11 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         AxisAlignedBB aabb;
         for (EnumFacing facing : connectData) {
             aabb = HITBOXES[facing.ordinal()];
-            RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
-        }
+            RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*///);
+/*        }
         aabb = HITBOXES[6];
-        RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
-        GlStateManager.depthMask(true);
+        RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*///);
+/*        GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         return true;//return false;
@@ -264,8 +259,8 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     }
 
     @Override
-    public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-        return layer == EnumWorldBlockLayer.CUTOUT;
+    public boolean canRenderInLayer(BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.CUTOUT;
     }
 
     private void checkConnections(){
@@ -327,7 +322,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         }
 
     }
-
+*/
     static {
         HITBOXES = new AxisAlignedBB[7];
         float thickness = 6 * RenderHelper.renderUnit;

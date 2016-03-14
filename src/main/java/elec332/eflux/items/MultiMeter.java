@@ -18,9 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,10 +47,10 @@ public class MultiMeter extends Item implements IRightClickCancel, INoJsonItem {
         TileEntity tileEntity = WorldHelper.getTileAt(world, pos);
         if (!world.isRemote) {
             if (tileEntity instanceof IMultiMeterDataProvider)
-                player.addChatComponentMessage(new ChatComponentText(((IMultiMeterDataProvider) tileEntity).getProvidedData()));
+                player.addChatComponentMessage(new TextComponentString(((IMultiMeterDataProvider) tileEntity).getProvidedData()));
             if (tileEntity instanceof IMultiMeterDataProviderMultiLine)
                 for (String s : ((IMultiMeterDataProviderMultiLine) tileEntity).getProvidedData())
-                    player.addChatComponentMessage(new ChatComponentText(s));
+                    player.addChatComponentMessage(new TextComponentString(s));
             //TODO: more provided info
             return true;
         }

@@ -3,22 +3,19 @@ package elec332.eflux.blocks;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
-import elec332.core.client.model.model.IBlockModel;
+import elec332.core.client.model.map.IBakedModelMetaRotationMap;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.DirectionHelper;
-import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.model.ModelRotation;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,18 +30,19 @@ public class BlockItemInlet extends BlockMachine {
 
     private static IEFluxBlockMachineData DATA;
 
+    @SideOnly(Side.CLIENT)
+    protected IBakedModelMetaRotationMap<IBakedModel> rotationMap;
+
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public IBakedModel getBlockModel(IBlockState state) {
         EnumFacing facing = getFacing(state);
-        TileEntity tile = WorldHelper.getTileAt(iba, pos);
-        int meta = (getMachine().hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive()) ? 1 : 0;
         if (facing != EnumFacing.UP && facing != EnumFacing.DOWN){
-            return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(facing));
+            return rotationMap.forMetaAndRotation(0, DirectionHelper.getRotationFromFacing(facing));
         } else if (facing == EnumFacing.UP){
-            return rotationMap.forMetaAndRotation(meta, ModelRotation.X270_Y0);
+            return rotationMap.forMetaAndRotation(0, ModelRotation.X270_Y0);
         }
-        return rotationMap.forMetaAndRotation(meta, ModelRotation.X90_Y0);
+        return rotationMap.forMetaAndRotation(0, ModelRotation.X90_Y0);
     }
 
     /**
@@ -54,7 +52,7 @@ public class BlockItemInlet extends BlockMachine {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        rotationMap = new BakedModelMetaRotationMap<IBlockModel>(true, true);
+        rotationMap = new BakedModelMetaRotationMap<IBakedModel>(true, true);
         for (int i = 0; i < 2; i++) {
             rotationMap.setModelsForRotation(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]), true, true));
         }

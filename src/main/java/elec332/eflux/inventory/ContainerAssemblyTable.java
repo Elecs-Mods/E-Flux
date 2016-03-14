@@ -10,6 +10,7 @@ import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.inventory.slot.SlotAssembly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -109,8 +110,8 @@ public class ContainerAssemblyTable extends ContainerMachine {
         super.updateProgressBar(id, value);
     }
 
-    @Override
-    public ItemStack slotClick(int slotID, int var2, int var3, EntityPlayer player) {
+    @Override //slotClick
+    public ItemStack func_184996_a(int slotID, int var2, ClickType var3, EntityPlayer player) {
         if (slotID > 0 && slotID < 10 && (player.worldObj.isRemote || !assemblyTable.drainPower(200)) && !canClick) {
             detectAndSendChanges();
             return null;
@@ -122,7 +123,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
                 canClick = false;
             }
         }
-        return super.slotClick(slotID, var2, var3, player);
+        return super.func_184996_a(slotID, var2, var3, player);
     }
 
     @Override

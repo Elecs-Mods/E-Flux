@@ -6,7 +6,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * Created by Elec332 on 13-9-2015.
@@ -118,7 +118,7 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return inventory.getDisplayName();
     }
 }

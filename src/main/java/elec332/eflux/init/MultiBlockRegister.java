@@ -14,7 +14,7 @@ import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;

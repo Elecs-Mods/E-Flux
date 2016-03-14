@@ -6,7 +6,6 @@ import elec332.core.client.ITessellator;
 import elec332.core.client.ITextureLoader;
 import elec332.core.client.RenderBlocks;
 import elec332.core.client.model.RenderingRegistry;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.render.AbstractBlockRenderer;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockMachineFrame;
@@ -14,9 +13,10 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.multiblock.TileMultiBlockTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,17 +30,17 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class MachineFrameRenderer extends AbstractBlockRenderer implements ITextureLoader {
 
-    public MachineFrameRenderer(IBlockModel model){
+    public MachineFrameRenderer(IBakedModel model){
         RenderingRegistry.instance().registerLoader(this);
         this.defaultModel = BlockMachineFrame.model;
     }
 
-    private IBlockModel defaultModel;
+    private IBakedModel defaultModel;
     private TextureAtlasSprite main;
     private TextureAtlasSprite[] lines;
 
     @Override
-    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderBlocks, ITessellator tessellator, WorldRenderer renderer) {
+    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderBlocks, ITessellator tessellator, VertexBuffer renderer) {
         boolean one = false;
         iba = Minecraft.getMinecraft().theWorld;
         Map<EnumFacing, Boolean> cache = Maps.newHashMap();
@@ -62,12 +62,12 @@ public class MachineFrameRenderer extends AbstractBlockRenderer implements IText
             cache.put(facing, b);
         }
         if (!one){
-            Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(iba, BlockMachineFrame.model, state, pos, renderer);
+            Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(iba, BlockMachineFrame.model, state, pos, renderer, true);
         } else {
             for (EnumFacing facing : EnumFacing.VALUES){
                 BlockPos offSet = pos.offset(facing);
-                if (state.getBlock().shouldSideBeRendered(iba, offSet, facing)){
-                    tessellator.setBrightness(state.getBlock().getMixedBrightnessForBlock(iba, pos.offset(facing)) - 2);
+                if (state.getBlock().shouldSideBeRendered(state, iba, offSet, facing)){
+                    tessellator.setBrightness(state.getBlock().func_185484_c(state, iba, pos.offset(facing))/*.getMixedBrightnessForBlock(iba, pos.offset(facing))*/);
                     renderFacing(facing, cache, renderBlocks, pos);
                 }
             }

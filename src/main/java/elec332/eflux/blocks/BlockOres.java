@@ -6,18 +6,16 @@ import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.map.BakedModelMetaMap;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,7 +33,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite[] textures;
     @SideOnly(Side.CLIENT)
-    private BakedModelMetaMap<IBlockModel> models;
+    private BakedModelMetaMap<IBakedModel> models;
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
@@ -70,13 +68,11 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      * This method is used when a model is requested to render the block in a world.
      *
      * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
      * @return The model to render for this block for the given arguments.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public IBakedModel getBlockModel(IBlockState state) {
         return models.forMeta(state.getValue(getProperty()));
     }
 
@@ -87,8 +83,8 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
-        return models.forMeta(meta);
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return models.forMeta(stack.getItemDamage());
     }
 
     /**
@@ -98,7 +94,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        models = new BakedModelMetaMap<IBlockModel>();
+        models = new BakedModelMetaMap<IBakedModel>();
         for (int i = 0; i < getTypes(); i++) {
             models.setModelForMeta(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]).setTexture(textures[i])));
         }

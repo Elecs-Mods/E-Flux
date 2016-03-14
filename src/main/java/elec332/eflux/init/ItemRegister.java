@@ -140,7 +140,7 @@ public final class ItemRegister {
     }
 
     protected void initMultiPartItems(){
-        cable = new ItemCable().register();
+        //cable = new ItemCable().register();
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);
         cableAdvanced = new ItemStack(cable, 1, 2);

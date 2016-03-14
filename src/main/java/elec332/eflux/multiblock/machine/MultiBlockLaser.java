@@ -9,7 +9,7 @@ import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.util.MultiBlockLogic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * Created by Elec332 on 10-9-2015.
@@ -174,7 +174,7 @@ public class TileEntityDustStorage extends TileMultiBlockTile implements ISidedI
      * Get the formatted ChatComponent that will be used for the sender's username in chat
      */
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 }

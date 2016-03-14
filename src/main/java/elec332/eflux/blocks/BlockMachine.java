@@ -6,7 +6,6 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
 import elec332.core.client.model.map.IBakedModelMetaRotationMap;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.tile.BlockTileBase;
 import elec332.core.tile.IActivatableMachine;
@@ -16,16 +15,23 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.EFluxResourceLocation;
-import net.minecraft.block.state.BlockState;
+import elec332.eflux.client.render.BlockMachineQuadProvider;
+import elec332.eflux.util.UniversalUnlistedProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,42 +48,43 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
         this.layer = machine.getRenderingLayer();
     }
 
+    public static final IUnlistedProperty<Boolean> ACTIVATED_PROPERTY;
+
     private final IEFluxBlockMachineData machine;
-    private final EnumWorldBlockLayer layer;
+    private final BlockRenderLayer layer;
 
     public IEFluxBlockMachineData getMachine(){
         return this.machine;
     }
 
     @Override
-    public int getRenderType() {
-        return machine.getRenderID();
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return machine.getRenderType();
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return layer == EnumWorldBlockLayer.SOLID;
+    public boolean isOpaqueCube(IBlockState state) {
+        return layer == BlockRenderLayer.SOLID;
     }
 
     @SideOnly(Side.CLIENT)
     protected TextureAtlasSprite[][] textures;
     @SideOnly(Side.CLIENT)
-    protected IBakedModelMetaRotationMap<IBlockModel> rotationMap;
+    private IBakedModel model;
 
     /**
      * This method is used when a model is requested to render the block in a world.
      *
      * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
      * @return The model to render for this block for the given arguments.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
-        TileEntity tile = WorldHelper.getTileAt(iba, pos);
+    public IBakedModel getBlockModel(IBlockState state) {
+        /*TileEntity tile = WorldHelper.getTileAt(iba, pos);
         int meta = (machine.hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive()) ? 1 : 0;
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(getFacing(state)));
+        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(getFacing(state)));*/
+        return model;
     }
 
     /**
@@ -87,8 +94,8 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
-        return rotationMap.get();
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return model;
     }
 
     /**
@@ -100,11 +107,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
-        int t = machine.hasTwoStates() ? 2 : 1;
-        for (int i = 0; i < t; i++) {
-            rotationMap.setModelsForRotation(i, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(textures[i])));
-        }
+        model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), new BlockMachineQuadProvider(textures, quadBakery)/*modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(textures[i]))*/);
     }
 
     /**
@@ -134,7 +137,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer() {
+    public BlockRenderLayer getBlockLayer() {
         return layer;
     }
 
@@ -149,8 +152,17 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
     }
 
     @Override
-    protected BlockState createBlockState() {
+    protected BlockStateContainer createBlockState() {
         return BlockStateHelper.FACING_NORMAL.createMetaBlockState(this);
+    }
+
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return super.getExtendedState(state, world, pos);
+    }
+
+    static {
+        ACTIVATED_PROPERTY = new UniversalUnlistedProperty<Boolean>("activated", Boolean.class);
     }
 
 }

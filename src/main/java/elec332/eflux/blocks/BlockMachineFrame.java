@@ -5,7 +5,6 @@ import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.RenderingRegistry;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -15,11 +14,12 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -38,7 +38,7 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite texture;
     @SideOnly(Side.CLIENT)
-    public static IBlockModel model;
+    public static IBakedModel model;
 
     @Override
     public BlockMachineFrame register() {
@@ -55,32 +55,25 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.CUTOUT;
-    }
-
-    @Override
-    public int getRenderType() {
-        return RenderingRegistry.SPECIAL_BLOCK_RENDERER_ID;
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     /**
      * This method is used when a model is requested to render the block in a world.
      *
      * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
      * @return The model to render for this block for the given arguments.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public IBakedModel getBlockModel(IBlockState state) {
         return null;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

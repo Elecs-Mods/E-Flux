@@ -12,16 +12,14 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.multipart.cable.PartAdvancedCable;
 import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.multipart.cable.PartNormalCable;
-import mcmultipart.multipart.IMultipart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,7 +29,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 12-2-2016.
  */
-public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
+public class ItemCable{}/* extends ItemEFluxMultiPart implements INoJsonItem {
 
     public ItemCable() {
         super("cable");
@@ -77,7 +75,7 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
     /**
      * A helper method to prevent you from having to hook into the event,
      * use this to make your quads. (This always comes AFTER the textures are loaded)
-     */
+     *
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
@@ -91,7 +89,7 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
      * Use this to register your textures.
      *
      * @param iconRegistrar The IIconRegistrar.
-     */
+     *
     @Override
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
@@ -101,4 +99,4 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
         textures[2] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/advancedCable"));
     }
 
-}
+}*/

@@ -4,6 +4,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.endernetwork.ILinkableItem;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -11,7 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -27,34 +31,34 @@ public class ItemEFluxSpawner extends ItemBlock implements ILinkableItem {
         super(block);
     }
 
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    @Override
+    @SuppressWarnings("all")
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand side, EnumFacing hitX, float hitY, float hitZ, float p_180614_9_) {
         TileEntity tile = WorldHelper.getTileAt(worldIn, pos);
 
         if (!(tile instanceof TileEntityMobSpawner)/* || !hasLink(stack)*/) {
-            return false;
+            return EnumActionResult.FAIL;
         }
 
         NBTTagCompound spawnerTag = new NBTTagCompound();
         ((TileEntityMobSpawner) tile).getSpawnerBaseLogic().writeToNBT(spawnerTag);
 
-        if (stack.stackSize == 0) {
-            return false;
-        } else if (!playerIn.canPlayerEdit(pos, side, stack)) {
-            return false;
-        } else {
+        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, hitX, stack) && worldIn.canBlockBePlaced(this.block, pos, false, hitX, null, stack)) {
             int i = this.getMetadata(stack.getMetadata());
-            IBlockState iblockstate = this.block.onBlockPlaced(worldIn, pos, side, hitX, hitY, hitZ, i, playerIn);
+            IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, hitX, hitY, hitZ, p_180614_9_, i, playerIn);
 
-            if (placeBlockAt(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ, iblockstate)) {
-                worldIn.playSoundEffect((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), this.block.stepSound.getPlaceSound(), (this.block.stepSound.getVolume() + 1.0F) / 2.0F, this.block.stepSound.getFrequency() * 0.8F);
+            if (placeBlockAt(stack, playerIn, worldIn, pos, hitX, hitY, hitZ, p_180614_9_, iblockstate1)) {
+                SoundType soundtype = this.block.func_185467_w();
+                worldIn.func_184133_a(playerIn, pos, soundtype.func_185841_e(), SoundCategory.BLOCKS, (soundtype.func_185843_a() + 1.0F) / 2.0F, soundtype.func_185847_b() * 0.8F);
                 --stack.stackSize;
             }
             tile = WorldHelper.getTileAt(worldIn, pos);
             if (tile instanceof TileEntityEFluxSpawner){
                 ((TileEntityEFluxSpawner) tile).readFromOldSpawner(spawnerTag);
             }
-
-            return true;
+            return EnumActionResult.SUCCESS;
+        } else {
+            return EnumActionResult.FAIL;
         }
     }
 

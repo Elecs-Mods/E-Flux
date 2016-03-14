@@ -9,9 +9,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 import java.util.Collections;
@@ -54,8 +55,9 @@ public class TileGrowthLamp extends BreakableMachineTile {
     }
 
     private boolean isValidCrop(BlockPos blockLoc){
-        Block block = WorldHelper.getBlockAt(worldObj, blockLoc);
-        return block instanceof IGrowable && block.getMaterial() != Material.grass;
+        IBlockState state = WorldHelper.getBlockState(worldObj, blockLoc);
+        Block block = state.getBlock();
+        return block instanceof IGrowable && block.getMaterial(state) != Material.grass;
     }
 
     private void remakeList(){

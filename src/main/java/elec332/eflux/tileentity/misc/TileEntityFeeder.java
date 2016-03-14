@@ -11,11 +11,14 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -70,8 +73,8 @@ public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileW
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return openGui(player, EFlux.instance, 0);
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+         return openGui(player, EFlux.instance, 0);
     }
 
     @Override

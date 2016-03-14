@@ -11,9 +11,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 
@@ -109,7 +109,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     @Override
     public boolean onBlockActivatedBy(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldObj.isRemote){
-            player.addChatComponentMessage(new ChatComponentText("Mode: " + (isOutputMode() ? "output" : "input")));
+            player.addChatComponentMessage(new TextComponentString("Mode: " + (isOutputMode() ? "output" : "input")));
         }
         return super.onBlockActivatedBy(player, side, hitX, hitY, hitZ);
     }
@@ -190,7 +190,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
      * Get the formatted ChatComponent that will be used for the sender's username in chat
      */
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 

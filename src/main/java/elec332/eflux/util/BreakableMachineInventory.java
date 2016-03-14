@@ -13,12 +13,13 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -42,8 +43,8 @@ public class BreakableMachineInventory implements IInventory{
     public Object brokenGui(final Side side, EntityPlayer player){
         BaseContainer container = new ContainerSingleSlot(this, player){
 
-            @Override
-            public ItemStack slotClick(int p_75144_1_, int p_75144_2_, int p_75144_3_, final EntityPlayer p_75144_4_) {
+            @Override //slotClick
+            public ItemStack func_184996_a(int p_75144_1_, int p_75144_2_, ClickType p_75144_3_, final EntityPlayer p_75144_4_) {
                 if (side.isServer()) {
                     ElecCore.tickHandler.registerCall(new Runnable() {
                         @Override
@@ -54,7 +55,7 @@ public class BreakableMachineInventory implements IInventory{
                         }
                     }, p_75144_4_.worldObj);
                 }
-                return super.slotClick(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
+                return super.func_184996_a(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
             }
 
 
@@ -117,13 +118,13 @@ public class BreakableMachineInventory implements IInventory{
 
                             if (itemstack.stackSize > itemstack.getMaxStackSize())
                             {
-                                s = EnumChatFormatting.YELLOW + "" + itemstack.getMaxStackSize();
+                                s = TextFormatting.YELLOW + "" + itemstack.getMaxStackSize();
                                 itemstack.stackSize = itemstack.getMaxStackSize();
                             }
 
                             if (itemstack.stackSize > slotIn.getItemStackLimit(itemstack))
                             {
-                                s = EnumChatFormatting.YELLOW + "" + slotIn.getItemStackLimit(itemstack);
+                                s = TextFormatting.YELLOW + "" + slotIn.getItemStackLimit(itemstack);
                                 itemstack.stackSize = slotIn.getItemStackLimit(itemstack);
                             }
                         }
@@ -267,7 +268,7 @@ public class BreakableMachineInventory implements IInventory{
      * Get the formatted ChatComponent that will be used for the sender's username in chat
      */
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 

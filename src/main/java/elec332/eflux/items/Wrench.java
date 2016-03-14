@@ -18,7 +18,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -46,7 +48,7 @@ public class Wrench extends Item implements IRightClickCancel, INoJsonItem {
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float HitX, float HitY, float HitZ) {
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         Block block = WorldHelper.getBlockAt(world, pos);
         if (block instanceof IWrenchable) {
             if (player.isSneaking()) {
@@ -57,15 +59,15 @@ public class Wrench extends Item implements IRightClickCancel, INoJsonItem {
             } else if (!world.isRemote){
                 ((IWrenchable) block).onWrenched(world, pos, side);
             }
-            player.swingItem();
-            itemStack.damageItem(1, player);
-            return false;
+            //player.swingItem();
+            stack.damageItem(1, player);
+            return EnumActionResult.SUCCESS;
         } else if (block.rotateBlock(world, pos, side)) {
-            player.swingItem();
-            itemStack.damageItem(1, player);
-            return false;
+            //player.swingItem();
+            stack.damageItem(1, player);
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.SUCCESS;
     }
 
     @SideOnly(Side.CLIENT)

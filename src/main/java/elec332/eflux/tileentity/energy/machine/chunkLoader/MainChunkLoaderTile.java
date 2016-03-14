@@ -8,12 +8,14 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.BreakableMachineTile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.ForgeChunkManager;
 
@@ -200,8 +202,8 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return isOwner(player) && super.onBlockActivated(player, side, hitX, hitY, hitZ);
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return isOwner(player) && super.onBlockActivated(state, player, hand, stack, side, hitX, hitY, hitZ);
     }
 
     @Override

@@ -7,7 +7,7 @@ import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergySource;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.multipart.cable.PartAbstractCable;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 

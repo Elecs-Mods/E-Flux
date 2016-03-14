@@ -15,12 +15,13 @@ import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +42,7 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
     private IItemModel model;
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityAreaMover){
             if (!world.isRemote && !stack.hasTagCompound()){
@@ -49,7 +50,7 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
                 stack.setTagCompound(((TileEntityAreaMover) tile).removeArea());
                 stack.setItemDamage(range);
             }
-            return !world.isRemote;
+            return !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
         } else if (stack.hasTagCompound()){
             if (!world.isRemote) {
                 BlockPos newPos = pos.offset(side);
@@ -60,8 +61,8 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
                         for (int k = 0; k < 2 * range + 1; k++) {
                             BlockPos m = newPos.add(i, j, k);
                             if (!world.isAirBlock(m)){
-                                player.addChatComponentMessage(new ChatComponentText("There is a block at: "+m+" that has to be removed before the structure can be placed."));
-                                return false;
+                                player.addChatComponentMessage(new TextComponentString("There is a block at: "+m+" that has to be removed before the structure can be placed."));
+                                return EnumActionResult.FAIL;
                             }
                         }
                     }
@@ -72,9 +73,9 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
                 template.generateStructure(newPos, world, world.getChunkProvider());
                 stack.setItemDamage(0);
             }
-            return !world.isRemote;
+            return !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     @Override

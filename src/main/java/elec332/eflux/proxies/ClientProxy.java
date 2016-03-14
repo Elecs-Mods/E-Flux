@@ -8,7 +8,6 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.model.IModelAndTextureLoader;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.tile.IInventoryTile;
@@ -22,17 +21,15 @@ import elec332.eflux.client.render.TileEntityLaserRenderer;
 import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
-import mcmultipart.client.multipart.ISmartMultipartModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.ModelRotation;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -87,7 +84,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     @Override
     @SuppressWarnings("all")
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        models = new BakedModelMetaMap<IBlockModel>();
+        models = new BakedModelMetaMap<IBakedModel>();
         for (int i = 0; i < textures.length; i++) {
             models.setModelForMeta(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]).setTexture(textures[i])));
         }
@@ -108,14 +105,14 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     }
 
     private TextureAtlasSprite[] textures;
-    private IBakedModelMetaMap<IBlockModel> models;
+    private IBakedModelMetaMap<IBakedModel> models;
     private ElecQuadBakery quadBakery;
-
+/* //Remove to re-enable MCMP model
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
-        event.modelRegistry.putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));
-        event.modelRegistry.putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_1#multipart"), new CR(1));
-        event.modelRegistry.putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_2#multipart"), new CR(2));
+        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));
+        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_1#multipart"), new CR(1));
+        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_2#multipart"), new CR(2));
     }
 
     private class CR implements ISmartMultipartModel {

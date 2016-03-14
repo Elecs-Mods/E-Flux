@@ -14,7 +14,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -25,7 +26,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     CAPACITOR(Capacitor.class, BlockTextures.getCapacitorProvider()),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getCoalGenProvider()),
     ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
-    GROWTHLAMP(TileGrowthLamp.class, 3, Material.glass, BlockTextures.getGrowthLampProvider()),
+    GROWTHLAMP(TileGrowthLamp.class, EnumBlockRenderType.MODEL, Material.glass, BlockTextures.getGrowthLampProvider()),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getChunkMainProvider()),
     CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getChunkSubProvider()),
     TESLACOIL(TileTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
@@ -43,22 +44,22 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     public Class<? extends ItemBlock> itemBlockClass;
     public boolean hasTwoStates = false;
     private BlockMachine blockMachine;
-    private int renderID = 3;
+    private EnumBlockRenderType renderID = EnumBlockRenderType.MODEL;
     private Material material = Material.rock;
     private IBlockTextureProvider textureProvider;
-    public EnumWorldBlockLayer renderingLayer = EnumWorldBlockLayer.SOLID;
+    public BlockRenderLayer renderingLayer = BlockRenderLayer.SOLID;
 
-    private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material, IBlockTextureProvider textureProvider){
+    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID, Material material, IBlockTextureProvider textureProvider){
         this(tileClass, renderID, material);
         this.textureProvider = textureProvider;
     }
 
-    private EnumMachines(Class<? extends TileEntity> tileClass, int renderID, Material material){
+    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID, Material material){
         this(tileClass, renderID);
         this.material = material;
     }
 
-    private EnumMachines(Class<? extends TileEntity> tileClass, int renderID){
+    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID){
         this(tileClass);
         this.renderID = renderID;
     }
@@ -115,7 +116,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     }
 
     @Override
-    public int getRenderID() {
+    public EnumBlockRenderType getRenderType() {
         return renderID;
     }
 
@@ -125,7 +126,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     }
 
     @Override
-    public EnumWorldBlockLayer getRenderingLayer() {
+    public BlockRenderLayer getRenderingLayer() {
         return renderingLayer;
     }
 

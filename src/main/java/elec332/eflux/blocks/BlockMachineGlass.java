@@ -1,7 +1,8 @@
 package elec332.eflux.blocks;
 
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockRenderLayer;
 
 /**
  * Created by Elec332 on 2-9-2015.
@@ -13,13 +14,13 @@ public class BlockMachineGlass extends BlockMachine {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.TRANSLUCENT;
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
 }

@@ -4,7 +4,6 @@ import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -12,12 +11,11 @@ import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.item.Item;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +30,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
     }
 
     @SideOnly(Side.CLIENT)
-    private IBlockModel model;
+    private IBakedModel model;
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite[] textures;
 
@@ -45,13 +43,11 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      * This method is used when a model is requested to render the block in a world.
      *
      * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
      * @return The model to render for this block for the given arguments.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public IBakedModel getBlockModel(IBlockState state) {
         return model;
     }
 
@@ -62,7 +58,7 @@ public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITile
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 

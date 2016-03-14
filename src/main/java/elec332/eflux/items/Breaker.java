@@ -8,7 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -33,13 +35,13 @@ public class Breaker extends Item implements IRightClickCancel{
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float HitX, float HitY, float HitZ) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World world, BlockPos pos, EnumHand side, EnumFacing hitX, float hitY, float hitZ, float p_180614_9_) {
         TileEntity tileEntity = WorldHelper.getTileAt(world, pos);
         if (!world.isRemote) {
             if (tileEntity instanceof BreakableMachineTile)
                 ((BreakableMachineTile)tileEntity).setBroken(true);
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.PASS;
     }
 }

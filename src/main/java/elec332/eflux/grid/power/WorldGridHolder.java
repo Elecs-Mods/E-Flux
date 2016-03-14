@@ -7,9 +7,8 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyTransmitter;;
-import mcmultipart.multipart.IMultipartContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
@@ -101,9 +100,9 @@ public class WorldGridHolder {
                 return;
             }
             if (getPowerTile(tile.getPos()) != null) {
-                if (!(tile instanceof IMultipartContainer)) {
-                    throw new IllegalStateException();
-                } else {
+                //if (!(tile instanceof IMultipartContainer)) {
+               //    throw new IllegalStateException();
+                //} else {
                     getPowerTile(tile.getPos()).checkConnector();
                     surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
                     for (EnumFacing facing : EnumFacing.VALUES) {
@@ -114,7 +113,7 @@ public class WorldGridHolder {
                         }
                     }
                     return;
-                }
+                //}
             }
             PowerTile powerTile = new PowerTile(tile);
             registeredTiles.put(powerTile, tile.getPos());
@@ -190,13 +189,13 @@ public class WorldGridHolder {
         if (!world.isRemote) {
             if (WorldHelper.getDimID(world) != WorldHelper.getDimID(this.world)) {
                 throw new IllegalArgumentException();
-            }
+            }/*
             if (WorldHelper.chunkLoaded(world, tile.getPos()) && WorldHelper.getTileAt(world, tile.getPos()) == tile && tile instanceof IMultipartContainer && EnergyAPIHelper.isEnergyTile(tile)) {
                 getPowerTile(tile.getPos()).checkConnector();
                 onBlockChange(tile.getPos(), EnumSet.allOf(EnumFacing.class));
                 surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
                 return;
-            }
+            }*/
             EFlux.systemPrintDebug("RemTile");
             removeTile(getPowerTile(tile.getPos()), true);
         }

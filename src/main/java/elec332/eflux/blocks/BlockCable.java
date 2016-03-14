@@ -9,7 +9,6 @@ import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -21,12 +20,12 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -49,7 +48,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite[] textures;
     @SideOnly(Side.CLIENT)
-    private IBakedModelMetaMap<IBlockModel> models;
+    private IBakedModelMetaMap<IBakedModel> models;
 
     @Override
     public BlockWithMeta register() {
@@ -85,20 +84,20 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
         return null;
     }
 
+    /*@Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+        setBlockBoundsBasedOnState(state, worldIn, pos); //setBlockBoundsBasedOnState
+        return super.getCollisionBoundingBox(state, worldIn, pos);
+    }*/
+
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
-        setBlockBoundsBasedOnState(worldIn, pos);
-        return super.getCollisionBoundingBox(worldIn, pos, state);
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+        return super.getSelectedBoundingBox(state, worldIn, pos);
     }
 
     @Override
-    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos) {
-        return super.getSelectedBoundingBox(worldIn, pos);
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public void setBlockBoundsBasedOnState(IBlockAccess iba, BlockPos pos) {
+    @SuppressWarnings("all") //setBlockBoundsBasedOnState
+    public AxisAlignedBB func_185496_a(IBlockState state, IBlockAccess iba, BlockPos pos) {
         List<EnumFacing> connections = Lists.newArrayList();
         TileEntity tile = WorldHelper.getTileAt(iba, pos);
         if (tile != null) {
@@ -120,31 +119,31 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
         float zMin = connections.contains(EnumFacing.NORTH) ? 0 : heightStuff;
         float zMax = connections.contains(EnumFacing.SOUTH) ? 1 : f1;
 
-        setBlockBounds(xMin, yMin, zMin, xMax, yMax, zMax);
+        return new AxisAlignedBB(xMin, yMin, zMin, xMax, yMax, zMax);
     }
 
     @Override
-    public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube() {
+    public boolean isNormalCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullBlock() {
+    public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
@@ -173,26 +172,26 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     }
 
     /**
-     * This method is used when a model is requested to render the block in a world.
+     * This method is used when a model is requested for every valid BlockState,
+     * during the initialisation of the ModelRegistry.
      *
-     * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
+     * @param state The current BlockState, can NOT be an ExtendedBlockState.
      * @return The model to render for this block for the given arguments.
      */
     @Override
-    @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public IBakedModel getBlockModel(IBlockState state) {
         return models.forMeta(getMetaFromState(state));
     }
 
     /**
      * This method is used when a model is requested when its not placed, so for an item.
+     *
+     * @return The model to render when the block is not placed.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
-        return models.forMeta(meta);
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return models.forMeta(stack.getItemDamage());
     }
 
     /**
@@ -202,7 +201,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        models = new BakedModelMetaMap<IBlockModel>();
+        models = new BakedModelMetaMap<IBakedModel>();
         for (int i = 0; i < textures.length; i++) {
             models.setModelForMeta(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]).setTexture(textures[i])));
         }

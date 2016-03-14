@@ -5,7 +5,7 @@ import elec332.eflux.client.manual.ManualPage;
 import elec332.eflux.client.manual.gui.GuiManual;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Created by Elec332 on 31-1-2016.
@@ -32,7 +32,7 @@ public abstract class AbstractManualPage extends ManualPage {
         int oldHeight = fr.FONT_HEIGHT;
         fr.FONT_HEIGHT = 32;
         String text = ClientHelper.translateToLocal(unLocalisedName);
-        fr.drawString(EnumChatFormatting.BOLD + text, (width/2) - (fr.getStringWidth(text) / 2), 8, 0);
+        fr.drawString(TextFormatting.BOLD + text, (width/2) - (fr.getStringWidth(text) / 2), 8, 0);
         fr.FONT_HEIGHT = oldHeight;
         renderBody(width, height, mouseX, mouseY, manual);
     }

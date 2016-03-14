@@ -18,7 +18,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -49,7 +50,7 @@ public final class BlockRegister {
                     machine.hasTwoStates = true;
                     break;
                 case SPAWNER:
-                    machine.renderingLayer = EnumWorldBlockLayer.CUTOUT;
+                    machine.renderingLayer = BlockRenderLayer.CUTOUT;
                     machine.itemBlockClass = ItemEFluxSpawner.class;
                     break;
             }
@@ -175,8 +176,8 @@ public final class BlockRegister {
         }
 
         @Override
-        public int getRenderID() {
-            return 3;
+        public EnumBlockRenderType getRenderType() {
+            return EnumBlockRenderType.MODEL;
         }
 
         @Override
@@ -185,8 +186,8 @@ public final class BlockRegister {
         }
 
         @Override
-        public EnumWorldBlockLayer getRenderingLayer() {
-            return EnumWorldBlockLayer.SOLID;
+        public BlockRenderLayer getRenderingLayer() {
+            return BlockRenderLayer.SOLID;
         }
     }
 
@@ -252,8 +253,8 @@ public final class BlockRegister {
         }
 
         @Override
-        public int getRenderID() {
-            return 3;
+        public EnumBlockRenderType getRenderType() {
+            return EnumBlockRenderType.MODEL;
         }
 
         @Override
@@ -262,8 +263,8 @@ public final class BlockRegister {
         }
 
         @Override
-        public EnumWorldBlockLayer getRenderingLayer() {
-            return EnumWorldBlockLayer.CUTOUT;
+        public BlockRenderLayer getRenderingLayer() {
+            return BlockRenderLayer.CUTOUT;
         }
 
     }

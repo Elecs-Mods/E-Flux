@@ -10,10 +10,10 @@ import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.blocks.BlockCable;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 
@@ -25,7 +25,7 @@ import java.util.List;
 public class CableRenderer extends AbstractBlockRenderer {
 
     @Override
-    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderer, ITessellator tessellator, WorldRenderer worldRenderer) {
+    public void renderBlock(IBlockAccess iba, IBlockState state, BlockPos pos, RenderBlocks renderer, ITessellator tessellator, VertexBuffer worldRenderer) {
 
         TileEntity tile = WorldHelper.getTileAt(iba, pos);
         int x = pos.getX();

@@ -9,7 +9,7 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;

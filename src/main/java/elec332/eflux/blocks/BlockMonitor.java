@@ -7,7 +7,6 @@ import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
 import elec332.core.client.model.map.IBakedModelMetaRotationMap;
-import elec332.core.client.model.model.IBlockModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BlockStateHelper;
@@ -19,16 +18,16 @@ import elec332.eflux.tileentity.basic.TileEntityMonitor;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Explosion;
@@ -52,7 +51,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @SideOnly(Side.CLIENT)
-    private IBakedModelMetaRotationMap<IBlockModel> rotationMap;
+    private IBakedModelMetaRotationMap<IBakedModel> rotationMap;
     @SideOnly(Side.CLIENT)
     public static TextureAtlasSprite normal, monitorF, monitorR, monitorL;
 
@@ -62,11 +61,11 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand side, ItemStack hitX, EnumFacing hitY, float hitZ, float p_180639_9_, float p_180639_10_) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileBase)
-            return ((TileBase) tile).onBlockActivated(player, side, hitX, hitY, hitZ);
-        return super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+            return ((TileBase) tile).onBlockActivated(state, playerIn, side, hitX, hitY, hitZ, p_180639_9_, p_180639_10_);
+        return super.onBlockActivated(world, pos, state, playerIn, side, hitX, hitY, hitZ, p_180639_9_, p_180639_10_);
     }
 
     @Override
@@ -125,22 +124,20 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
      * This method is used when a model is requested to render the block in a world.
      *
      * @param state The current BlockState.
-     * @param iba   The IBlockAccess the block is in.
-     * @param pos   The position of the block.
      * @return The model to render for this block for the given arguments.
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBlockModel getBlockModel(IBlockState state, IBlockAccess iba, BlockPos pos) {
-        TileEntityMonitor tile = (TileEntityMonitor)WorldHelper.getTileAt(iba, pos);
+    public IBakedModel getBlockModel(IBlockState state) {
+        //TileEntityMonitor tile = (TileEntityMonitor)WorldHelper.getTileAt(iba, pos);
         int meta = 0;
         //if (tile != null){
-            meta = tile.getMonitorSide();
+        //    meta = tile.getMonitorSide();
         //} else {
          //   Minecraft.getMinecraft().theWorld.markBlockRangeForRenderUpdate(pos, pos);
         //}
 
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(tile.getTileFacing()));
+        return null;//rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(tile.getTileFacing()));
     }
 
     /**
@@ -150,10 +147,9 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(Item item, int meta) {
-        return rotationMap.forMeta(meta);
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return rotationMap.forMeta(stack.getItemDamage());
     }
-
 
     /**
      * A helper method to prevent you from having to hook into the event,
@@ -164,7 +160,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(final ElecQuadBakery quadBakery, ElecModelBakery modelBakery, final ElecTemplateBakery templateBakery) {
-        rotationMap = new BakedModelMetaRotationMap<IBlockModel>();
+        rotationMap = new BakedModelMetaRotationMap<IBakedModel>();
         rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorF))));
         rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorR))));
         rotationMap.setModelsForRotation(2, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorL))));
@@ -218,7 +214,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    protected BlockState createBlockState() {
+    protected BlockStateContainer createBlockState() {
         return BlockStateHelper.FACING_NORMAL.createMetaBlockState(this);
     }
 
