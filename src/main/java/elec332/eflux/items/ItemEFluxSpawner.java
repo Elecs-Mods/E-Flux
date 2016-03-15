@@ -48,8 +48,8 @@ public class ItemEFluxSpawner extends ItemBlock implements ILinkableItem {
             IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, hitX, hitY, hitZ, p_180614_9_, i, playerIn);
 
             if (placeBlockAt(stack, playerIn, worldIn, pos, hitX, hitY, hitZ, p_180614_9_, iblockstate1)) {
-                SoundType soundtype = this.block.func_185467_w();
-                worldIn.func_184133_a(playerIn, pos, soundtype.func_185841_e(), SoundCategory.BLOCKS, (soundtype.func_185843_a() + 1.0F) / 2.0F, soundtype.func_185847_b() * 0.8F);
+                SoundType soundtype = this.block.getSoundType();
+                worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 --stack.stackSize;
             }
             tile = WorldHelper.getTileAt(worldIn, pos);

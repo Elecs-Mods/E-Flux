@@ -67,7 +67,7 @@ public class MachineFrameRenderer extends AbstractBlockRenderer implements IText
             for (EnumFacing facing : EnumFacing.VALUES){
                 BlockPos offSet = pos.offset(facing);
                 if (state.getBlock().shouldSideBeRendered(state, iba, offSet, facing)){
-                    tessellator.setBrightness(state.getBlock().func_185484_c(state, iba, pos.offset(facing))/*.getMixedBrightnessForBlock(iba, pos.offset(facing))*/);
+                    tessellator.setBrightness(state.getBlock().getLightValue(state, iba, pos.offset(facing))/*.getMixedBrightnessForBlock(iba, pos.offset(facing))*/);
                     renderFacing(facing, cache, renderBlocks, pos);
                 }
             }

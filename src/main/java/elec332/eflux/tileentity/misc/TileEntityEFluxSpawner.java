@@ -144,8 +144,8 @@ public class TileEntityEFluxSpawner extends TileBase {
                     double d3 = (double)((float)blockpos.getX() + this.getSpawnerWorld().rand.nextFloat());
                     double d4 = (double)((float)blockpos.getY() + this.getSpawnerWorld().rand.nextFloat());
                     double d5 = (double)((float)blockpos.getZ() + this.getSpawnerWorld().rand.nextFloat());
-                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
-                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
+                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d4, d5, 0.0D, 0.0D, 0.0D);
+                    this.getSpawnerWorld().spawnParticle(EnumParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D);
 
                     if (this.spawnDelay > 0)
                     {
@@ -172,21 +172,21 @@ public class TileEntityEFluxSpawner extends TileBase {
 
                     for (int i = 0; i < this.spawnCount; ++i)
                     {
-                        NBTTagCompound nbttagcompound = this.randomEntity.func_185277_b();
+                        NBTTagCompound nbttagcompound = this.randomEntity.getNbt();
                         NBTTagList nbttaglist = nbttagcompound.getTagList("Pos", 6);
                         World world = this.getSpawnerWorld();
                         int j = nbttaglist.tagCount();
                         double d0 = j >= 1 ? nbttaglist.getDoubleAt(0) : (double)blockpos.getX() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)this.spawnRange + 0.5D;
                         double d1 = j >= 2 ? nbttaglist.getDoubleAt(1) : (double)(blockpos.getY() + world.rand.nextInt(3) - 1);
                         double d2 = j >= 3 ? nbttaglist.getDoubleAt(2) : (double)blockpos.getZ() + (world.rand.nextDouble() - world.rand.nextDouble()) * (double)this.spawnRange + 0.5D;
-                        Entity entity = AnvilChunkLoader.func_186054_a(nbttagcompound, world, d0, d1, d2, false);
+                        Entity entity = AnvilChunkLoader.readWorldEntityPos(nbttagcompound, world, d0, d1, d2, false);
 
                         if (entity == null)
                         {
                             return;
                         }
 
-                        int k = world.getEntitiesWithinAABB(entity.getClass(), (new AxisAlignedBB((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), (double)(blockpos.getX() + 1), (double)(blockpos.getY() + 1), (double)(blockpos.getZ() + 1))).func_186662_g((double)this.spawnRange)).size();
+                        int k = world.getEntitiesWithinAABB(entity.getClass(), (new AxisAlignedBB((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), (double)(blockpos.getX() + 1), (double)(blockpos.getY() + 1), (double)(blockpos.getZ() + 1))).expandXyz((double)this.spawnRange)).size();
 
                         if (k >= this.maxNearbyEntities)
                         {
@@ -200,12 +200,11 @@ public class TileEntityEFluxSpawner extends TileBase {
                         if (entityliving == null || entityliving.getCanSpawnHere() && entityliving.isNotColliding())
                         {
                             modifyEntity(entity);
-                            if (this.randomEntity.func_185277_b().func_186856_d() == 1 && this.randomEntity.func_185277_b().hasKey("id", 8) && entity instanceof EntityLiving)
-                            {
-                                ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
+                            if (this.randomEntity.getNbt().getSize() == 1 && this.randomEntity.getNbt().hasKey("id", 8) && entity instanceof EntityLiving) {
+                                ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), null);
                             }
 
-                            AnvilChunkLoader.func_186052_a(entity, world);
+                            AnvilChunkLoader.spawnEntity(entity, world);
                             world.playAuxSFX(2004, blockpos, 0);
 
                             if (entityliving != null)
@@ -234,7 +233,7 @@ public class TileEntityEFluxSpawner extends TileBase {
             if (brainDead && (entity instanceof EntityLiving)){
                 EntityLiving entityLiving = (EntityLiving) entity;
                 makeBrainDead(entityLiving);
-                for (Entity entity1 : entityLiving.func_184188_bt()){
+                for (Entity entity1 : entityLiving.getPassengers()){
                     if (entity1 instanceof EntityLiving){
                         makeBrainDead((EntityLiving) entity1);
                     }

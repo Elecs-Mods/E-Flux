@@ -75,12 +75,12 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
     public Object getGuiClient(EntityPlayer player) {
         return new GuiStandardFormat((BaseContainer)getGuiServer(player), new ResourceLocation("textures/gui/container/crafting_table.png")){
             @Override //handleMouseClick
-            protected void func_184098_a(Slot slotIn, int slotId, int clickedButton, ClickType clickType) {
+            protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, ClickType clickType) {
                 if ((!((ContainerAssemblyTable)inventorySlots).canClick) && slotId > 0 && slotId < 10) {
                     //System.out.println("nope   "+((ContainerAssemblyTable)inventorySlots).canClick);
                     return;
                 }
-                super.func_184098_a(slotIn, slotId, clickedButton, clickType);
+                super.handleMouseClick(slotIn, slotId, clickedButton, clickType);
             }
 
         };

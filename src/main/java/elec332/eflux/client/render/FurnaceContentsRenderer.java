@@ -101,7 +101,7 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
 
     private final RenderEntityItem re = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().renderItem){
         @Override
-        protected int func_177078_a(ItemStack stack) {
+        protected int getModelCount(ItemStack stack) {
             return 1;
         }
     };

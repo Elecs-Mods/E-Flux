@@ -97,7 +97,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
 
     @Override
     @SuppressWarnings("all") //setBlockBoundsBasedOnState
-    public AxisAlignedBB func_185496_a(IBlockState state, IBlockAccess iba, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess iba, BlockPos pos) {
         List<EnumFacing> connections = Lists.newArrayList();
         TileEntity tile = WorldHelper.getTileAt(iba, pos);
         if (tile != null) {

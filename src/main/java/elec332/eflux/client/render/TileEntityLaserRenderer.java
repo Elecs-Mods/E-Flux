@@ -47,7 +47,7 @@ public class TileEntityLaserRenderer extends TileEntitySpecialRenderer<TileEntit
 
                 this.bindTexture(laser);
 
-                tessellator.getMCTessellator().getWorldRenderer().begin(7, DefaultVertexFormats.BLOCK);
+                tessellator.getMCTessellator().getBuffer().begin(7, DefaultVertexFormats.BLOCK);
                 tessellator.setBrightness(240);
 
                 drawBeam(start, new Vector(te.getRenderPos()), player, .1f);
