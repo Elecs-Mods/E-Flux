@@ -195,7 +195,7 @@ public class GuiManual extends GuiScreen {
                 this.mouseDragged(mc, mouseX, mouseY);
                 int i = xPosition + (width/2) - 8;
                 int j = yPosition + (height/2) - 8;
-                if (renderStack != null) {
+                if (renderStack != null && renderStack.getItem() != null) {
                     GlStateManager.pushMatrix();
                     GlStateManager.enableLighting();
                     GlStateManager.enableDepth();

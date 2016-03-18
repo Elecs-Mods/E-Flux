@@ -32,8 +32,10 @@ public class ItemMultiBlockCreator extends EFluxItem implements INoJsonItem {
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        return EFlux.multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, side) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        System.out.println("item usage");
+        EFlux.multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, side);
+        return EnumActionResult.PASS;
     }
 
     @SideOnly(Side.CLIENT)

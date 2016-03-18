@@ -14,8 +14,11 @@ import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,6 +46,11 @@ public class BlockItemInlet extends BlockMachine {
             return rotationMap.forMetaAndRotation(0, ModelRotation.X270_Y0);
         }
         return rotationMap.forMetaAndRotation(0, ModelRotation.X90_Y0);
+    }
+
+    @Override
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return rotationMap.get();
     }
 
     /**

@@ -2,6 +2,7 @@ package elec332.eflux.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -9,6 +10,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
@@ -34,6 +37,10 @@ public abstract class BlockWithMeta extends Block {
         return META;
     }
 
+    public IUnlistedProperty[] getUnlistedProperties(){
+        return new IUnlistedProperty[0];
+    }
+
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getBlockState().getBaseState().withProperty(getProperty(), meta);
@@ -51,7 +58,7 @@ public abstract class BlockWithMeta extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, getProperty());
+        return new ExtendedBlockState(this, new IProperty[]{getProperty()}, getUnlistedProperties());
     }
 
     public String getUnlocalizedName(ItemStack stack){

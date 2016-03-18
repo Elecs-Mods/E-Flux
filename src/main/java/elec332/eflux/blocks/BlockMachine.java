@@ -17,6 +17,7 @@ import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.BlockMachineQuadProvider;
 import elec332.eflux.util.UniversalUnlistedProperty;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -31,6 +32,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -153,12 +156,13 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return BlockStateHelper.FACING_NORMAL.createMetaBlockState(this);
+        return new ExtendedBlockState(this, new IProperty[]{BlockStateHelper.FACING_NORMAL.getProperty()}, new IUnlistedProperty[]{ACTIVATED_PROPERTY});
     }
 
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getExtendedState(state, world, pos);
+        TileEntity tile = WorldHelper.getTileAt(world, pos);
+        return ((IExtendedBlockState)state).withProperty(ACTIVATED_PROPERTY, machine.hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive());
     }
 
     static {

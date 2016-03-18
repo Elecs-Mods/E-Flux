@@ -5,9 +5,12 @@ import com.google.common.collect.Lists;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
+import elec332.core.util.BlockStateHelper;
+import elec332.core.util.DirectionHelper;
 import elec332.eflux.blocks.BlockMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -33,8 +36,10 @@ public class BlockMachineQuadProvider implements IQuadProvider {
         if (side == null){
             return ImmutableList.of();
         }
-        TextureAtlasSprite[] textures = this.textures[0];//this.textures[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0];
-        return Lists.newArrayList(quadBakery.bakeQuad(MutableQuadTemplate.templateForTexture(side, textures[side.ordinal()])));
+        TextureAtlasSprite[] textures = this.textures[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0];
+        ModelRotation rotation = state == null ? ModelRotation.X0_Y0 : DirectionHelper.getRotationFromFacing(BlockMachine.getFacing(state));
+        EnumFacing usedRot = rotation.rotate(side);
+        return Lists.newArrayList(quadBakery.bakeQuad(MutableQuadTemplate.templateForTexture(side, textures[usedRot.ordinal()])));
     }
 
 }

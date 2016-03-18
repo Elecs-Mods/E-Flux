@@ -4,12 +4,13 @@ import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
-import elec332.core.client.model.RenderingRegistry;
+import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.render.MachineFrameRenderer;
+import elec332.eflux.client.render.MachineFrameQuadProvider;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.util.UniversalUnlistedProperty;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -22,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,10 +38,14 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
         super(Material.rock, name, EFlux.ModID);
     }
 
+    public static final IUnlistedProperty<BlockPos> FRAME_POS_PROPERTY = new UniversalUnlistedProperty<BlockPos>("position", BlockPos.class);
+
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite texture;
     @SideOnly(Side.CLIENT)
-    public static IBakedModel model;
+    public static IBakedModel model, itemModel;
+    @SideOnly(Side.CLIENT)
+    private static IQuadProvider quadProvider;
 
     @Override
     public BlockMachineFrame register() {
@@ -47,6 +54,11 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
         }
         super.register();
         return this;
+    }
+
+    @Override
+    public IUnlistedProperty[] getUnlistedProperties() {
+        return new IUnlistedProperty[]{FRAME_POS_PROPERTY};
     }
 
     @Override
@@ -68,7 +80,7 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @Override
     @SideOnly(Side.CLIENT)
     public IBakedModel getBlockModel(IBlockState state) {
-        return null;
+        return model;
     }
 
     @Override
@@ -80,12 +92,13 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        model = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture));
+        itemModel = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture));
+        model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), quadProvider);
     }
 
     @SideOnly(Side.CLIENT)
     private void registerClient(){
-        RenderingRegistry.instance().registerRenderer(this, new MachineFrameRenderer(model));
+        quadProvider = new MachineFrameQuadProvider();
     }
 
     /**
@@ -97,6 +110,11 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/default_side"));
+    }
+
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return ((IExtendedBlockState)state).withProperty(FRAME_POS_PROPERTY, pos);
     }
 
     @Override
