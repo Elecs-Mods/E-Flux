@@ -119,20 +119,24 @@ public class Circuit extends Item implements ICircuit, INoJsonItem, IElectricCom
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         model = modelBakery.itemModelForTextures(texture);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         texture = iconRegistrar.registerSprite(getTexture());
     }
 
+    @SideOnly(Side.CLIENT)
     protected ResourceLocation getTexture(){
         return new EFluxResourceLocation("items/board");
     }

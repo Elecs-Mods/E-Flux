@@ -79,6 +79,7 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
@@ -88,6 +89,7 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
      * use this to make your quads. (This always comes AFTER the textures are loaded)
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
         model = modelBakery.itemModelForTextures(texture);
     }
@@ -98,7 +100,9 @@ public class ItemAreaMover extends EFluxItem implements INoJsonItem {
      * @param iconRegistrar The IIconRegistrar.
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
         texture = iconRegistrar.registerSprite(new EFluxResourceLocation("items/areaMover"));
     }
+
 }
