@@ -36,6 +36,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Mod;
@@ -56,7 +57,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)"/*;required-after:mcmultipart@[1.0.7,)"*/,
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class EFlux { //TODO
 
@@ -135,9 +136,9 @@ public class EFlux { //TODO
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         MultiBlockRegister.init();
         configWrapper.refresh();
-        EventHelper.registerHandler(EventHelper.Handler.BOTH, new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
         registerRecipes();
-        EventHelper.registerHandlerForge(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
 
         Compat.instance.init();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {

@@ -7,7 +7,6 @@ import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.items.circuits.UnrefinedBoard;
 import elec332.eflux.util.GrinderRecipes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -140,7 +139,7 @@ public final class ItemRegister {
     }
 
     protected void initMultiPartItems(){
-        //cable = new ItemCable().register();
+        cable = new ItemCable().register();
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);
         cableAdvanced = new ItemStack(cable, 1, 2);

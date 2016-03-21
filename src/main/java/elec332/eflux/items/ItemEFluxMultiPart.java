@@ -1,12 +1,13 @@
 package elec332.eflux.items;
 
 import elec332.eflux.EFlux;
+import mcmultipart.item.ItemMultiPart;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 10-2-2016.
  */
-public abstract class ItemEFluxMultiPart{}/* extends ItemMultiPart {
+public abstract class ItemEFluxMultiPart extends ItemMultiPart {
 
     public ItemEFluxMultiPart(String name){
         this.setCreativeTab(EFlux.creativeTab);
@@ -22,4 +23,4 @@ public abstract class ItemEFluxMultiPart{}/* extends ItemMultiPart {
         return this;
     }
 
-}*/
+}

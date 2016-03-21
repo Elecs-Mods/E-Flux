@@ -18,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentString;
@@ -39,11 +41,13 @@ public class MultiMeter extends Item implements IRightClickCancel, INoJsonItem {
         GameRegistry.registerItem(this, name);
     }
 
+    @Override
     public ItemStack getContainerItem(ItemStack itemStack) {
         return new ItemStack(this, 1, itemStack.getItemDamage() + 1);
     }
 
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float HitX, float HitY, float HitZ) {
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tileEntity = WorldHelper.getTileAt(world, pos);
         if (!world.isRemote) {
             if (tileEntity instanceof IMultiMeterDataProvider)
@@ -52,9 +56,9 @@ public class MultiMeter extends Item implements IRightClickCancel, INoJsonItem {
                 for (String s : ((IMultiMeterDataProviderMultiLine) tileEntity).getProvidedData())
                     player.addChatComponentMessage(new TextComponentString(s));
             //TODO: more provided info
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     @SideOnly(Side.CLIENT)

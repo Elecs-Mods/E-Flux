@@ -9,6 +9,7 @@ import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IModelAndTextureLoader;
+import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.world.WorldHelper;
@@ -22,11 +23,8 @@ import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -107,7 +106,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     private TextureAtlasSprite[] textures;
     private IBakedModelMetaMap<IBakedModel> models;
     private ElecQuadBakery quadBakery;
-/* //Remove to re-enable MCMP model
+ //Remove to re-enable MCMP model
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));
@@ -115,7 +114,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_2#multipart"), new CR(2));
     }
 
-    private class CR implements ISmartMultipartModel {
+    private class CR implements IBakedModel {
 
         private CR(int meta){
             this.meta = meta;
@@ -123,50 +122,51 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
         private final int meta;
 
-        @Override
-        public IBakedModel handlePartState(IBlockState state) {
-            return new CM((IExtendedBlockState) state, meta);
-        }
+        //@Override
+   //     public IBakedModel handlePartState(IBlockState state) {
+   //         return new CM((IExtendedBlockState) state, meta);
+    //    }
+
 
         @Override
-        public List<BakedQuad> getFaceQuads(EnumFacing p_177551_1_) {
-            throw new IllegalArgumentException();
-        }
-
-        @Override
-        public List<BakedQuad> getGeneralQuads() {
-            throw new IllegalArgumentException();
+        public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+            return side == null ? new CM((IExtendedBlockState) state, meta).getBakedQuads(state, null, rand) : ImmutableList.of();
         }
 
         @Override
         public boolean isAmbientOcclusion() {
-            throw new IllegalArgumentException();
+            return true;
         }
 
         @Override
         public boolean isGui3d() {
-            throw new IllegalArgumentException();
+            return false;
         }
 
         @Override
         public boolean isBuiltInRenderer() {
-            throw new IllegalArgumentException();
+            return false;
         }
 
         @Override
         public TextureAtlasSprite getParticleTexture() {
-            throw new IllegalArgumentException();
+            return textures[meta];
         }
 
         @Override
         @SuppressWarnings("deprecation")
         public ItemCameraTransforms getItemCameraTransforms() {
-            throw new IllegalArgumentException();
+            return null;
+        }
+
+        @Override
+        public ItemOverrideList getOverrides() {
+            return ItemOverrideList.NONE;
         }
 
     }
 
-    private class CM implements IBakedModel {
+    private class CM implements IQuadProvider {
 
         private CM(IExtendedBlockState state, int meta){
             up = state.getValue(PartBasicCable.UP);
@@ -176,21 +176,22 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             south = state.getValue(PartBasicCable.SOUTH);
             west = state.getValue(PartBasicCable.WEST);
             this.meta = meta;
+            this.state = state;
         }
 
+        private final IBlockState state;
         private final boolean up, down, north, east, south, west;
         private final int meta;
 
         @Override
-        public List<BakedQuad> getFaceQuads(EnumFacing p_177551_1_) {
-            return ImmutableList.of();
+        public List<BakedQuad> getBakedQuads(@Nullable IBlockState state, EnumFacing side, long random) {
+            return side != null ? ImmutableList.of() : getGeneralQuads();
         }
 
-        @Override
         @SuppressWarnings("all")
         public List<BakedQuad> getGeneralQuads() {
             if (up && down && north && east && south && west){
-                return models.forMeta(meta).getGeneralQuads();
+                return models.forMeta(meta).getQuads(state, null, 0L);
             }
             List<BakedQuad> ret = Lists.newArrayList();
 
@@ -219,31 +220,6 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             return quadBakery.bakeQuad(new Vector3f(xMa, yMa, zMa), new Vector3f(xMi, yMi, zMi), textures[meta], facing, ModelRotation.X0_Y0, uMin, vMin, uMax, vMax, -1);
         }
 
-        @Override
-        public boolean isAmbientOcclusion() {
-            return true;
-        }
-
-        @Override
-        public boolean isGui3d() {
-            return false;
-        }
-
-        @Override
-        public boolean isBuiltInRenderer() {
-            return false;
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleTexture() {
-            return textures[meta];
-        }
-
-        @Override
-        @SuppressWarnings("deprecation")
-        public ItemCameraTransforms getItemCameraTransforms() {
-            return null;
-        }
     }
 
     /*private class ML implements ICustomModelLoader {

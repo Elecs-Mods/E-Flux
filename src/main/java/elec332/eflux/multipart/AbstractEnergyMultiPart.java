@@ -8,7 +8,7 @@ import elec332.eflux.api.energy.EnergyAPIHelper;
  */
 public abstract class AbstractEnergyMultiPart extends AbstractMultiPart {
 
-    /*@Override
+    @Override
     public void onPartValidated() {
         if (!getWorld().isRemote) {
             EnergyAPIHelper.postLoadEvent(getTile());
@@ -20,6 +20,6 @@ public abstract class AbstractEnergyMultiPart extends AbstractMultiPart {
         if (!getWorld().isRemote) {
             EnergyAPIHelper.postUnloadEvent(getTile());
         }
-    }*/
+    }
 
 }
