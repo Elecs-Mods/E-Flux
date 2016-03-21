@@ -185,7 +185,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
         @Override
         public List<BakedQuad> getBakedQuads(@Nullable IBlockState state, EnumFacing side, long random) {
-            return side != null ? ImmutableList.of() : getGeneralQuads();
+            return side != null ? ImmutableList.<BakedQuad>of() : getGeneralQuads();
         }
 
         @SuppressWarnings("all")
