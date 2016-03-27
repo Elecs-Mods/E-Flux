@@ -30,7 +30,7 @@ public class PlayerEventHandler {
 
     @SubscribeEvent
     public void onBlockBroken(BlockEvent.BreakEvent event){
-        if (WorldHelper.getTileAt(event.world, event.pos) instanceof MainChunkLoaderTile && !((MainChunkLoaderTile)WorldHelper.getTileAt(event.world, event.pos)).isOwner(event.getPlayer())){
+        if (WorldHelper.getTileAt(event.getWorld(), event.getPos()) instanceof MainChunkLoaderTile && !((MainChunkLoaderTile)WorldHelper.getTileAt(event.getWorld(), event.getPos())).isOwner(event.getPlayer())){
             event.setCanceled(true);
         }
     }

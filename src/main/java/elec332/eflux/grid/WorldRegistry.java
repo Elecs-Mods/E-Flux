@@ -92,7 +92,7 @@ public class WorldRegistry {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        if (WorldHelper.getDimID(world) == WorldHelper.getDimID(event.world))
+        if (WorldHelper.getDimID(world) == WorldHelper.getDimID(event.getWorld()))
             unload();
     }
 }
