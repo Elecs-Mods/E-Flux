@@ -1,8 +1,10 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.annotations.RegisterTile;
-import elec332.eflux.multiblock.MultiBlockInterfaces;
+import elec332.eflux.util.IEFluxFluidHandler;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -12,11 +14,15 @@ import net.minecraftforge.fluids.IFluidHandler;
  * Created by Elec332 on 13-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockFluidInlet")
-public class TileEntityMultiBlockFluidInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockFluidHandler> implements IFluidHandler{
+public class TileEntityMultiBlockFluidInlet extends TileMultiBlockInteraction<IEFluxFluidHandler> implements IFluidHandler {
+
+    @CapabilityInject(IEFluxFluidHandler.class)
+    private static Capability<IEFluxFluidHandler> CAPABILITY;
 
     @Override
     public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().fill(resource, doFill);
+        IEFluxFluidHandler mb = getMultiBlockHandler();
+        return mb == null ? 0 : mb.fill(resource, doFill);
     }
 
     @Override
@@ -31,7 +37,8 @@ public class TileEntityMultiBlockFluidInlet extends TileMultiBlockInteraction<Mu
 
     @Override
     public boolean canFill(EnumFacing from, Fluid fluid) {
-        return getMultiBlockHandler() != null && getMultiBlockHandler().canFill(fluid);
+        IEFluxFluidHandler mb = getMultiBlockHandler();
+        return mb != null && mb.canFill(fluid);
     }
 
     @Override
@@ -41,7 +48,13 @@ public class TileEntityMultiBlockFluidInlet extends TileMultiBlockInteraction<Mu
 
     @Override
     public FluidTankInfo[] getTankInfo(EnumFacing from) {
-        return getMultiBlockHandler() == null ? new FluidTankInfo[0] : getMultiBlockHandler().getTankInfo();
+        IEFluxFluidHandler mb = getMultiBlockHandler();
+        return mb == null ? new FluidTankInfo[0] : mb.getTankInfo();
+    }
+
+    @Override
+    protected Capability<IEFluxFluidHandler> getCapability() {
+        return CAPABILITY;
     }
 
 }

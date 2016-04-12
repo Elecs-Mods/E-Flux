@@ -7,12 +7,16 @@ import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 
 /**
  * Created by Elec332 on 13-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerOutlet")
 public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> implements IEnergySource {
+
+    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerProvider.class)
+    public static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> CAPABILITY;
 
     @Override
     public void onTileUnloaded() {
@@ -36,18 +40,24 @@ public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<M
      */
     @Override
     public int provideEnergy(int rp, boolean execute) {
-        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().provideEnergy(rp, execute);
+        MultiBlockInterfaces.IEFluxMultiBlockPowerProvider mb = getMultiBlockHandler();
+        return mb == null ? 0 : mb.provideEnergy(rp, execute);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, boolean hasMultiBlock) {
         return (capability == EFluxAPI.PROVIDER_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
         return capability == EFluxAPI.PROVIDER_CAPABILITY ? (facing == getTileFacing() ? (T)this : null) : super.getCapability(capability, facing);
+    }
+
+    @Override
+    protected Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> getCapability() {
+        return CAPABILITY;
     }
 
 }

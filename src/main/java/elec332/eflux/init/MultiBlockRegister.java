@@ -6,10 +6,7 @@ import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
-import elec332.eflux.multiblock.machine.MultiBlockCompressor;
-import elec332.eflux.multiblock.machine.MultiBlockFurnace;
-import elec332.eflux.multiblock.machine.MultiBlockGrinder;
-import elec332.eflux.multiblock.machine.MultiBlockLaser;
+import elec332.eflux.multiblock.machine.*;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.Block;
@@ -155,11 +152,35 @@ public final class MultiBlockRegister {
 
         }, "grinder", MultiBlockGrinder.class);
 
+        EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
+
+            @Override
+            public boolean canCreate(EntityPlayerMP player) {
+                return true;
+            }
+
+            @Override
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
+                return true;
+            }
+
+            @Override
+            public BlockStructure getStructure() {
+                return BlockStructures.distillationTower;
+            }
+
+            @Override
+            public BlockStateWrapper getTriggerBlock() {
+                return frameAdvanced;
+            }
+
+        }, "distillationTower", MultiBlockDistillationTower.class);
+
     }
 
     public static class BlockStructures{
 
-        public static BlockStructure compressor, laser, furnace, grinder;
+        public static BlockStructure compressor, laser, furnace, grinder, distillationTower;
 
         private static void init(){
             compressor = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
@@ -263,6 +284,18 @@ public final class MultiBlockRegister {
                         return radiator;
                     if (length == 2 && height == 0 && width == 0)
                         return dustStorage;
+                    return frameNormal;
+                }
+            });
+            distillationTower = new BlockStructure(3, 4, 7, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (width == 0){
+                        if (height < 3){
+                            return frameAdvanced;
+                        }
+                        return null;
+                    }
                     return frameNormal;
                 }
             });

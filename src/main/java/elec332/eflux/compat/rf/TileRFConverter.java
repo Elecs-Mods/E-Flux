@@ -9,12 +9,13 @@ import elec332.eflux.util.Config;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Created by Elec332 on 20-7-2015.
  */
-public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, IEnergyProvider {
+public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, IEnergyProvider, ITickable {
 
     private int storedPower;
 

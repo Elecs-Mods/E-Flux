@@ -17,13 +17,14 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 12-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxScanner")
-public class TileScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots {
+public class TileScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots, ITickable {
 
     public TileScanner(){
         super(2);
@@ -36,7 +37,6 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
 
     @Override
     public void update() {
-        super.update();
         if (timeCheck() && inventory.getStackInSlot(0) != null && inventory.getStackInSlot(0).getItem() == ItemRegister.groundMesh && inventory.getStackInSlot(1) == null && energyContainer.drainPower(150)){
             ItemStack stack = inventory.getStackInSlot(0).copy();
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());

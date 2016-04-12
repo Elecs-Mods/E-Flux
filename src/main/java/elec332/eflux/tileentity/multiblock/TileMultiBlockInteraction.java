@@ -1,28 +1,17 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.multiblock.AbstractMultiBlockTile;
-import elec332.core.multiblock.IMultiBlock;
-import elec332.eflux.EFlux;
-import elec332.eflux.multiblock.MultiBlockInterfaces;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class TileMultiBlockInteraction<M extends MultiBlockInterfaces.IEFluxMultiBlock> extends AbstractMultiBlockTile {
+public abstract class TileMultiBlockInteraction<M> extends TileMultiBlockTile {
 
-    public TileMultiBlockInteraction() {
-        super(EFlux.multiBlockRegistry);
-    }
+    protected abstract Capability<M> getCapability();
 
     @SuppressWarnings("unchecked")
     public M getMultiBlockHandler(){
-        IMultiBlock multiBlock = getMultiBlock();
-        if (multiBlock == null)
-            return null;
-        try {
-            return (M) multiBlock;
-        } catch (ClassCastException e){
-            return null;
-        }
+        return getMultiBlockCapability(getCapability(), null);
     }
+
 }

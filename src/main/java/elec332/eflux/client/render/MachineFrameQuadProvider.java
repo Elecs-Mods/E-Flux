@@ -44,7 +44,7 @@ public class MachineFrameQuadProvider implements IQuadProvider, IModelAndTexture
         Map<EnumFacing, Boolean> cache = Maps.newHashMap();
         if (state != null) {
             World world = Minecraft.getMinecraft().theWorld;
-            BlockPos pos = ((IExtendedBlockState)state).getValue(BlockMachineFrame.FRAME_POS_PROPERTY);
+            BlockPos pos = new BlockPos(((IExtendedBlockState)state).getValue(BlockMachineFrame.FRAME_POS_PROPERTY));
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos offset = pos.offset(facing);
                 IBlockState state1 = WorldHelper.getBlockState(world, offset);

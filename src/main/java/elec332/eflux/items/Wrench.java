@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Elec332 on 3-4-2015.
  */
 public class Wrench extends Item implements IRightClickCancel, INoJsonItem {
+
     public Wrench(String name) {
         setCreativeTab(EFlux.creativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);

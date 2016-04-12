@@ -106,7 +106,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     private TextureAtlasSprite[] textures;
     private IBakedModelMetaMap<IBakedModel> models;
     private ElecQuadBakery quadBakery;
- //Remove to re-enable MCMP model
+
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));

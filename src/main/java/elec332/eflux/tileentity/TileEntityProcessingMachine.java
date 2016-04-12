@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 5-5-2015.
  */
-public abstract class TileEntityProcessingMachine extends BreakableMachineTileWithSlots implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine{
+public abstract class TileEntityProcessingMachine extends BreakableMachineTileWithSlots implements ITileWithSlots, IInventoryTile, IEFluxMachine, IHasProgressBar, IProgressMachine, ITickable {
 
     public TileEntityProcessingMachine(int i, int upgradeSlots){
         super(0);
@@ -51,7 +52,6 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
 
     @Override
     public void update() {
-        super.update();
         if (!worldObj.isRemote) {
             energyContainer.tick();
         }

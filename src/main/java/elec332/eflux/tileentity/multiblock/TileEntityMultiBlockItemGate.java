@@ -3,6 +3,7 @@ package elec332.eflux.tileentity.multiblock;
 import elec332.core.api.annotations.RegisterTile;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BasicInventory;
+import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -22,7 +24,7 @@ import java.util.List;
  */
 //TODO: Interface
 @RegisterTile(name = "TileEntityEFluxMultiBlockItemGate")
-public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IActivatableMachine {
+public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IActivatableMachine, ITickable {
 
     public TileEntityMultiBlockItemGate(){
         super();
@@ -71,16 +73,10 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     }
 
     @Override
-    public boolean canUpdate() {
-        return true;
-    }
-
-    @Override
     public void update() {
-        super.update();
         if (!worldObj.isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                inventory.setInventorySlotContents(i, (getMultiBlock()).inject(inventory.getStackInSlot(i)));
+                inventory.setInventorySlotContents(i, (((EFluxMultiBlockMachine)getMultiBlock())).inject(inventory.getStackInSlot(i)));
             }
         }
     }

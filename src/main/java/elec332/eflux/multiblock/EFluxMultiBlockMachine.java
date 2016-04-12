@@ -14,8 +14,13 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -28,6 +33,9 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
         this.broken = false;
     }
+
+    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor.class)
+    private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> CAPABILITY;
 
     private EnergyContainer energyContainer;
     private BreakableMachineInventory breakableMachineInventory;
@@ -175,4 +183,16 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     public final int receivePower(int rp, int ef) {
         return energyContainer.receivePower(rp, ef);
     }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY ? (T)this : super.getCapability(capability, facing, pos);
+    }
+
 }

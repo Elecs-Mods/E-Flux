@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Elec332 on 5-4-2015.
  */
 public class MultiMeter extends Item implements IRightClickCancel, INoJsonItem {
+
     public MultiMeter(String name) {
         setCreativeTab(EFlux.creativeTab);
         setUnlocalizedName(EFlux.ModID + "." + name);

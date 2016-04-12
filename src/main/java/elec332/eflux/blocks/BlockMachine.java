@@ -17,6 +17,7 @@ import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.BlockMachineQuadProvider;
 import elec332.eflux.util.UniversalUnlistedProperty;
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -24,6 +25,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -35,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -58,6 +61,18 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
 
     public IEFluxBlockMachineData getMachine(){
         return this.machine;
+    }
+
+    @Override
+    public BlockMachine register() {
+        GameRegistry.register(this);
+        Class<? extends ItemBlock> itemBlockClass = machine.getItemBlockClass();
+        try {
+            GameRegistry.register(itemBlockClass.getConstructor(Block.class).newInstance(this), getRegistryName());
+        } catch (Exception e){
+            throw new RuntimeException("Error registering ItemBlock: "+itemBlockClass.getCanonicalName());
+        }
+        return this;
     }
 
     @Override

@@ -28,6 +28,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +40,7 @@ import java.util.Random;
  * Created by Elec332 on 29-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCoalGenerator")
-public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile {
+public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
     public CoalGenerator(){
         inventory = new BasicInventory("", 1){
@@ -68,8 +69,7 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void updateEntity() {
+    public void update() {
         if (burnTime > 0){
             ltp = sppt;
             burnTime--;

@@ -9,12 +9,13 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 
 /**
  * Created by Elec332 on 17-10-2015.
  */
 @RegisterTile(name = "TileEntityEFluxRubbleSieve")
-public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine{
+public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine, ITickable {
 
     public TileRubbleSieve() {
         super(4);
@@ -29,7 +30,6 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
 
     @Override
     public void update() {
-        super.update();
         if (!worldObj.isRemote){
             energyContainer.tick();
         }

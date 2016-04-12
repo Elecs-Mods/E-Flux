@@ -9,12 +9,16 @@ import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 
 /**
  * Created by Elec332 on 28-7-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerInlet")
 public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+
+    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor.class)
+    private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> CAPABILITY;
 
     @Override
     public void onTileUnloaded() {
@@ -38,7 +42,8 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      */
     @Override
     public int requestedRP() {
-        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().requestedRP();
+        MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor mb = getMultiBlockHandler();
+        return mb == null ? 0 : mb.requestedRP();
     }
 
     /**
@@ -47,7 +52,8 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
      */
     @Override
     public int getRequestedEF(int rp) {
-        return getMultiBlockHandler() == null ? 0 : getMultiBlockHandler().getRequestedEF(rp);
+        MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor mb = getMultiBlockHandler();
+        return mb == null ? 0 : mb.getRequestedEF(rp);
     }
 
     /**
@@ -59,7 +65,8 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
     public int receivePower(int rp, int ef) {
         lastEF = ef;
         latsRP = rp;
-        return getMultiBlockHandler() == null ? ef : getMultiBlockHandler().receivePower(rp, ef);
+        MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor mb = getMultiBlockHandler();
+        return mb == null ? ef : mb.receivePower(rp, ef);
     }
 
     @Override
@@ -76,14 +83,19 @@ public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<Mu
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, boolean hasMultiBlock) {
         return (capability == EFluxAPI.RECEIVER_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
         return capability == EFluxAPI.RECEIVER_CAPABILITY ? (facing == getTileFacing() ? (T)this : null) : super.getCapability(capability, facing);
+    }
+
+    @Override
+    protected Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> getCapability() {
+        return CAPABILITY;
     }
 
 }

@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +30,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  * Created by Elec332 on 20-2-2016.
  */
 @RegisterTile(name = "TileEntityEFluxSpawner")
-public class TileEntityEFluxSpawner extends TileBase {
+public class TileEntityEFluxSpawner extends TileBase implements ITickable {
 
     public TileEntityEFluxSpawner(){
         mobSpawner = new EFluxMobSpawner();

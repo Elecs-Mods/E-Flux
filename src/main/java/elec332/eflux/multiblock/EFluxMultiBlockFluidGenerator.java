@@ -1,20 +1,30 @@
 package elec332.eflux.multiblock;
 
 import elec332.eflux.handler.FluidEnergyProviderHandler;
+import elec332.eflux.util.IEFluxFluidHandler;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGenerator implements MultiBlockInterfaces.IEFluxMultiBlockFluidHandler{
+public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGenerator implements IEFluxFluidHandler {
 
     public EFluxMultiBlockFluidGenerator(int capacity){
         fluidTank = new FluidTank(capacity);
     }
+
+    @CapabilityInject(IEFluxFluidHandler.class)
+    private static Capability<IEFluxFluidHandler> CAPABILITY;
 
     private FluidTank fluidTank;
     private int countDownTimer;
@@ -102,4 +112,16 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     public FluidTankInfo[] getTankInfo() {
         return new FluidTankInfo[]{fluidTank.getInfo()};
     }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
+    }
+
 }

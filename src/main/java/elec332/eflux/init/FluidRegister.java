@@ -12,12 +12,16 @@ public final class FluidRegister {
     public static final FluidRegister instance = new FluidRegister();
     private FluidRegister(){
         slib = new Fluid("Slib", new EFluxResourceLocation("slibFluid"), new EFluxResourceLocation("slibFluid"));
+        oil = new Fluid("Oil", new EFluxResourceLocation("oilStill"), new EFluxResourceLocation("oilFlowing"));
+        crudeOil = new Fluid("CrudeOil", new EFluxResourceLocation("crudeOil"), new EFluxResourceLocation("crudeOil"));
     }
 
-    public static Fluid slib;
+    public static Fluid slib, oil, crudeOil;
 
     public void init(){
         FluidRegistry.registerFluid(slib);
+        FluidRegistry.registerFluid(oil);
+        FluidRegistry.registerFluid(crudeOil);
     }
 
 }

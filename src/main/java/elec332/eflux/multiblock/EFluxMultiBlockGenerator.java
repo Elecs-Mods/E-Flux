@@ -3,6 +3,12 @@ package elec332.eflux.multiblock;
 import elec332.core.multiblock.AbstractMultiBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 13-9-2015.
@@ -21,6 +27,9 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
         }
         storedPower += power;
     }
+
+    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerProvider.class)
+    private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> CAPABILITY;
 
     protected int storedPower;
 
@@ -73,6 +82,17 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player) {
         return false;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
     }
 
 }

@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 
 import java.util.List;
 
@@ -15,13 +16,12 @@ import java.util.List;
  * Created by Elec332 on 21-7-2015.
  */
 @RegisterTile(name = "TileEntityEFluxTeslaCoil")
-public class TileTeslaCoil extends BreakableMachineTile {
+public class TileTeslaCoil extends BreakableMachineTile implements ITickable {
 
     public static final DamageSource teslaCoilDamageSource = new DamageSource("TeslaCoil").setDamageBypassesArmor().setDamageAllowedInCreativeMode();
 
     @Override
     public void update() {
-        super.update();
         if (timeCheck()) {
             @SuppressWarnings("unchecked")
             List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, Utils.getAABBAroundBlock(getPos(), 2, 2, 2, 2, 2, 2));

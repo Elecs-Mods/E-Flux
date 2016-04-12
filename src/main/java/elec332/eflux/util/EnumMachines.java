@@ -10,6 +10,7 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import elec332.eflux.tileentity.misc.TileEntityFeeder;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
@@ -77,7 +78,8 @@ public enum EnumMachines implements IEFluxBlockMachineData {
 
     public void init(){
         this.blockMachine = new BlockMachine(this);
-        GameRegistry.registerBlock(blockMachine, itemBlockClass, blockMachine.blockName);
+        //GameRegistry.registerBlock(blockMachine, itemBlockClass, blockMachine.blockName);
+        blockMachine.register();
     }
 
     @Override

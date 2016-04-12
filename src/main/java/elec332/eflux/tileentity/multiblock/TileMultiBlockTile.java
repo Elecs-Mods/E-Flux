@@ -13,8 +13,8 @@ public abstract class TileMultiBlockTile extends AbstractMultiBlockTile {
         super(EFlux.multiBlockRegistry);
     }
 
-    @Override
+   /* @Override
     public EFluxMultiBlockMachine getMultiBlock() {
         return (EFluxMultiBlockMachine) super.getMultiBlock();
-    }
+    }*/
 }

@@ -128,8 +128,8 @@ public final class BlockRegister {
         private final IBlockTextureProvider textureProvider;
 
         public void init(){
-            this.block = new BlockMachine(this);
-            GameRegistry.registerBlock(block, getName());
+            this.block = new BlockMachine(this).register();
+            //GameRegistry.registerBlock(block, getName());
             this.bsw = new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
         }
 
@@ -205,8 +205,8 @@ public final class BlockRegister {
         private final Class<? extends TileEntity> tileClass;
 
         public void init(){
-            this.block = new BlockMachineGlass(this);
-            GameRegistry.registerBlock(block, getName());
+            this.block = new BlockMachineGlass(this).register();
+            //GameRegistry.registerBlock(block, getName());
             this.bsw = new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
         }
 

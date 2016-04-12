@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -30,7 +31,7 @@ import java.util.List;
  * Created by Elec332 on 19-2-2016.
  */
 @RegisterTile(name = "TileEntityEFluxFeeder")
-public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileWithSlots {
+public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileWithSlots, ITickable {
 
     public TileEntityFeeder(){
         invWrapper = new InvWrapper(new BasicInventory("", 1, this));

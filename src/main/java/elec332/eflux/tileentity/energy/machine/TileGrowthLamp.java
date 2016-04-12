@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by Elec332 on 16-5-2015.
  */
 @RegisterTile(name = "TileEntityEFluxGrowthLamp")
-public class TileGrowthLamp extends BreakableMachineTile {
+public class TileGrowthLamp extends BreakableMachineTile implements ITickable {
 
     public TileGrowthLamp(){
         this.blockLocations = Lists.newArrayList();
@@ -32,7 +33,6 @@ public class TileGrowthLamp extends BreakableMachineTile {
 
     @Override
     public void update() {
-        super.update();
         if (energyContainer.drainPower(120)) {
             for (int i = 0; i < 9; i++) {
                 if (blockLocations.isEmpty()) {

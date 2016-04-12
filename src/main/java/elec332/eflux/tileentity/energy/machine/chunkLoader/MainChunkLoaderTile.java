@@ -15,6 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -27,7 +28,7 @@ import java.util.UUID;
  * Created by Elec332 on 25-5-2015.
  */
 @RegisterTile(name = "TileEntityEFluxChunkLoaderMainTile")
-public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader{
+public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader, ITickable {
 
     public MainChunkLoaderTile(){
         repairItems = Lists.newArrayList(new ItemStack(Items.ender_eye), new ItemStack(Items.ender_pearl));
@@ -70,7 +71,6 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
 
     @Override
     public void update() {
-        super.update();
         if (worldObj.isRemote)
             return;
         calculatePower();
@@ -173,11 +173,6 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
                     }
             //    }
            // }, worldObj);
-    }
-
-    @Override
-    public boolean canUpdate() {
-        return !worldObj.isRemote;
     }
 
     public boolean isOwner(EntityPlayer player){
