@@ -41,7 +41,7 @@ import java.util.List;
 public class BlockCable extends BlockWithMeta implements ITileEntityProvider, INoJsonBlock {
 
     public BlockCable(String blockName) {
-        super(Material.cloth, blockName, EFlux.ModID);
+        super(Material.CLOTH, blockName, EFlux.ModID);
         setCreativeTab(EFlux.creativeTab);
     }
 

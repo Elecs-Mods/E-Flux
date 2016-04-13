@@ -57,7 +57,7 @@ public class TileGrowthLamp extends BreakableMachineTile implements ITickable {
     private boolean isValidCrop(BlockPos blockLoc){
         IBlockState state = WorldHelper.getBlockState(worldObj, blockLoc);
         Block block = state.getBlock();
-        return block instanceof IGrowable && block.getMaterial(state) != Material.grass;
+        return block instanceof IGrowable && block.getMaterial(state) != Material.GRASS;
     }
 
     private void remakeList(){
@@ -73,7 +73,7 @@ public class TileGrowthLamp extends BreakableMachineTile implements ITickable {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Blocks.glowstone);
+        return new ItemStack(Blocks.GLOWSTONE);
     }
 
     @Override

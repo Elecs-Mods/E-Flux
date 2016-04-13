@@ -48,7 +48,7 @@ public class TileTeslaCoil extends BreakableMachineTile implements ITickable {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.gold_ingot);
+        return new ItemStack(Items.GOLD_INGOT);
     }
 
     @Override

@@ -95,7 +95,7 @@ public final class ItemRegister {
         OreDictionary.registerOre("ingotZinc", zincIngot);
         OreDictionary.registerOre("ingotConductive", conductiveIngot);
 
-        OreDictionary.registerOre("vanillaCoal", Items.coal);
+        OreDictionary.registerOre("vanillaCoal", Items.COAL);
 
         registerCircuits();
     }

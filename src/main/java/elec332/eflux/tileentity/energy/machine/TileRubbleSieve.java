@@ -133,7 +133,7 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.iron_ingot);
+        return new ItemStack(Items.IRON_INGOT);
     }
 
     @Override

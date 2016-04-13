@@ -55,7 +55,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
                 @Override
                 public void update() {
                     canClick = assemblyTable.getStoredPower() >= 200;
-                    for (ICrafting crafting : crafters){
+                    for (ICrafting crafting : listeners){
                         crafting.sendProgressBarUpdate(ContainerAssemblyTable.this, 3, canClick ? 1 : 0);
                     }
                 }
@@ -96,7 +96,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         super.detectAndSendChanges();
         circuit.validate();
         syncSlots();
-        for (ICrafting crafting : crafters){
+        for (ICrafting crafting : listeners){
             crafting.sendProgressBarUpdate(this, 3, canClick ? 1 : 0);
         }
     }
@@ -110,8 +110,8 @@ public class ContainerAssemblyTable extends ContainerMachine {
         super.updateProgressBar(id, value);
     }
 
-    @Override //slotClick
-    public ItemStack func_184996_a(int slotID, int var2, ClickType var3, EntityPlayer player) {
+    @Override
+    public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer player) {
         if (slotID > 0 && slotID < 10 && (player.worldObj.isRemote || !assemblyTable.drainPower(200)) && !canClick) {
             detectAndSendChanges();
             return null;
@@ -123,7 +123,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
                 canClick = false;
             }
         }
-        return super.func_184996_a(slotID, var2, var3, player);
+        return super.slotClick(slotID, dragType, clickTypeIn, player);
     }
 
     @Override

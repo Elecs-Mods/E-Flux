@@ -121,7 +121,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
 
     @Override
     public Material getMaterial() {
-        return Material.glass;
+        return Material.GLASS;
     }
 
     @Override

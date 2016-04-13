@@ -46,10 +46,10 @@ public class TileEntityEFluxSpawner extends TileBase implements ITickable {
         if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.shockBoard) && ((ICircuit)stack.getItem()).isValid(stack)){
             brainDead = b = true;
         }
-        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(Items.ender_eye))){
+        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(Items.ENDER_EYE))){
             hasRedstone = b = true;
         }
-        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(Items.emerald))){
+        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(Items.EMERALD))){
             ignorePlayer = b = true;
         }
         if (b){

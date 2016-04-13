@@ -34,7 +34,7 @@ public class AssemblyTable extends BreakableMachineTile implements IInventoryTil
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.iron_hoe);
+        return new ItemStack(Items.IRON_HOE);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class TileScanner extends BreakableMachineTileWithSlots implements IInven
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.blaze_powder);
+        return new ItemStack(Items.BLAZE_POWDER);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Capacitor extends BreakableMachineTile implements ISpecialEnergySou
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.stick);
+        return new ItemStack(Items.STICK);
     }
 
     @Override

@@ -24,7 +24,7 @@ public abstract class AbstractEFluxBlockMachineData implements IEFluxBlockMachin
 
     @Override
     public Material getBlockMaterial() {
-        return Material.rock;
+        return Material.ROCK;
     }
 
     @Override

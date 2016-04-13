@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, ITileEntityProvider {
 
     public BlockMachineFrame(String name) {
-        super(Material.rock, name, EFlux.ModID);
+        super(Material.ROCK, name, EFlux.ModID);
     }
 
     public static final IUnlistedProperty<BlockPos> FRAME_POS_PROPERTY = new UniversalUnlistedProperty<BlockPos>("position", BlockPos.class);

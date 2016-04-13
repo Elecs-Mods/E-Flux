@@ -40,66 +40,66 @@ public final class RecipeRegister {
 
     private static void registerCraftingRecipes(){
         //TEMP
-        registerShapedRecipe(compressedIngot, "IOI", "IDI", "OIO", 'I', iron_ingot, 'O', obsidian, 'D', diamond);
+        registerShapedRecipe(compressedIngot, "IOI", "IDI", "OIO", 'I', IRON_INGOT, 'O', OBSIDIAN, 'D', DIAMOND);
 
-        registerShapedRecipe(new ItemStack(wrench), "S S", " I ", " I ", 'S', silverIngot, 'I', iron_ingot);
-        registerShapedRecipe(new ItemStack(multiBlockCreator), "ZIZ", "WIW", "III", 'I', iron_ingot, 'Z', zincIngot, 'W', wrench);
-        registerShapedRecipe(new ItemStack(multimeter), "IGI", "ZLZ", "ICI", 'I', iron_ingot, 'G', glass, 'Z', zincIngot, 'L', glowstone, 'C', copperCoil);
+        registerShapedRecipe(new ItemStack(wrench), "S S", " I ", " I ", 'S', silverIngot, 'I', IRON_INGOT);
+        registerShapedRecipe(new ItemStack(multiBlockCreator), "ZIZ", "WIW", "III", 'I', IRON_INGOT, 'Z', zincIngot, 'W', wrench);
+        registerShapedRecipe(new ItemStack(multimeter), "IGI", "ZLZ", "ICI", 'I', IRON_INGOT, 'G', GLASS, 'Z', zincIngot, 'L', GLOWSTONE, 'C', copperCoil);
 
-        registerShapedRecipe(COAL_GENERATOR.getBlock(), "CIC", "IZI", "IFI", 'C', copperIngot, 'I', iron_ingot, 'Z', copperCoil, 'F', furnace);
+        registerShapedRecipe(COAL_GENERATOR.getBlock(), "CIC", "IZI", "IFI", 'C', copperIngot, 'I', IRON_INGOT, 'Z', copperCoil, 'F', FURNACE);
 
-        registerShapedRecipe(conductiveCoil, "RRG", "RCR", "GRR", 'R', redstone, 'G', gold_nugget, 'C', conductiveIngot);
-        registerShapedRecipe(copperCoil, "RRG", "RCR", "GRR", 'R', redstone, 'G', gold_nugget, 'C', copperIngot);
-        registerShapedRecipe(silverCoil, "RRG", "RSR", "GRR", 'R', redstone, 'G', gold_nugget, 'S', silverIngot);
+        registerShapedRecipe(conductiveCoil, "RRG", "RCR", "GRR", 'R', REDSTONE, 'G', GOLD_NUGGET, 'C', conductiveIngot);
+        registerShapedRecipe(copperCoil, "RRG", "RCR", "GRR", 'R', REDSTONE, 'G', GOLD_NUGGET, 'C', copperIngot);
+        registerShapedRecipe(silverCoil, "RRG", "RSR", "GRR", 'R', REDSTONE, 'G', GOLD_NUGGET, 'S', silverIngot);
 
-        registerShapedRecipe(GROWTHLAMP.getBlock(), "ZCZ", "INI", "RGR", 'Z', zincIngot, 'C', copperCoil, 'I', iron_ingot, 'N', frameNormal.toItemStack(), 'R', redstone, 'G', glowstone);
-        registerShapedRecipe(CHUNKMAIN.getBlock(), "CAC", "DYD", "EOE", 'C', conductiveCoil, 'A', frameAdvanced.toItemStack(), 'D', diamond, 'Y', ender_eye, 'E', ender_pearl, 'O', conductiveIngot);
-        registerShapedRecipe(CHUNKSUB.getBlock(), "GEG", "YFY", "SYS", 'G', gold_ingot, 'E', ender_pearl, 'Y', ender_eye, 'F', frameNormal.toItemStack(), 'S', silverIngot);
+        registerShapedRecipe(GROWTHLAMP.getBlock(), "ZCZ", "INI", "RGR", 'Z', zincIngot, 'C', copperCoil, 'I', IRON_INGOT, 'N', frameNormal.toItemStack(), 'R', REDSTONE, 'G', GLOWSTONE);
+        registerShapedRecipe(CHUNKMAIN.getBlock(), "CAC", "DYD", "EOE", 'C', conductiveCoil, 'A', frameAdvanced.toItemStack(), 'D', DIAMOND, 'Y', ENDER_EYE, 'E', ENDER_PEARL, 'O', conductiveIngot);
+        registerShapedRecipe(CHUNKSUB.getBlock(), "GEG", "YFY", "SYS", 'G', GOLD_INGOT, 'E', ENDER_PEARL, 'Y', ENDER_EYE, 'F', frameNormal.toItemStack(), 'S', silverIngot);
         registerShapedRecipe(TESLACOIL.getBlock(), "CCC", "CFC", "COC", 'C', copperIngot, 'F', frameNormal.toItemStack(), 'O', conductiveCoil);
-        registerShapedRecipe(SCANNER.getBlock(), "IGI", "DGF", "CZC", 'I', iron_ingot, 'G', glowstone, 'D', diamond, 'G', heatResistantGlass.toItemStack(), 'F', frameNormal.toItemStack(), 'C', silverCoil, 'Z', zincIngot);
-        registerShapedRecipe(WASHER.getBlock(), "ZBI", "ZWF", "CGC", 'Z', zincIngot, 'B', bucket, 'I', iron_ingot, 'W', wool, 'F', frameNormal.toItemStack(), 'C', copperIngot, 'G', silverCoil);
-        registerShapedRecipe(RUBBLESIEVE.getBlock(), "IBI", "TBF", "ICI", 'I', iron_ingot, 'B', iron_bars, 'T', trapdoor, 'F', frameBasic.toItemStack(), 'C', copperCoil);
+        registerShapedRecipe(SCANNER.getBlock(), "IGI", "DGF", "CZC", 'I', IRON_INGOT, 'G', GLOWSTONE, 'D', DIAMOND, 'G', heatResistantGlass.toItemStack(), 'F', frameNormal.toItemStack(), 'C', silverCoil, 'Z', zincIngot);
+        registerShapedRecipe(WASHER.getBlock(), "ZBI", "ZWF", "CGC", 'Z', zincIngot, 'B', BUCKET, 'I', IRON_INGOT, 'W', WOOL, 'F', frameNormal.toItemStack(), 'C', copperIngot, 'G', silverCoil);
+        registerShapedRecipe(RUBBLESIEVE.getBlock(), "IBI", "TBF", "ICI", 'I', IRON_INGOT, 'B', IRON_BARS, 'T', TRAPDOOR, 'F', frameBasic.toItemStack(), 'C', copperCoil);
 
-        registerShapedRecipe(powerInlet.toItemStack(), "IRI", "ISI", "CFC", 'I', iron_ingot, 'R', redstone, 'S', silverCoil, 'C', copperIngot, 'F', frameNormal.toItemStack());
+        registerShapedRecipe(powerInlet.toItemStack(), "IRI", "ISI", "CFC", 'I', IRON_INGOT, 'R', REDSTONE, 'S', silverCoil, 'C', copperIngot, 'F', frameNormal.toItemStack());
 
-        registerShapedRecipe(frameBasic.toItemStack(), "CIC", "IZI", "CIC", 'C', copperIngot, 'I', iron_ingot, 'Z', zincIngot);
-        registerShapedRecipe(frameNormal.toItemStack(), "ISI", "ZGZ", "ISI", 'I', iron_ingot, 'S', silverIngot, 'Z', zincIngot, 'G', gold_ingot);
-        registerShapedRecipe(new ItemStack(frameAdvanced.block, 2, frameAdvanced.meta), "CZC", "IDI", "CGC", 'C', compressedIngot, 'Z', silverIngot, 'I', iron_ingot, 'D', diamond, 'G', gold_ingot);
-        registerShapedRecipe(itemGate.toItemStack(), "RTR", "IHI", "ZBZ", 'R', redstone, 'T', trapdoor, 'I', iron_ingot, 'H', hopper, 'Z', zincIngot, 'B', frameBasic.toItemStack());
-        registerShapedRecipe(new ItemStack(heatResistantGlass.block, 4, heatResistantGlass.meta), "IGI", "GOG", "IGI", 'I', iron_ingot, 'G', glass, 'O', obsidian);
-        registerShapedRecipe(laserLens.toItemStack(), "ZDZ", "IGI", "GDG", 'Z', zincIngot, 'D', diamond, 'I', iron_ingot, 'G', heatResistantGlass.toItemStack());
-        registerShapedRecipe(laserCore.toItemStack(), "CAC", "HSH", "GDG", 'C', conductiveCoil, 'A', frameAdvanced.toItemStack(), 'H', compressedIngot, 'S', silverCoil, 'G', gold_ingot, 'D', diamond);
-        registerShapedRecipe(heater.toItemStack(), "SBS", "ZCZ", "IRI", 'S', silverCoil, 'B', frameBasic.toItemStack(), 'Z', zincIngot, 'C', copperCoil, 'I', iron_ingot, 'R', redstone_block);
-        registerShapedRecipe(monitor.toItemStack(), "IGI", "C C", "ZFZ", 'I', iron_ingot, 'G', heatResistantGlass.toItemStack(), 'C', conductiveCoil, 'Z', zincIngot, 'F', frameNormal.toItemStack());
-        registerShapedRecipe(radiator.toItemStack(), "CBC", "I I", "CFC", 'C', copperIngot, 'B', iron_bars, 'I', iron_ingot, 'F', frameBasic.toItemStack());
-        registerShapedRecipe(motor.toItemStack(), "CIC", "SDS", "FGR", 'C', copperIngot, 'I', iron_ingot, 'S', conductiveCoil, 'D', compressedIngot, 'F', frameNormal.toItemStack(), 'G', copperCoil, 'R', redstone);
-        registerShapedRecipe(precisionMotor.toItemStack(), "SGS", "CMC", "R R", 'S', silverIngot, 'G', gold_ingot, 'C', copperCoil, 'M', motor.toItemStack(), 'R', redstone);
-        registerShapedRecipe(dustStorage.toItemStack(), "CBC", "ICI", "FGF", 'C', copperIngot, 'B', iron_bars, 'I', iron_ingot, 'C', chest, 'F', frameNormal.toItemStack(), 'G', itemGate.toItemStack());
+        registerShapedRecipe(frameBasic.toItemStack(), "CIC", "IZI", "CIC", 'C', copperIngot, 'I', IRON_INGOT, 'Z', zincIngot);
+        registerShapedRecipe(frameNormal.toItemStack(), "ISI", "ZGZ", "ISI", 'I', IRON_INGOT, 'S', silverIngot, 'Z', zincIngot, 'G', GOLD_INGOT);
+        registerShapedRecipe(new ItemStack(frameAdvanced.block, 2, frameAdvanced.meta), "CZC", "IDI", "CGC", 'C', compressedIngot, 'Z', silverIngot, 'I', IRON_INGOT, 'D', DIAMOND, 'G', GOLD_INGOT);
+        registerShapedRecipe(itemGate.toItemStack(), "RTR", "IHI", "ZBZ", 'R', REDSTONE, 'T', TRAPDOOR, 'I', IRON_INGOT, 'H', HOPPER, 'Z', zincIngot, 'B', frameBasic.toItemStack());
+        registerShapedRecipe(new ItemStack(heatResistantGlass.block, 4, heatResistantGlass.meta), "IGI", "GOG", "IGI", 'I', IRON_INGOT, 'G', GLASS, 'O', OBSIDIAN);
+        registerShapedRecipe(laserLens.toItemStack(), "ZDZ", "IGI", "GDG", 'Z', zincIngot, 'D', DIAMOND, 'I', IRON_INGOT, 'G', heatResistantGlass.toItemStack());
+        registerShapedRecipe(laserCore.toItemStack(), "CAC", "HSH", "GDG", 'C', conductiveCoil, 'A', frameAdvanced.toItemStack(), 'H', compressedIngot, 'S', silverCoil, 'G', GOLD_INGOT, 'D', DIAMOND);
+        registerShapedRecipe(heater.toItemStack(), "SBS", "ZCZ", "IRI", 'S', silverCoil, 'B', frameBasic.toItemStack(), 'Z', zincIngot, 'C', copperCoil, 'I', IRON_INGOT, 'R', REDSTONE_BLOCK);
+        registerShapedRecipe(monitor.toItemStack(), "IGI", "C C", "ZFZ", 'I', IRON_INGOT, 'G', heatResistantGlass.toItemStack(), 'C', conductiveCoil, 'Z', zincIngot, 'F', frameNormal.toItemStack());
+        registerShapedRecipe(radiator.toItemStack(), "CBC", "I I", "CFC", 'C', copperIngot, 'B', IRON_BARS, 'I', IRON_INGOT, 'F', frameBasic.toItemStack());
+        registerShapedRecipe(motor.toItemStack(), "CIC", "SDS", "FGR", 'C', copperIngot, 'I', IRON_INGOT, 'S', conductiveCoil, 'D', compressedIngot, 'F', frameNormal.toItemStack(), 'G', copperCoil, 'R', REDSTONE);
+        registerShapedRecipe(precisionMotor.toItemStack(), "SGS", "CMC", "R R", 'S', silverIngot, 'G', GOLD_INGOT, 'C', copperCoil, 'M', motor.toItemStack(), 'R', REDSTONE);
+        registerShapedRecipe(dustStorage.toItemStack(), "CBC", "ICI", "FGF", 'C', copperIngot, 'B', IRON_BARS, 'I', IRON_INGOT, 'C', CHEST, 'F', frameNormal.toItemStack(), 'G', itemGate.toItemStack());
 
-        registerShapedRecipe(new ItemStack(cableBasic.getItem(), 5, 0), "RRR", "SCS", "RRR", 'R', redstone, 'S', silverIngot, 'C', copperIngot);
-        registerShapedRecipe(new ItemStack(cableNormal.getItem(), 3, 1), "RRR", "CGC", "RRR", 'R', redstone, 'G', gold_ingot, 'C', conductiveIngot);
-        registerShapedRecipe(new ItemStack(cableAdvanced.getItem(), 1, 2), "RER", "CSC", "RER", 'R', redstone, 'S', silverIngot, 'C', conductiveIngot, 'E', ender_pearl);
+        registerShapedRecipe(new ItemStack(cableBasic.getItem(), 5, 0), "RRR", "SCS", "RRR", 'R', REDSTONE, 'S', silverIngot, 'C', copperIngot);
+        registerShapedRecipe(new ItemStack(cableNormal.getItem(), 3, 1), "RRR", "CGC", "RRR", 'R', REDSTONE, 'G', GOLD_INGOT, 'C', conductiveIngot);
+        registerShapedRecipe(new ItemStack(cableAdvanced.getItem(), 1, 2), "RER", "CSC", "RER", 'R', REDSTONE, 'S', silverIngot, 'C', conductiveIngot, 'E', ENDER_PEARL);
 
-        registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ender_eye, 'L', CHUNKSUB.getBlock(), 'I', iron_ingot, 'S', silverIngot);
-        registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ender_eye, 'I', iron_ingot, 'M', multimeter, 'Z', zincIngot, 'R', redstone);
+        registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ENDER_EYE, 'L', CHUNKSUB.getBlock(), 'I', IRON_INGOT, 'S', silverIngot);
+        registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ENDER_EYE, 'I', IRON_INGOT, 'M', multimeter, 'Z', zincIngot, 'R', REDSTONE);
 
         CraftingManager.getInstance().addShapelessRecipe(new ItemStack(dustConductive.getItem(), 3, dustConductive.getItemDamage()), dustGold, dustSilver, dustTin);
 
         registerShapedRecipe(carbonMesh, "CCC", "CCC", "CCC", 'C', dustCoal);
 
-        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), book, redstone);
+        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), BOOK, REDSTONE);
 
         for (int i = 0; i < 3; i++) {
             CraftingManager.getInstance().addShapelessRecipe(new ItemStack(cableBasic.getItem(), 1, i), new ItemStack(oldCable, 1, i));
         }
 
-        registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', redstone, 'I', new ItemStack(dye, 1, 4), 'C', copperIngot, 'G', new ItemStack(dye, 1, 8), 'D', dustIron);
+        registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
 
     }
 
     private static void registerFurnaceRecipes(){
-        registerSmelting(dustIron, iron_ingot);
-        registerSmelting(dustGold, gold_ingot);
+        registerSmelting(dustIron, IRON_INGOT);
+        registerSmelting(dustGold, GOLD_INGOT);
         registerSmelting(dustCopper, copperIngot);
         registerSmelting(dustConductive, conductiveIngot);
         registerSmelting(dustSilver, silverIngot);

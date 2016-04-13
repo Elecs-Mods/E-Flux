@@ -70,7 +70,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Items.iron_ingot);
+        return new ItemStack(Items.IRON_INGOT);
     }
 
     @Override

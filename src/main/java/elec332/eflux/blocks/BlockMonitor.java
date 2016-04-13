@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, ITileEntityProvider {
 
     public BlockMonitor() {
-        super(Material.rock);
+        super(Material.ROCK);
         setUnlocalizedName(EFlux.ModID+"monitor");
         setResistance(5.0f);
         setHardness(2.5f);

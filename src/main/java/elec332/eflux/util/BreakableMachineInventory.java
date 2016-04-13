@@ -43,19 +43,19 @@ public class BreakableMachineInventory implements IInventory{
     public Object brokenGui(final Side side, EntityPlayer player){
         BaseContainer container = new ContainerSingleSlot(this, player){
 
-            @Override //slotClick
-            public ItemStack func_184996_a(int p_75144_1_, int p_75144_2_, ClickType p_75144_3_, final EntityPlayer p_75144_4_) {
+            @Override
+            public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, final EntityPlayer player) {
                 if (side.isServer()) {
                     ElecCore.tickHandler.registerCall(new Runnable() {
                         @Override
                         public void run() {
                             if (canFix()) {
-                                p_75144_4_.closeScreen();
+                                player.closeScreen();
                             }
                         }
-                    }, p_75144_4_.worldObj);
+                    }, player.worldObj);
                 }
-                return super.func_184996_a(p_75144_1_, p_75144_2_, p_75144_3_, p_75144_4_);
+                return super.slotClick(slotId, dragType, clickTypeIn, player);
             }
 
 

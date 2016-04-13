@@ -27,7 +27,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     CAPACITOR(Capacitor.class, BlockTextures.getCapacitorProvider()),
     COAL_GENERATOR(CoalGenerator.class, BlockTextures.getCoalGenProvider()),
     ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
-    GROWTHLAMP(TileGrowthLamp.class, EnumBlockRenderType.MODEL, Material.glass, BlockTextures.getGrowthLampProvider()),
+    GROWTHLAMP(TileGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS, BlockTextures.getGrowthLampProvider()),
     CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getChunkMainProvider()),
     CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getChunkSubProvider()),
     TESLACOIL(TileTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
@@ -46,7 +46,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     public boolean hasTwoStates = false;
     private BlockMachine blockMachine;
     private EnumBlockRenderType renderID = EnumBlockRenderType.MODEL;
-    private Material material = Material.rock;
+    private Material material = Material.ROCK;
     private IBlockTextureProvider textureProvider;
     public BlockRenderLayer renderingLayer = BlockRenderLayer.SOLID;
 

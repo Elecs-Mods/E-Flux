@@ -68,7 +68,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Blocks.iron_bars);
+        return new ItemStack(Blocks.IRON_BARS);
     }
 
     @Override

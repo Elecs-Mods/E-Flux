@@ -31,7 +31,7 @@ import java.util.UUID;
 public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader, ITickable {
 
     public MainChunkLoaderTile(){
-        repairItems = Lists.newArrayList(new ItemStack(Items.ender_eye), new ItemStack(Items.ender_pearl));
+        repairItems = Lists.newArrayList(new ItemStack(Items.ENDER_EYE), new ItemStack(Items.ENDER_PEARL));
         active = true;
         this.changed = true;
         this.tickets = Lists.newArrayList();

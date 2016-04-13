@@ -86,7 +86,7 @@ public class EFlux { //TODO
         creativeTab = new CreativeTabs("EFlux") {
             @Override
             public Item getTabIconItem() {
-                return Item.getItemFromBlock(Blocks.anvil);  //TODO: replace with mod item, once we got a nice one
+                return Item.getItemFromBlock(Blocks.ANVIL);  //TODO: replace with mod item, once we got a nice one
             }
         };
         logger = event.getModLog();
@@ -98,7 +98,7 @@ public class EFlux { //TODO
         ElecCore.oldBlocks = true;
 
         //DEBUG///////////////////
-        logger.info(new RecipeItemStack(Items.iron_ingot).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
+        logger.info(new RecipeItemStack(Items.IRON_INGOT).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
 
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
@@ -174,15 +174,15 @@ public class EFlux { //TODO
     }
 
     private void registerRecipes(){
-        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.dye, 3, 5));
-        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.beef)), new ItemStack(Items.experience_bottle, 6));
+        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.DYE, 3, 5));
+        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.BEEF)), new ItemStack(Items.EXPERIENCE_BOTTLE, 6));
     }
 
     /*
      * I normally never do this, but its ugly above.
      */
     public EFlux(){
-        FurnaceRecipes.smeltingBase = new EFluxFurnaceRecipes();
+        FurnaceRecipes.SMELTING_BASE = new EFluxFurnaceRecipes();
     }
 
 }

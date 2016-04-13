@@ -28,7 +28,7 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return new ItemStack(Blocks.iron_block);
+        return new ItemStack(Blocks.IRON_BLOCK);
     }
 
     @Override

@@ -153,7 +153,7 @@ public final class BlockRegister {
 
         @Override
         public Material getBlockMaterial() {
-            return Material.rock;
+            return Material.ROCK;
         }
 
         @Override
@@ -230,7 +230,7 @@ public final class BlockRegister {
 
         @Override
         public Material getBlockMaterial() {
-            return Material.glass;
+            return Material.GLASS;
         }
 
         @Override
