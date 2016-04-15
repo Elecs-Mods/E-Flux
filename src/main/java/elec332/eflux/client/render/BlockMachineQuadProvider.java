@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
-import elec332.core.util.BlockStateHelper;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.blocks.BlockMachine;
 import net.minecraft.block.state.IBlockState;

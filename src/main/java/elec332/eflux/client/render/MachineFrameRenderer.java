@@ -10,14 +10,14 @@ import elec332.core.client.render.AbstractBlockRenderer;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockMachineFrame;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.tileentity.multiblock.TileMultiBlockTile;
+import elec332.eflux.tileentity.multiblock.AbstractTileEntityMultiBlock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,11 +47,11 @@ public class MachineFrameRenderer extends AbstractBlockRenderer implements IText
         for (EnumFacing facing : EnumFacing.VALUES){
             BlockPos offset = pos.offset(facing);
             IBlockState state1 = WorldHelper.getBlockState(iba, offset);
-            TileMultiBlockTile tile1, tile2;
+            AbstractTileEntityMultiBlock tile1, tile2;
             boolean b = false;
             if (state1.getBlock() == state.getBlock() && WorldHelper.getBlockMeta(state) == WorldHelper.getBlockMeta(state1)){
-                tile2 = (TileMultiBlockTile) WorldHelper.getTileAt(iba, offset);
-                tile1 = (TileMultiBlockTile) WorldHelper.getTileAt(iba, pos);
+                tile2 = (AbstractTileEntityMultiBlock) WorldHelper.getTileAt(iba, offset);
+                tile1 = (AbstractTileEntityMultiBlock) WorldHelper.getTileAt(iba, pos);
                 /*if (tile1 == null || tile2 == null){
                     System.out.println((tile1==null)+"   "+(tile2==null));
                     Minecraft.getMinecraft().theWorld.markBlockRangeForRenderUpdate(pos, pos);

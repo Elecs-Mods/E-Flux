@@ -15,7 +15,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 28-7-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerInlet")
-public class TileEntityMultiBlockPowerInlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
 
     @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor.class)
     private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> CAPABILITY;

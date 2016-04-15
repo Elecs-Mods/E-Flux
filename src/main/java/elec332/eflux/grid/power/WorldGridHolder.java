@@ -6,13 +6,15 @@ import elec332.core.world.PositionedObjectHolder;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
-import elec332.eflux.api.energy.IEnergyTransmitter;;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.*;
+
+;
 
 /**
  * Created by Elec332 on 23-4-2015.

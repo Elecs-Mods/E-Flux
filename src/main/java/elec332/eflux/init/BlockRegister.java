@@ -11,6 +11,8 @@ import elec332.eflux.items.ItemEFluxSpawner;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockFluidInlet;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockFluidOutlet;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockPowerInlet;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.Block;
@@ -21,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -33,7 +34,8 @@ public final class BlockRegister {
     }
 
     public static Block ores, oldCable, areaMover;
-    public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet;
+    public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
+                                    fluidInlet, fluidOutlet;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
     public void init(FMLInitializationEvent event){
@@ -93,6 +95,9 @@ public final class BlockRegister {
         monitor = newBlockStateWrapper(new BlockMonitor().register().setCreativeTab(EFlux.creativeTab));
         powerInlet = BlockMachineParts.POWERINLET.getMultiBlockWrapper();
 
+        fluidInlet = BlockMachineParts.FLUIDINLET.getMultiBlockWrapper();
+        fluidOutlet = BlockMachineParts.FLUIDOUTLET.getMultiBlockWrapper();
+
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
 
         oldCable = new BlockCable("efluxCable").register();
@@ -110,6 +115,8 @@ public final class BlockRegister {
         RADIATOR(BlockTextures.getDefaultProvider("radiator")),
         MOTOR(BlockTextures.getDefaultProvider("motor")),
         PRECISION_MOTOR(BlockTextures.getDefaultProvider("precisionMotor")),
+        FLUIDINLET(TileEntityMultiBlockFluidInlet.class, BlockTextures.getDefaultProvider("???")),
+        FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class, BlockTextures.getDefaultProvider("???")),
 
         POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
 

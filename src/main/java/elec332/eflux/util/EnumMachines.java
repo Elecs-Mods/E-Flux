@@ -10,14 +10,12 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import elec332.eflux.tileentity.misc.TileEntityFeeder;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 4-4-2015.

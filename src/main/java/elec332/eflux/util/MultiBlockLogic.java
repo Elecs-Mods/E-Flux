@@ -1,10 +1,11 @@
 package elec332.eflux.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import elec332.core.world.WorldHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class MultiBlockLogic {
                 }
                 return toDrop;
             }
-            return null;
+            return ImmutableList.of();
         }
 
         public static int getNewDistanceAfterMining(int oldDistance, EnumFacing facing){

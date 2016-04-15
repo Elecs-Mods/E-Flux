@@ -5,7 +5,7 @@ import net.minecraftforge.common.capabilities.Capability;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class TileMultiBlockInteraction<M> extends TileMultiBlockTile {
+public abstract class AbstractTileEntityMultiBlockHandler<M> extends AbstractTileEntityMultiBlock {
 
     protected abstract Capability<M> getCapability();
 

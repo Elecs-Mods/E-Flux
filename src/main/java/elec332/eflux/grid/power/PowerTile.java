@@ -7,8 +7,8 @@ import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.*;
 import elec332.eflux.grid.WorldRegistry;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;

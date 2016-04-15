@@ -11,17 +11,30 @@ public final class FluidRegister {
 
     public static final FluidRegister instance = new FluidRegister();
     private FluidRegister(){
-        slib = new Fluid("Slib", new EFluxResourceLocation("slibFluid"), new EFluxResourceLocation("slibFluid"));
-        oil = new Fluid("Oil", new EFluxResourceLocation("oilStill"), new EFluxResourceLocation("oilFlowing"));
-        crudeOil = new Fluid("CrudeOil", new EFluxResourceLocation("crudeOil"), new EFluxResourceLocation("crudeOil"));
+        slib =registerFluid("Slib");
+        oil = registerFluid("Oil");
+        crudeOil = registerFluid("CrudeOil");
+        lubicrant = registerFluid("Lubicrant");
+        fuel = registerFluid("Fuel");
+        diesel = registerFluid("Diesel");
+        petrol = registerFluid("Petrol");
+        gas = registerFluid("Gas");
     }
 
-    public static Fluid slib, oil, crudeOil;
+    public static Fluid slib, oil, crudeOil; //Pre-Refinery
+    public static Fluid lubicrant, fuel, diesel, petrol, gas; //Post-refinery
+
+    private static Fluid registerFluid(String name){
+        String s = name.substring(0, 1).toLowerCase() + name.substring(1);
+        Fluid ret = new Fluid(name, new EFluxResourceLocation(s), new EFluxResourceLocation(s));
+        FluidRegistry.registerFluid(ret);
+        return ret;
+    }
 
     public void init(){
-        FluidRegistry.registerFluid(slib);
-        FluidRegistry.registerFluid(oil);
-        FluidRegistry.registerFluid(crudeOil);
+        //FluidRegistry.registerFluid(slib);
+       // FluidRegistry.registerFluid(oil);
+        //FluidRegistry.registerFluid(crudeOil);
     }
 
 }

@@ -6,8 +6,8 @@ import elec332.eflux.api.EFluxKinetics;
 import elec332.eflux.api.kinetic.IKineticReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 

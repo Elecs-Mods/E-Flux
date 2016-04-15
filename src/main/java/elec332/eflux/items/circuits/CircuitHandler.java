@@ -4,13 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.Components;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.RecipeItemStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.EnumSet;

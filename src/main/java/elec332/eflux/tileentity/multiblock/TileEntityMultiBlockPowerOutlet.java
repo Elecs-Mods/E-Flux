@@ -13,7 +13,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 13-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerOutlet")
-public class TileEntityMultiBlockPowerOutlet extends TileMultiBlockInteraction<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> implements IEnergySource {
+public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBlockHandler<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> implements IEnergySource {
 
     @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerProvider.class)
     public static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> CAPABILITY;

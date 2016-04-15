@@ -7,7 +7,6 @@ import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
-import elec332.core.util.EventHelper;
 import elec332.core.util.MCModInfo;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.compat.Compat;
@@ -18,7 +17,6 @@ import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.init.*;
-import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
@@ -57,7 +55,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)"/*;required-after:mcmultipart@[1.1.0,)"*/,
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class EFlux { //TODO
 
@@ -129,6 +127,7 @@ public class EFlux { //TODO
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
+        CapabilityRegister.instance.init();
         MultiPartRegister.init();
         FluidRegister.instance.init();
         proxy.initRenderStuff();

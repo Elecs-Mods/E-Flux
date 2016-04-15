@@ -1,9 +1,5 @@
 package elec332.eflux.compat.jei;
 
-import net.minecraft.client.Minecraft;
-
-import javax.annotation.Nonnull;
-
 /**
  * Created by Elec332 on 14-2-2016.
  */

@@ -11,8 +11,8 @@ import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -291,10 +291,21 @@ public final class MultiBlockRegister {
                 @Override
                 public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                     if (width == 0){
+                        if (height == 2 && (length == 0 || length == 2)){
+                            return fluidInlet;
+                        }
                         if (height < 3){
                             return frameAdvanced;
                         }
                         return null;
+                    }
+                    if (length == 1){
+                        if (width == 2 && (height == 0 || height == 6)){
+                            return fluidOutlet;
+                        }
+                        if (width == 3 && (height == 1 || height == 3 || height == 5)){
+                            return fluidOutlet;
+                        }
                     }
                     return frameNormal;
                 }
