@@ -198,7 +198,7 @@ public final class MultiBlockRegister {
                 return frameNormal;
             }
 
-        }, "desalter", MultiBlockDeSalter.class);
+        }, "desalter", MultiBlockDesalter.class);
 
     }
 

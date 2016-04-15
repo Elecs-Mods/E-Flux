@@ -50,6 +50,22 @@ public class Config {
 
         }
 
+        @Configurable.Class
+        public static class DistillationTower {
+
+            @Configurable(minValue = 10, maxValue = 1000)
+            public static int requiredheat = 200;
+
+        }
+
+        @Configurable.Class
+        public static class Desalter {
+
+            @Configurable(minValue = 10, maxValue = 1000)
+            public static int requiredheat = 200;
+
+        }
+
     }
 
     @Configurable(category = "energy", comment = "This defines the conversion for the RF power system")

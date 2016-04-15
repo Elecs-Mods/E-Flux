@@ -2,9 +2,12 @@ package elec332.eflux.multiblock.machine;
 
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.api.heat.IHeatReceiver;
 import elec332.eflux.api.util.CapabilityHelper;
+import elec332.eflux.util.Config;
 import elec332.eflux.util.IEFluxFluidHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 1-4-2016.
  */
-public class MultiBlockDistillationTower extends AbstractMultiBlock {
+public class MultiBlockDistillationTower extends AbstractMultiBlock implements IHeatReceiver {
 
     @CapabilityInject(IEFluxFluidHandler.class)
     private static Capability<IEFluxFluidHandler> CAPABILITY;
@@ -51,8 +54,32 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock {
 
     private CapabilityHelper.FluidHandlerHelper oilTank;
     private CapabilityHelper.FluidHandlerHelper lubeTank, fuelTank, dieselTank, petrolTank, gasTank;
-    private int heat; //TODO
+    private int heat;
     private BlockPos oilIn1, oilIn2, lubeOut, gasOut, petrolOut, fuelOut, dieselOut;
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        tagCompound.setTag("oil", oilTank.serializeNBT());
+        tagCompound.setTag("lube", lubeTank.serializeNBT());
+        tagCompound.setTag("fuel", fuelTank.serializeNBT());
+        tagCompound.setTag("diesel", dieselTank.serializeNBT());
+        tagCompound.setTag("petrol", petrolTank.serializeNBT());
+        tagCompound.setTag("gas", gasTank.serializeNBT());
+        tagCompound.setInteger("heat", heat);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        oilTank.deserializeNBT(tagCompound.getCompoundTag("oil"));
+        lubeTank.deserializeNBT(tagCompound.getCompoundTag("lube"));
+        fuelTank.deserializeNBT(tagCompound.getCompoundTag("fuel"));
+        dieselTank.deserializeNBT(tagCompound.getCompoundTag("diesel"));
+        petrolTank.deserializeNBT(tagCompound.getCompoundTag("petrol"));
+        gasTank.deserializeNBT(tagCompound.getCompoundTag("gas"));
+        heat = tagCompound.getInteger("heat");
+    }
 
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player) {
@@ -64,12 +91,12 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock {
      */
     @Override
     public void onTick() {
-        if (getWorldObj().getWorldTime() % 20 == 0){ //TODO: Impl heat
+        if (getWorldObj().getWorldTime() % 20 == 0 && heat > Config.MultiBlocks.DistillationTower.requiredheat){
             FluidStack stack = oilTank.drain(100, false);
             if (stack == null || stack.amount != 100){
                 return;
             }
-            //TODO: decrease heat
+            heat -= Config.MultiBlocks.DistillationTower.requiredheat;
             oilTank.drain(100, true);
             attemptFill(lubeTank, 2, lubicrant);
             attemptFill(fuelTank, 49, fuel);
@@ -115,6 +142,16 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock {
             return null;
         }
         return super.getCapability(capability, facing, pos);
+    }
+
+    @Override
+    public int getHeat() {
+        return this.heat;
+    }
+
+    @Override
+    public void addHeat(int heat) {
+        this.heat += heat;
     }
 
 }

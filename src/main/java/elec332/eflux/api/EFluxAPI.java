@@ -4,6 +4,7 @@ import elec332.eflux.api.energy.IEnergyMonitor;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
+import elec332.eflux.api.heat.IHeatReceiver;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,6 +27,9 @@ public class EFluxAPI {
     @CapabilityInject(IEnergyMonitor.class)
     public static Capability<IEnergyMonitor> MONITOR_CAPABILITY;
 
+    @CapabilityInject(IHeatReceiver.class)
+    public static Capability<IHeatReceiver> HEAT_CAPABILITY;
+
     public static void dummyLoad(){
     }
 
@@ -34,6 +38,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IEnergySource.class);
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
         registerWithoutStorageAndDefaultInstance(IEnergyMonitor.class);
+        registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);
     }
 
     static void registerWithoutStorageAndDefaultInstance(Class clazz){
