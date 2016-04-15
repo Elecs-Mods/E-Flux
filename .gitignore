@@ -6,4 +6,6 @@
 eclipse/
 out/
 run/
+classes/
+.idea/
 src/main/resources/assets/eflux/textures.zip
