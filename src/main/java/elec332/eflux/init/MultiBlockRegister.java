@@ -176,11 +176,35 @@ public final class MultiBlockRegister {
 
         }, "distillationTower", MultiBlockDistillationTower.class);
 
+        EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
+
+            @Override
+            public boolean canCreate(EntityPlayerMP entityPlayerMP) {
+                return true;
+            }
+
+            @Override
+            public boolean areSecondaryConditionsMet(World world, BlockPos blockPos, EnumFacing enumFacing) {
+                return true;
+            }
+
+            @Override
+            public BlockStructure getStructure() {
+                return BlockStructures.desalter;
+            }
+
+            @Override
+            public BlockStateWrapper getTriggerBlock() {
+                return frameNormal;
+            }
+
+        }, "desalter", MultiBlockDeSalter.class);
+
     }
 
     public static class BlockStructures{
 
-        public static BlockStructure compressor, laser, furnace, grinder, distillationTower;
+        public static BlockStructure compressor, laser, furnace, grinder, distillationTower, desalter;
 
         private static void init(){
             compressor = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
@@ -310,6 +334,30 @@ public final class MultiBlockRegister {
                     return frameNormal;
                 }
             });
+
+            desalter = new BlockStructure(2, 2, 3, new BlockStructure.IStructureFiller() {
+
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (length == 1 && height == 0){
+                        if (width == 0){
+                            return fluidInlet;
+                        }
+                        if (width == 1){
+                            return fluidOutlet;
+                        }
+                    }
+                    if (length == 0 && width == 0 && height == 1){
+                        return fluidInlet;
+                    }
+                    if (length == 1 && width == 1 && height == 2){
+                        return fluidOutlet;
+                    }
+                    return frameNormal;
+                }
+
+            });
+
         }
 
     }

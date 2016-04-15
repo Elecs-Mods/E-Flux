@@ -19,9 +19,10 @@ public final class FluidRegister {
         diesel = registerFluid("Diesel");
         petrol = registerFluid("Petrol");
         gas = registerFluid("Gas");
+        brine = registerFluid("Brine");
     }
 
-    public static Fluid slib, oil, crudeOil; //Pre-Refinery
+    public static Fluid slib, oil, crudeOil, brine; //Pre-Refinery
     public static Fluid lubicrant, fuel, diesel, petrol, gas; //Post-refinery
 
     private static Fluid registerFluid(String name){
