@@ -62,9 +62,9 @@ public class TileGrowthLamp extends BreakableMachineTile implements ITickable {
 
     private void remakeList(){
         blockLocations.clear();
-        for (int offsetY= -Config.Machines.growthLampY; offsetY <= Config.Machines.growthLampY; offsetY++) {
-            for (int offsetZ = -Config.Machines.growthLampXZ; offsetZ <= Config.Machines.growthLampXZ; offsetZ++) {
-                for (int offsetX = -Config.Machines.growthLampXZ; offsetX <= Config.Machines.growthLampXZ; offsetX++) {
+        for (int offsetY= -Config.Machines.GrowthLamp.growthLampY; offsetY <= Config.Machines.GrowthLamp.growthLampY; offsetY++) {
+            for (int offsetZ = -Config.Machines.GrowthLamp.growthLampXZ; offsetZ <= Config.Machines.GrowthLamp.growthLampXZ; offsetZ++) {
+                for (int offsetX = -Config.Machines.GrowthLamp.growthLampXZ; offsetX <= Config.Machines.GrowthLamp.growthLampXZ; offsetX++) {
                     blockLocations.add(pos.add(offsetX, offsetY, offsetZ));
                 }
             }

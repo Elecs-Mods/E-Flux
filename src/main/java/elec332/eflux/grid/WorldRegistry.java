@@ -5,6 +5,7 @@ import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.grid.power.WorldGridHolder;
+import elec332.eflux.grid.tank.EFluxDynamicTankWorldHolder;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,16 +38,20 @@ public class WorldRegistry {
         return null;
     }
 
+    @SuppressWarnings("all")
     public static void tick(TickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            for (World world : worlds)
+            for (World world : worlds) {
                 get(world).tickInternal();
+            }
         }
     }
+
     //////////////////////////////////////////////////////
 
     private WorldRegistry(World world) {
         this.gridHolderPower = new WorldGridHolder(world);
+        this.tankRegistry = new EFluxDynamicTankWorldHolder(world);
         this.tickables = new ArrayDeque<ITickable>();
         this.world = world;
         EFlux.logger.info("Created new WorldHandler");
@@ -59,6 +64,7 @@ public class WorldRegistry {
     }
 
     private final WorldGridHolder gridHolderPower;
+    private final EFluxDynamicTankWorldHolder tankRegistry;
     private final Queue<ITickable> tickables;
     private final World world;
 
@@ -66,7 +72,11 @@ public class WorldRegistry {
         return gridHolderPower;
     }
 
-    public void tickInternal() {
+    public EFluxDynamicTankWorldHolder getTankRegistry(){
+        return tankRegistry;
+    }
+
+    private void tickInternal() {
         gridHolderPower.onServerTickInternal();
         Iterator<ITickable> ti = tickables.iterator();
         ITickable tickable;
@@ -84,16 +94,19 @@ public class WorldRegistry {
         this.tickables.remove(tickable);
     }
 
-    public void unload() {
+    private void unload() {
         MinecraftForge.EVENT_BUS.unregister(this);
         mappings.remove(world);
         worlds.remove(world);
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void onWorldUnload(WorldEvent.Unload event) {
-        if (WorldHelper.getDimID(world) == WorldHelper.getDimID(event.getWorld()))
+        if (WorldHelper.getDimID(world) == WorldHelper.getDimID(event.getWorld())) {
             unload();
+        }
     }
+
 }
 

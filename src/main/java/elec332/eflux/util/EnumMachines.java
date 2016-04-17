@@ -10,6 +10,7 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
 import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import elec332.eflux.tileentity.misc.TileEntityFeeder;
+import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
@@ -35,6 +36,8 @@ public enum EnumMachines implements IEFluxBlockMachineData {
 
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
     SPAWNER(TileEntityEFluxSpawner.class, BlockTextures.getSpawnerProvider()),
+
+    TANK(TileEntityTank.class, BlockTextures.getDefaultProvider("??!?"))
 
     ;
     //___Data__//////////////////////////////////////////////////////////

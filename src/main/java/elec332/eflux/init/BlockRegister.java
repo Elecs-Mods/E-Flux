@@ -9,6 +9,7 @@ import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.items.ChunkLoaderItemBlock;
 import elec332.eflux.items.ItemEFluxSpawner;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockFluidInlet;
@@ -110,7 +111,7 @@ public final class BlockRegister {
     public enum BlockMachineParts implements IEFluxBlockMachineData {
 
         LASERCORE(BlockTextures.getDefaultProvider("laserCoreFront")),
-        HEATER(BlockTextures.getDefaultProvider("heaterFront")),
+        HEATER(TileEntityHeater.class, BlockTextures.getDefaultProvider("heaterFront")),
         DUSTSTORAGE(TileEntityDustStorage.class, BlockTextures.getCustomProvider("dustStorage", "default_side", "default_side")),
         RADIATOR(BlockTextures.getDefaultProvider("radiator")),
         MOTOR(BlockTextures.getDefaultProvider("motor")),

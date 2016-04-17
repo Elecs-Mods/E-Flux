@@ -13,11 +13,24 @@ public class Config {
     @Configurable.Class
     public static class Machines {
 
-        @Configurable(comment = "Sets the y range in which to search for plants")
-        public static int growthLampY = 5;
+        @Configurable.Class
+        public static class GrowthLamp {
 
-        @Configurable(comment = "Sets the x & z range in which to search for plants")
-        public static int growthLampXZ = 5;
+            @Configurable(comment = "Sets the y range in which to search for plants")
+            public static int growthLampY = 5;
+
+            @Configurable(comment = "Sets the x & z range in which to search for plants")
+            public static int growthLampXZ = 5;
+
+        }
+
+        @Configurable.Class
+        public static class Heater {
+
+            @Configurable(minValue = 1, maxValue = 1000)
+            public static int generatedHeatPerTick = 20;
+
+        }
 
     }
 
