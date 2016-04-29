@@ -1,6 +1,7 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.world.WorldHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -26,13 +27,13 @@ public class TileEntityMultiBlockFluidOutlet extends AbstractTileEntityMultiBloc
     @Override
     public void update() {
         if (hasRedstone()){
-            EnumFacing facing = getTileFacing().getOpposite();
-            TileEntity tile = worldObj.getTileEntity(getPos().offset(facing.getOpposite()));
+            EnumFacing facing = getTileFacing();
+            TileEntity tile = WorldHelper.getTileAt(worldObj, getPos().offset(facing));
             if (tile instanceof IFluidHandler){
-                FluidStack stack = ((IFluidHandler)tile).drain(facing, 100, false);
-                int i = fill(facing, stack, false);
+                FluidStack stack = drain(facing, 100, false);
+                int i = ((IFluidHandler)tile).fill(facing.getOpposite(), stack, false);
                 if (i > 0){
-                    fill(facing, ((IFluidHandler) tile).drain(facing, i, true), true);
+                    ((IFluidHandler)tile).fill(facing.getOpposite(), drain(facing, i, true), true);
                 }
             }
         }

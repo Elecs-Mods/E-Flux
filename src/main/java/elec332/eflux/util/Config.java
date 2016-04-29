@@ -66,8 +66,11 @@ public class Config {
         @Configurable.Class
         public static class DistillationTower {
 
-            @Configurable(minValue = 10, maxValue = 1000)
-            public static int requiredheat = 200;
+            @Configurable(minValue = 100, maxValue = 10000)
+            public static int requiredheat = 2000;
+
+            @Configurable(minValue = 1, maxValue = 1000)
+            public static int heatDispersion = 65;
 
         }
 

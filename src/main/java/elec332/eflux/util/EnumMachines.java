@@ -37,7 +37,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
     SPAWNER(TileEntityEFluxSpawner.class, BlockTextures.getSpawnerProvider()),
 
-    TANK(TileEntityTank.class, BlockTextures.getDefaultProvider("??!?"))
+    TANK(TileEntityTank.class, EnumBlockRenderType.INVISIBLE, Material.ROCK, BlockTextures.getDefaultProvider("??!?"))
 
     ;
     //___Data__//////////////////////////////////////////////////////////

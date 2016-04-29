@@ -1,9 +1,11 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.client.util.KeyHelper;
 import elec332.core.compat.handlers.WailaCompatHandler;
 import elec332.core.tile.TileBase;
 import elec332.core.util.NBTHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.grid.tank.EFluxDynamicTank;
 import elec332.eflux.util.IEFluxTank;
@@ -12,7 +14,6 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -54,8 +55,8 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
     }
 
     @Override
-    public void onChunkUnload() {
-        super.onChunkUnload();
+    public void onTileUnloaded() {
+        super.onTileLoaded();
         if (!worldObj.isRemote){
             WorldRegistry.get(worldObj).getTankRegistry().removeTile(this);
         }
@@ -90,12 +91,11 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
                     if (i == stack1.amount){
                         fill(null, stack1.copy(), true);
                         ItemStack s = FluidContainerRegistry.drainFluidContainer(stack);
-                        if (s != null) {
+                        if (s != null && !PlayerHelper.isPlayerInCreative(player)) {
                             stack.setItem(s.getItem());
                             stack.setItemDamage(s.getItemDamage());
                             stack.setTagCompound(s.getTagCompound());
                         }
-                        System.out.println("filled");
                         return true;
                     }
                 }
@@ -106,9 +106,12 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
                     FluidStack f = FluidContainerRegistry.getFluidForFilledItem(s.copy());
                     if (f != null && f.amount == 1000){
                         drain(null, 1000, true);
-                        stack.setItem(s.getItem());
-                        stack.setItemDamage(s.getItemDamage());
-                        stack.setTagCompound(s.getTagCompound());
+                        if (!PlayerHelper.isPlayerInCreative(player)) {
+                            stack.setItem(s.getItem());
+                            stack.setItemDamage(s.getItemDamage());
+                            stack.setTagCompound(s.getTagCompound());
+                        }
+                        return true;
                     }
                 }
             }
@@ -122,7 +125,9 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
         if (tankMultiBlock != null){
             multiBlockTag = tankMultiBlock.getSaveData(this);
         }
-        tagCompound.setTag("multiBlockData", multiBlockTag);
+        if (multiBlockTag != null) {
+            tagCompound.setTag("multiBlockData", multiBlockTag);
+        }
         if (lastSeenFluid != null){
             tagCompound.setString("lsf", lastSeenFluid.getName());
         }
@@ -174,7 +179,7 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
 
     @Override
     public void setClientRenderFluid(Fluid fluid) {
-        sendPacket(1, new NBTHelper().addToTag("f", fluid == null ? "" : fluid.getName()).serializeNBT());
+        sendPacket(1, new NBTHelper().addToTag(fluid == null ? "" : fluid.getName(), "f").serializeNBT());
     }
 
     @Override
@@ -243,6 +248,9 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
         if (tag != null && tag.hasKey("c")){
             list.add("Fluid: "+(getClientRenderFluid() == null ? "null" : getClientRenderFluid().getLocalizedName(null)));
             list.add("Amount: "+tag.getInteger("c")+" / "+tag.getInteger("t"));
+            if (KeyHelper.isShiftDown()){
+                list.add("Internal stored: "+tag.getInteger("i")+" / "+getTankSize());
+            }
         }
         return list;
     }
@@ -252,6 +260,7 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
         if (tankMultiBlock != null) {
             nbtTagCompound.setInteger("c", tankMultiBlock.getTotalStoredAmount());
             nbtTagCompound.setInteger("t", tankMultiBlock.getCapacity());
+            nbtTagCompound.setInteger("i", tankMultiBlock.getTankContentAmount(getPos()));
         }
         return nbtTagCompound;
     }

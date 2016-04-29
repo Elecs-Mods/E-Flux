@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -45,6 +46,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     public BlockMonitor() {
         super(Material.ROCK);
         setUnlocalizedName(EFlux.ModID+"monitor");
+        setRegistryName(EFlux.ModID, "monitor");
         setResistance(5.0f);
         setHardness(2.5f);
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
@@ -56,7 +58,8 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     public static TextureAtlasSprite normal, monitorF, monitorR, monitorL;
 
     public BlockMonitor register(){
-        GameRegistry.registerBlock(this, "monitor");
+        GameRegistry.register(this);
+        GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
         return this;
     }
 

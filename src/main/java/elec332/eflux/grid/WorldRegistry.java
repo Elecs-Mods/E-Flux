@@ -78,6 +78,7 @@ public class WorldRegistry {
 
     private void tickInternal() {
         gridHolderPower.onServerTickInternal();
+        tankRegistry.tick();
         Iterator<ITickable> ti = tickables.iterator();
         ITickable tickable;
         while (ti.hasNext()){

@@ -1,6 +1,9 @@
 package elec332.eflux.tileentity.multiblock;
 
+import com.google.common.base.Predicate;
 import elec332.eflux.util.IEFluxFluidHandler;
+import elec332.eflux.util.IRedstoneUpgradable;
+import elec332.eflux.util.RedstoneCapability;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -12,7 +15,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 /**
  * Created by Elec332 on 14-4-2016.
  */
-public abstract class AbstractTileEntityMultiBlockFluidHandler extends AbstractTileEntityMultiBlockHandler<IEFluxFluidHandler> implements IFluidHandler {
+public abstract class AbstractTileEntityMultiBlockFluidHandler extends AbstractTileEntityMultiBlockHandler<IEFluxFluidHandler> implements IFluidHandler, IRedstoneUpgradable {
 
     @CapabilityInject(IEFluxFluidHandler.class)
     private static Capability<IEFluxFluidHandler> CAPABILITY;
@@ -79,6 +82,23 @@ public abstract class AbstractTileEntityMultiBlockFluidHandler extends AbstractT
     @Override
     protected Capability<IEFluxFluidHandler> getCapability() {
         return CAPABILITY;
+    }
+
+    @Override
+    public Predicate<Mode> getModePredicate() {
+        return null;
+    }
+
+    @Override
+    public boolean isRedstonePowered() {
+        boolean cap = hasCapability(RedstoneCapability.CAPABILITY, null);
+        //System.out.println("HssCap: "+cap);
+        return cap && getCapability(RedstoneCapability.CAPABILITY, null).isPowered(worldObj, pos);
+    }
+
+    @Override
+    public boolean hasRedstone() {
+        return isRedstonePowered();
     }
 
 }

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public class BreakableMachineInventory implements IInventory{
+public class BreakableMachineInventory implements IInventory {
 
     public BreakableMachineInventory(IBreakableMachine tile, ItemStack s){
         this.i = tile;

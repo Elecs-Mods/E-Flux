@@ -11,23 +11,28 @@ import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IModelAndTextureLoader;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
+import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.client.manual.gui.GuiManual;
 import elec332.eflux.client.render.FurnaceContentsRenderer;
 import elec332.eflux.client.render.RenderHandler;
 import elec332.eflux.client.render.TileEntityLaserRenderer;
+import elec332.eflux.client.render.TileEntityTankRenderer;
 import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
+import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -36,6 +41,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
@@ -44,6 +50,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 24-2-2015.
  */
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
     public ClientProxy(){
@@ -60,6 +67,15 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             case 1:
                 if (tile instanceof BreakableMachineTile)
                     return ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
+            case 2:
+                if (tile != null) {
+                    return new GuiMachine((BaseContainer) getServerGuiElement(2, player, world, x, y, z)) {
+                        @Override
+                        public ResourceLocation getBackgroundImageLocation() {
+                            return new EFluxResourceLocation("BGRED");
+                        }
+                    };
+                }
             default:
                 if (tile instanceof IInventoryTile)
                     return ((IInventoryTile) tile).getGuiClient(player);
@@ -74,6 +90,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         RenderHandler.dummy();
         ClientRegistry.bindTileEntitySpecialRenderer(FurnaceRenderTile.class, new FurnaceContentsRenderer());
         //ModelLoaderRegistry.registerLoader(new ML());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer<TileEntityTank>());
     }
 
     /**
@@ -121,12 +138,6 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         }
 
         private final int meta;
-
-        //@Override
-   //     public IBakedModel handlePartState(IBlockState state) {
-   //         return new CM((IExtendedBlockState) state, meta);
-    //    }
-
 
         @Override
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
@@ -206,12 +217,12 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             float zMin = (north ? 0 : heightStuff);
             float zMax = (south ? 16 : f1);
 
-            ret.add(bakeQuad(xMax, f1, zMax, xMin, f1, zMin, EnumFacing.UP, xMin, zMin, xMax, zMax));
-            ret.add(bakeQuad(xMax, heightStuff, zMax, xMin, heightStuff, zMin, EnumFacing.DOWN, xMin, zMin, xMax, zMax));
-            ret.add(bakeQuad(xMax, yMax, f1, xMin, yMin, f1, EnumFacing.SOUTH, xMin, zMin, xMax, zMax));
-            ret.add(bakeQuad(xMax, yMax, heightStuff, xMin, yMin, heightStuff, EnumFacing.NORTH, xMin, zMin, xMax, zMax));
-            ret.add(bakeQuad(f1, yMax, zMax, f1, yMin, zMin, EnumFacing.EAST, xMin, zMin, xMax, zMax));
-            ret.add(bakeQuad(heightStuff, yMax, zMax, heightStuff, yMin, zMin, EnumFacing.WEST, xMin, zMin, xMax, zMax));
+            ret.add(bakeQuad(xMin, f1, zMin, xMax, f1, zMax, EnumFacing.UP, xMin, zMin, xMax, zMax));
+            ret.add(bakeQuad(xMax, heightStuff, zMax, xMin, heightStuff, zMin, EnumFacing.DOWN, xMax, zMin, xMin, zMax));
+            ret.add(bakeQuad(xMax, yMax, f1, xMin, yMin, f1, EnumFacing.SOUTH, xMax, yMin, xMin, yMax));
+            ret.add(bakeQuad(xMax, yMax, heightStuff, xMin, yMin, heightStuff, EnumFacing.NORTH, xMin, yMin, xMax, yMax));
+            ret.add(bakeQuad(f1, yMax, zMax, f1, yMin, zMin, EnumFacing.EAST, zMin, yMin, zMax, yMax));
+            ret.add(bakeQuad(heightStuff, yMax, zMax, heightStuff, yMin, zMin, EnumFacing.WEST, zMax, yMin, zMin, yMax));
 
             return ret;
         }
@@ -221,52 +232,5 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         }
 
     }
-
-    /*private class ML implements ICustomModelLoader {
-
-        @Override
-        public boolean accepts(ResourceLocation modelLocation) {
-            return modelLocation.getResourceDomain().equals("eflux") && modelLocation.getResourcePath().contains("i-aint-making-jsons");
-        }
-
-        @Override
-        public IModel loadModel(final ResourceLocation modelLocation) throws IOException {
-            return new IModel(){
-
-                final int i = Integer.parseInt(modelLocation.getResourcePath().replace("i-aint-making-jsons_", ""));
-
-                IFlexibleBakedModel model;
-
-                @Override
-                public Collection<ResourceLocation> getDependencies() {
-                    return null; //??
-                }
-
-                @Override
-                public Collection<ResourceLocation> getTextures() {
-                    return null; //Uhm, nope
-                }
-
-                @Override
-                public IFlexibleBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-                    if (model == null){
-                        model = new IFlexibleBakedModel.Wrapper(models.forMeta(i), DefaultVertexFormats.BLOCK);
-                    }
-                    return model;
-                }
-
-                @Override
-                public IModelState getDefaultState() { //WTF?
-                    return null;
-                }
-            };
-            //return null;
-        }
-
-        @Override
-        public void onResourceManagerReload(IResourceManager resourceManager) {
-        }
-
-    }*/
 
 }

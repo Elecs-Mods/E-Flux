@@ -16,6 +16,7 @@ import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
+import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
@@ -138,6 +139,7 @@ public class EFlux { //TODO
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         registerRecipes();
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
 
         Compat.instance.init();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {

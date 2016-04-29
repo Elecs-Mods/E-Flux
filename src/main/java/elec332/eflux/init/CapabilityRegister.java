@@ -2,6 +2,7 @@ package elec332.eflux.init;
 
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import elec332.eflux.util.IEFluxFluidHandler;
+import elec332.eflux.util.RedstoneCapability;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,6 +23,7 @@ public enum CapabilityRegister {
         registerWithoutAnything(MultiBlockInterfaces.IEFluxMultiBlockPowerProvider.class);
 
         registerWithoutAnything(IEFluxFluidHandler.class);
+        registerWithoutAnything(RedstoneCapability.class);
     }
 
     private static <T> void registerWithoutAnything(Class<T> clazz){

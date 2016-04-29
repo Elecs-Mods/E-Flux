@@ -19,6 +19,10 @@ public class HeatHelper {
     @Nullable
     public static IHeatReceiver getHeatReceiver(IBlockAccess iba, BlockPos pos, EnumFacing from){
         TileEntity tile = WorldHelper.getTileAt(iba, pos.offset(from));
+        if (tile == null){
+            return null;
+        }
+        from = from.getOpposite();
         if (tile.hasCapability(EFluxAPI.HEAT_CAPABILITY, from)) {
             return tile.getCapability(EFluxAPI.HEAT_CAPABILITY, from);
         }

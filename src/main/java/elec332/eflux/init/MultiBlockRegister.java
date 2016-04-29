@@ -334,9 +334,7 @@ public final class MultiBlockRegister {
                     return frameNormal;
                 }
             });
-
             desalter = new BlockStructure(2, 2, 3, new BlockStructure.IStructureFiller() {
-
                 @Override
                 public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
                     if (length == 1 && height == 0){
@@ -355,7 +353,6 @@ public final class MultiBlockRegister {
                     }
                     return frameNormal;
                 }
-
             });
 
         }

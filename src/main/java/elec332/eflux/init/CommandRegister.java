@@ -1,12 +1,19 @@
 package elec332.eflux.init;
 
 import com.google.common.collect.Lists;
+import elec332.core.main.ElecCore;
+import elec332.core.util.PlayerHelper;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.util.IEFluxTank;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.List;
@@ -48,6 +55,14 @@ public final class CommandRegister {
                 if (arg.equals(reloadConfig)){
                     System.out.println("reloading configs");
                     EFlux.configWrapper.refresh();
+                }
+                if (ElecCore.developmentEnvironment) {
+                    if (arg.equals("oil")) {
+                        TileEntity tile = WorldHelper.getTileAt(((EntityPlayer) sender).worldObj, PlayerHelper.getPosPlayerIsLookingAt((EntityPlayer) sender, 5D).getBlockPos());
+                        if (tile instanceof IEFluxTank) {
+                            ((IEFluxTank) tile).fill(null, new FluidStack(FluidRegister.oil, 1000), true);
+                        }
+                    }
                 }
             }
 

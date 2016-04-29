@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 /**
  * Created by Elec332 on 16-4-2015.
  */
+@SuppressWarnings("all")
 public class EventHandler {
 
     @SubscribeEvent
