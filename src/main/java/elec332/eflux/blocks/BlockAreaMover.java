@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockAreaMover extends BlockWithMeta implements INoJsonBlock, ITileEntityProvider {
 
     public BlockAreaMover() {
-        super(Material.ROCK, "areaMover", EFlux.ModID);
+        super(Material.ROCK, "areaMover", EFlux.ModID.toLowerCase());
     }
 
     @SideOnly(Side.CLIENT)

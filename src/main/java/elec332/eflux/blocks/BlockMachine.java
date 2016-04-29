@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockMachine extends BlockTileBase implements INoJsonBlock {
 
     public BlockMachine(IEFluxBlockMachineData machine){
-        super(machine.getBlockMaterial(), machine.getTileClass(), machine.getName(), EFlux.ModID);
+        super(machine.getBlockMaterial(), machine.getTileClass(), machine.getName(), EFlux.ModID.toLowerCase());
         setCreativeTab(EFlux.creativeTab);
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
         this.machine = machine;

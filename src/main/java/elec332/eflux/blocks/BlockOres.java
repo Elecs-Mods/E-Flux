@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockOres extends BlockWithMeta implements INoJsonBlock {
 
     public BlockOres() {
-        super(Material.ROCK, "ore", EFlux.ModID);
+        super(Material.ROCK, "ore", EFlux.ModID.toLowerCase());
         setResistance(5.0f);
         setHardness(2.5f);
     }

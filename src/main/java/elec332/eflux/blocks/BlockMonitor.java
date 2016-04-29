@@ -46,7 +46,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     public BlockMonitor() {
         super(Material.ROCK);
         setUnlocalizedName(EFlux.ModID+"monitor");
-        setRegistryName(EFlux.ModID, "monitor");
+        setRegistryName(EFlux.ModID.toLowerCase(), "monitor");
         setResistance(5.0f);
         setHardness(2.5f);
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
