@@ -2,6 +2,7 @@ package elec332.eflux.client.render;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import elec332.core.client.RenderHelper;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
@@ -36,9 +37,28 @@ public class BlockMachineQuadProvider implements IQuadProvider {
             return ImmutableList.of();
         }
         TextureAtlasSprite[] textures = this.textures[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0];
-        ModelRotation rotation = state == null ? ModelRotation.X0_Y0 : DirectionHelper.getRotationFromFacing(BlockMachine.getFacing(state));
+        ModelRotation rotation = state == null ? ModelRotation.X0_Y0 : defaultFor(BlockMachine.getFacing(state));
         EnumFacing usedRot = rotation.rotate(side);
         return Lists.newArrayList(quadBakery.bakeQuad(MutableQuadTemplate.templateForTexture(side, textures[usedRot.ordinal()])));
+    }
+
+    public static ModelRotation defaultFor(EnumFacing facing) {
+        switch(facing) {
+            case UP:
+                return ModelRotation.X90_Y0;
+            case DOWN:
+                return ModelRotation.X270_Y0;
+            case NORTH:
+                return ModelRotation.X0_Y0;
+            case EAST:
+                return ModelRotation.X0_Y270;
+            case SOUTH:
+                return ModelRotation.X0_Y180;
+            case WEST:
+                return ModelRotation.X0_Y90;
+            default:
+                return ModelRotation.X0_Y0;
+        }
     }
 
 }

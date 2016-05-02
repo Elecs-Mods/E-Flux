@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.eflux.EFlux;
+import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -11,6 +12,7 @@ public abstract class EFluxItem extends Item {
 
     public EFluxItem(String name){
         this.name = name;
+        setRegistryName(new EFluxResourceLocation(name));
         setUnlocalizedName(EFlux.ModID+"."+name);
         setCreativeTab(EFlux.creativeTab);
     }
@@ -18,7 +20,7 @@ public abstract class EFluxItem extends Item {
     private final String name;
 
     public EFluxItem register(){
-        GameRegistry.registerItem(this, name);
+        GameRegistry.register(this);
         return this;
     }
 

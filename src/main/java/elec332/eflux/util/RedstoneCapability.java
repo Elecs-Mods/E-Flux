@@ -5,8 +5,12 @@ import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.widget.WidgetButton;
 import elec332.core.inventory.widget.WidgetEnumChange;
+import elec332.core.util.InventoryHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.init.ItemRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -28,8 +32,16 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
     }
 
     public boolean onActivated(EntityPlayer player, ItemStack stack){
+        if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.redstoneUpgrade)){
+            player.inventory.decrStackSize(player.inventory.getSlotFor(stack), 1);
+            upgraded = true;
+            return true;
+        }
         if (stack == null && upgraded) {
-            player.openGui(EFlux.instance, 2, player.worldObj, 0, 0, 0);
+            if (!player.worldObj.isRemote) {
+                BlockPos pos = PlayerHelper.getPosPlayerIsLookingAt(player, 20D).getBlockPos();
+                player.openGui(EFlux.instance, 2, player.worldObj, pos.getX(), pos.getY(), pos.getZ());
+            }
             return true;
         }
         return false;
@@ -53,7 +65,9 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
 
     @Override
     public void addSlots(BaseContainer baseContainer) {
-        baseContainer.addWidget(new WidgetEnumChange<IRedstoneUpgradable.Mode>(20, 20, 70, 20, IRedstoneUpgradable.Mode.class).addButtonEvent(this));
+        WidgetEnumChange<IRedstoneUpgradable.Mode> widget = new WidgetEnumChange<IRedstoneUpgradable.Mode>(20, 20, 70, 20, IRedstoneUpgradable.Mode.class);
+        widget.setEnum(mode);
+        baseContainer.addWidget(widget.addButtonEvent(this));
     }
 
     @Override
@@ -73,6 +87,8 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
     @Override
     public void onButtonClicked(WidgetButton widgetButton) {
         mode = (IRedstoneUpgradable.Mode)((WidgetEnumChange)widgetButton).getEnum();
+        System.out.println("click");
+        System.out.println(mode);
     }
 
 }

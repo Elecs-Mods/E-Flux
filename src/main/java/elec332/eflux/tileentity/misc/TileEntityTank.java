@@ -65,6 +65,9 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
     @Override
     @SuppressWarnings("deprecation")
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (worldObj.isRemote){
+            return true;
+        }
         if (stack != null && stack.getItem() instanceof IFluidContainerItem){
             IFluidContainerItem item = (IFluidContainerItem) stack.getItem();
             int capacity = item.getCapacity(stack);

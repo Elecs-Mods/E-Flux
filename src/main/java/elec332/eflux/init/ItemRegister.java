@@ -36,6 +36,8 @@ public final class ItemRegister {
     public static ItemStack smallUnrefinedBoard, normalUnrefinedBoard, advancedUnrefinedBoard;
     //Assembled Circuit Boards
     public static ItemStack shockBoard;
+    //Misc
+    public static ItemStack redstoneUpgrade;
 
     public void init(FMLInitializationEvent event){
         //if (ElecCore.developmentEnvironment)
@@ -81,6 +83,8 @@ public final class ItemRegister {
         dustConductive = new ItemStack(dusts, 1, 8);
 
         manual = new ItemManual().register();
+
+        redstoneUpgrade = new ItemStack(new EFluxItem("redstoneUpgrade"){}.register().setMaxStackSize(1));
 
         List<String> components = ((EFluxDusts) dusts).getComponents();
         for (int i = 0; i < components.size(); i++) {

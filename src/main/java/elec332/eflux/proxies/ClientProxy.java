@@ -89,8 +89,9 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
         RenderHandler.dummy();
         ClientRegistry.bindTileEntitySpecialRenderer(FurnaceRenderTile.class, new FurnaceContentsRenderer());
-        //ModelLoaderRegistry.registerLoader(new ML());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer<TileEntityTank>());
+        TileEntityTankRenderer<TileEntityTank> tankRenderer = new TileEntityTankRenderer<TileEntityTank>();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, tankRenderer);
+        RenderingRegistry.instance().registerLoader(tankRenderer);
     }
 
     /**

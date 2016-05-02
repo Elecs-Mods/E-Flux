@@ -4,9 +4,13 @@ import elec332.core.util.WorldGenInfo;
 import elec332.core.world.WorldGen;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.init.BlockRegister;
+import elec332.eflux.init.FluidRegister;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
+import net.minecraft.world.gen.feature.WorldGenLakes;
 
 import java.io.File;
 import java.util.Random;
@@ -28,14 +32,18 @@ public class WorldGenOres extends WorldGen {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        switch (WorldHelper.getDimID(world)){
-            case 0:
-                generateOverworld(world, random, chunkX, chunkZ, copper);
-                generateOverworld(world, random, chunkX, chunkZ, tin);
-                generateOverworld(world, random, chunkX, chunkZ, zinc);
-                generateOverworld(world, random, chunkX, chunkZ, silver);
-            default:
-                break;
+        if (/*!(chunkGenerator instanceof ChunkProviderFlat)*/true) {
+            int dim = WorldHelper.getDimID(world);
+            switch (dim) {
+                case 0:
+                    generateOverworld(world, random, chunkX, chunkZ, copper);
+                    generateOverworld(world, random, chunkX, chunkZ, tin);
+                    generateOverworld(world, random, chunkX, chunkZ, zinc);
+                    generateOverworld(world, random, chunkX, chunkZ, silver);
+                    new WorldGenLakes(FluidRegister.oil.getBlock()).generate(world, random, new BlockPos(chunkX * 16 + random.nextInt(16), 20 + random.nextInt(60), chunkZ * 16 + random.nextInt(16)));
+                default:
+                    break;
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public class Wrench extends Item implements IRightClickCancel, INoJsonItem {
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         Block block = WorldHelper.getBlockAt(world, pos);
         if (block instanceof IWrenchable) {
             if (player.isSneaking()) {

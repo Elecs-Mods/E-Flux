@@ -56,6 +56,9 @@ public final class BlockRegister {
                     machine.renderingLayer = BlockRenderLayer.CUTOUT;
                     machine.itemBlockClass = ItemEFluxSpawner.class;
                     break;
+                case TANK:
+                    machine.renderingLayer = BlockRenderLayer.CUTOUT;
+                    break;
             }
             machine.init();
         }
@@ -116,8 +119,8 @@ public final class BlockRegister {
         RADIATOR(BlockTextures.getDefaultProvider("radiator")),
         MOTOR(BlockTextures.getDefaultProvider("motor")),
         PRECISION_MOTOR(BlockTextures.getDefaultProvider("precisionMotor")),
-        FLUIDINLET(TileEntityMultiBlockFluidInlet.class, BlockTextures.getDefaultProvider("???")),
-        FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class, BlockTextures.getDefaultProvider("???")),
+        FLUIDINLET(TileEntityMultiBlockFluidInlet.class, BlockTextures.getDefaultProvider("fluidInletFront")),
+        FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class, BlockTextures.getDefaultProvider("fluidOutletFront")),
 
         POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
 

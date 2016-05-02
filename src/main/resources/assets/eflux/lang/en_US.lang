@@ -47,47 +47,52 @@ tile.EFlux.efluxCable.0.name=Basic Cable
 tile.EFlux.efluxCable.1.name=Normal Cable
 tile.EFlux.efluxCable.2.name=Advanced Cable
 
-tile.EFlux.lasercore.name=Laser Core
-tile.EFlux.heater.name=Heater
-tile.EFlux.duststorage.name=Dust Storage
-tile.EFlux.radiator.name=Radiator
-tile.EFlux.motor.name=Motor
-tile.EFlux.precision_motor.name=Precision Motor
-tile.EFlux.glass.name=Heat-Resistant Glass
-tile.EFlux.laserlens.name=Laser Lens
+tile.eflux.lasercore.name=Laser Core
+tile.eflux.heater.name=Heater
+tile.eflux.duststorage.name=Dust Storage
+tile.eflux.radiator.name=Radiator
+tile.eflux.motor.name=Motor
+tile.eflux.precision_motor.name=Precision Motor
+tile.eflux.glass.name=Heat-Resistant Glass
+tile.eflux.laserlens.name=Laser Lens
 
 
-tile.EFlux.powerinlet.name=Power Inlet
+tile.eflux.powerinlet.name=Power Inlet
 
-tile.EFlux.ore.copper.name=Copper Ore
-tile.EFlux.ore.tin.name=Tin Ore
-tile.EFlux.ore.zinc.name=Zinc Ore
-tile.EFlux.ore.silver.name=Silver Ore
+tile.eflux.ore.copper.name=Copper Ore
+tile.eflux.ore.tin.name=Tin Ore
+tile.eflux.ore.zinc.name=Zinc Ore
+tile.eflux.ore.silver.name=Silver Ore
 
-tile.EFlux.blockFrame.0.name=Basic Machine Frame
-tile.EFlux.blockFrame.1.name=Normal Machine Frame
-tile.EFlux.blockFrame.2.name=Advanced Machine Frame
+tile.eflux.blockFrame.0.name=Basic Machine Frame
+tile.eflux.blockFrame.1.name=Normal Machine Frame
+tile.eflux.blockFrame.2.name=Advanced Machine Frame
 
-tile.EFlux.itemInlet.name=Item Gate
+tile.eflux.itemInlet.name=Item Gate
 
-tile.EFluxMonitor.name=Monitor
+tile.EFluxmonitor.name=Monitor
 
-tile.EFlux.areaMover.0.name=Area Mover (Tier 1)
-tile.EFlux.areaMover.1.name=Area Mover (Tier 2)
-tile.EFlux.areaMover.2.name=Area Mover (Tier 3)
+tile.eflux.areaMover.0.name=Area Mover (Tier 1)
+tile.eflux.areaMover.1.name=Area Mover (Tier 2)
+tile.eflux.areaMover.2.name=Area Mover (Tier 3)
 
-tile.EFlux.capacitor.name=Capacitor
-tile.EFlux.coal_generator.name=Coal Generator
-tile.EFlux.assembly_table.name=Assembly Table
-tile.EFlux.growthlamp.name=Growth Lamp
-tile.EFlux.chunkmain.name=ChunkLoader Controller
-tile.EFlux.chunksub.name=ChunkLoader
-tile.EFlux.teslacoil.name=Tesla Coil
-tile.EFlux.scanner.name=Scanner
-tile.EFlux.washer.name=Washer
-tile.EFlux.rubblesieve.name=Rubble Sieve
+tile.eflux.capacitor.name=Capacitor
+tile.eflux.coal_generator.name=Coal Generator
+tile.eflux.assembly_table.name=Assembly Table
+tile.eflux.growthlamp.name=Growth Lamp
+tile.eflux.chunkmain.name=ChunkLoader Controller
+tile.eflux.chunksub.name=ChunkLoader
+tile.eflux.teslacoil.name=Tesla Coil
+tile.eflux.scanner.name=Scanner
+tile.eflux.washer.name=Washer
+tile.eflux.rubblesieve.name=Rubble Sieve
 
-tile.EFlux.RFConverter.name=RF Converter
+tile.eflux.RFConverter.name=RF Converter
+
+tile.eflux.fluidinlet.name=Fluid Inlet
+tile.eflux.fluidoutlet.name=Fluid Outlet
+tile.eflux.feeder.name=Feeder
+tile.eflux.spawner.name=EFlux Spawner
 
 ##MANUAL
 eflux.manual.main=E-Flux Manual
