@@ -98,7 +98,7 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
             return null;
         }
         EnderNetwork ret = networkData.get(uuid);
-        if (ret == null && validKeys.contains(uuid)){
+        if (ret == null /*&& validKeys.contains(uuid)*/){
             ret = new EnderNetwork(uuid, side);
             networkData.put(uuid, ret);
         }
@@ -107,7 +107,7 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
 
     public UUID generateNew(){
         UUID uuid = UUID.randomUUID();
-        while (validKeys.contains(uuid)){
+        while (networkData.keySet().contains(uuid)){
             uuid = UUID.randomUUID();
         }
         validKeys.add(uuid);
