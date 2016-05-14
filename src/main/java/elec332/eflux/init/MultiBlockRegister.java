@@ -8,13 +8,21 @@ import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.multiblock.machine.*;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockEnderReader;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.List;
 
 import static elec332.eflux.init.BlockRegister.*;
 
@@ -200,11 +208,65 @@ public final class MultiBlockRegister {
 
         }, "desalter", MultiBlockDesalter.class);
 
+        EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
+
+            @Override
+            public boolean canCreate(EntityPlayerMP entityPlayerMP) {
+                return true;
+            }
+
+            @Override
+            public boolean areSecondaryConditionsMet(World world, BlockPos bottomLeft, EnumFacing facing) {
+                TileEntityMultiBlockEnderReader tile = (TileEntityMultiBlockEnderReader) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 0, 0));
+                if (tile.isValidMultiBlock()){
+                    return true;
+                }
+                BlockPos topRight = getTranslatedPosition(bottomLeft, facing, 2, 2, 2);
+                AxisAlignedBB aabb = new AxisAlignedBB(bottomLeft, topRight);
+                List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
+                boolean ret = false;
+                for (EntityItem item : items){
+                    ItemStack stack = item.getEntityItem();
+                    if (stack != null && stack.getItem() != null && stack.getItem() == Items.ENDER_EYE){
+                        ret = true;
+                        break;
+                    }
+                }
+                if (ret){
+                    for (EntityItem entityItem : items){
+                        world.removeEntity(entityItem);
+                    }
+                }
+                return ret;
+                /*if (!ret) {
+                    System.out.println("checkT");
+                    TileEntityMultiBlockEnderReader tile = (TileEntityMultiBlockEnderReader) WorldHelper.getTileAt(world, getTranslatedPosition(bottomLeft, facing, 1, 0, 0));
+                    System.out.println("gotT");
+                    boolean b =  tile.isValidMultiBlock();
+                    System.out.println("V: "+b);
+                    return b;*/
+                //    return false;
+                //}
+                //return true;
+            }
+
+            @Override
+            public BlockStructure getStructure() {
+                return BlockStructures.enderContainer;
+            }
+
+            @Override
+            public BlockStateWrapper getTriggerBlock() {
+                return heatResistantGlass;
+            }
+
+        }, "enderContainer", MultiBlockEnderContainer.class);
+
     }
 
     public static class BlockStructures{
 
-        public static BlockStructure compressor, laser, furnace, grinder, distillationTower, desalter;
+        public static BlockStructure compressor, laser, furnace, grinder, distillationTower, desalter, enderContainer;
 
         private static void init(){
             compressor = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
@@ -352,6 +414,26 @@ public final class MultiBlockRegister {
                         return fluidOutlet;
                     }
                     return frameNormal;
+                }
+            });
+            enderContainer = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (length == 1 && height == 0){
+                        if (width == 0){
+                            return enderReader;
+                        }
+                        if (width == 2){
+                            return powerInlet;
+                        }
+                    }
+                    if (length == 1 && width == 1 && height == 1){
+                        return air;
+                    }
+                    if (height == 1 && (width == 1 || length == 1) || length == 1 && width == 1){
+                        return heatResistantGlass;
+                    }
+                    return frameAdvanced;
                 }
             });
 

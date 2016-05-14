@@ -51,11 +51,6 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
     private int heat;
 
     @Override
-    public boolean onAnyBlockActivated(EntityPlayer entityPlayer) {
-        return false;
-    }
-
-    @Override
     public void onTick() {
         if (getWorldObj().getWorldTime() % 10 == 0 && heat >= Config.MultiBlocks.Desalter.requiredheat){
             FluidStack drained = oilTank.drain(20, false);

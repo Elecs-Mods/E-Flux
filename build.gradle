@@ -58,6 +58,9 @@ version = "${config.minecraft_version}-${config.mod_version}." + (System.env.DRO
 group= mod.group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod.fileName
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
     runDir = "run"

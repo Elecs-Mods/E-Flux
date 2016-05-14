@@ -40,6 +40,7 @@ public class UnrefinedBoard extends Item implements INoJsonItem {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (int i = 0; i < types; i++) {
             subItems.add(new ItemStack(itemIn, 1, i));

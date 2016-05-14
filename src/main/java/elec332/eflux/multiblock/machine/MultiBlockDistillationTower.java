@@ -97,11 +97,6 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
         heat = tagCompound.getInteger("heat");
     }
 
-    @Override
-    public boolean onAnyBlockActivated(EntityPlayer player) {
-        return false;
-    }
-
     /**
      * This gets run server-side only
      */

@@ -1,15 +1,22 @@
 package elec332.eflux.util;
 
 import com.google.common.base.Predicate;
+import net.minecraft.tileentity.TileEntity;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 22-4-2016.
  */
 public interface IRedstoneUpgradable {
 
-    public Predicate<Mode> getModePredicate();
+    default public Predicate<Mode> getModePredicate(){
+        return IRedstoneUpgradable.DEFAULT_MODE;
+    }
 
-    public boolean isRedstonePowered();
+    default public boolean isRedstonePowered(TileEntity tile) {
+        return tile.hasCapability(RedstoneCapability.CAPABILITY, null) && tile.getCapability(RedstoneCapability.CAPABILITY, null).isPowered(tile.getWorld(), tile.getPos());
+    }
 
     public enum Mode {
 
@@ -33,5 +40,12 @@ public interface IRedstoneUpgradable {
         public abstract boolean isPowered(boolean hasRedstone);
 
     }
+
+    static final Predicate<Mode> DEFAULT_MODE = new Predicate<Mode>() {
+        @Override
+        public boolean apply(@Nullable Mode input) {
+            return true;
+        }
+    };
 
 }

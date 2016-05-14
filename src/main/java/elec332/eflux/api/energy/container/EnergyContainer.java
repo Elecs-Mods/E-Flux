@@ -63,8 +63,10 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
             markDirty();
             return true;
         }
-        storedPower = 0;
-        markDirty();
+        if (storedPower > 0) {
+            storedPower = 0;
+            markDirty();
+        }
         return false;
     }
 

@@ -12,27 +12,39 @@ import elec332.core.client.model.model.IModelAndTextureLoader;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.inventory.BaseContainer;
+import elec332.core.multiblock.IMultiBlockRenderer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
+import elec332.eflux.client.inventory.GuiEnderContainer;
 import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.client.manual.gui.GuiManual;
 import elec332.eflux.client.render.FurnaceContentsRenderer;
 import elec332.eflux.client.render.RenderHandler;
 import elec332.eflux.client.render.TileEntityLaserRenderer;
 import elec332.eflux.client.render.TileEntityTankRenderer;
+import elec332.eflux.inventory.ContainerEnderContainer;
+import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.tileentity.BreakableMachineTile;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -65,8 +77,10 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             case 3:
                 return new GuiManual();
             case 1:
-                if (tile instanceof BreakableMachineTile)
+                if (tile instanceof BreakableMachineTile) {
                     return ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
+                }
+                return null;
             case 2:
                 if (tile != null) {
                     return new GuiMachine((BaseContainer) getServerGuiElement(2, player, world, x, y, z)) {
@@ -76,22 +90,63 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
                         }
                     };
                 }
+                return null;
+            case 4:
+                Container container1 = getServerGuiElement(ID, player, world, x, y, z);
+                if (container1 != null){
+                    return new GuiEnderContainer((ContainerEnderContainer) container1);
+                }
+                return null;
+            case 5:
+                Container container2 = getServerGuiElement(ID, player, world, x, y, z);
+                if (container2 != null){
+                    return new GuiMachine((BaseContainer) container2) {
+                        @Override
+                        public ResourceLocation getBackgroundImageLocation() {
+                            return new EFluxResourceLocation("gui/GuiNull.png");
+                        }
+                    };
+                }
+                return null;
             default:
-                if (tile instanceof IInventoryTile)
+                if (tile instanceof IInventoryTile) {
                     return ((IInventoryTile) tile).getGuiClient(player);
-                else return null;
+                }
+                return null;
         }
+    }
+
+    @Override
+    public World getClientWorld() {
+        return Minecraft.getMinecraft().theWorld;
     }
 
     @Override
     public void initRenderStuff(){
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaser.class, new TileEntityLaserRenderer());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInsideItemRenderer.class, new InsideItemRenderer());
         RenderHandler.dummy();
         ClientRegistry.bindTileEntitySpecialRenderer(FurnaceRenderTile.class, new FurnaceContentsRenderer());
         TileEntityTankRenderer<TileEntityTank> tankRenderer = new TileEntityTankRenderer<TileEntityTank>();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, tankRenderer);
         RenderingRegistry.instance().registerLoader(tankRenderer);
+        /*EFlux.multiBlockRegistry.registerMultiBlockRenderer(MultiBlockEnderContainer.class, new IMultiBlockRenderer<MultiBlockEnderContainer>() {
+
+            EntityItem eI = new EntityItem(null, 0, 0, 0, new ItemStack(Items.ENDER_PEARL));
+
+            @Override
+            public void renderMultiBlock(MultiBlockEnderContainer multiblock, float partialTicks) {
+                GlStateManager.pushMatrix();
+                GlStateManager.rotate(System.currentTimeMillis() % 360, 1, 0, 0);
+                BlockPos pos = multiblock.getBlockLocAtTranslatedPos(1, 1, 1);
+                Minecraft.getMinecraft().getRenderManager().doRenderEntity(eI, pos.getX() + .5, pos.getY(), pos.getZ() + .5, 0, partialTicks, true);
+                GlStateManager.popMatrix();
+            }
+
+            @Override
+            public AxisAlignedBB getRenderingBoundingBox(MultiBlockEnderContainer multiblock) {
+                return new AxisAlignedBB(multiblock.getLocation(), multiblock.getBlockLocAtTranslatedPos(2, 2, 2));
+            }
+        });*/
     }
 
     /**

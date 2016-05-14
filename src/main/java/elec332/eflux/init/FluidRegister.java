@@ -42,7 +42,7 @@ public final class FluidRegister {
         lubicrant = registerFluid("lubicrant");
         fuel = registerFluid("fuel");
         diesel = registerFluid("diesel");
-        petrol = registerFluid("Petrol");
+        petrol = registerFluid("petrol");
         gas = registerFluid("lpg");
         brine = registerFluid("brine");
     }

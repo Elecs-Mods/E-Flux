@@ -26,7 +26,7 @@ public class TileEntityMultiBlockFluidOutlet extends AbstractTileEntityMultiBloc
 
     @Override
     public void update() {
-        if (hasRedstone()){
+        if (isRedstonePowered(this)){
             EnumFacing facing = getTileFacing();
             TileEntity tile = WorldHelper.getTileAt(worldObj, getPos().offset(facing));
             if (tile instanceof IFluidHandler){

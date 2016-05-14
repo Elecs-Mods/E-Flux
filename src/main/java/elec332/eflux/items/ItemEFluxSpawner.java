@@ -1,7 +1,6 @@
 package elec332.eflux.items;
 
 import elec332.core.world.WorldHelper;
-import elec332.eflux.endernetwork.ILinkableItem;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -25,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 21-2-2016.
  */
-public class ItemEFluxSpawner extends ItemBlock implements ILinkableItem {
+public class ItemEFluxSpawner extends ItemBlock {
 
     public ItemEFluxSpawner(Block block) {
         super(block);
@@ -60,34 +59,6 @@ public class ItemEFluxSpawner extends ItemBlock implements ILinkableItem {
         } else {
             return EnumActionResult.FAIL;
         }
-    }
-
-    @Override
-    @Nullable
-    public UUID getLinkID(ItemStack stack) {
-        return stack.hasTagCompound() ? UUID.fromString(stack.getTagCompound().getString("lID")) : null;
-    }
-
-    @Override
-    public boolean hasLink(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey("lID");
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return super.getUnlocalizedName(stack);
-    }
-
-    @Override
-    public void setLinkID(ItemStack stack, @Nullable UUID newID) {
-        if (!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
-        }
-        if (newID == null){
-            stack.getTagCompound().removeTag("lID");
-            return;
-        }
-        stack.getTagCompound().setString("lID", newID.toString());
     }
 
 }

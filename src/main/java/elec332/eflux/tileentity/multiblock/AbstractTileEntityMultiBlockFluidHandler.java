@@ -1,9 +1,7 @@
 package elec332.eflux.tileentity.multiblock;
 
-import com.google.common.base.Predicate;
 import elec332.eflux.util.IEFluxFluidHandler;
 import elec332.eflux.util.IRedstoneUpgradable;
-import elec332.eflux.util.RedstoneCapability;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -82,23 +80,6 @@ public abstract class AbstractTileEntityMultiBlockFluidHandler extends AbstractT
     @Override
     protected Capability<IEFluxFluidHandler> getCapability() {
         return CAPABILITY;
-    }
-
-    @Override
-    public Predicate<Mode> getModePredicate() {
-        return null;
-    }
-
-    @Override
-    public boolean isRedstonePowered() {
-        boolean cap = hasCapability(RedstoneCapability.CAPABILITY, null);
-        //System.out.println("HssCap: "+cap);
-        return cap && getCapability(RedstoneCapability.CAPABILITY, null).isPowered(worldObj, pos);
-    }
-
-    @Override
-    public boolean hasRedstone() {
-        return isRedstonePowered();
     }
 
 }

@@ -102,7 +102,7 @@ public class Components extends Item implements IElectricComponent, INoJsonItem 
         }
     }
 
-    private static class BrokenComponents extends Components{
+    private static class BrokenComponents extends Components {
 
         @Override
         protected String getName() {

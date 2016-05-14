@@ -13,4 +13,5 @@ public class EFluxCoils extends EFluxItemsIngot {
     protected String getName() {
         return "coils";
     }
+
 }

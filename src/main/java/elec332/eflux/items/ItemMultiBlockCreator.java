@@ -25,7 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ItemMultiBlockCreator extends EFluxItem implements INoJsonItem {
 
-
     public ItemMultiBlockCreator() {
         super("multiBlockCreator");
     }

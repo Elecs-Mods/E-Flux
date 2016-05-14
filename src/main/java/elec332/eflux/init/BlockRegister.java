@@ -11,10 +11,7 @@ import elec332.eflux.items.ItemEFluxSpawner;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
-import elec332.eflux.tileentity.multiblock.TileEntityDustStorage;
-import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockFluidInlet;
-import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockFluidOutlet;
-import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockPowerInlet;
+import elec332.eflux.tileentity.multiblock.*;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,7 +33,7 @@ public final class BlockRegister {
 
     public static Block ores, oldCable, areaMover;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
-                                    fluidInlet, fluidOutlet;
+                                    fluidInlet, fluidOutlet, enderReader;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
     public void init(FMLInitializationEvent event){
@@ -102,6 +99,8 @@ public final class BlockRegister {
         fluidInlet = BlockMachineParts.FLUIDINLET.getMultiBlockWrapper();
         fluidOutlet = BlockMachineParts.FLUIDOUTLET.getMultiBlockWrapper();
 
+        enderReader = BlockMachineParts.ENDER.getMultiBlockWrapper();
+
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
 
         oldCable = new BlockCable("efluxCable").register();
@@ -123,6 +122,7 @@ public final class BlockRegister {
         FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class, BlockTextures.getDefaultProvider("fluidOutletFront")),
 
         POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
+        ENDER(TileEntityMultiBlockEnderReader.class, BlockTextures.getDefaultProvider("ender_front")),
 
         ;
 

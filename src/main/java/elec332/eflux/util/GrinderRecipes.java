@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 10-9-2015.
  */
-public class GrinderRecipes{
+public class GrinderRecipes {
 
     public static final GrinderRecipes instance = new GrinderRecipes();
     private GrinderRecipes(){

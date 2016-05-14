@@ -1,6 +1,7 @@
 package elec332.eflux.multiblock;
 
 import elec332.core.multiblock.AbstractMultiBlock;
+import elec332.eflux.api.energy.IEnergySource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -13,7 +14,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implements MultiBlockInterfaces.IEFluxMultiBlockPowerProvider {
+public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implements IEnergySource {
 
     public EFluxMultiBlockGenerator(){
         storedPower = 0;
@@ -28,8 +29,8 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
         storedPower += power;
     }
 
-    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerProvider.class)
-    private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerProvider> CAPABILITY;
+    @CapabilityInject(IEnergySource.class)
+    private static Capability<IEnergySource> CAPABILITY;
 
     protected int storedPower;
 
@@ -77,11 +78,6 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
     @Override
     public void invalidate() {
 
-    }
-
-    @Override
-    public boolean onAnyBlockActivated(EntityPlayer player) {
-        return false;
     }
 
     @Override

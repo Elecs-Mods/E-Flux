@@ -8,6 +8,7 @@ import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockFluid;
 import elec332.eflux.client.ClientHelper;
+import elec332.eflux.client.WrappedModel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -39,7 +40,7 @@ public class ItemBucket extends net.minecraft.item.ItemBucket implements INoJson
     public ItemBucket(final BlockFluid containedBlock) {
         super(containedBlock);
         setRegistryName(containedBlock.getRegistryName());
-        setUnlocalizedName(getRegistryName().toString());
+        setUnlocalizedName(getRegistryName().toString().replace(":", ".").toLowerCase());
         setContainerItem(Items.BUCKET);
         MinecraftForge.EVENT_BUS.register(new Object(){
 
@@ -67,55 +68,22 @@ public class ItemBucket extends net.minecraft.item.ItemBucket implements INoJson
     private static final ResourceLocation BUCKET_BACK, BUCKET_FRONT;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IBakedModel getItemModel(ItemStack itemStack, World world, EntityLivingBase entityLivingBase) {
         return model;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iIconRegistrar) {
         iIconRegistrar.registerSprite(BUCKET_BACK);
         iIconRegistrar.registerSprite(BUCKET_FRONT);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerModels(ElecQuadBakery elecQuadBakery, ElecModelBakery elecModelBakery, ElecTemplateBakery elecTemplateBakery) {
-        final IBakedModel modelB = new ModelDynBucket(BUCKET_BACK, fluidRL, BUCKET_FRONT, fluid, true).bake(ClientHelper.DEFAULT_ITEM_STATE, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-        model = new IBakedModel() {
-            @Override
-            public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-                return modelB.getQuads(state, side, rand);
-            }
-
-            @Override
-            public boolean isAmbientOcclusion() {
-                return modelB.isAmbientOcclusion();
-            }
-
-            @Override
-            public boolean isGui3d() {
-                return modelB.isGui3d();
-            }
-
-            @Override
-            public boolean isBuiltInRenderer() {
-                return modelB.isBuiltInRenderer();
-            }
-
-            @Override
-            public TextureAtlasSprite getParticleTexture() {
-                return modelB.getParticleTexture();
-            }
-
-            @Override
-            public ItemCameraTransforms getItemCameraTransforms() {
-                return ElecModelBakery.DEFAULT_ITEM;
-            }
-
-            @Override
-            public ItemOverrideList getOverrides() {
-                return modelB.getOverrides();
-            }
-        };
+        model = WrappedModel.wrapWithDefaultItemTransforms(new ModelDynBucket(BUCKET_BACK, fluidRL, BUCKET_FRONT, fluid, true).bake(ClientHelper.DEFAULT_ITEM_STATE, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter()));
     }
 
     static {

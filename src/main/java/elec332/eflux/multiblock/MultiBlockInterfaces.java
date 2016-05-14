@@ -34,22 +34,4 @@ public final class MultiBlockInterfaces {
 
     }
 
-    @Deprecated
-    public interface IEFluxMultiBlockPowerAcceptor extends IEFluxMultiBlock{
-
-        public int requestedRP();
-
-        public int getRequestedEF(int rp);
-
-        public int receivePower(int rp, int ef);
-
-    }
-
-    @Deprecated
-    public interface IEFluxMultiBlockPowerProvider extends IEFluxMultiBlock{
-
-        public int provideEnergy(int rp, boolean execute);
-
-    }
-
 }

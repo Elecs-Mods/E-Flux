@@ -3,6 +3,7 @@ package elec332.eflux.multiblock;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.InventoryHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
@@ -11,10 +12,12 @@ import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.MultiBlockLogic;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -26,7 +29,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor, IEFluxPowerHandler {
+public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, IEFluxPowerHandler {
 
     public EFluxMultiBlockMachine(){
         super();
@@ -34,8 +37,8 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         this.broken = false;
     }
 
-    @CapabilityInject(MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor.class)
-    private static Capability<MultiBlockInterfaces.IEFluxMultiBlockPowerAcceptor> CAPABILITY;
+    @CapabilityInject(IEnergyReceiver.class)
+    private static Capability<IEnergyReceiver> CAPABILITY;
 
     private EnergyContainer energyContainer;
     private BreakableMachineInventory breakableMachineInventory;
@@ -135,13 +138,13 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
-    public final boolean onAnyBlockActivated(EntityPlayer player) {
+    public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
         if (broken)
             return openGui(player);
-        return onAnyBlockActivatedSafe(player);
+        return onAnyBlockActivatedSafe(player, hand, stack, pos, state);
     }
 
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player){
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state){
         return false;
     }
 
@@ -170,21 +173,6 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     public abstract ItemStack getRandomRepairItem();
 
     @Override
-    public final int requestedRP(){
-        return energyContainer.requestedRP();
-    }
-
-    @Override
-    public final int getRequestedEF(int rp) {
-        return energyContainer.getRequestedEF(rp);
-    }
-
-    @Override
-    public final int receivePower(int rp, int ef) {
-        return energyContainer.receivePower(rp, ef);
-    }
-
-    @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
     }
@@ -192,7 +180,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CAPABILITY ? (T)this : super.getCapability(capability, facing, pos);
+        return capability == CAPABILITY ? (T) energyContainer : super.getCapability(capability, facing, pos);
     }
 
 }

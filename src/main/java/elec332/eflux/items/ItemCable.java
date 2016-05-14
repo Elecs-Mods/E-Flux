@@ -57,6 +57,7 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (int i = 0; i < 3; i++) {
             subItems.add(new ItemStack(itemIn, 1, i));

@@ -7,12 +7,14 @@ import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -101,14 +103,14 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     public boolean canFaceUpOrDown() {
         return true;
     }
-
+/*
     @Override
-    public boolean onBlockActivatedBy(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedBy(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldObj.isRemote){
             player.addChatComponentMessage(new TextComponentString("Mode: " + (isOutputMode() ? "output" : "input")));
         }
-        return super.onBlockActivatedBy(player, side, hitX, hitY, hitZ);
-    }
+        return super.onBlockActivatedBy(state, player, hand, stack, side, hitX, hitY, hitZ);
+    }*/
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {

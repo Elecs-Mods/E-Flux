@@ -6,6 +6,8 @@ import elec332.eflux.items.*;
 import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.items.circuits.UnrefinedBoard;
+import elec332.eflux.items.ender.capability.ItemEFluxEnderCapabilityPlayerInventory;
+import elec332.eflux.items.ender.ItemEnderInventory;
 import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -37,7 +39,7 @@ public final class ItemRegister {
     //Assembled Circuit Boards
     public static ItemStack shockBoard;
     //Misc
-    public static ItemStack redstoneUpgrade;
+    public static ItemStack redstoneUpgrade, entangledEnder;
 
     public void init(FMLInitializationEvent event){
         //if (ElecCore.developmentEnvironment)
@@ -48,12 +50,17 @@ public final class ItemRegister {
         groundMesh = new GroundMesh().register();
         areaMover = new ItemAreaMover().register().setCreativeTab(EFlux.creativeTab);
         multiBlockCreator = new ItemMultiBlockCreator().register();
+        entangledEnder = new ItemStack(new ItemEntangledEnder().register());
 
         EFluxItems = new EFluxItems();
         GameRegistry.registerItem(EFluxItems, "GenericItems");
         carbonPlate = new ItemStack(EFluxItems, 1, 0);
         scrap = new ItemStack(EFluxItems, 1, 1);
         carbonMesh = new ItemStack(EFluxItems, 1, 2);
+
+        GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory(CapabilityRegister.instance.playerInventory));
+        new ItemEnderConfigurator().register();
+        new ItemEnderInventory().register();
 
         ingot = new EFluxItemsIngot();
         GameRegistry.registerItem(ingot, "EFluxIngot");

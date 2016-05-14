@@ -1,14 +1,28 @@
 package elec332.eflux.handler;
 
 import com.google.common.base.Predicate;
+import elec332.core.main.ElecCore;
+import elec332.core.util.InventoryHelper;
+import elec332.core.util.NBTHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
+import elec332.eflux.endernetwork.EnderNetwork;
+import elec332.eflux.endernetwork.EnderNetworkManager;
+import elec332.eflux.init.ItemRegister;
+import elec332.eflux.items.ItemEntangledEnder;
 import elec332.eflux.util.IRedstoneUpgradable;
 import elec332.eflux.util.RedstoneCapability;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -16,12 +30,61 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Created by Elec332 on 27-4-2016.
  */
 public class WorldEventHandler {
+
+    @SubscribeEvent
+    public void onExplosion(ExplosionEvent.Detonate event){
+        if (!event.getWorld().isRemote) {
+            int ender = 0, blaze = 0, gold = 0;
+            boolean enderman = false;
+            for (Entity entity : event.getAffectedEntities()) {
+                if (entity instanceof EntityEnderman) {
+                    enderman = true;
+                }
+                if (entity instanceof EntityItem) {
+                    ItemStack stack = ((EntityItem) entity).getEntityItem();
+                    if (stack != null && stack.getItem() != null) {
+                        Item item = stack.getItem();
+                        if (item == Items.ENDER_PEARL) {
+                            ender += stack.stackSize;
+                        } else if (item == Items.BLAZE_ROD) {
+                            blaze += stack.stackSize;
+                        } else if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.dustGold)) {
+                            gold += stack.stackSize;
+                        }
+                    }
+                }
+            }
+            if (enderman) {
+                int pairs = 0;
+                while (ender >= 2 && blaze >= 1 && gold >= 2) {
+                    pairs++;
+                    ender -= 2;
+                    gold -= 2;
+                    blaze--;
+                }
+                final int pairs2 = pairs;
+                ElecCore.tickHandler.registerCall(new Runnable() {
+                    @Override
+                    public void run() {
+                        Vec3d pos = event.getExplosion().getPosition();
+                        for (int i = 0; i < pairs2; i++) {
+                            ItemStack stack = ItemEntangledEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew());
+                            stack.stackSize = 2;
+                            WorldHelper.dropStack(event.getWorld(), (int) pos.xCoord, (int) pos.yCoord, (int) pos.zCoord, stack);
+                        }
+                    }
+                }, event.getWorld());
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onBlockActivated(PlayerInteractEvent.RightClickBlock event){

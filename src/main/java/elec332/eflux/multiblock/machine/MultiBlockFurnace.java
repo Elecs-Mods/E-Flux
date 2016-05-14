@@ -7,6 +7,7 @@ import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,7 +15,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -123,13 +126,13 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player) {
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
         if (player instanceof EntityPlayerMP)
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
             }
 
-        return super.onAnyBlockActivatedSafe(player);
+        return super.onAnyBlockActivatedSafe(player, hand, stack, pos, state);
     }
 
     @Override

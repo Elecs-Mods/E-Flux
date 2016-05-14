@@ -288,7 +288,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
                         BlockPos pos = getPos().offset(side);
                         TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
                         if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
-                            if (EnergyAPIHelper.isProvider(tile, side) || EnergyAPIHelper.isReceiver(tile, side)) {
+                            if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
                                 connectData.add(side);
                             } else {
                                 IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());

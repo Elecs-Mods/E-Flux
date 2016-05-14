@@ -6,11 +6,14 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.util.DustPile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Elec332 on 27-8-2015.
@@ -93,15 +96,16 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
         return 500;
     }
 
+
     @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player) {
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
         if (!getWorldObj().isRemote){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
             }
             PlayerHelper.sendMessageToPlayer(player, ""+dustPile.getSize());
         }
-        return super.onAnyBlockActivatedSafe(player);
+        return super.onAnyBlockActivatedSafe(player, hand, stack, pos, state);
     }
 
     @Override

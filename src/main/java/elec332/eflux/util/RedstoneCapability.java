@@ -39,7 +39,7 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
         }
         if (stack == null && upgraded) {
             if (!player.worldObj.isRemote) {
-                BlockPos pos = PlayerHelper.getPosPlayerIsLookingAt(player, 20D).getBlockPos();
+                BlockPos pos = PlayerHelper.getPosPlayerIsLookingAt(player, 6D).getBlockPos();
                 player.openGui(EFlux.instance, 2, player.worldObj, pos.getX(), pos.getY(), pos.getZ());
             }
             return true;

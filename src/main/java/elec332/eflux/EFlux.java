@@ -9,21 +9,26 @@ import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.MCModInfo;
 import elec332.eflux.api.EFluxAPI;
+import elec332.eflux.api.ender.IEnderCapabilityFactory;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.compat.Compat;
 import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
 import elec332.eflux.endernetwork.EnderNetworkManager;
+import elec332.eflux.endernetwork.EnderRegistryCallbacks;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
+import elec332.eflux.network.*;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
+import elec332.eflux.util.LoadTimer;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
@@ -32,12 +37,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.config.Configuration;;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -45,13 +48,14 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
+import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -76,10 +80,18 @@ public class EFlux { //TODO
     public static Random random;
     public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
+    public static FMLControlledNamespacedRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
+
+    private LoadTimer loadTimer;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
+        loadTimer = new LoadTimer(logger, ModName);
+        loadTimer.startPhase(event);
+        enderCapabilityRegistry = PersistentRegistryManager.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, null, 0, Byte.MAX_VALUE, true, EnderRegistryCallbacks.INSTANCE, EnderRegistryCallbacks.INSTANCE, EnderRegistryCallbacks.INSTANCE);
         EFluxAPI.dummyLoad();
+        CapabilityRegister.instance.init();
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
         creativeTab = new CreativeTabs("EFlux") {
@@ -88,17 +100,18 @@ public class EFlux { //TODO
                 return Item.getItemFromBlock(Blocks.ANVIL);  //TODO: replace with mod item, once we got a nice one
             }
         };
-        logger = event.getModLog();
         configWrapper = new ConfigWrapper(config);
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
+        networkHandler.registerClientPacket(new PacketSyncEnderNetwork());
+        networkHandler.registerClientPacket(new PacketSyncEnderContainerGui());
+        networkHandler.registerClientPacket(new PacketSendEnderNetworkData());
+        networkHandler.registerClientPacket(new PacketSendValidNetworkKeys());
+        networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
-
-        ElecCore.oldBlocks = true;
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.IRON_INGOT).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
-
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));
@@ -116,7 +129,7 @@ public class EFlux { //TODO
         logger.info("RF API loaded: "+Compat.RF);
         logger.info("RFTools: "+Compat.RFTools);
 
-
+        loadTimer.endPhase(event);
         MCModInfo.createMCModInfo(event, "Created by Elec332",
                 "E-Flux",
                 "website link", "logo",
@@ -125,10 +138,10 @@ public class EFlux { //TODO
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws IOException{
+        loadTimer.startPhase(event);
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
-        CapabilityRegister.instance.init();
         MultiPartRegister.init();
         FluidRegister.instance.init();
         proxy.initRenderStuff();
@@ -149,19 +162,16 @@ public class EFlux { //TODO
             }
         });
         RecipeRegister.registerRecipes();
-        ServerHelper.instance.registerExtendedProperties("EFluxEnderNetwork", new Callable<INBTSerializable<NBTTagCompound>>() {
-            @Override
-            public INBTSerializable<NBTTagCompound> call() throws Exception {
-                return EnderNetworkManager.instance;
-            }
-        });
+        EnderNetworkManager.registerSaveHandler();
         //register items/blocks
-
+        loadTimer.endPhase(event);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
+        loadTimer.startPhase(event);
         //Nope
+        loadTimer.endPhase(event);
     }
 
     @Mod.EventHandler
@@ -170,8 +180,9 @@ public class EFlux { //TODO
     }
 
     public static void systemPrintDebug(Object s){
-        if (Config.DebugLog)
+        if (Config.DebugLog) {
             System.out.println(s);
+        }
     }
 
     private void registerRecipes(){
