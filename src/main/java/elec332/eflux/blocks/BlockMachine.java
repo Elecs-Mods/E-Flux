@@ -12,7 +12,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.render.BlockMachineQuadProvider;
+import elec332.eflux.client.render.model.BlockMachineQuadProvider;
 import elec332.eflux.util.UniversalUnlistedProperty;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;

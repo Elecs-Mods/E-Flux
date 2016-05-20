@@ -26,9 +26,10 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
+        return tagCompound;
     }
 
     @Override

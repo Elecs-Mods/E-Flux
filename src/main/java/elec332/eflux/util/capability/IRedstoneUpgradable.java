@@ -1,4 +1,4 @@
-package elec332.eflux.util;
+package elec332.eflux.util.capability;
 
 import com.google.common.base.Predicate;
 import net.minecraft.tileentity.TileEntity;

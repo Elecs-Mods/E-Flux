@@ -21,6 +21,9 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
     }
 
     protected void generatePower(int power){
+        if (power <= 0){
+            return;
+        }
         int i = maxStoredPower() - storedPower;
         if (power > i){
             storedPower = maxStoredPower();
@@ -81,13 +84,8 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         return capability == CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
     }
 

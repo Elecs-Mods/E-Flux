@@ -112,14 +112,14 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityMonitor) {
             ((TileEntityMonitor) tile).pokeCheckStuff();
         } else if (tile instanceof TileBase) {
             ((TileBase) tile).onNeighborBlockChange(block);
         } else {
-            super.onNeighborBlockChange(world, pos, state, block);
+            super.neighborChanged(state, world, pos, block);
         }
     }
 

@@ -1,4 +1,4 @@
-package elec332.eflux.util;
+package elec332.eflux.util.capability;
 
 import com.google.common.base.Predicate;
 import elec332.core.inventory.BaseContainer;
@@ -10,7 +10,6 @@ import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

@@ -147,6 +147,15 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        if (capability == EFluxAPI.HEAT_CAPABILITY && heatInputs.contains(pos)){
+            return (T) this;
+        }
+        return super.getCapability(capability, facing, pos);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         if (capability == CAPABILITY){
             if (pos.equals(oilIn1) || pos.equals(oilIn2)){
                 return (T) oilTank;
@@ -163,10 +172,7 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
             }
             return null;
         }
-        if (capability == EFluxAPI.HEAT_CAPABILITY && heatInputs.contains(pos)){
-            return (T) this;
-        }
-        return super.getCapability(capability, facing, pos);
+        return super.getSpecialCapability(capability, facing, pos);
     }
 
     @Override

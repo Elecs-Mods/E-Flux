@@ -1,6 +1,7 @@
 package elec332.eflux.api.ender;
 
 import elec332.eflux.api.ender.internal.DisconnectReason;
+import elec332.eflux.api.ender.internal.ICapabilityNetworkHandler;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,18 @@ public interface IEnderCapability<T> extends INBTSerializable<NBTTagCompound> {
     public void addConnection(IStableEnderConnection<T> connection);
 
     public void removeConnection(IStableEnderConnection<T> connection, DisconnectReason reason);
+
+    default public void setNetworkHandler(ICapabilityNetworkHandler networkHandler){
+    }
+
+    default public void onDataPacket(int id, NBTTagCompound data){
+    }
+
+    default public void validate(){
+    }
+
+    default public void invalidate(){
+    }
 
     default public void addInformation(List<String> list){
     }

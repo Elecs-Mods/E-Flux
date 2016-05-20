@@ -78,12 +78,13 @@ public class TileEntityEFluxSpawner extends TileBase implements ITickable {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setBoolean("Hr", hasRedstone);
         tagCompound.setBoolean("ignoreP", ignorePlayer);
         tagCompound.setBoolean("brainDead", brainDead);
         tagCompound.setBoolean("rA", redstoneActivated);
+        return tagCompound;
     }
 
     @Override
@@ -115,7 +116,7 @@ public class TileEntityEFluxSpawner extends TileBase implements ITickable {
     private class EFluxMobSpawner extends MobSpawnerBaseLogic {
 
         @Override
-        public void func_98267_a(int id) {
+        public void broadcastEvent(int id) {
             //???
         }
 
@@ -205,7 +206,7 @@ public class TileEntityEFluxSpawner extends TileBase implements ITickable {
                             }
 
                             AnvilChunkLoader.spawnEntity(entity, world);
-                            world.playAuxSFX(2004, blockpos, 0);
+                            world.playEvent(2004, blockpos, 0);
 
                             if (entityliving != null)
                             {

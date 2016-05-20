@@ -31,7 +31,6 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
         if (!worldObj.isRemote) {
             EnergyAPIHelper.postLoadEvent(this);
         }
-        System.out.println(pos + " f: "+getTileFacing());
     }
 
     private int latsRP, lastEF;

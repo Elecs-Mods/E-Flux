@@ -11,7 +11,7 @@ import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.inventory.slot.SlotAssembly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -55,7 +55,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
                 @Override
                 public void update() {
                     canClick = assemblyTable.getStoredPower() >= 200;
-                    for (ICrafting crafting : listeners){
+                    for (IContainerListener crafting : listeners){
                         crafting.sendProgressBarUpdate(ContainerAssemblyTable.this, 3, canClick ? 1 : 0);
                     }
                 }
@@ -96,7 +96,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         super.detectAndSendChanges();
         circuit.validate();
         syncSlots();
-        for (ICrafting crafting : listeners){
+        for (IContainerListener crafting : listeners){
             crafting.sendProgressBarUpdate(this, 3, canClick ? 1 : 0);
         }
     }

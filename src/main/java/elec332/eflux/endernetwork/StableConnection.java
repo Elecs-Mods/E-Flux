@@ -1,11 +1,13 @@
 package elec332.eflux.endernetwork;
 
+import elec332.core.world.WorldHelper;
 import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.IEnderNetworkTile;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
+import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nonnull;
 
@@ -26,6 +28,9 @@ public final class StableConnection<T> implements IStableEnderConnection<T> {
         this.capability.addConnection(this);
         this.component.onConnect(this);
         ((EnderNetwork)this.network).activeConnections[freq].add(this);
+        TileEntity tile = component.getTile();
+        tile.markDirty();
+        WorldHelper.markBlockForUpdate(tile.getWorld(), tile.getPos());
     }
 
     private final IEnderNetwork network;

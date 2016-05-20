@@ -13,10 +13,7 @@ import elec332.eflux.multipart.AbstractEnergyMultiPart;
 import mcmultipart.MCMultiPartMod;
 import mcmultipart.client.multipart.ICustomHighlightPart;
 import mcmultipart.microblock.IMicroblock;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.OcclusionHelper;
-import mcmultipart.multipart.PartSlot;
+import mcmultipart.multipart.*;
 import mcmultipart.raytrace.PartMOP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -226,18 +223,6 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @SideOnly(Side.CLIENT)
     public boolean drawHighlight(PartMOP hit, EntityPlayer player, float partialTicks) {
 
-        /*float thickness = 6 * RenderHelper.renderUnit;
-        float heightStuff = (1 - thickness)/2;
-        float f1 = thickness + heightStuff;
-
-        float yMin = connectData.contains(EnumFacing.DOWN) ? 0 : heightStuff;
-        float yMax = connectData.contains(EnumFacing.UP) ? 1 : f1;
-        float xMin = connectData.contains(EnumFacing.WEST) ? 0 : heightStuff;
-        float xMax = connectData.contains(EnumFacing.EAST) ? 1 : f1;
-        float zMin = connectData.contains(EnumFacing.NORTH) ? 0 : heightStuff;
-        float zMax = connectData.contains(EnumFacing.SOUTH) ? 1 : f1;
-
-        AxisAlignedBB aabb = new AxisAlignedBB(xMin, yMin, zMin, xMax, yMax, zMax);*/
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
@@ -283,23 +268,25 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
             ElecCore.tickHandler.registerCall(new Runnable() {
                 @Override
                 public void run() {
-                    connectData.clear();
-                    for (EnumFacing side : EnumFacing.VALUES) {
-                        BlockPos pos = getPos().offset(side);
-                        TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
-                        if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
-                            if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
-                                connectData.add(side);
-                            } else {
-                                IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
-                                if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)){
+                    if (MultipartHelper.getPartContainer(getWorld(), getPos()) != null) {
+                        connectData.clear();
+                        for (EnumFacing side : EnumFacing.VALUES) {
+                            BlockPos pos = getPos().offset(side);
+                            TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
+                            if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
+                                if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
                                     connectData.add(side);
+                                } else {
+                                    IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
+                                    if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)) {
+                                        connectData.add(side);
+                                    }
                                 }
                             }
                         }
+                        sendUpdatePacket(true);
                     }
-                    sendUpdatePacket(true);
-               }
+                }
             }, Side.SERVER);
         }
     }

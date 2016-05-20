@@ -64,13 +64,14 @@ public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileW
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setInteger("fc", feedCounter);
         NBTBase inv = tagCompound.getTag("inv");
         if (inv != null) {
             CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.getStorage().readNBT(null, invWrapper, null, inv);
         }
+        return tagCompound;
     }
 
     @Override

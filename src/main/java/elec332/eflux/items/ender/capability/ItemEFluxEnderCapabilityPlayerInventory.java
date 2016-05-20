@@ -2,6 +2,7 @@ package elec332.eflux.items.ender.capability;
 
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
+import elec332.eflux.init.CapabilityRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,8 +16,8 @@ import net.minecraftforge.common.util.FakePlayer;
  */
 public class ItemEFluxEnderCapabilityPlayerInventory extends EFluxEnderCapabilityItem {
 
-    public ItemEFluxEnderCapabilityPlayerInventory(IEnderCapabilityFactory enderCapabilityFactory) {
-        super(enderCapabilityFactory);
+    public ItemEFluxEnderCapabilityPlayerInventory() {
+        super(CapabilityRegister.instance.playerInventory);
     }
 
     @Override

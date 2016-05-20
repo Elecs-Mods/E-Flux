@@ -10,7 +10,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.GroundMesh;
+import elec332.eflux.items.ItemGroundMesh;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.DustPile;
@@ -41,7 +41,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
     private ItemStack gonnaBeOutputted;
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         NBTTagCompound tag = new NBTTagCompound();
         waterTank.writeToNBT(tag);
@@ -54,6 +54,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
             gonnaBeOutputted.writeToNBT(tag);
             tagCompound.setTag("GBO", tag);
         }
+        return tagCompound;
     }
 
 
@@ -93,7 +94,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canProcess() {
-        if (!((GroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkOutput())){
+        if (!((ItemGroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkOutput())){
             fluid = false;
             gonnaBeOutputted = null;
             stone = 0;
@@ -287,7 +288,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        return slot == 0 && GroundMesh.isValidMesh(stack);
+        return slot == 0 && ItemGroundMesh.isValidMesh(stack);
     }
 
     @Override

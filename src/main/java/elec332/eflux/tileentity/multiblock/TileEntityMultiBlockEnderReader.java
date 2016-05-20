@@ -14,11 +14,12 @@ import elec332.core.util.InventoryHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
+import elec332.eflux.api.ender.internal.IEnderNetworkItem;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiEnderContainer;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.ItemEntangledEnder;
+import elec332.eflux.items.ItemInfusedEnder;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,16 +49,19 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
 
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (hand == EnumHand.OFF_HAND){
+            return false;
+        }
+        int current = player.inventory.currentItem;
+        IInventory playerInv = player.inventory;
+        stack = playerInv.getStackInSlot(current);
         if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.entangledEnder)){
             if (!worldObj.isRemote) {
-                //if (this.networkID != null) {
-                //    EnderNetworkManager.removeNetwork(networkID);
-                //}
-                this.networkID = ItemEntangledEnder.getUUID(stack);
+                this.networkID = ItemInfusedEnder.getUUID(stack);
                 if (getMultiBlock() != null) {
                     ((MultiBlockEnderContainer) getMultiBlock()).setUUID(this);
                 }
-                //player.inventory.decrStackSize(player.inventory.getSlotFor(stack), 1);
+                playerInv.decrStackSize(current, 1);
                 NBTTagCompound send = new NBTTagCompound();
                 if (networkID != null){
                     send.setString("u", networkID.toString());
@@ -148,7 +152,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
 
                 @Override
                 public boolean isItemValidForSlot(int id, ItemStack stack) {
-                    return stack == null || (stack.getItem() != null && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null));
+                    return stack == null || (stack.getItem() != null && (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null) || stack.getItem() instanceof IEnderNetworkItem));
                 }
 
             };
@@ -191,7 +195,19 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                                 clear.setActive(true);
                             }
                             checkFreq();
+                            checkUpDown();
                         }
+                    } else if (stack.getItem() instanceof IEnderNetworkItem){
+                        b = true;
+                        valid = new int[0];
+                        freq = 0;
+                        if (!clear.isActive()){
+                            clear.setActive(true);
+                        }
+                        if (!set.isActive()){
+                            set.setActive(true);
+                        }
+                        up.setActive(false);
                     }
                 }
                 if (!b){
@@ -270,6 +286,8 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                                 component.setFrequency(freq);
                             }
                         }
+                    } else if (stack.getItem() instanceof IEnderNetworkItem){
+                        ((IEnderNetworkItem) stack.getItem()).setNetworkID(networkID, stack);
                     }
                 }
             } else if (button == clear){
@@ -281,9 +299,11 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                             component.setUUID(null);
                             component.setFrequency(-1);
                         }
+                        freq = 0;
+                        checkUpDown();
+                    } else if (stack.getItem() instanceof IEnderNetworkItem){
+                        ((IEnderNetworkItem) stack.getItem()).setNetworkID(networkID, stack);
                     }
-                    freq = 0;
-                    checkUpDown();
                 }
             }
         }

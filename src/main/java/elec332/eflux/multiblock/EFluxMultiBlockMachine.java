@@ -173,13 +173,8 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     public abstract ItemStack getRandomRepairItem();
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         return capability == CAPABILITY ? (T) energyContainer : super.getCapability(capability, facing, pos);
     }
 

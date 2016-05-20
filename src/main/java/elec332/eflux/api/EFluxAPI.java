@@ -6,7 +6,9 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.heat.IHeatReceiver;
+import elec332.eflux.api.ender.internal.IEndergyCapability;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -34,6 +36,9 @@ public class EFluxAPI {
     @CapabilityInject(IEnderNetworkComponent.class)
     public static Capability<IEnderNetworkComponent> ENDER_COMPONENT_CAPABILITY;
 
+    @CapabilityInject(IEndergyCapability.class)
+    public static Capability<IEndergyCapability> ENDERGY_ENDER_CAPABILITY;
+
     public static void dummyLoad(){
     }
 
@@ -44,6 +49,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IEnergyMonitor.class);
         registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnderNetworkComponent.class);
+        registerWithoutStorageAndDefaultInstance(IEndergyCapability.class);
     }
 
     static void registerWithoutStorageAndDefaultInstance(Class clazz){
@@ -51,12 +57,12 @@ public class EFluxAPI {
 
             @Override
             public NBTBase writeNBT(Capability capability, Object instance, EnumFacing side) {
-                return null;
+                throw new UnsupportedOperationException();
             }
 
             @Override
             public void readNBT(Capability capability, Object instance, EnumFacing side, NBTBase nbt) {
-
+                throw new UnsupportedOperationException();
             }
 
         }, new Callable() {

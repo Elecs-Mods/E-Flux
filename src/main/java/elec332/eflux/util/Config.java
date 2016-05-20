@@ -8,7 +8,15 @@ import elec332.core.config.Configurable;
 public class Config {
 
     @Configurable(category = "debug", comment = "Prints a LOT of debug information to the game log")
-    public static boolean DebugLog = false;
+    public static boolean debugLog = false;
+
+    @Configurable.Class
+    public static class General {
+
+        @Configurable(comment = "Set to true to enable the creative area mover.")
+        public static boolean creativeAreaMover = false;
+
+    }
 
     @Configurable.Class
     public static class Machines {

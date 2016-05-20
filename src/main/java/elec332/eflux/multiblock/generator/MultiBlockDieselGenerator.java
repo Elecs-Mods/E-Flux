@@ -1,5 +1,6 @@
 package elec332.eflux.multiblock.generator;
 
+import elec332.eflux.handler.FluidEnergyProviderHandler;
 import elec332.eflux.multiblock.EFluxMultiBlockFluidGenerator;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -10,7 +11,12 @@ import net.minecraftforge.fluids.FluidStack;
 public class MultiBlockDieselGenerator extends EFluxMultiBlockFluidGenerator {
 
     public MultiBlockDieselGenerator() {
-        super(12 * FluidContainerRegistry.BUCKET_VOLUME);
+        super(12000);
+    }
+
+    @Override
+    protected FluidEnergyProviderHandler.FluidBurnData modifyBurnData(FluidEnergyProviderHandler.FluidBurnData burnData) {
+        return burnData;
     }
 
     /**

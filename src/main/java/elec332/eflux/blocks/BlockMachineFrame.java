@@ -8,7 +8,7 @@ import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.render.MachineFrameQuadProvider;
+import elec332.eflux.client.render.model.MachineFrameQuadProvider;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.util.UniversalUnlistedProperty;
 import net.minecraft.block.ITileEntityProvider;

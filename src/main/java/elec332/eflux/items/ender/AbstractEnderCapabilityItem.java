@@ -12,7 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -55,6 +57,17 @@ public abstract class AbstractEnderCapabilityItem<T> extends EFluxItem {
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
+    }
+
+    protected IWeakEnderConnection<T> getCurrentConnection(ItemStack stack){
+        if (stack != null && stack.getItem() == this && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
+            @SuppressWarnings("unchecked")
+            IEnderNetworkComponent<T> component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
+            if (component != null) {
+                return (IWeakEnderConnection<T>) component.getCurrentConnection();
+            }
+        }
+        return null;
     }
 
     protected abstract ActionResult<ItemStack> execute(@Nonnull IEnderNetworkComponent<T> component, @Nonnull IWeakEnderConnection<T> connection, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand);

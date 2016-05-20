@@ -6,7 +6,6 @@ import elec332.core.client.RenderHelper;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonBlock;
-import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.template.ElecTemplateBakery;
@@ -14,7 +13,6 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.render.CableRenderer;
 import elec332.eflux.tileentity.energy.cable.AbstractCable;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -209,7 +207,7 @@ public class BlockCable extends BlockWithMeta implements ITileEntityProvider, IN
 
     @SideOnly(Side.CLIENT)
     private void registerISBHR(){
-        RenderingRegistry.instance().registerRenderer(this, new CableRenderer());
+        //RenderingRegistry.instance().registerRenderer(this, new CableRenderer());
     }
 
 }

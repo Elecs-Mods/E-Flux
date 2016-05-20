@@ -1,4 +1,4 @@
-package elec332.eflux.client.render;
+package elec332.eflux.client.render.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

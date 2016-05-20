@@ -41,7 +41,7 @@ public class TileEntityDustStorage extends AbstractTileEntityMultiBlock implemen
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         if (stored != null) {
             NBTTagCompound tag = new NBTTagCompound();
@@ -49,6 +49,7 @@ public class TileEntityDustStorage extends AbstractTileEntityMultiBlock implemen
             tag.setTag("storedDust", tag);
         }
         tagCompound.setBoolean("lastRedstone", redstone);
+        return tagCompound;
     }
 
     @Override

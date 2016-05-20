@@ -110,6 +110,17 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        if (capability == EFluxAPI.HEAT_CAPABILITY){
+            if (pos.getY() == oilIn.getY()){
+                return (T) this;
+            }
+        }
+        return super.getCapability(capability, facing, pos);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         if (capability == CAPABILITY){
             if (pos.equals(oilIn)){
                 return (T) oilTank;
@@ -124,12 +135,7 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
                 return (T) brineTank;
             }
         }
-        if (capability == EFluxAPI.HEAT_CAPABILITY){
-            if (pos.getY() == oilIn.getY()){
-                return (T) this;
-            }
-        }
-        return super.getCapability(capability, facing, pos);
+        return super.getSpecialCapability(capability, facing, pos);
     }
 
     @Override

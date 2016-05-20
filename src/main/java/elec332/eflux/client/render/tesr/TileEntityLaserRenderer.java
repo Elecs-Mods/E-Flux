@@ -1,4 +1,4 @@
-package elec332.eflux.client.render;
+package elec332.eflux.client.render.tesr;
 
 import elec332.core.client.ITessellator;
 import elec332.core.client.RenderHelper;

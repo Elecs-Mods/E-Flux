@@ -27,7 +27,7 @@ public class FluidEnergyProviderHandler {
     public FluidBurnData getPowerFromFluid(Fluid fluid){
         if (fluid == null)
             return null;
-        return burnDataMap.get(fluid.getName());
+        return burnDataMap.get(fluid.getName().toLowerCase());
     }
 
     public void registerFuelData(String fluid, int fuelCost, int powerProvided){
@@ -37,18 +37,25 @@ public class FluidEnergyProviderHandler {
     public void registerFuelData(String fluid, int fuelCost, int burnTime, int powerProvided){
         if (burnDataMap.get(fluid) != null)
             throw new IllegalArgumentException("FuelData for \""+fluid+"\" is already registered!");
-        burnDataMap.put(fluid, new FluidBurnData(fuelCost, burnTime, powerProvided));
+        fluid = fluid.toLowerCase();
+        burnDataMap.put(fluid, new FluidBurnData(fluid, fuelCost, burnTime, powerProvided));
     }
 
-    public static class FluidBurnData{
+    public static class FluidBurnData {
 
-        public FluidBurnData(int fuelCost, int burnTime, int powerProvided){
+        public FluidBurnData(String fluid, int fuelCost, int burnTime, int powerProvided){
             this.fuelCost = fuelCost;
             this.burnTime = burnTime;
-            this.powerProvided = powerProvided;
+            this.powerPerTick = powerProvided;
+            this.fluid = fluid;
         }
 
-        public final int fuelCost, burnTime, powerProvided;
+        public final int fuelCost, burnTime, powerPerTick;
+        public final String fluid;
+
+        public FluidBurnData modify(float fuel, float burn, float power){
+            return new FluidBurnData(fluid, (int) (fuelCost * fuel), (int) (burnTime * burn), (int) (powerPerTick * power));
+        }
 
     }
 

@@ -6,7 +6,6 @@ import elec332.core.inventory.widget.WidgetButtonArrow;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
-import elec332.eflux.client.WidgetVanillaButton;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
 import elec332.eflux.endernetwork.EnderNetwork;
 import elec332.eflux.endernetwork.EnderNetworkManager;
@@ -40,7 +39,7 @@ public class ContainerEnderContainer extends BaseContainer implements WidgetButt
         this.component = component;
         if (!player.worldObj.isRemote) {
             NBTTagCompound send = new NBTTagCompound();
-            uuid = component.getUuid();
+            this.uuid = component.getUuid();
             validFreqs = EnderNetworkManager.get(player.worldObj).get(uuid).getFrequencies(component.getRequiredCapability());
             send.setIntArray("f", validFreqs);
             freqIdx = component.getFrequency();

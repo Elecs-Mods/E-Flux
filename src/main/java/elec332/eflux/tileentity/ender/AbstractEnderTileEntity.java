@@ -24,7 +24,7 @@ public abstract class AbstractEnderTileEntity<T> extends TileBase implements Def
 
     public AbstractEnderTileEntity(Capability<T> capability){
         this.capability = capability;
-        enderHandler = new DefaultEnderConnectableTile<T>(capability).addListener(this);
+        enderHandler = new DefaultEnderConnectableTile<T>(capability, this).addListener(this);
     }
 
     private final Capability<T> capability;
@@ -51,7 +51,6 @@ public abstract class AbstractEnderTileEntity<T> extends TileBase implements Def
     public void onTileLoaded() {
         if (connected){
             UUID id = enderHandler.getUuid();
-            System.out.println(id);
             EnderNetwork net = get(worldObj).get(id);
             net.connect(enderHandler);
         }
@@ -66,9 +65,10 @@ public abstract class AbstractEnderTileEntity<T> extends TileBase implements Def
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setBoolean("connected", connected);
+        return tagCompound;
     }
 
     @Override

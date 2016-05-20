@@ -2,16 +2,20 @@ package elec332.eflux.endernetwork.capabilities;
 
 import elec332.core.server.ServerHelper;
 import elec332.core.util.BasicInventory;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
+import elec332.eflux.util.SafeWrappedInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -31,11 +35,35 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
 
     public EFluxEnderCapabilityPlayerInventory(Side side, IEnderNetwork network) {
         super(side, network);
+        if (side.isServer()) {
+            eventHandler = new Object() {
+
+                @SubscribeEvent
+                public void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+                    if (event.player instanceof EntityPlayerMP && PlayerHelper.getPlayerUUID(event.player).equals(EFluxEnderCapabilityPlayerInventory.this.player)) {
+                        sendPoke(0);
+                        checkInv();
+                    }
+                }
+
+                @SubscribeEvent
+                public void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+                    if (event.player instanceof EntityPlayerMP && PlayerHelper.getPlayerUUID(event.player).equals(EFluxEnderCapabilityPlayerInventory.this.player)) {
+                        sendPoke(0);
+                        checkInv();
+                    }
+                }
+
+            };
+            MinecraftForge.EVENT_BUS.register(eventHandler);
+        }
     }
 
+    private Object eventHandler;
     private UUID player;
     private static final String NBT_KEY = "enderPlayer";
-    private static final IItemHandler NULL_INVENTORY;
+    private static final IItemHandlerModifiable NULL_INVENTORY;
+    private SafeWrappedInventory inv;
 
     @Override
     @Nonnull
@@ -49,34 +77,48 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
         if (player == null){
             return NULL_INVENTORY;
         }
-        EntityPlayer player;
-        if (side.isServer()) {
+        return inv;
+    }
+
+    @Override
+    public void onDataPacket(int id, NBTTagCompound data) {
+        if (id == 0){
+            checkInv();
+        }
+    }
+
+    @Override
+    public void validate() {
+        checkInv();
+    }
+
+    private void checkInv(){
+        if (inv != null){
+            inv.clear();
+        }
+        IItemHandlerModifiable itemHandler;
+        if (side.isServer()){
             EntityPlayerMP playerMP = ServerHelper.instance.getRealPlayer(this.player);
             if (playerMP != null){
-                player = playerMP;
+                itemHandler = new PlayerMainInvWrapper(playerMP.inventory);
             } else {
-                return NULL_INVENTORY;
+                itemHandler = NULL_INVENTORY;
             }
         } else {
-            if (Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.player) != null) { //TODO: I do not trust this...
-                return new InvWrapper(new BasicInventory("s", 36));
+            if (Minecraft.getMinecraft().getConnection().getPlayerInfo(this.player) != null){
+                itemHandler = new InvWrapper(new BasicInventory("", 36));
             } else {
-                return NULL_INVENTORY;
+                itemHandler = NULL_INVENTORY;
             }
-            /*if (Minecraft.getMinecraft().getSession().getProfile().getId().equals(this.player)){
-                player = Minecraft.getMinecraft().thePlayer;
-            } else {
-                return null;
-            }*/
         }
-        return new PlayerMainInvWrapper(player.inventory);
+        inv = SafeWrappedInventory.of(itemHandler);
     }
 
     @Override
     public void addInformation(List<String> list) {
         list.add("");
         //EntityPlayerMP player = ServerHelper.instance.getRealPlayer(this.player);
-        NetworkPlayerInfo info = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.player);
+        NetworkPlayerInfo info = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.player);
         list.add(info == null ? null : info.getGameProfile().getName());
     }
 
@@ -91,6 +133,18 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
 
     @Override
     public void removeConnection(IStableEnderConnection<IItemHandler> connection, DisconnectReason reason) {
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (eventHandler != null) {
+            MinecraftForge.EVENT_BUS.unregister(eventHandler);
+        }
+        if (inv != null) {
+            inv.clear();
+            inv = null;
+        }
     }
 
     @Override
@@ -129,7 +183,7 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
 
             @Override
             public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-                return null;
+                return stack;
             }
 
             @Override

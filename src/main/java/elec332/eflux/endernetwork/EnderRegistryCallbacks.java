@@ -1,5 +1,6 @@
 package elec332.eflux.endernetwork;
 
+import com.google.common.collect.Lists;
 import elec332.core.client.ITextureLoader;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.model.IModelLoader;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +21,8 @@ import java.util.Map;
 public enum EnderRegistryCallbacks implements IForgeRegistry.AddCallback<IEnderCapabilityFactory>, IForgeRegistry.ClearCallback<IEnderCapabilityFactory>, IForgeRegistry.CreateCallback<IEnderCapabilityFactory> {
 
     INSTANCE;
+
+    private final List<Integer> registeredTypes = Lists.newArrayList();
 
     @Override
     public void onCreate(Map<ResourceLocation, ?> slaveset) {
@@ -30,16 +34,19 @@ public enum EnderRegistryCallbacks implements IForgeRegistry.AddCallback<IEnderC
 
     @Override
     public void onAdd(IEnderCapabilityFactory obj, int id, Map<ResourceLocation, ?> slaveset) {
-        if (obj.createItem()){
-            GameRegistry.register(new EFluxEnderCapabilityItem(obj));
-        }
-        if (FMLCommonHandler.instance().getSide().isClient()){
-            if (obj instanceof IModelLoader) {
-                RenderingRegistry.instance().registerLoader((IModelLoader) obj);
+        if (!registeredTypes.contains(id)) {
+            if (obj.createItem()) {
+                GameRegistry.register(new EFluxEnderCapabilityItem(obj));
             }
-            if (obj instanceof ITextureLoader){
-                RenderingRegistry.instance().registerLoader((ITextureLoader) obj);
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                if (obj instanceof IModelLoader) {
+                    RenderingRegistry.instance().registerLoader((IModelLoader) obj);
+                }
+                if (obj instanceof ITextureLoader) {
+                    RenderingRegistry.instance().registerLoader((ITextureLoader) obj);
+                }
             }
+            registeredTypes.add(id);
         }
     }
 

@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class IEnderCapabilityFactory extends IForgeRegistryEntry.Impl<IEnderCapabilityFactory> {
 
+    private static final int[] DEFAULT_TYPES = new int[]{0};
+
     /**
      * Creates a new IEnderCapability
      *
@@ -35,6 +37,10 @@ public abstract class IEnderCapabilityFactory extends IForgeRegistryEntry.Impl<I
     @SideOnly(Side.CLIENT)
     public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getMissingModel();
+    }
+
+    public int[] getTypes(){
+        return DEFAULT_TYPES;
     }
 
 }

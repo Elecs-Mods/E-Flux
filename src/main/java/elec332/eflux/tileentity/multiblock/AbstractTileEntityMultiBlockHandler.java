@@ -1,5 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
+import elec332.core.multiblock.AbstractMultiBlock;
 import net.minecraftforge.common.capabilities.Capability;
 
 /**
@@ -11,7 +12,8 @@ public abstract class AbstractTileEntityMultiBlockHandler<M> extends AbstractTil
 
     @SuppressWarnings("unchecked")
     public M getMultiBlockHandler(){
-        return getMultiBlockCapability(getCapability(), null);
+        AbstractMultiBlock mb = getMultiBlock();
+        return mb == null ? null : mb.getSpecialCapability(getCapability(), null, pos);
     }
 
 }

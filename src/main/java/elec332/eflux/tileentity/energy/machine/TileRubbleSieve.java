@@ -104,7 +104,7 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         if (sieving != null){
             NBTTagCompound tag = new NBTTagCompound();
@@ -117,6 +117,7 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
             tagCompound.setTag("tbo", tag);
         }
         tagCompound.setInteger("sA", r);
+        return tagCompound;
     }
 
     @Override

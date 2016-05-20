@@ -1,7 +1,7 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.eflux.util.IEFluxFluidHandler;
-import elec332.eflux.util.IRedstoneUpgradable;
+import elec332.eflux.util.capability.IRedstoneUpgradable;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;

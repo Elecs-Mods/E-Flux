@@ -47,10 +47,10 @@ public final class ItemRegister {
         multimeter = new MultiMeter("MultiMeter");
         wrench = new Wrench("Wrench");
         Components.init();
-        groundMesh = new GroundMesh().register();
+        groundMesh = new ItemGroundMesh().register();
         areaMover = new ItemAreaMover().register().setCreativeTab(EFlux.creativeTab);
         multiBlockCreator = new ItemMultiBlockCreator().register();
-        entangledEnder = new ItemStack(new ItemEntangledEnder().register());
+        entangledEnder = new ItemStack(new ItemInfusedEnder().register());
 
         EFluxItems = new EFluxItems();
         GameRegistry.registerItem(EFluxItems, "GenericItems");
@@ -58,9 +58,10 @@ public final class ItemRegister {
         scrap = new ItemStack(EFluxItems, 1, 1);
         carbonMesh = new ItemStack(EFluxItems, 1, 2);
 
-        GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory(CapabilityRegister.instance.playerInventory));
+        GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory());
         new ItemEnderConfigurator().register();
         new ItemEnderInventory().register();
+        new ItemEnderLink().register();
 
         ingot = new EFluxItemsIngot();
         GameRegistry.registerItem(ingot, "EFluxIngot");

@@ -5,6 +5,7 @@ import elec332.eflux.api.ender.IEnderNetworkTile;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
@@ -16,9 +17,10 @@ import java.util.UUID;
  */
 public class DefaultEnderConnectableTile<T> implements IEnderNetworkTile<T> {
 
-    public DefaultEnderConnectableTile(Capability<T> capability){
+    public DefaultEnderConnectableTile(Capability<T> capability, TileEntity tile){
         this.capability = capability;
         this.listeners = Lists.newArrayList();
+        this.tile = tile;
     }
 
     private final Capability<T> capability;
@@ -26,6 +28,7 @@ public class DefaultEnderConnectableTile<T> implements IEnderNetworkTile<T> {
     private int frequency;
     private UUID uuid;
     private IStableEnderConnection<T> currentConnection;
+    private TileEntity tile;
 
     public DefaultEnderConnectableTile<T> addListener(IConnectionListener listener){
         listeners.add(listener);
@@ -57,6 +60,11 @@ public class DefaultEnderConnectableTile<T> implements IEnderNetworkTile<T> {
     @Override
     public Capability<T> getRequiredCapability() {
         return this.capability;
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return tile;
     }
 
     @Override

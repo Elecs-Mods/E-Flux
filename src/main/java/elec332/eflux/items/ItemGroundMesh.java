@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Created by Elec332 on 10-9-2015.
  */
-public class GroundMesh extends EFluxItem implements INoJsonItem {
+public class ItemGroundMesh extends EFluxItem implements INoJsonItem {
 
-    public GroundMesh() {
+    public ItemGroundMesh() {
         super("GroundMesh");
     }
 

@@ -77,9 +77,7 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
 
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
-        System.out.println("act");
-        if (network != null && stack == null && !getWorldObj().isRemote){
-            System.out.println("opening GUI");
+        if (network != null && stack == null && !getWorldObj().isRemote && network.isPowered()){
             openGui(player, EFlux.instance);
         }
         return true;
@@ -123,13 +121,8 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == EFluxAPI.RECEIVER_CAPABILITY || super.hasCapability(capability, facing, pos);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         return capability == EFluxAPI.RECEIVER_CAPABILITY ? (T) getReceiver() : super.getCapability(capability, facing, pos);
     }
 

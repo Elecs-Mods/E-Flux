@@ -4,12 +4,14 @@ import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.endernetwork.EnderCapabilityHelper;
 import elec332.eflux.endernetwork.capabilities.AbstractEnderCapability;
+import elec332.eflux.endernetwork.capabilities.EFluxCapabilityEndergy;
 import elec332.eflux.endernetwork.capabilities.EFluxEnderCapabilityPlayerInventory;
+import elec332.eflux.endernetwork.capabilities.factory.DefaultFactory;
+import elec332.eflux.endernetwork.capabilities.factory.EndergyFactory;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import elec332.eflux.util.IEFluxFluidHandler;
-import elec332.eflux.util.RedstoneCapability;
+import elec332.eflux.util.capability.RedstoneCapability;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,6 +22,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.concurrent.Callable;
 import java.util.function.Function;
+
+import static elec332.eflux.endernetwork.EnderCapabilityHelper.getConstructor;
 
 /**
  * Created by Elec332 on 2-4-2016.
@@ -36,6 +40,7 @@ public enum CapabilityRegister {
         registerWithoutAnything(IEFluxFluidHandler.class);
         registerWithoutAnything(RedstoneCapability.class);
         playerInventory = registerEnderCapabilityNoItem("playerInventory", EFluxEnderCapabilityPlayerInventory.class);
+        GameRegistry.register(new EndergyFactory());
     }
 
     private static IEnderCapabilityFactory registerEnderCapabilityNoItem(String name, Class<? extends AbstractEnderCapability> clazz){
@@ -46,25 +51,12 @@ public enum CapabilityRegister {
         return registerEnderCapability(name, getConstructor(clazz));
     }
 
-    private static Function<Pair<Side, IEnderNetwork>, IEnderCapability> getConstructor(Class<? extends AbstractEnderCapability> clazz){
-        return new Function<Pair<Side, IEnderNetwork>, IEnderCapability>() {
-            @Override
-            public IEnderCapability apply(Pair<Side, IEnderNetwork> params) {
-                try {
-                    return clazz.getConstructor(Side.class, IEnderNetwork.class).newInstance(params.getLeft(), params.getRight());
-                } catch (Exception e){
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-    }
-
     private static IEnderCapabilityFactory registerEnderCapability(String name, Function<Pair<Side, IEnderNetwork>, IEnderCapability> factory){
-        return GameRegistry.register(new EnderCapabilityHelper.DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)));
+        return GameRegistry.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)));
     }
 
     private static IEnderCapabilityFactory registerEnderCapabilityNoItem(String name, Function<Pair<Side, IEnderNetwork>, IEnderCapability> factory){
-        return GameRegistry.register(new EnderCapabilityHelper.DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)){
+        return GameRegistry.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)){
 
             @Override
             public boolean createItem() {

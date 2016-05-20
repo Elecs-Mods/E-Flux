@@ -180,10 +180,11 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setInteger("chunksLoaded", loadedChunks);
         tagCompound.setBoolean("powerBool", recentlyWithoutPower);
+        return tagCompound;
     }
 
     @Override

@@ -27,10 +27,11 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 4-5-2016.
  */
-public class ItemEntangledEnder extends EFluxItem {
+public class ItemInfusedEnder extends EFluxItem {
 
-    public ItemEntangledEnder() {
-        super("entangledEnder");
+    public ItemInfusedEnder() {
+        super("infusedEnder");
+        setMaxStackSize(1);
     }
 
     @Override
@@ -58,21 +59,5 @@ public class ItemEntangledEnder extends EFluxItem {
         stack.setTagCompound(tag);
         return stack;
     }
-
-    /*@Override
-    public boolean hasCustomEntity(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-        return new EntityItem(world, location.posX, location.posY, location.posZ, itemstack){
-            @Override
-            public void setFire(int seconds) {
-            }
-        }.fire;
-    }
-
-    private static final class EntityCustomI*/
 
 }

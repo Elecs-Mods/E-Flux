@@ -56,7 +56,7 @@ public abstract class BreakableMachineTile extends EnergyTileBase implements IEn
         if (!worldObj.isRemote) {
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
             for (EntityPlayerMP playerMP : ServerHelper.instance.getAllPlayersWatchingBlock(worldObj, pos)){
-                playerMP.playerNetServerHandler.sendPacket(getDescriptionPacket());
+                playerMP.connection.sendPacket(getUpdatePacket());
             }
         }
     }

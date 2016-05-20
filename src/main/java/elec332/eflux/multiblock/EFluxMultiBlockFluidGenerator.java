@@ -28,6 +28,7 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
 
     private FluidTank fluidTank;
     private int countDownTimer;
+    private int powerTick;
 
     /**
      * Initialise your multiblock here, all fields provided by @link IMultiblock have already been given a value
@@ -41,23 +42,22 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     public final void onTick() {
         countDownTimer--;
         if (countDownTimer <= 0){
-            FluidEnergyProviderHandler.FluidBurnData burnData = FluidEnergyProviderHandler.instance.getPowerFromFluid(fluidTank.getFluid());
+            powerTick = 0;
+            FluidEnergyProviderHandler.FluidBurnData burnData = modifyBurnData(FluidEnergyProviderHandler.instance.getPowerFromFluid(fluidTank.getFluid()));
             if (burnData == null){
-                countDownTimer = 20;
+                countDownTimer = 10;
                 return;
             }
-            float f = (float)fluidTank.getFluidAmount()/burnData.fuelCost;
-            if (f < 1){
-                fluidTank.drain((int) (f * burnData.fuelCost), true);
-                countDownTimer = (int) (f * burnData.burnTime);
-                generatePower((int) (f * burnData.powerProvided));
-                return;
-            }
-            fluidTank.drain(burnData.fuelCost, true);
-            countDownTimer = burnData.burnTime;
-            generatePower(burnData.powerProvided);
+            float f = Math.min(((float)fluidTank.getFluidAmount()/burnData.fuelCost), 1);
+            fluidTank.drain((int) (burnData.fuelCost * f), true);
+            countDownTimer = (int) (burnData.burnTime * f);
+            powerTick = (int) (burnData.powerPerTick * f);
+        } else {
+            generatePower(powerTick);
         }
     }
+
+    protected abstract FluidEnergyProviderHandler.FluidBurnData modifyBurnData(FluidEnergyProviderHandler.FluidBurnData burnData);
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
@@ -83,7 +83,7 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        if (fluidTank.getFluid() == null && !isFluidValid(resource))
+        if (fluidTank.getFluid() == null || !isFluidValid(resource))
             return 0;
         return fluidTank.fill(resource, doFill);
     }
@@ -114,13 +114,8 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CAPABILITY || super.hasCapability(capability, facing, pos);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
         return capability == CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
     }
 

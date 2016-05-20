@@ -2,7 +2,6 @@ package elec332.eflux;
 
 import com.google.common.collect.Lists;
 import elec332.core.config.ConfigWrapper;
-import elec332.core.main.ElecCore;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
@@ -180,7 +179,7 @@ public class EFlux { //TODO
     }
 
     public static void systemPrintDebug(Object s){
-        if (Config.DebugLog) {
+        if (Config.debugLog) {
             System.out.println(s);
         }
     }

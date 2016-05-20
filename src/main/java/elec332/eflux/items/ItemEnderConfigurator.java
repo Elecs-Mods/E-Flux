@@ -4,14 +4,19 @@ import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
+import elec332.eflux.api.ender.internal.IEnderNetworkItem;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * Created by Elec332 on 9-5-2016.
@@ -27,7 +32,11 @@ public class ItemEnderConfigurator extends EFluxItem {
         if (worldIn.isRemote){
             return EnumActionResult.SUCCESS;
         }
-        IEnderNetworkComponent component = EnderConnectionHelper.getComponent(WorldHelper.getTileAt(worldIn, pos), facing);
+        if (stack == null || stack.getItem() != this){
+            return EnumActionResult.SUCCESS;
+        }
+        TileEntity tile = WorldHelper.getTileAt(worldIn, pos);
+        IEnderNetworkComponent component = EnderConnectionHelper.getComponent(tile, facing);
         if (component != null){
             if (component.getUuid() == null){
                 PlayerHelper.sendMessageToPlayer(playerIn, "You cannot configure an unlinked tile!");

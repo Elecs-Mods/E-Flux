@@ -142,12 +142,13 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
         tagCompound.setInteger("ibt", sppt);
         tagCompound.setInteger("bt", burnTime);
         tagCompound.setBoolean("aC", active);
+        return tagCompound;
     }
 
     @Override

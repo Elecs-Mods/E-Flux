@@ -140,13 +140,11 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
 
     @Override
     public NBTTagCompound serializeNBT() {
-        System.out.println("netser "+side);
         return new NBTHelper().addToTag(networkData.serializeNBT(), "lEN").addToTag(getValidKeys(), "U_keys").serializeNBT();
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        System.out.println("netdeser "+side);
         networkData.deserializeNBT(nbt.getTagList("lEN", 10));
         deserializekeys(nbt.getTagList("U_keys", NBT.NBTData.STRING.getID()));
     }

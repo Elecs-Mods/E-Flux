@@ -112,9 +112,10 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         this.inventory.writeToNBT(tagCompound);
+        return tagCompound;
     }
 
     @Override

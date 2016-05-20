@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by Elec332 on 14-5-2016.
  */
@@ -34,32 +36,47 @@ public class SlotScrollableItemHandler extends Slot {
     public boolean isItemValid(ItemStack stack) {
         if (stack == null)
             return false;
-        ItemStack remainder = this.getItemHandler().insertItem(index, stack, true);
+        IItemHandler handler = getItemHandler();
+        if (handler == null){
+            return false;
+        }
+        ItemStack remainder = handler.insertItem(index, stack, true);
         return remainder == null || remainder.stackSize < stack.stackSize;
     }
 
     @Override
     public ItemStack getStack() {
-        return this.getItemHandler().getStackInSlot(index);
+        IItemHandler handler = getItemHandler();
+        if (handler == null){
+            return null;
+        }
+        return handler.getStackInSlot(index);
     }
 
     @Override
     public void putStack(ItemStack stack) {
-        ((IItemHandlerModifiable) this.getItemHandler()).setStackInSlot(index, stack);
+        IItemHandler handler = getItemHandler();
+        if (handler == null){
+            return;
+        }
+        ((IItemHandlerModifiable) handler).setStackInSlot(index, stack);
         this.onSlotChanged();
     }
 
     @Override
     public void onSlotChange(ItemStack p_75220_1_, ItemStack p_75220_2_) {
-
     }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {
+        IItemHandler handler = getItemHandler();
+        if (handler == null){
+            return 0;
+        }
         ItemStack maxAdd = stack.copy();
         maxAdd.stackSize = maxAdd.getMaxStackSize();
-        ItemStack currentStack = this.getItemHandler().getStackInSlot(index);
-        ItemStack remainder = this.getItemHandler().insertItem(index, maxAdd, true);
+        ItemStack currentStack = handler.getStackInSlot(index);
+        ItemStack remainder = handler.insertItem(index, maxAdd, true);
 
         int current = currentStack == null ? 0 : currentStack.stackSize;
         int added = maxAdd.stackSize - (remainder != null ? remainder.stackSize : 0);
@@ -68,14 +85,20 @@ public class SlotScrollableItemHandler extends Slot {
 
     @Override
     public boolean canTakeStack(EntityPlayer playerIn) {
-        return this.getItemHandler().extractItem(index, 1, true) != null;
+        IItemHandler handler = getItemHandler();
+        return handler != null && handler.extractItem(index, 1, true) != null;
     }
 
     @Override
     public ItemStack decrStackSize(int amount) {
-        return this.getItemHandler().extractItem(index, amount, false);
+        IItemHandler handler = getItemHandler();
+        if (handler == null){
+            return null;
+        }
+        return handler.extractItem(index, amount, false);
     }
 
+    @Nullable
     public IItemHandler getItemHandler() {
         return itemHandler;
     }

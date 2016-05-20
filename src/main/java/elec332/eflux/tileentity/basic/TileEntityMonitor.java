@@ -59,9 +59,10 @@ public class TileEntityMonitor extends TileEntityBlockMachine {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setInteger("monS", monitorSide);
+        return tagCompound;
     }
 
     @Override

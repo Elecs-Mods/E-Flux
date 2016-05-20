@@ -38,9 +38,10 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     private boolean hasFilter;
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
+        return tagCompound;
     }
 
     @Override
