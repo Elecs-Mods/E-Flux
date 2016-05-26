@@ -36,8 +36,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Elec332 on 3-5-2016.
@@ -110,7 +110,7 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     private IEnergyReceiver getReceiver(){
-        return network == null ? energyContainer : network.getEnergyContainer();
+        return network == null ? energyContainer : network;
     }
 
     /**

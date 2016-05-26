@@ -4,19 +4,15 @@ import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
-import elec332.eflux.api.ender.internal.IEnderNetworkItem;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.UUID;
 
 /**
  * Created by Elec332 on 9-5-2016.

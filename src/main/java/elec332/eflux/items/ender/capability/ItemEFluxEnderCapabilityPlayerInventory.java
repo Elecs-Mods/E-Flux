@@ -1,7 +1,6 @@
 package elec332.eflux.items.ender.capability;
 
 import elec332.core.util.PlayerHelper;
-import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.init.CapabilityRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

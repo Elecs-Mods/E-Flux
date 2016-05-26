@@ -70,16 +70,16 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
 
     @Override
     public void update() {
-        if (burnTime > 0){
+        if (burnTime > 0) {
             ltp = sppt;
             burnTime--;
         } else {
             ltp = 0;
             sppt = 0;
             ItemStack stack = inventory.getStackInSlot(0);
-            if (stack != null){
+            if (stack != null) {
                 int burnTime = TileEntityFurnace.getItemBurnTime(stack.copy());
-                if (burnTime > 0){
+                if (burnTime > 0) {
                     inventory.decrStackSize(0, 1);
                     this.burnTime = burnTime;
                     sppt = 150;
@@ -92,15 +92,15 @@ public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInv
                     WorldHelper.dropStack(worldObj, pos.offset(getTileFacing()), stack.copy());
                 }
             }
-            if (active && !(burnTime > 0)){
+            if (active && !(burnTime > 0)) {
                 active = false;
                 reRenderBlock();
             }
         }
-        if (worldObj.getTotalWorldTime() % 5 == 0){
+        if (worldObj.getTotalWorldTime() % 5 == 0) {
             outA = 0;
             for (int i = 0; i < dirData.length; i++) {
-                if (dirData[i] == 1){
+                if (dirData[i] == 1) {
                     outA++;
                     dirData[i] = 0;
                 }

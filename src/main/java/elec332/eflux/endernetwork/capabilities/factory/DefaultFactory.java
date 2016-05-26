@@ -32,7 +32,7 @@ public class DefaultFactory extends IEnderCapabilityFactory implements IModelAnd
     }
 
     private final Function<Pair<Side, IEnderNetwork>, IEnderCapability> factory;
-    protected final ResourceLocation[] texture;
+    protected ResourceLocation[] texture;
     @SideOnly(Side.CLIENT)
     protected TextureAtlasSprite[] textures;
     @SideOnly(Side.CLIENT)

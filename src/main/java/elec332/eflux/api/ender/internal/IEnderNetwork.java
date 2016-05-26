@@ -17,9 +17,9 @@ public interface IEnderNetwork {
 
     public boolean connect(@Nonnull IEnderNetworkComponent component);
 
-    public boolean drainPower(int power);
+    public boolean drainEndergy(int endergy);
 
-    public int getStoredPower();
+    public int getStoredEndergy();
 
     public void syncToClient();
 

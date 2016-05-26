@@ -2,7 +2,6 @@ package elec332.eflux.endernetwork;
 
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.ender.IEnderCapability;
-import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.IEnderNetworkTile;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;

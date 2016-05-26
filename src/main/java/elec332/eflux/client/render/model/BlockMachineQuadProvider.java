@@ -2,11 +2,9 @@ package elec332.eflux.client.render.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import elec332.core.client.RenderHelper;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
-import elec332.core.util.DirectionHelper;
 import elec332.eflux.blocks.BlockMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;

@@ -9,10 +9,11 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.*;
-import elec332.eflux.api.ender.internal.*;
+import elec332.eflux.api.ender.internal.DisconnectReason;
+import elec332.eflux.api.ender.internal.IEnderConnection;
+import elec332.eflux.api.ender.internal.IEnderNetwork;
+import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.ISpecialEnergySource;
-import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import elec332.eflux.network.PacketSendEnderNetworkData;
@@ -38,11 +39,10 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 18-2-2016.
  */
-public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEFluxPowerHandler, IEnergyReceiver, ISpecialEnergySource, ITickable, IEnderNetwork {
+public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEFluxPowerHandler, IEnergyReceiver, ITickable, IEnderNetwork {
 
     @SuppressWarnings("unchecked")
     EnderNetwork(UUID id, Side side){
-        this.energyContainer = new EnergyContainer(10000, this);
         this.id = id;
         this.maxID = 5;
         this.side = side;
@@ -86,14 +86,18 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         };
     }
 
-    public static final int INVALID = -1;
+    private static final int POWER_PER_ENDERGY = 9;
 
     private final Side side;
     private final UUID id;
     private boolean powered;
     private int drain;
 
-    private EnergyContainer energyContainer;
+    private int endergyProduction_MAX = 640;
+
+    private int endergy;
+    private int maxEndergy = 1000;
+
     private int maxID;
     private final NBTMap<Integer, EnderCapabilityWrapper> capabilityMap;
     private IEnderCapability[] capabilities;
@@ -106,7 +110,6 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound saveTag = new NBTTagCompound();
-        energyContainer.writeToNBT(saveTag);
         saveTag.setTag("capsE", capabilityMap.serializeNBT());
         saveTag.setInteger("mxI", maxID);
         upgradeInventory.writeToNBT(saveTag);
@@ -123,7 +126,6 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
                 networkHandler.invalidate();
             }
         }
-        energyContainer.readFromNBT(nbt);
         capabilityMap.deserializeNBT(nbt.getTagList("capsE", 10));
         capabilities = new IEnderCapability[maxID];
         linkedReferences = new WeakReference[maxID];
@@ -280,19 +282,15 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         int power = 0;
         for (IEnderCapability capability : capabilities){
             if (capability != null) {
-                power += capability.getPowerConsumption();
+                power += capability.getEndergyConsumption();
             }
         }
         this.drain = power;
     }
 
-    public EnergyContainer getEnergyContainer() {
-        return energyContainer;
-    }
-
     @Override
     public void update() {
-        setPowered(energyContainer.drainPower(drain));
+        setPowered(drainEndergy_(drain));
         if (powered) {
             for (ITickable tickable : tickables) {
                 tickable.update();
@@ -375,7 +373,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
      */
     @Override
     public int requestedRP() {
-        return energyContainer.requestedRP();
+        return getOptimalRP();
     }
 
     /**
@@ -384,7 +382,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
      */
     @Override
     public int getRequestedEF(int rp) {
-        return energyContainer.getRequestedEF(rp);
+        return (Math.min(endergyProduction_MAX, maxEndergy - endergy) * POWER_PER_ENDERGY) / rp;
     }
 
     /**
@@ -394,36 +392,15 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
      */
     @Override
     public int receivePower(int rp, int ef) {
-        return energyContainer.receivePower(rp, ef);
-    }
-
-    /**
-     * @param rp    the RedstonePotential in the network
-     * @param reqEF the requested amount of EnergeticFlux
-     * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
-     */
-    @Override
-    public int provideEnergeticFlux(int rp, int reqEF) {
-        return rp * reqEF > mpe() ? provideEnergy(rp, true) : (energyContainer.drainPower(rp*reqEF) ? reqEF : 0);
-    }
-
-    /**
-     * @param rp      the RedstonePotential in the network
-     * @param execute weather the power is actually drawn from the tile,
-     *                this flag is always true for IEnergySource.
-     * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
-     */
-    @Override
-    public int provideEnergy(int rp, boolean execute) {
-        int ret = mpe()/rp;
-        if (execute){
-            energyContainer.drainPower(ret);
+        endergy += toEndergy(rp, ef);
+        if (endergy > maxEndergy){
+            endergy = maxEndergy;
         }
-        return ret;
+        return 0;
     }
 
-    private int mpe(){
-        return Math.min(1000, energyContainer.getStoredPower());
+    private int toEndergy(int rp, int ef){
+        return (rp * ef) / POWER_PER_ENDERGY;
     }
 
     @Override
@@ -451,7 +428,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         }
         int id = component.getFrequency();
         IEnderCapability capability = getCapability(component.getRequiredCapability(), id);
-        if (capability == null){
+        if (capability == null || !capability.canConnect(component)){
             return false;
         }
         if (component instanceof IEnderNetworkTile) {
@@ -477,13 +454,22 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     }
 
     @Override
-    public boolean drainPower(int power) {
-        return powered && energyContainer.drainPower(power);
+    public boolean drainEndergy(int power) {
+        return powered && drainEndergy_(power);
+    }
+
+    private boolean drainEndergy_(int endergy){
+        if (endergy > this.endergy){
+            this.endergy = 0;
+            return false;
+        }
+        this.endergy -= endergy;
+        return true;
     }
 
     @Override
-    public int getStoredPower() {
-        return powered ? energyContainer.getStoredPower() : 0;
+    public int getStoredEndergy() {
+        return powered ? endergy : 0;
     }
 
     private void sendPacket(int i, NBTTagCompound data){

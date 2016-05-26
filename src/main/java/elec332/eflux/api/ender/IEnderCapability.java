@@ -23,7 +23,11 @@ public interface IEnderCapability<T> extends INBTSerializable<NBTTagCompound> {
     @Nullable
     public T get();
 
-    public int getPowerConsumption();
+    public int getEndergyConsumption();
+
+    default public boolean canConnect(IEnderNetworkComponent<T> component){
+        return true;
+    }
 
     public void addConnection(IStableEnderConnection<T> connection);
 
@@ -45,7 +49,15 @@ public interface IEnderCapability<T> extends INBTSerializable<NBTTagCompound> {
     }
 
     default public String getInformation(){
-        return getPowerConsumption()+" EF";
+        return getEndergyConsumption()+" EF";
+    }
+
+    default public boolean hasConfigGUI(){
+        return false;
+    }
+
+    default public Object getGuiObject(boolean client){
+        return null;
     }
 
     @Override

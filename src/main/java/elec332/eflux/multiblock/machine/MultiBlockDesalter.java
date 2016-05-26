@@ -7,7 +7,6 @@ import elec332.eflux.api.heat.IHeatReceiver;
 import elec332.eflux.api.util.CapabilityHelper;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.IEFluxFluidHandler;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

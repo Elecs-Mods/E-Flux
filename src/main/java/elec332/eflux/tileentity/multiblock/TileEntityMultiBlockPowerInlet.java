@@ -5,7 +5,6 @@ import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
-import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -71,8 +70,8 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
     @Override
     public String[] getProvidedData() {
         String[] ret = new String[]{
-                "Power: "+((EFluxMultiBlockMachine)getMultiBlock()).getStoredPower(),
-                "Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken(),
+                //"Power: "+((EFluxMultiBlockMachine)getMultiBlock()).getStoredPower(),
+                //"Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken(),
                 "RP: "+latsRP,
                 "EF: "+lastEF
         };

@@ -4,11 +4,10 @@ import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.endernetwork.capabilities.AbstractEnderCapability;
-import elec332.eflux.endernetwork.capabilities.EFluxCapabilityEndergy;
-import elec332.eflux.endernetwork.capabilities.EFluxEnderCapabilityPlayerInventory;
+import elec332.eflux.endernetwork.EnderCapabilityHelper;
+import elec332.eflux.endernetwork.capabilities.*;
 import elec332.eflux.endernetwork.capabilities.factory.DefaultFactory;
-import elec332.eflux.endernetwork.capabilities.factory.EndergyFactory;
+import elec332.eflux.endernetwork.capabilities.factory.DefaultMetaItemFactory;
 import elec332.eflux.multiblock.MultiBlockInterfaces;
 import elec332.eflux.util.IEFluxFluidHandler;
 import elec332.eflux.util.capability.RedstoneCapability;
@@ -40,7 +39,13 @@ public enum CapabilityRegister {
         registerWithoutAnything(IEFluxFluidHandler.class);
         registerWithoutAnything(RedstoneCapability.class);
         playerInventory = registerEnderCapabilityNoItem("playerInventory", EFluxEnderCapabilityPlayerInventory.class);
-        GameRegistry.register(new EndergyFactory());
+        registerEnderCapability("endergy", EFluxEnderCapabilityEndergy.class, 3);
+        registerEnderCapability("normalInventory", EFluxEnderCapabilityInventory.class);
+        registerEnderCapability("energy_EFlux", EFluxEnderCapabilityEnergy.class);
+    }
+
+    private static IEnderCapabilityFactory registerEnderCapability(String name, Class<? extends AbstractEnderCapability> clazz, int types){
+        return GameRegistry.register(new DefaultMetaItemFactory(new EFluxResourceLocation(name), EnderCapabilityHelper.getConstructor(clazz), types));
     }
 
     private static IEnderCapabilityFactory registerEnderCapabilityNoItem(String name, Class<? extends AbstractEnderCapability> clazz){

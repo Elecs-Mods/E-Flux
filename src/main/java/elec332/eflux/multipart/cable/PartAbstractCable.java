@@ -40,9 +40,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -52,7 +52,7 @@ import java.util.UUID;
 public abstract class PartAbstractCable extends AbstractEnergyMultiPart implements IEnergyTransmitter, ISlottedPart, ICustomHighlightPart {
 
     public PartAbstractCable(){
-        connectData = EnumSet.noneOf(EnumFacing.class);
+        connectData = new BitSet(EnumFacing.VALUES.length);
     }
 
     public void setGridIdentifier(UUID uuid){
@@ -62,7 +62,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     }
 
     private UUID gridIdentifier;
-    private Set<EnumFacing> connectData;
+    private BitSet connectData;
     private static final AxisAlignedBB[] HITBOXES;
     public static final PropertyBool UP = PropertyBool.create("up"), DOWN = PropertyBool.create("down"), NORTH = PropertyBool.create("north"), EAST = PropertyBool.create("east"), SOUTH = PropertyBool.create("south"), WEST = PropertyBool.create("west");
 
@@ -83,7 +83,15 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public void onPartValidated() {
         super.onPartValidated();
-        checkConnections();
+        checkConnections(false);
+    }
+
+    @Override
+    public void setContainer(IMultipartContainer container) {
+        super.setContainer(container);
+        if (getWorld().isRemote){
+            checkConnections(true);
+        }
     }
 
     @Override
@@ -126,24 +134,18 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
 
     @Override
     public void onNeighborBlockChange(Block block) {
-        checkConnections();
+        checkConnections(false);
     }
 
     @Override
     public void onPartChanged(IMultipart part) {
-        checkConnections();
+        checkConnections(false);
     }
 
     @Override
     public void writeUpdatePacket(PacketBuffer buf) {
         super.writeUpdatePacket(buf);
-        byte[] bytes = new byte[6];
-        for (EnumFacing facing : EnumFacing.VALUES){
-            if (connected(facing)){
-                bytes[facing.ordinal()] = 1;
-            }
-        }
-        buf.writeByteArray(bytes);
+        buf.writeByteArray(connectData.toByteArray());
         if (gridIdentifier != null) {
             buf.writeUuid(gridIdentifier);
         }
@@ -152,13 +154,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public void readUpdatePacket(PacketBuffer buf) {
         super.readUpdatePacket(buf);
-        connectData.clear();
-        byte[] bytes = buf.readByteArray();
-        for (int i = 0; i < bytes.length; i++) {
-            if (bytes[i] == 1){
-                connectData.add(EnumFacing.getFront(i));
-            }
-        }
+        connectData = BitSet.valueOf(buf.readByteArray());
         if (buf.readableBytes() > 15) {
             this.gridIdentifier = buf.readUuid();
         }
@@ -230,9 +226,11 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
         AxisAlignedBB aabb;
-        for (EnumFacing facing : connectData) {
-            aabb = HITBOXES[facing.ordinal()];
-            RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            if (connectData.get(facing.getIndex())) {
+                aabb = HITBOXES[facing.ordinal()];
+                RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
+            }
         }
         aabb = HITBOXES[6];
         RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
@@ -255,7 +253,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     }
 
     private boolean connected(EnumFacing side){
-        return connectData.contains(side);
+        return connectData.get(side.getIndex());
     }
 
     @Override
@@ -263,8 +261,8 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         return layer == BlockRenderLayer.CUTOUT;
     }
 
-    private void checkConnections(){
-        if (!getWorld().isRemote) {
+    private void checkConnections(boolean clientAdd){
+        if (!getWorld().isRemote || clientAdd) {
             ElecCore.tickHandler.registerCall(new Runnable() {
                 @Override
                 public void run() {
@@ -275,19 +273,23 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
                             TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
                             if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
                                 if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
-                                    connectData.add(side);
+                                    connectData.set(side.getIndex());
                                 } else {
                                     IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
                                     if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)) {
-                                        connectData.add(side);
+                                        connectData.set(side.getIndex());
                                     }
                                 }
                             }
                         }
-                        sendUpdatePacket(true);
+                        if (!getWorld().isRemote) {
+                            sendUpdatePacket(true);
+                        } else {
+                            WorldHelper.reRenderBlock(getTile());
+                        }
                     }
                 }
-            }, Side.SERVER);
+            }, getWorld());
         }
     }
 

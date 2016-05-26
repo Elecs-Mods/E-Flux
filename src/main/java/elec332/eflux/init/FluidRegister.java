@@ -1,30 +1,13 @@
 package elec332.eflux.init;
 
-import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockFluid;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.ItemBucket;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.*;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.awt.*;

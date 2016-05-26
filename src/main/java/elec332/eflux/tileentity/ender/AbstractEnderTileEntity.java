@@ -7,7 +7,6 @@ import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderConnection;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.endernetwork.EnderNetwork;
-import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.util.DefaultEnderConnectableTile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +14,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.UUID;
 
-import static elec332.eflux.endernetwork.EnderNetworkManager.*;
+import static elec332.eflux.endernetwork.EnderNetworkManager.get;
 
 /**
  * Created by Elec332 on 9-5-2016.

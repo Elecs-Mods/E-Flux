@@ -1,15 +1,12 @@
 package elec332.eflux.client.inventory;
 
-import com.google.common.collect.Lists;
 import elec332.core.client.RenderHelper;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.inventory.ContainerEnderContainer;
-import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * Created by Elec332 on 9-5-2016.

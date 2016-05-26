@@ -1,7 +1,6 @@
 package elec332.eflux.api.ender.internal;
 
 import elec332.eflux.api.ender.IEnderCapability;
-import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.IEnderNetworkTile;
 
 import javax.annotation.Nonnull;

@@ -1,14 +1,13 @@
 package elec332.eflux.api;
 
 import elec332.eflux.api.ender.IEnderNetworkComponent;
+import elec332.eflux.api.ender.internal.IEndergyCapability;
 import elec332.eflux.api.energy.IEnergyMonitor;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergySource;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.heat.IHeatReceiver;
-import elec332.eflux.api.ender.internal.IEndergyCapability;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;

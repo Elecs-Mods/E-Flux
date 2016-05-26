@@ -4,9 +4,7 @@ import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by Elec332 on 19-5-2016.

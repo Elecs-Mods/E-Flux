@@ -39,7 +39,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -55,6 +55,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+
+;
 
 /**
  * Created by Elec332 on 24-2-2015.

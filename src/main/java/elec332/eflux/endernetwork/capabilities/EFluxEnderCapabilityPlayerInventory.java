@@ -123,8 +123,8 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
     }
 
     @Override
-    public int getPowerConsumption() {
-        return 200;
+    public int getEndergyConsumption() {
+        return 50;
     }
 
     @Override

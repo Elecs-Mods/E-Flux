@@ -2,7 +2,6 @@ package elec332.eflux.multiblock.generator;
 
 import elec332.eflux.handler.FluidEnergyProviderHandler;
 import elec332.eflux.multiblock.EFluxMultiBlockFluidGenerator;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 /**

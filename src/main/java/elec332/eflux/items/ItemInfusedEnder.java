@@ -1,19 +1,12 @@
 package elec332.eflux.items;
 
 import elec332.core.world.WorldHelper;
-import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
-import elec332.eflux.api.ender.internal.IEnderConnection;
-import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
-import elec332.eflux.endernetwork.ItemConnection;
 import elec332.eflux.init.ItemRegister;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;

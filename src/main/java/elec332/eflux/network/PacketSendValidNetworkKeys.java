@@ -5,7 +5,6 @@ import elec332.core.util.NBT;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.endernetwork.EnderNetworkManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

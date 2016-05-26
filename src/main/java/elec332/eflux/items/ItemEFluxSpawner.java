@@ -18,9 +18,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.UUID;
-
 /**
  * Created by Elec332 on 21-2-2016.
  */
