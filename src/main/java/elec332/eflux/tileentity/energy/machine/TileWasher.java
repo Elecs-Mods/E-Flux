@@ -10,7 +10,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.ItemGroundMesh;
+import elec332.eflux.items.ItemEFluxGroundMesh;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.DustPile;
@@ -94,7 +94,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canProcess() {
-        if (!((ItemGroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkOutput())){
+        if (!((ItemEFluxGroundMesh.isValidMesh(getStackInSlot(0)) || gonnaBeOutputted != null) && checkOutput())){
             fluid = false;
             gonnaBeOutputted = null;
             stone = 0;
@@ -288,7 +288,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        return slot == 0 && ItemGroundMesh.isValidMesh(stack);
+        return slot == 0 && ItemEFluxGroundMesh.isValidMesh(stack);
     }
 
     @Override

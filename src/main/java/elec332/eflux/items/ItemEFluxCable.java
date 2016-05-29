@@ -31,9 +31,9 @@ import java.util.List;
 /**
  * Created by Elec332 on 12-2-2016.
  */
-public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
+public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJsonItem {
 
-    public ItemCable() {
+    public ItemEFluxCable() {
         super("cable");
     }
 
@@ -66,7 +66,7 @@ public class ItemCable extends ItemEFluxMultiPart implements INoJsonItem {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return "item.EFlux.cable." + stack.getItemDamage();
+        return super.getUnlocalizedName(stack) + stack.getItemDamage();
     }
 
     @Override

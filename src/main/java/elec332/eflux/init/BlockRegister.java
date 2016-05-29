@@ -6,8 +6,8 @@ import elec332.eflux.blocks.*;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
-import elec332.eflux.items.ChunkLoaderItemBlock;
-import elec332.eflux.items.ItemEFluxSpawner;
+import elec332.eflux.items.ItemBlockEFluxChunkLoader;
+import elec332.eflux.items.ItemBlockEFluxSpawner;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
@@ -31,7 +31,7 @@ public final class BlockRegister {
     private BlockRegister(){
     }
 
-    public static Block ores, oldCable, areaMover;
+    public static Block ores, areaMover;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
                                     fluidInlet, fluidOutlet, enderReader;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
@@ -41,17 +41,17 @@ public final class BlockRegister {
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){
                 case CHUNKMAIN:
-                    machine.itemBlockClass = ChunkLoaderItemBlock.class;
+                    machine.itemBlockClass = ItemBlockEFluxChunkLoader.class;
                     break;
                 case CHUNKSUB:
-                    machine.itemBlockClass = ChunkLoaderItemBlock.class;
+                    machine.itemBlockClass = ItemBlockEFluxChunkLoader.class;
                     break;
                 case COAL_GENERATOR:
                     machine.hasTwoStates = true;
                     break;
                 case SPAWNER:
                     machine.renderingLayer = BlockRenderLayer.CUTOUT;
-                    machine.itemBlockClass = ItemEFluxSpawner.class;
+                    machine.itemBlockClass = ItemBlockEFluxSpawner.class;
                     break;
                 case TANK:
                     machine.renderingLayer = BlockRenderLayer.CUTOUT;
@@ -102,8 +102,6 @@ public final class BlockRegister {
         enderReader = BlockMachineParts.ENDER.getMultiBlockWrapper();
 
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
-
-        oldCable = new BlockCable("efluxCable").register();
     }
 
     private BlockStateWrapper newBlockStateWrapper(Block block){

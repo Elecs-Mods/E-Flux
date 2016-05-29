@@ -29,14 +29,10 @@ public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends T
         Fluid fluid = te.getClientRenderFluid();
         float height = te.getClientRenderHeight();
 
-
-
-
-
-
         float offset = -0.0002f;
 
-        GlStateManager.pushMatrix();GlStateManager.translate(x, y, z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
         net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -84,15 +80,15 @@ public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends T
             map.put(facing, tile != null && tile instanceof IEFluxTank && te.getClientRenderFluid() == ((IEFluxTank) tile).getClientRenderFluid());
         }
         for (EnumFacing facing : EnumFacing.VALUES) {
-            if (!map.get(facing) && facing == EnumFacing.DOWN) {
-                render(renderBlocks, facing, dDown);
-            }
-            for (TextureAtlasSprite tas : textureAtlasSprites) {
-                if (!map.get(facing) && facing != EnumFacing.DOWN) {
-                    render(renderBlocks, facing, tas);
-                }
-                if (!map.get(facing.getOpposite())) {
-                    renderBlocks.render(facing, new BlockPos(-facing.getFrontOffsetX(), -facing.getFrontOffsetY(), -facing.getFrontOffsetZ()), tas);
+            if (!map.get(facing)) {
+                if (facing == EnumFacing.DOWN) {
+                    render(renderBlocks, facing, dDown);
+                    renderBlocks.renderFaceYPos(facing.getFrontOffsetX() + RenderHelper.BB_EXPAND_NUMBER, facing.getFrontOffsetY() + RenderHelper.BB_EXPAND_NUMBER, facing.getFrontOffsetZ() + RenderHelper.BB_EXPAND_NUMBER, dDown);
+                } else {
+                    for (TextureAtlasSprite tas : textureAtlasSprites) {
+                        render(renderBlocks, facing, tas);
+                        renderBlocks.render(facing.getOpposite(), new BlockPos(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ()), tas);
+                    }
                 }
             }
         }
@@ -100,14 +96,13 @@ public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends T
 
         tessellator.getMCTessellator().draw();
         GlStateManager.popMatrix();
-
     }
 
     private TextureAtlasSprite up, right, down, left, dDown;
     private TextureAtlasSprite[] textureAtlasSprites;
 
     private void render(RenderBlocks rb, EnumFacing side, TextureAtlasSprite texture){
-        rb.render(side, new BlockPos(0, 0, 0), texture);
+        rb.render(side, BlockPos.ORIGIN, texture);
     }
 
     @Override

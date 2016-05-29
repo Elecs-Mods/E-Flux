@@ -8,18 +8,18 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 /**
  * Created by Elec332 on 10-9-2015.
  */
-public abstract class EFluxItem extends Item {
+public abstract class AbstractEFluxItem extends Item {
 
-    public EFluxItem(String name){
+    public AbstractEFluxItem(String name){
         this.name = name;
         setRegistryName(new EFluxResourceLocation(name));
-        setUnlocalizedName(EFlux.ModID+"."+name);
+        setUnlocalizedName(getRegistryName().toString().replace(":", ".").toLowerCase());
         setCreativeTab(EFlux.creativeTab);
     }
 
-    private final String name;
+    protected final String name;
 
-    public EFluxItem register(){
+    public AbstractEFluxItem register(){
         GameRegistry.register(this);
         return this;
     }

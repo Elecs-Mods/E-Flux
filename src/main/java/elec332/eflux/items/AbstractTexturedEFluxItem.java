@@ -4,46 +4,33 @@ import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
 import elec332.core.client.model.INoJsonItem;
-import elec332.core.client.model.model.IItemModel;
 import elec332.core.client.model.template.ElecTemplateBakery;
-import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by Elec332 on 17-1-2016.
+ * Created by Elec332 on 27-5-2016.
  */
-public class ItemMultiBlockCreator extends EFluxItem implements INoJsonItem {
+public abstract class AbstractTexturedEFluxItem extends AbstractEFluxItem implements INoJsonItem {
 
-    public ItemMultiBlockCreator() {
-        super("multiBlockCreator");
-    }
-
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        System.out.println("item usage");
-        EFlux.multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, side);
-        return EnumActionResult.PASS;
+    public AbstractTexturedEFluxItem(String name) {
+        super(name);
     }
 
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite texture;
     @SideOnly(Side.CLIENT)
-    private IItemModel model;
+    private IBakedModel model;
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return model;
     }
 
@@ -65,7 +52,7 @@ public class ItemMultiBlockCreator extends EFluxItem implements INoJsonItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
-        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("items/mbc"));
+        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("items/"+name));
     }
 
 }

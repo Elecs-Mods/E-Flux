@@ -17,9 +17,9 @@ import net.minecraft.world.World;
 /**
  * Created by Elec332 on 9-5-2016.
  */
-public class ItemEnderConfigurator extends EFluxItem {
+public class ItemEFluxEnderConfigurator extends AbstractTexturedEFluxItem {
 
-    public ItemEnderConfigurator() {
+    public ItemEFluxEnderConfigurator() {
         super("enderConfigurator");
     }
 

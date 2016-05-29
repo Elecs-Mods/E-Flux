@@ -17,9 +17,9 @@ import net.minecraft.world.World;
 /**
  * Created by Elec332 on 10-1-2016.
  */
-public class ChunkLoaderItemBlock extends ItemBlock {
+public class ItemBlockEFluxChunkLoader extends ItemBlock {
 
-    public ChunkLoaderItemBlock(Block block) {
+    public ItemBlockEFluxChunkLoader(Block block) {
         super(block);
     }
 

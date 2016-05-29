@@ -5,7 +5,7 @@ import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IWeakEnderConnection;
 import elec332.eflux.endernetwork.util.DefaultEnderConnectableItem;
-import elec332.eflux.items.EFluxItem;
+import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.util.CapabilityWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /**
  * Created by Elec332 on 14-5-2016.
  */
-public abstract class AbstractEnderCapabilityItem<T> extends EFluxItem {
+public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFluxItem {
 
     public AbstractEnderCapabilityItem(String name) {
         super(name);
@@ -31,7 +31,7 @@ public abstract class AbstractEnderCapabilityItem<T> extends EFluxItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         stack = player.getHeldItem(hand); //Just to make sure.
-        if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)){
+        if (stack != null && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)){
             @SuppressWarnings("unchecked")
             IEnderNetworkComponent<T> component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
             if (component != null){

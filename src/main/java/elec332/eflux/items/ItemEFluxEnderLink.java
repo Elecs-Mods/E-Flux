@@ -19,9 +19,9 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 16-5-2016.
  */
-public class ItemEnderLink extends EFluxItem implements IEnderNetworkItem{
+public class ItemEFluxEnderLink extends AbstractTexturedEFluxItem implements IEnderNetworkItem {
 
-    public ItemEnderLink() {
+    public ItemEFluxEnderLink() {
         super("enderLink");
     }
 

@@ -3,9 +3,9 @@ package elec332.eflux.items;
 /**
  * Created by Elec332 on 18-1-2016.
  */
-public class EFluxDusts extends EFluxItems {
+public class ItemEFluxDusts extends ItemEFluxGenerics {
 
-    public EFluxDusts(){
+    public ItemEFluxDusts(){
         components = new String[]{"dustIron", "dustGold", "dustCopper", "dustZinc", "dustSilver", "dustCoal", "dustStone", "dustTin", "dustConductive"};
     }
 

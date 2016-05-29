@@ -89,10 +89,6 @@ public final class RecipeRegister {
 
         CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), BOOK, REDSTONE);
 
-        for (int i = 0; i < 3; i++) {
-            CraftingManager.getInstance().addShapelessRecipe(new ItemStack(cableBasic.getItem(), 1, i), new ItemStack(oldCable, 1, i));
-        }
-
         registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
 
     }
@@ -235,7 +231,7 @@ public final class RecipeRegister {
             }
 
         });
-        CircuitHandler.register();
+        //CircuitHandler.register();
     }
 
     private static void registerSmelting(ItemStack in, Item item){

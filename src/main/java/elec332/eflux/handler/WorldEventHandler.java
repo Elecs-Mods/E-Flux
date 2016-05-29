@@ -7,7 +7,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.ItemInfusedEnder;
+import elec332.eflux.items.ItemEFluxInfusedEnder;
 import elec332.eflux.util.capability.IRedstoneUpgradable;
 import elec332.eflux.util.capability.RedstoneCapability;
 import net.minecraft.entity.Entity;
@@ -73,7 +73,7 @@ public class WorldEventHandler {
                     public void run() {
                         Vec3d pos = event.getExplosion().getPosition();
                         for (int i = 0; i < pairs2; i++) {
-                            ItemStack stack = ItemInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew());
+                            ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew());
                             //stack.stackSize = 2;
                             WorldHelper.dropStack(event.getWorld(), (int) pos.xCoord, (int) pos.yCoord, (int) pos.zCoord, stack);
                         }

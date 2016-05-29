@@ -21,9 +21,9 @@ import net.minecraft.world.World;
 /**
  * Created by Elec332 on 21-2-2016.
  */
-public class ItemEFluxSpawner extends ItemBlock {
+public class ItemBlockEFluxSpawner extends ItemBlock {
 
-    public ItemEFluxSpawner(Block block) {
+    public ItemBlockEFluxSpawner(Block block) {
         super(block);
     }
 

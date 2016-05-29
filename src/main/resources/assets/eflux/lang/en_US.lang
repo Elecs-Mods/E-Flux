@@ -2,40 +2,62 @@
 itemGroup.EFlux=EFlux
 
 ##ITEMS
-item.EFlux.MultiMeter.name=Multimeter
-item.EFlux.Wrench.name=Wrench
-item.EFlux.groundMesh.name=Ground Mesh
-item.EFlux.genericItems.carbonPlate.name=Carbon Plate
-item.EFlux.genericItems.scrap.name=Scrap
-item.EFlux.genericItems.carbonMesh.name=Carbon Mesh
-item.EFlux.GroundMesh.name=Ground Mesh
-item.EFlux.ingots.copper.name=Copper Ingot
-item.EFlux.ingots.tin.name=Tin Ingot
-item.EFlux.ingots.zinc.name=Zinc Ingot
-item.EFlux.ingots.silver.name=Silver Ingot
-item.EFlux.ingots.compressed.name=Compressed Ingot
-item.EFlux.ingots.conductive.name=Conductive Ingot
-item.EFlux.coils.co.name=Copper Coil
-item.EFlux.coils.si.name=Silver Coil
-item.EFlux.coils.cond.name=Conductive Coil
-item.EFlux.itemAreaMover.name=Area Mover
-item.EFlux.multiBlockCreator.name=MultiBlock Toolkit
+item.eflux.multimeter.name=Multimeter
+item.eflux.wrench.name=Wrench
+item.eflux.genericitems.carbonplate.name=Carbon Plate
+item.eflux.genericitems.scrap.name=Scrap
+item.eflux.genericitems.carbonmesh.name=Carbon Mesh
+item.eflux.genericitems.plantmesh.name=Plant Mesh
+item.eflux.groundmesh.name=Ground Mesh
+item.eflux.ingots.copper.name=Copper Ingot
+item.eflux.ingots.tin.name=Tin Ingot
+item.eflux.ingots.zinc.name=Zinc Ingot
+item.eflux.ingots.silver.name=Silver Ingot
+item.eflux.ingots.compressed.name=Compressed Ingot
+item.eflux.ingots.conductive.name=Conductive Ingot
+item.eflux.coils.co.name=Copper Coil
+item.eflux.coils.si.name=Silver Coil
+item.eflux.coils.cond.name=Conductive Coil
+item.eflux.itemareamover.name=Area Mover
+item.eflux.multiblockcreator.name=MultiBlock Toolkit
 
-item.EFlux.dusts.dustIron.name=Iron Dust
-item.EFlux.dusts.dustGold.name=Gold Dust
-item.EFlux.dusts.dustCopper.name=Copper Dust
-item.EFlux.dusts.dustZinc.name=Zinc Dust
-item.EFlux.dusts.dustSilver.name=Silver Dust
-item.EFlux.dusts.dustCoal.name=Coal Dust
-item.EFlux.dusts.dustStone.name=Stone Dust
-item.EFlux.dusts.dustTin.name=Tin Dust
-item.EFlux.dusts.dustConductive.name=Conductive Dust
+item.eflux.dusts.dustiron.name=Iron Dust
+item.eflux.dusts.dustgold.name=Gold Dust
+item.eflux.dusts.dustcopper.name=Copper Dust
+item.eflux.dusts.dustzinc.name=Zinc Dust
+item.eflux.dusts.dustsilver.name=Silver Dust
+item.eflux.dusts.dustcoal.name=Coal Dust
+item.eflux.dusts.duststone.name=Stone Dust
+item.eflux.dusts.dusttin.name=Tin Dust
+item.eflux.dusts.dustconductive.name=Conductive Dust
 
-item.EFlux.cable.0.name=Basic Cable
-item.EFlux.cable.1.name=Normal Cable
-item.EFlux.cable.2.name=Advanced Cable
+item.eflux.cable.0.name=Basic Cable
+item.eflux.cable.1.name=Normal Cable
+item.eflux.cable.2.name=Advanced Cable
 
-item.EFlux.manual.name=Manual
+item.eflux.brine.name=Brine Bucket
+item.eflux.lpg.name=LPG Bucket
+item.eflux.petrol.name=Petrol Bucket
+item.eflux.diesel.name=Diesel Bucket
+item.eflux.fuel.name=Fuel Bucket
+item.eflux.lubicrant.name=Lubicrant Bucket
+item.eflux.crudeoil.name=Crude Oil Bucket
+item.eflux.oil.name=Oil Bucket
+item.eflux.slib.name=Slib Bucket
+
+item.eflux.manual.name=Manual
+
+item.eflux.components.resistor.name=Resistor
+item.eflux.components.capacitor.name=Capacitor
+item.eflux.components.transistor.name=Transistor
+item.eflux.components.coil.name=Coil
+item.eflux.components.diode.name=Diode
+item.eflux.brokencomponents.resistor.name=Resistor
+item.eflux.brokencomponents.capacitor.name=Capacitor
+item.eflux.brokencomponents.transistor.name=Transistor
+item.eflux.brokencomponents.coil.name=Coil
+item.eflux.brokencomponents.diode.name=Diode
+
 
 ##CIRCUITS
 item.EFlux.unrefinedcircuitboard.0.name=Small Unrefined Circuit Board
@@ -43,10 +65,6 @@ item.EFlux.unrefinedcircuitboard.1.name=Normal Unrefined Circuit Board
 item.EFlux.unrefinedcircuitboard.2.name=Advanced Unrefined Circuit Board
 
 ##BLOCKS
-tile.EFlux.efluxCable.0.name=Basic Cable
-tile.EFlux.efluxCable.1.name=Normal Cable
-tile.EFlux.efluxCable.2.name=Advanced Cable
-
 tile.eflux.lasercore.name=Laser Core
 tile.eflux.heater.name=Heater
 tile.eflux.duststorage.name=Dust Storage

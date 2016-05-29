@@ -20,9 +20,9 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 4-5-2016.
  */
-public class ItemInfusedEnder extends EFluxItem {
+public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
-    public ItemInfusedEnder() {
+    public ItemEFluxInfusedEnder() {
         super("infusedEnder");
         setMaxStackSize(1);
     }

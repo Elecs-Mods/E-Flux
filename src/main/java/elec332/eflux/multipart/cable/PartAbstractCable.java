@@ -89,9 +89,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public void setContainer(IMultipartContainer container) {
         super.setContainer(container);
-        if (getWorld().isRemote){
-            checkConnections(true);
-        }
+        //ElecCore.tickHandler.registerCall(new ClientChecker(), Side.CLIENT);
     }
 
     @Override
@@ -104,6 +102,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public IBlockState getExtendedState(IBlockState ibs) {
         IExtendedBlockState state = (IExtendedBlockState) ibs;
+        checkConnectionsNow();
         return state.withProperty(DOWN, connected(EnumFacing.DOWN)).withProperty(UP, connected(EnumFacing.UP)).withProperty(NORTH, connected(EnumFacing.NORTH)).withProperty(SOUTH, connected(EnumFacing.SOUTH)).withProperty(WEST, connected(EnumFacing.WEST)).withProperty(EAST, connected(EnumFacing.EAST));
     }
 
@@ -266,30 +265,34 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
             ElecCore.tickHandler.registerCall(new Runnable() {
                 @Override
                 public void run() {
-                    if (MultipartHelper.getPartContainer(getWorld(), getPos()) != null) {
-                        connectData.clear();
-                        for (EnumFacing side : EnumFacing.VALUES) {
-                            BlockPos pos = getPos().offset(side);
-                            TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
-                            if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
-                                if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
-                                    connectData.set(side.getIndex());
-                                } else {
-                                    IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
-                                    if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)) {
-                                        connectData.set(side.getIndex());
-                                    }
-                                }
-                            }
-                        }
-                        if (!getWorld().isRemote) {
-                            sendUpdatePacket(true);
-                        } else {
-                            WorldHelper.reRenderBlock(getTile());
+                    checkConnectionsNow();
+                }
+            }, getWorld());
+        }
+    }
+
+    private void checkConnectionsNow(){
+        if (MultipartHelper.getPartContainer(getWorld(), getPos()) != null) {
+            connectData.clear();
+            for (EnumFacing side : EnumFacing.VALUES) {
+                BlockPos pos = getPos().offset(side);
+                TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
+                if (EnergyAPIHelper.isEnergyTile(tile) && canConnectToSide(side)) {
+                    if (EnergyAPIHelper.isProvider(tile, side.getOpposite()) || EnergyAPIHelper.isReceiver(tile, side.getOpposite())) {
+                        connectData.set(side.getIndex());
+                    } else {
+                        IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
+                        if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)) {
+                            connectData.set(side.getIndex());
                         }
                     }
                 }
-            }, getWorld());
+            }
+            if (!getWorld().isRemote) {
+                sendUpdatePacket(true);
+            } else {
+                WorldHelper.reRenderBlock(getTile());
+            }
         }
     }
 
@@ -339,6 +342,21 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         HITBOXES[EnumFacing.WEST.ordinal()] = new AxisAlignedBB(heightStuff, heightStuff, heightStuff, 0, f1, f1);
         HITBOXES[EnumFacing.EAST.ordinal()] = new AxisAlignedBB(1, heightStuff, heightStuff, f1, f1, f1);
         HITBOXES[6] = new AxisAlignedBB(heightStuff, heightStuff, heightStuff, f1, f1, f1);
+    }
+
+    private class ClientChecker implements Runnable {
+
+        @Override
+        public void run() {
+            if (getWorld() != null) {
+                if (getWorld().isRemote) {
+                    checkConnections(true);
+                }
+            } else {
+                ElecCore.tickHandler.registerCall(new ClientChecker(), Side.CLIENT);
+            }
+        }
+
     }
 
 }

@@ -25,11 +25,13 @@ import java.util.List;
 /**
  * Created by Elec332 on 17-5-2015.
  */
-public class EFluxItems extends Item implements INoJsonItem {
+public class ItemEFluxGenerics extends Item implements INoJsonItem {
 
-    public EFluxItems(){
-        this.setCreativeTab(EFlux.creativeTab);
+    public ItemEFluxGenerics(){
         this.setHasSubtypes(true);
+        setRegistryName(new EFluxResourceLocation(getName()));
+        setUnlocalizedName(getRegistryName().toString().replace(":", ".").toLowerCase());
+        setCreativeTab(EFlux.creativeTab);
     }
 
     protected String[] components = {
@@ -49,18 +51,14 @@ public class EFluxItems extends Item implements INoJsonItem {
         return "genericItems";
     }
 
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return "item."+EFlux.ModID+"."+getName()+"."+components[stack.getItemDamage()];
+    protected String getTextureName(int meta){
+        return components[meta];
     }
 
-   // @SideOnly(Side.CLIENT)
-   // public void registerIcons(IIconRegister iconRegister){
-   //     textures = new IIcon[components.length];
-   //     for(int i = 0; i < components.length; i++){
-   //         textures[i] = iconRegister.registerIcon(EFlux.ModID+":"+getName()+"."+components[i]);
-   //     }
-   // }
+    @Override
+    public String getUnlocalizedName(ItemStack stack) {
+        return super.getUnlocalizedName(stack)+"."+components[stack.getItemDamage()].toLowerCase();
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -100,7 +98,7 @@ public class EFluxItems extends Item implements INoJsonItem {
     public void registerTextures(IIconRegistrar iconRegistrar) {
         textures = new TextureAtlasSprite[components.length];
         for(int i = 0; i < components.length; i++){
-            textures[i] = iconRegistrar.registerSprite(new EFluxResourceLocation("items/"+components[i]));
+            textures[i] = iconRegistrar.registerSprite(new EFluxResourceLocation("items/"+getTextureName(i)));
         }
     }
 

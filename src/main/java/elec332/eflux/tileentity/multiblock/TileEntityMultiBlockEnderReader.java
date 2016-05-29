@@ -19,7 +19,7 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiEnderContainer;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.ItemInfusedEnder;
+import elec332.eflux.items.ItemEFluxInfusedEnder;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,7 +57,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
         stack = playerInv.getStackInSlot(current);
         if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.entangledEnder)){
             if (!worldObj.isRemote) {
-                this.networkID = ItemInfusedEnder.getUUID(stack);
+                this.networkID = ItemEFluxInfusedEnder.getUUID(stack);
                 if (getMultiBlock() != null) {
                     ((MultiBlockEnderContainer) getMultiBlock()).setUUID(this);
                 }

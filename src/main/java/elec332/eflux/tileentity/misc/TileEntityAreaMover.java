@@ -28,10 +28,11 @@ public class TileEntityAreaMover extends TileEntity {
         int i = super.getBlockMetadata();
         if (i > MAX_RANGE){
             WorldHelper.setBlockState(worldObj, pos, getBlockType().getDefaultState(), 3);
+            updateContainingBlockInfo();
         } else {
             return i;
         }
-        return super.getBlockMetadata();
+        return getBlockMetadata();
     }
 
     public NBTTagCompound removeArea(){
