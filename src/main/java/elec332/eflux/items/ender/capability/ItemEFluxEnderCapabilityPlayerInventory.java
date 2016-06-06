@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.FakePlayer;
 /**
  * Created by Elec332 on 7-5-2016.
  */
-public class ItemEFluxEnderCapabilityPlayerInventory extends EFluxEnderCapabilityItem {
+public class ItemEFluxEnderCapabilityPlayerInventory extends ItemEFluxEnderCapability {
 
     public ItemEFluxEnderCapabilityPlayerInventory() {
         super(CapabilityRegister.instance.playerInventory);

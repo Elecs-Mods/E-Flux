@@ -15,7 +15,7 @@ import net.minecraft.util.text.ITextComponent;
  * Created by Elec332 on 10-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxDustStorage")
-public class TileEntityDustStorage extends AbstractTileEntityMultiBlock implements ISidedInventory{
+public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements ISidedInventory{
 
     private ItemStack stored;
     private boolean redstone;

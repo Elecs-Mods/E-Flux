@@ -1,10 +1,10 @@
 package elec332.eflux.init;
 
 import elec332.eflux.api.circuit.EnumCircuit;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.*;
-import elec332.eflux.items.circuits.CircuitHandler;
+import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
-import elec332.eflux.items.circuits.UnrefinedBoard;
 import elec332.eflux.items.ender.ItemEnderInventory;
 import elec332.eflux.items.ender.capability.ItemEFluxEnderCapabilityPlayerInventory;
 import elec332.eflux.util.GrinderRecipes;
@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public final class ItemRegister {
     private ItemRegister(){
     }
 
-    public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual;
+    public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual, entangledEnder, nullBlueprint;
 
     public static ItemEFluxElectricComponents components, brokenComponents;
     @SuppressWarnings("all")
@@ -37,29 +38,26 @@ public final class ItemRegister {
     public static ItemStack cableBasic, cableNormal, cableAdvanced;
     //Circuit Boards
     public static ItemStack smallUnrefinedBoard, normalUnrefinedBoard, advancedUnrefinedBoard;
-    //Assembled Circuit Boards
-    public static ItemStack shockBoard;
+    //Ender stuff
+    public static Item enderLink, enderConfigurator, enderInventoryViewer;
+    public static Item enderCapabilityPlayerInventory;
     //Misc
-    public static ItemStack redstoneUpgrade, entangledEnder;
+    public static ItemStack redstoneUpgrade;
 
     public void init(FMLInitializationEvent event){
+
         multimeter = GameRegistry.register(new ItemEFluxMultiMeter());
         wrench = GameRegistry.register(new ItemEFluxWrench());
-        groundMesh = new ItemEFluxGroundMesh().register();
-        areaMover = new ItemEFluxAreaMover().register();
-        multiBlockCreator = new ItemEFluxMultiBlockCreator().register();
-        entangledEnder = new ItemStack(new ItemEFluxInfusedEnder().register());
+        groundMesh = GameRegistry.register(new ItemEFluxGroundMesh());
+        areaMover = GameRegistry.register(new ItemEFluxAreaMover());
+        multiBlockCreator = GameRegistry.register(new ItemEFluxMultiBlockCreator());
+        entangledEnder = GameRegistry.register(new ItemEFluxInfusedEnder());
 
         efluxItems = new ItemEFluxGenerics();
         GameRegistry.register(efluxItems);
         carbonPlate = new ItemStack(efluxItems, 1, 0);
         scrap = new ItemStack(efluxItems, 1, 1);
         carbonMesh = new ItemStack(efluxItems, 1, 2);
-
-        GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory());
-        new ItemEFluxEnderConfigurator().register();
-        new ItemEnderInventory().register();
-        new ItemEFluxEnderLink().register();
 
         ingot = new ItemEFluxIngots();
         GameRegistry.register(ingot);
@@ -88,13 +86,28 @@ public final class ItemRegister {
         dustTin = new ItemStack(dusts, 1, 7);
         dustConductive = new ItemStack(dusts, 1, 8);
 
+        unrefinedBoard = new ItemEFluxCircuit();
+        GameRegistry.register(unrefinedBoard);
+        smallUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.SMALL);
+        normalUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.NORMAL);
+        advancedUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.ADVANCED);
+
         components = GameRegistry.register(new ItemEFluxElectricComponents());
         brokenComponents = GameRegistry.register(new ItemEFluxElectricComponents.BrokenComponents());
-
-        manual = new ItemEFluxManual().register();
-
+        manual = GameRegistry.register(new ItemEFluxManual());
+        nullBlueprint = GameRegistry.register(new ItemEFluxBluePrint());
+        enderLink = GameRegistry.register(new ItemEFluxEnderLink());
+        enderConfigurator = GameRegistry.register(new ItemEFluxEnderConfigurator());
+        enderCapabilityPlayerInventory = GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory());
+        enderInventoryViewer = GameRegistry.register(new ItemEnderInventory());
+        //What was I doing here again?
         redstoneUpgrade = new ItemStack(new AbstractEFluxItem("redstoneUpgrade"){}.register().setMaxStackSize(1));
 
+        registerOreDictionary();
+        registerCircuits();
+    }
+
+    private void registerOreDictionary(){
         List<String> components = ((ItemEFluxDusts) dusts).getComponents();
         for (int i = 0; i < components.size(); i++) {
             OreDictionary.registerOre(components.get(i), new ItemStack(dusts, 1, i));
@@ -109,23 +122,13 @@ public final class ItemRegister {
         OreDictionary.registerOre("ingotConductive", conductiveIngot);
 
         OreDictionary.registerOre("vanillaCoal", Items.COAL);
-
-        registerCircuits();
     }
 
-    private void registerCircuits(){
-        unrefinedBoard = new UnrefinedBoard();
-        GameRegistry.registerItem(unrefinedBoard, "UnrefinedBoard");
-        smallUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 0);
-        normalUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 1);
-        advancedUnrefinedBoard = new ItemStack(unrefinedBoard, 1, 2);
-        registerCircuits_();
-    }
-
-    private void registerCircuits_(){
-        CircuitHandler.register(new ICircuitDataProvider() {
+    private void registerCircuits() {
+        GameRegistry.register(new ICircuitDataProvider() {
 
             @Override
+            @Nonnull
             public ItemStack[] getComponents() {
                 return new ItemStack[]{
                         null, circuit(3), circuit(4), circuit(2), circuit(1), circuit(1), circuit(4), circuit(3), null
@@ -133,13 +136,12 @@ public final class ItemRegister {
             }
 
             @Override
-            public String getName() {
-                return "shock";
+            @Nonnull
+            public EnumCircuit getCircuitType() {
+                return EnumCircuit.NORMAL;
             }
 
-        }, EnumCircuit.SMALL);
-
-        shockBoard = getBoard(EnumCircuit.SMALL, "shock");
+        }, new EFluxResourceLocation("shock"));
 
     }
 
@@ -147,12 +149,8 @@ public final class ItemRegister {
         return new ItemStack(components, 1, i);
     }
 
-    private static ItemStack getBoard(EnumCircuit circuit, String name){
-        return new ItemStack(CircuitHandler.get(circuit).getCircuitFromName(name));
-    }
-
-    protected void initMultiPartItems(){
-        cable = new ItemEFluxCable().register();
+    void registerMultiPartItems(){
+        cable = GameRegistry.register(new ItemEFluxCable());
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);
         cableAdvanced = new ItemStack(cable, 1, 2);

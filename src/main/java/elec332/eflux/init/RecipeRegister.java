@@ -3,12 +3,13 @@ package elec332.eflux.init;
 import elec332.core.java.JavaHelper;
 import elec332.core.util.OredictHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.items.circuits.CircuitHandler;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.recipes.CompressorRecipes;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.IEFluxFurnaceRecipe;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
+import elec332.eflux.util.RecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -89,7 +90,9 @@ public final class RecipeRegister {
 
         CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), BOOK, REDSTONE);
 
-        registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
+        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
+        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, normalUnrefinedBoard, "CSC", "RIL", "CSC", 'C', copperIngot, 'S', silverIngot, 'R', REDSTONE, 'I', smallUnrefinedBoard, 'L', new ItemStack(DYE, 1, 15));
+        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, advancedUnrefinedBoard, "CBC", "BLB", "SCS", 'C', conductiveIngot, 'B', normalUnrefinedBoard, 'L', new ItemStack(DYE, 1, 11), 'S', GOLD_INGOT);
 
     }
 
@@ -145,68 +148,8 @@ public final class RecipeRegister {
             }
 
         });
-        GameRegistry.addRecipe(new IRecipe() {
-
-            @Override
-            public boolean matches(InventoryCrafting inv, World worldIn) {
-                int total = 0;
-                for (int i = 0; i < inv.getSizeInventory(); i++) {
-                    ItemStack stack = inv.getStackInSlot(i);
-                    if (stack != null){
-                        Item item = stack.getItem();
-                        if (item == null || item != ItemRegister.groundMesh){
-                            return false;
-                        }
-                        DustPile d = DustPile.fromNBT(stack.getTagCompound());
-                        total += d.getSize();
-                        if (total > 9){
-                            return false;
-                        }
-                    }
-                }
-                return total <= 9 && total > 0;
-            }
-
-            @Override
-            public ItemStack getCraftingResult(InventoryCrafting inv) {
-                DustPile dustPile = DustPile.newDustPile();
-                dustPile.scanned = true;
-                dustPile.clean = true;
-                dustPile.pure = true;
-                for (int i = 0; i < inv.getSizeInventory(); i++) {
-                    ItemStack stack = inv.getStackInSlot(i);
-                    if (stack != null && stack.getItem() == ItemRegister.groundMesh){
-                        DustPile d2 = DustPile.fromNBT(stack.getTagCompound());
-                        dustPile.add(d2);
-                    }
-                }
-                if (dustPile.getSize() > 9){
-                    return null;
-                }
-                ItemStack ret = dustPile.getContentStack(1);
-                if (ret != null)
-                    return ret;
-                ret = new ItemStack(groundMesh);
-                ret.setTagCompound(dustPile.toNBT());
-                return ret;
-            }
-
-            @Override
-            public int getRecipeSize() {
-                return 4;
-            }
-
-            @Override
-            public ItemStack getRecipeOutput() {
-                return null;
-            }
-
-            @Override
-            public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-                return ForgeHooks.defaultRecipeGetRemainingItems(inv);
-            }
-
-        });
+        GameRegistry.addRecipe(new DustRecipe());
+        OredictHelper.registerRecipeSorter(new EFluxResourceLocation("dusts"), DustRecipe.class);
         EFluxFurnaceRecipes.getInstance().registerRecipe(new IEFluxFurnaceRecipe() {
 
             @Override
@@ -234,6 +177,70 @@ public final class RecipeRegister {
         //CircuitHandler.register();
     }
 
+    private static class DustRecipe implements IRecipe {
+
+        @Override
+        public boolean matches(InventoryCrafting inv, World worldIn) {
+            int total = 0;
+            for (int i = 0; i < inv.getSizeInventory(); i++) {
+                ItemStack stack = inv.getStackInSlot(i);
+                if (stack != null){
+                    Item item = stack.getItem();
+                    if (item == null || item != ItemRegister.groundMesh){
+                        return false;
+                    }
+                    DustPile d = DustPile.fromNBT(stack.getTagCompound());
+                    total += d.getSize();
+                    if (total > 9){
+                        return false;
+                    }
+                }
+            }
+            return total <= 9 && total > 0;
+        }
+
+        @Override
+        public ItemStack getCraftingResult(InventoryCrafting inv) {
+            DustPile dustPile = DustPile.newDustPile();
+            dustPile.scanned = true;
+            dustPile.clean = true;
+            dustPile.pure = true;
+            for (int i = 0; i < inv.getSizeInventory(); i++) {
+                ItemStack stack = inv.getStackInSlot(i);
+                if (stack != null && stack.getItem() == ItemRegister.groundMesh){
+                    DustPile d2 = DustPile.fromNBT(stack.getTagCompound());
+                    dustPile.add(d2);
+                }
+            }
+            if (dustPile.getSize() > 9){
+                return null;
+            }
+            ItemStack ret = dustPile.getContentStack(1);
+            if (ret != null) {
+                return ret;
+            }
+            ret = new ItemStack(groundMesh);
+            ret.setTagCompound(dustPile.toNBT());
+            return ret;
+        }
+
+        @Override
+        public int getRecipeSize() {
+            return 4;
+        }
+
+        @Override
+        public ItemStack getRecipeOutput() {
+            return null;
+        }
+
+        @Override
+        public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+            return ForgeHooks.defaultRecipeGetRemainingItems(inv);
+        }
+
+    }
+
     private static void registerSmelting(ItemStack in, Item item){
         registerSmelting(in, new ItemStack(item));
     }
@@ -247,7 +254,7 @@ public final class RecipeRegister {
     }
 
     private static void registerShapedRecipe(ItemStack stack, Object... params){
-        GameRegistry.addShapedRecipe(stack, params);
+        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_FUNCTION, stack, params);
     }
 
 }

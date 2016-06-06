@@ -4,7 +4,9 @@ import elec332.core.api.annotations.RegisterTile;
 import elec332.core.tile.TileBase;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.NBTHelper;
+import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,10 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,7 +41,7 @@ public class TileEntityEFluxSpawner extends TileBase implements ITickable {
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         boolean b = false;
-        if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.shockBoard) && ((ICircuit)stack.getItem()).isValid(stack)){
+        if (CircuitHelper.isCircuitType(stack, new EFluxResourceLocation("shock")) && CircuitHelper.isValidCircuit(stack)){
             brainDead = b = true;
         }
         if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(Items.ENDER_EYE))){

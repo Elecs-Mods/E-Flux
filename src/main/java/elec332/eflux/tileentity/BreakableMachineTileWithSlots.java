@@ -122,4 +122,7 @@ public abstract class BreakableMachineTileWithSlots extends BreakableMachineTile
     public ITextComponent getDisplayName() {
         return inventory.getDisplayName();
     }
+
+
+
 }

@@ -38,7 +38,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
     @Nullable
     public static UUID getUUID(ItemStack stack){
-        if (stack != null && stack.getItem() == ItemRegister.entangledEnder.getItem() && stack.hasTagCompound() && stack.getTagCompound().hasKey("nUUID")){
+        if (stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nUUID")){
             return UUID.fromString(stack.getTagCompound().getString("nUUID"));
         }
         return null;
@@ -46,7 +46,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
     @Nonnull
     public static ItemStack createStack(@Nonnull UUID uuid){
-        ItemStack stack = ItemRegister.entangledEnder.copy();
+        ItemStack stack = new ItemStack(ItemRegister.entangledEnder);
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("nUUID", uuid.toString());
         stack.setTagCompound(tag);

@@ -1,5 +1,6 @@
 package elec332.eflux.api;
 
+import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IEndergyCapability;
 import elec332.eflux.api.energy.IEnergyMonitor;
@@ -38,6 +39,9 @@ public class EFluxAPI {
     @CapabilityInject(IEndergyCapability.class)
     public static Capability<IEndergyCapability> ENDERGY_ENDER_CAPABILITY;
 
+    @CapabilityInject(ICircuit.class)
+    public static Capability<ICircuit> EFLUX_CIRCUIT_CAPABILITY;
+
     public static void dummyLoad(){
     }
 
@@ -49,6 +53,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnderNetworkComponent.class);
         registerWithoutStorageAndDefaultInstance(IEndergyCapability.class);
+        registerWithoutStorageAndDefaultInstance(ICircuit.class);
     }
 
     static void registerWithoutStorageAndDefaultInstance(Class clazz){

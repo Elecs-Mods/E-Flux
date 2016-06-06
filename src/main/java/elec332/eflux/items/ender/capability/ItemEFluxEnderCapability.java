@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Created by Elec332 on 7-5-2016.
  */
-public class EFluxEnderCapabilityItem extends Item implements INoJsonItem, IEnderCapabilityContainingItem {
+public class ItemEFluxEnderCapability extends Item implements INoJsonItem, IEnderCapabilityContainingItem {
 
-    public EFluxEnderCapabilityItem(IEnderCapabilityFactory enderCapabilityFactory) {
+    public ItemEFluxEnderCapability(IEnderCapabilityFactory enderCapabilityFactory) {
         super();
         this.factory = enderCapabilityFactory;
         this.types = Lists.newArrayList();

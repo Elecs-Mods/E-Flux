@@ -55,7 +55,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
         int current = player.inventory.currentItem;
         IInventory playerInv = player.inventory;
         stack = playerInv.getStackInSlot(current);
-        if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.entangledEnder)){
+        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(ItemRegister.entangledEnder))){
             if (!worldObj.isRemote) {
                 this.networkID = ItemEFluxInfusedEnder.getUUID(stack);
                 if (getMultiBlock() != null) {

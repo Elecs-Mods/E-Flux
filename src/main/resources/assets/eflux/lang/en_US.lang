@@ -52,11 +52,11 @@ item.eflux.components.capacitor.name=Capacitor
 item.eflux.components.transistor.name=Transistor
 item.eflux.components.coil.name=Coil
 item.eflux.components.diode.name=Diode
-item.eflux.brokencomponents.resistor.name=Resistor
-item.eflux.brokencomponents.capacitor.name=Capacitor
-item.eflux.brokencomponents.transistor.name=Transistor
-item.eflux.brokencomponents.coil.name=Coil
-item.eflux.brokencomponents.diode.name=Diode
+item.eflux.brokencomponents.resistor.name=Broken Resistor
+item.eflux.brokencomponents.capacitor.name=Broken Capacitor
+item.eflux.brokencomponents.transistor.name=Broken Transistor
+item.eflux.brokencomponents.coil.name=Broken Coil
+item.eflux.brokencomponents.diode.name=Broken Diode
 
 
 ##CIRCUITS

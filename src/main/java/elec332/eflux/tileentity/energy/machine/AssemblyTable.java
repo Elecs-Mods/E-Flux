@@ -5,6 +5,7 @@ import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
@@ -26,10 +27,17 @@ import net.minecraft.util.ResourceLocation;
 public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
+
         @Override
         public boolean isItemValidForSlot(int id, ItemStack stack) {
-            return stack.getItem() instanceof ICircuit;
+            return CircuitHelper.getCircuit(stack) != null;
         }
+
+        @Override
+        public int getInventoryStackLimit() {
+            return 1;
+        }
+
     };
 
     @Override

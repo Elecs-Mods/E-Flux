@@ -3,10 +3,10 @@ package elec332.eflux.multiblock.machine;
 import elec332.core.util.DirectionHelper;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.EnumCircuit;
-import elec332.eflux.items.circuits.CircuitHandler;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.util.MultiBlockLogic;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -97,7 +97,7 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
 
     @Override
     public ItemStack getRandomRepairItem() {
-        return CircuitHandler.get(EnumCircuit.SMALL).getUnrefinedCircuit();
+        return new ItemStack(Items.APPLE);//TODO CircuitHandler.get(EnumCircuit.SMALL).getUnrefinedCircuit();
     }
 
     @Override

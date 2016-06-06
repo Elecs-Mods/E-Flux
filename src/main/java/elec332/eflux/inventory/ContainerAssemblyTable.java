@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
+import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.api.energy.container.EnergyContainer;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ITickable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Elec332 on 4-5-2015.
@@ -33,7 +35,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
 
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack != null && stack.getItem() instanceof ICircuit;
+                return CircuitHelper.getCircuit(stack) != null;
             }
 
         });
@@ -45,8 +47,9 @@ public class ContainerAssemblyTable extends ContainerMachine {
             }
         }
         circuit.openInventory(player);
-        if (inv.getStackInSlot(0) != null && inv.getStackInSlot(0).getItem() instanceof ICircuit && ((ICircuit)inv.getStackInSlot(0).getItem()).isCircuit(inv.getStackInSlot(0))) {
-            circuit.setStack(inv.getStackInSlot(0));
+        ItemStack stack = inv.getStackInSlot(0);
+        if (CircuitHelper.isEtchedCircuit(stack)) {
+            circuit.setStack(stack);
         }
         addPlayerInventoryToContainer();
         syncSlots();
@@ -73,13 +76,13 @@ public class ContainerAssemblyTable extends ContainerMachine {
 
     private void syncSlots(){
         ItemStack stack = getSlot(0).inventory.getStackInSlot(0);
-        if (stack!= null && stack.getItem() instanceof ICircuit && ((ICircuit)stack.getItem()).isCircuit(stack)){
+        if (CircuitHelper.getCircuit(stack) != null){
             circuit.setStack(stack);
-            int i = ((ICircuit)stack.getItem()).boardSize(stack);
+            int i = CircuitHelper.getCircuitBoardSize(stack);
             for (SlotAssembly assembly : assemblies) {
                 assembly.setI(i);
                 if (i > assembly.getSlotIndex()) {
-                    assembly.validItem = ((ICircuit) stack.getItem()).getRequiredComponent(stack, assembly.getSlotIndex());
+                    assembly.validItem = CircuitHelper.getRequiredCircuitComponent(stack, assembly.getSlotIndex());
                 }
             }
         } else {
@@ -116,14 +119,16 @@ public class ContainerAssemblyTable extends ContainerMachine {
             detectAndSendChanges();
             return null;
         }
-        if (slotID  < 10) {
+        if (slotID < 10) {
             syncSlots();
             circuit.validate();
             if (slotID > 0){
                 canClick = false;
             }
         }
-        return super.slotClick(slotID, dragType, clickTypeIn, player);
+        ItemStack stack = super.slotClick(slotID, dragType, clickTypeIn, player);
+        syncSlots();
+        return stack;
     }
 
     @Override
@@ -136,18 +141,15 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
     }
 
-    private class InventoryCircuit extends BasicInventory implements IInventory {
+    private class InventoryCircuit extends BasicInventory {
 
         private InventoryCircuit(){
             super("NAME", 9);
         }
 
         public void setStack(ItemStack stack) {
-            if (stack == null || !(stack.getItem() instanceof ICircuit)) {
-                throw new IllegalArgumentException("Item not instance of ICircuit");
-            }
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+            if (CircuitHelper.getCircuit(stack) == null) {
+                throw new IllegalArgumentException("Stack does not have ICircuit capability!");
             }
             this.stack = stack;
             checkOpen();
@@ -159,16 +161,24 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         private ItemStack stack;
-        private boolean formed = false;
 
         @Override
         public void openInventory(EntityPlayer player) {
             checkOpen();
         }
 
+        @Override
+        public void setInventorySlotContents(int slotID, ItemStack stack) {
+            if (slotID >= inventoryContents.length){
+                return;
+            }
+            super.setInventorySlotContents(slotID, stack);
+        }
+
         protected void checkOpen(){
             if (stack != null) {
-                readFromNBT(stack.getTagCompound());
+                ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
+                inventoryContents = circuit.getSolderedComponents();
             }
         }
 
@@ -179,37 +189,31 @@ public class ContainerAssemblyTable extends ContainerMachine {
 
         protected void checkClose(){
             if (stack != null) {
-                NBTTagCompound tag = new NBTTagCompound();
-                writeToNBT(tag);
-                stack.setTagCompound(tag);
-                inventoryContents = new ItemStack[getSizeInventory()];
+                markDirty();
+                inventoryContents = new ItemStack[0];
             }
         }
 
         @Override
         public void markDirty() {
             if (stack != null) {
-                NBTTagCompound tag = new NBTTagCompound();
-                writeToNBT(tag);
-                stack.setTagCompound(tag);
+                ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
+                circuit.setSolderedComponents(inventoryContents);;
             }
         }
 
         public void validate(){
-            if (stack != null) {
-                formed = isValid();
-                markDirty();
-            }
+            isValid();
+            markDirty();
         }
 
         private boolean isValid(){
-            ICircuit circuit = (ICircuit) stack.getItem();
-            for (int i = 0; i < circuit.boardSize(stack); i++) {
-                if (!InventoryHelper.areEqualNoSizeNoNBT(circuit.getRequiredComponent(stack, i), getStackInSlot(i))) {
-                    return false;
-                }
+            if (stack != null) {
+                ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
+                circuit.validate();
+                return circuit.isValidCircuit();
             }
-            return true;
+            return false;
         }
 
         @Override
@@ -220,37 +224,6 @@ public class ContainerAssemblyTable extends ContainerMachine {
         @Override
         public int getInventoryStackLimit() {
             return 1;
-        }
-
-        @Override
-        public void writeToNBT(NBTTagCompound compound) {
-            NBTTagList nbttaglist = new NBTTagList();
-            for(int i = 0; i < this.inventoryContents.length; ++i) {
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setByte("Slot", (byte)i);
-                if (this.inventoryContents[i] != null) {
-                    this.inventoryContents[i].writeToNBT(tag);
-                }
-                nbttaglist.appendTag(tag);
-            }
-            compound.setTag("Items", nbttaglist);
-            compound.setBoolean("valid", formed);
-        }
-
-        @Override
-        public void readFromNBT(NBTTagCompound compound) {
-            this.inventoryContents = new ItemStack[this.getSizeInventory()];
-            if (stack.hasTagCompound()) {
-                NBTTagList nbttaglist = compound.getTagList("Items", 10);
-                for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-                    NBTTagCompound tag = nbttaglist.getCompoundTagAt(i);
-                    int j = tag.getByte("Slot") & 255;
-                    if (j >= 0 && j < this.inventoryContents.length) {
-                        this.inventoryContents[j] = ItemStack.loadItemStackFromNBT(tag);
-                    }
-                }
-                this.formed = compound.getBoolean("valid");
-            }
         }
 
     }

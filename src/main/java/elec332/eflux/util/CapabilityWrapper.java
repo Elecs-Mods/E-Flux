@@ -60,6 +60,7 @@ public class CapabilityWrapper {
         public void deserializeNBT(NBTBase nbt) {
             ((INBTSerializable) impl).deserializeNBT(nbt);
         }
+
     }
 
 }

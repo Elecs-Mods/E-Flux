@@ -7,6 +7,7 @@ import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.MCModInfo;
+import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -20,6 +21,7 @@ import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
+import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.network.*;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
@@ -27,7 +29,7 @@ import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
-import elec332.eflux.util.LoadTimer;
+import elec332.core.util.LoadTimer;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
@@ -48,9 +50,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
-import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -82,6 +84,7 @@ public class EFlux { //TODO
     public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
     public static FMLControlledNamespacedRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
+    public static FMLControlledNamespacedRegistry<ICircuitDataProvider> circuitRegistry;
 
     private LoadTimer loadTimer;
 
@@ -90,13 +93,16 @@ public class EFlux { //TODO
         logger = event.getModLog();
         loadTimer = new LoadTimer(logger, ModName);
         loadTimer.startPhase(event);
-        enderCapabilityRegistry = PersistentRegistryManager.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, null, 0, Byte.MAX_VALUE, true, EnderRegistryCallbacks.INSTANCE, EnderRegistryCallbacks.INSTANCE, EnderRegistryCallbacks.INSTANCE);
+        enderCapabilityRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, EnderRegistryCallbacks.INSTANCE);
+        circuitRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("circuits"), ICircuitDataProvider.class, RegistryHelper.getNullCallback());
         EFluxAPI.dummyLoad();
         CapabilityRegister.instance.init();
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
         creativeTab = new CreativeTabs("EFlux") {
             @Override
+            @Nonnull
+            @SuppressWarnings("all")
             public Item getTabIconItem() {
                 return Item.getItemFromBlock(Blocks.ANVIL);  //TODO: replace with mod item, once we got a nice one
             }

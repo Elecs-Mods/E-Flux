@@ -5,7 +5,7 @@ import elec332.core.client.ITextureLoader;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.model.IModelLoader;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
-import elec332.eflux.items.ender.capability.EFluxEnderCapabilityItem;
+import elec332.eflux.items.ender.capability.ItemEFluxEnderCapability;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -36,7 +36,7 @@ public enum EnderRegistryCallbacks implements IForgeRegistry.AddCallback<IEnderC
     public void onAdd(IEnderCapabilityFactory obj, int id, Map<ResourceLocation, ?> slaveset) {
         if (!registeredTypes.contains(id)) {
             if (obj.createItem()) {
-                GameRegistry.register(new EFluxEnderCapabilityItem(obj));
+                GameRegistry.register(new ItemEFluxEnderCapability(obj));
             }
             if (FMLCommonHandler.instance().getSide().isClient()) {
                 if (obj instanceof IModelLoader) {

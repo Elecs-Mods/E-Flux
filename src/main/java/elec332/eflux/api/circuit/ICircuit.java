@@ -1,22 +1,37 @@
 package elec332.eflux.api.circuit;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 4-5-2015.
  */
 public interface ICircuit {
 
-    public int boardSize(ItemStack stack);
+    public int boardSize();
 
-    public ItemStack getRequiredComponent(ItemStack stack, int slot);
+    @Nullable
+    public ItemStack getRequiredComponent(int slot);
 
-    public void breakRandomComponent(ItemStack stack);
+    public void breakRandomComponent();
 
-    public boolean isValid(ItemStack stack);
+    public void validate();
 
-    public EnumCircuit getDifficulty(ItemStack stack);
+    public boolean isValidCircuit();
 
-    public boolean isCircuit(ItemStack stack);
+    public EnumCircuit getDifficulty();
+
+    public boolean isEtchedCircuit();
+
+    @Nonnull
+    public ItemStack[] getSolderedComponents();
+
+    public void setSolderedComponents(ItemStack[] components);
+
+    @Nullable
+    public ResourceLocation getCircuitName();
 
 }

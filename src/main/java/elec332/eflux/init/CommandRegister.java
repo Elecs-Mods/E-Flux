@@ -5,11 +5,15 @@ import elec332.core.main.ElecCore;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.circuit.CircuitHelper;
+import elec332.eflux.client.EFluxResourceLocation;
+import elec332.eflux.items.circuits.IEFluxCircuit;
 import elec332.eflux.util.IEFluxTank;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -62,6 +66,10 @@ public final class CommandRegister {
                         if (tile instanceof IEFluxTank) {
                             ((IEFluxTank) tile).fill(null, new FluidStack(FluidRegister.oil, 1000), true);
                         }
+                    } else if (arg.equals("circuit")){
+                        ItemStack stack = ItemRegister.normalUnrefinedBoard.copy();
+                        ((IEFluxCircuit)CircuitHelper.getCircuit(stack)).etch(EFlux.circuitRegistry.getObject(new EFluxResourceLocation("shock")));
+                        ((EntityPlayer) sender).inventory.addItemStackToInventory(stack);
                     }
                 }
             }

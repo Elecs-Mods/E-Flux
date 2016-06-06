@@ -112,7 +112,7 @@ public final class BlockRegister {
 
         LASERCORE(BlockTextures.getDefaultProvider("laserCoreFront")),
         HEATER(TileEntityHeater.class, BlockTextures.getDefaultProvider("heaterFront")),
-        DUSTSTORAGE(TileEntityDustStorage.class, BlockTextures.getCustomProvider("dustStorage", "default_side", "default_side")),
+        DUSTSTORAGE(TileEntityMultiBlockDustStorage.class, BlockTextures.getCustomProvider("dustStorage", "default_side", "default_side")),
         RADIATOR(BlockTextures.getDefaultProvider("radiator")),
         MOTOR(BlockTextures.getDefaultProvider("motor")),
         PRECISION_MOTOR(BlockTextures.getDefaultProvider("precisionMotor")),

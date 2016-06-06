@@ -34,12 +34,13 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     SCANNER(TileScanner.class, BlockTextures.getScannerProvider()),
     WASHER(TileWasher.class, BlockTextures.getWasherProvider()),
     RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
+    ETCHINGMACHINE(TileEntityEtchingMachine.class),
 
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
     SPAWNER(TileEntityEFluxSpawner.class, BlockTextures.getSpawnerProvider()),
 
     TANK(TileEntityTank.class, EnumBlockRenderType.INVISIBLE, Material.ROCK, BlockTextures.getDefaultProvider("??!?")),
-    TEST(TileEntityEnderChest.class)
+    ENDERCHEST(TileEntityEnderChest.class)
 
     ;
     //___Data__//////////////////////////////////////////////////////////
