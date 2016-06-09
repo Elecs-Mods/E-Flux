@@ -21,6 +21,8 @@ import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
+import elec332.eflux.items.ItemEFluxBluePrint;
+import elec332.eflux.items.ItemEFluxCircuit;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.network.*;
 import elec332.eflux.proxies.CommonProxy;
@@ -33,11 +35,15 @@ import elec332.core.util.LoadTimer;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,6 +56,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -170,6 +177,21 @@ public class EFlux { //TODO
         });
         RecipeRegister.registerRecipes();
         EnderNetworkManager.registerSaveHandler();
+        new VillagerRegistry.VillagerCareer(VillagerRegistry.instance().getRegistry().getValue(new ResourceLocation("smith")), "technician").addTrade(0, new EntityVillager.ITradeList() {
+
+            @Override
+            public void modifyMerchantRecipeList(MerchantRecipeList recipeList, Random random) {
+                ICircuitDataProvider randomCircuit = getRandomBlueprint(random);
+                int i = 14 + random.nextInt(9) * (randomCircuit.getCircuitType().getCircuitLevel() + 1);
+                recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, i), ItemEFluxBluePrint.createBlueprint(randomCircuit)));
+            }
+
+            private ICircuitDataProvider getRandomBlueprint(Random random){
+                List<ICircuitDataProvider> circuits = circuitRegistry.getValues();
+                return circuits.get(random.nextInt(circuits.size()));
+            }
+
+        });
         //register items/blocks
         loadTimer.endPhase(event);
     }
