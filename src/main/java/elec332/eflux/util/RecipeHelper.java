@@ -1,12 +1,15 @@
 package elec332.eflux.util;
 
 import com.google.common.collect.Maps;
+import elec332.core.util.InventoryHelper;
 import elec332.core.util.RegistryHelper;
 import net.minecraft.block.Block;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.world.World;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -95,7 +98,49 @@ public class RecipeHelper {
         SHAPED_RECIPE_FUNCTION = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output);
         SHAPED_RECIPE_WITH_NBT_CHECK = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output){
 
-            //TODO
+            @Override
+            public boolean matches(InventoryCrafting inv, World worldIn) {
+                for (int i = 0; i <= 3 - this.recipeWidth; ++i) {
+                    for (int j = 0; j <= 3 - this.recipeHeight; ++j) {
+                        if (this.checkMatch(inv, i, j, true)) {
+                            return true;
+                        }
+
+                        if (this.checkMatch(inv, i, j, false)) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            private boolean checkMatch(InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        int k = i - p_77573_2_;
+                        int l = j - p_77573_3_;
+                        ItemStack itemstack = null;
+
+                        if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
+                            if (p_77573_4_) {
+                                itemstack = this.recipeItems[this.recipeWidth - k - 1 + l * this.recipeWidth];
+                            } else {
+                                itemstack = this.recipeItems[k + l * this.recipeWidth];
+                            }
+                        }
+
+                        ItemStack itemstack1 = p_77573_1_.getStackInRowAndColumn(i, j);
+
+                        if (itemstack1 != null || itemstack != null) {
+                            if (!InventoryHelper.areEqualNoSize(itemstack, itemstack1)){
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
 
         };
     }
