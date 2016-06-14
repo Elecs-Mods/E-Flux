@@ -14,14 +14,19 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelDynBucket;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,6 +66,18 @@ public class ItemBucket extends net.minecraft.item.ItemBucket implements INoJson
     private final Fluid fluid;
     private final ResourceLocation fluidRL;
     private static final ResourceLocation BUCKET_BACK, BUCKET_FRONT;
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+        return new FluidHandlerItemStackSimple.SwapEmpty(stack, new ItemStack(Items.BUCKET), 1000){
+
+            @Override
+            public boolean canFillFluidType(FluidStack fluid) {
+                return fluid != null && fluid.getFluid() == ItemBucket.this.fluid;
+            }
+
+        };
+    }
 
     @Override
     @SideOnly(Side.CLIENT)

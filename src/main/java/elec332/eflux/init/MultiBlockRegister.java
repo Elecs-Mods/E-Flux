@@ -6,6 +6,7 @@ import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
+import elec332.eflux.multiblock.generator.MultiBlockDieselGenerator;
 import elec332.eflux.multiblock.machine.*;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockEnderReader;
@@ -261,11 +262,35 @@ public final class MultiBlockRegister {
 
         }, "enderContainer", MultiBlockEnderContainer.class);
 
+        EFlux.multiBlockRegistry.registerMultiBlock(new AbstractAdvancedMultiBlockStructure() {
+
+            @Override
+            public boolean canCreate(EntityPlayerMP entityPlayerMP) {
+                return true;
+            }
+
+            @Override
+            public boolean areSecondaryConditionsMet(World world, BlockPos blockPos, EnumFacing enumFacing) {
+                return true;
+            }
+
+            @Override
+            public BlockStructure getStructure() {
+                return BlockStructures.dieselGenerator;
+            }
+
+            @Override
+            public BlockStateWrapper getTriggerBlock() {
+                return frameNormal;
+            }
+
+        }, "dieselGenerator", MultiBlockDieselGenerator.class);
+
     }
 
     public static class BlockStructures{
 
-        public static BlockStructure compressor, laser, furnace, grinder, distillationTower, desalter, enderContainer;
+        public static BlockStructure compressor, laser, furnace, grinder, distillationTower, desalter, enderContainer, dieselGenerator;
 
         private static void init(){
             compressor = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
@@ -433,6 +458,32 @@ public final class MultiBlockRegister {
                         return heatResistantGlass;
                     }
                     return frameAdvanced;
+                }
+            });
+            dieselGenerator = new BlockStructure(3, 3, 3, new BlockStructure.IStructureFiller() {
+                @Override
+                public BlockStateWrapper getBlockAtPos(int length, int width, int height) {
+                    if (length == 1) {
+                        if (height == 0) {
+                            if (width == 2) {
+                                return powerOutlet;
+                            }
+                        }
+                        if (height == 1) {
+                            if (width == 1) {
+                                return air;
+                            }
+                        }
+                        if (height == 2) {
+                            if (width == 1) {
+                                return fluidInlet;
+                            }
+                        }
+                    }
+                    if ((length == 0 || length == 2) && width == 1 && height == 1){
+                        return radiator;
+                    }
+                    return frameNormal;
                 }
             });
 

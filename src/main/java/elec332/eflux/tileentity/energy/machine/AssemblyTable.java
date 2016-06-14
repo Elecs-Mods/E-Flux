@@ -6,7 +6,6 @@ import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.CircuitHelper;
-import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
 import elec332.eflux.tileentity.BreakableMachineTile;

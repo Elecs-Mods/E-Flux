@@ -66,7 +66,7 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return super.getUnlocalizedName(stack) + stack.getItemDamage();
+        return super.getUnlocalizedName(stack) + "." + stack.getItemDamage();
     }
 
     @Override

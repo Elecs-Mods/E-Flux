@@ -4,7 +4,6 @@ import elec332.core.main.ElecCore;
 import elec332.core.util.StatCollector;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

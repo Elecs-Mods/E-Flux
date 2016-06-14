@@ -17,9 +17,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import javax.annotation.Nonnull;
 
 import static elec332.eflux.EFlux.random;
 import static elec332.eflux.init.BlockRegister.*;
@@ -153,7 +156,7 @@ public final class RecipeRegister {
         EFluxFurnaceRecipes.getInstance().registerRecipe(new IEFluxFurnaceRecipe() {
 
             @Override
-            public boolean accepts(ItemStack input) {
+            public boolean accepts(@Nonnull ItemStack input) {
                 if (!(input.getItem() != groundMesh && input.getTagCompound() != null)){
                     return false;
                 }
@@ -162,14 +165,14 @@ public final class RecipeRegister {
             }
 
             @Override
-            public ItemStack getOutput(ItemStack stack) {
+            public ItemStack getOutput(@Nonnull ItemStack stack) {
                 ItemStack ret = conductiveIngot.copy();
                 ret.stackSize = 1 + (EFlux.random.nextFloat() > .7 ? 1 : 0);
                 return ret;
             }
 
             @Override
-            public float getExperience(ItemStack input) {
+            public float getExperience(@Nonnull ItemStack input) {
                 return 0.9f;
             }
 
@@ -177,6 +180,7 @@ public final class RecipeRegister {
         //CircuitHandler.register();
     }
 
+    @SuppressWarnings("all")
     private static class DustRecipe implements IRecipe {
 
         @Override

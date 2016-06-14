@@ -99,23 +99,7 @@ public class RecipeHelper {
         SHAPED_RECIPE_WITH_NBT_CHECK = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output){
 
             @Override
-            public boolean matches(InventoryCrafting inv, World worldIn) {
-                for (int i = 0; i <= 3 - this.recipeWidth; ++i) {
-                    for (int j = 0; j <= 3 - this.recipeHeight; ++j) {
-                        if (this.checkMatch(inv, i, j, true)) {
-                            return true;
-                        }
-
-                        if (this.checkMatch(inv, i, j, false)) {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-
-            private boolean checkMatch(InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
+            public boolean checkMatch(InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
                 for (int i = 0; i < 3; ++i) {
                     for (int j = 0; j < 3; ++j) {
                         int k = i - p_77573_2_;

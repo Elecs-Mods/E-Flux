@@ -33,7 +33,7 @@ public final class BlockRegister {
 
     public static Block ores, areaMover;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
-                                    fluidInlet, fluidOutlet, enderReader;
+                                    fluidInlet, fluidOutlet, enderReader, powerOutlet;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
     public void init(FMLInitializationEvent event){
@@ -95,6 +95,7 @@ public final class BlockRegister {
         precisionMotor = BlockMachineParts.PRECISION_MOTOR.getMultiBlockWrapper();
         monitor = newBlockStateWrapper(new BlockMonitor().register().setCreativeTab(EFlux.creativeTab));
         powerInlet = BlockMachineParts.POWERINLET.getMultiBlockWrapper();
+        powerOutlet = BlockMachineParts.POWEROUTLET.getMultiBlockWrapper();
 
         fluidInlet = BlockMachineParts.FLUIDINLET.getMultiBlockWrapper();
         fluidOutlet = BlockMachineParts.FLUIDOUTLET.getMultiBlockWrapper();
@@ -121,6 +122,7 @@ public final class BlockRegister {
 
         POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
         ENDER(TileEntityMultiBlockEnderReader.class, BlockTextures.getDefaultProvider("ender_front")),
+        POWEROUTLET(TileEntityMultiBlockPowerOutlet.class, BlockTextures.getDefaultProvider("poweroutlet_front")),
 
         ;
 

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,6 +35,12 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
             component.setUUID(getUUID(stack));
         }
         return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        tooltip.add("Network ID: "+getUUID(stack));
     }
 
     @Nullable

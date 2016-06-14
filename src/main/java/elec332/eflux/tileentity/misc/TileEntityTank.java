@@ -45,7 +45,6 @@ public class TileEntityTank extends TileBase implements IEFluxTank, WailaCompatH
     @SideOnly(Side.CLIENT)
     private float clientFluidHeight;
 
-
     @Override
     public void onTileLoaded() {
         super.onTileLoaded();

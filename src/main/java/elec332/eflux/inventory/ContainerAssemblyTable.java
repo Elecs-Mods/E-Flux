@@ -3,7 +3,6 @@ package elec332.eflux.inventory;
 import com.google.common.collect.Lists;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.util.BasicInventory;
-import elec332.core.util.InventoryHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
@@ -16,8 +15,6 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ITickable;
 
 import java.util.List;

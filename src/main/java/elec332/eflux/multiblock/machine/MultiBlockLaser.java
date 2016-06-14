@@ -2,7 +2,6 @@ package elec332.eflux.multiblock.machine;
 
 import elec332.core.util.DirectionHelper;
 import elec332.core.util.NBTHelper;
-import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.util.MultiBlockLogic;

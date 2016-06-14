@@ -6,6 +6,7 @@ import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
+import elec332.core.util.LoadTimer;
 import elec332.core.util.MCModInfo;
 import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.EFluxAPI;
@@ -22,7 +23,6 @@ import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.items.ItemEFluxBluePrint;
-import elec332.eflux.items.ItemEFluxCircuit;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.network.*;
 import elec332.eflux.proxies.CommonProxy;
@@ -31,7 +31,6 @@ import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
-import elec332.core.util.LoadTimer;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenOres;
 import net.minecraft.creativetab.CreativeTabs;
@@ -56,6 +55,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import org.apache.logging.log4j.Logger;
 
@@ -64,8 +64,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-
-;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -144,10 +142,13 @@ public class EFlux { //TODO
         logger.info("RFTools: "+Compat.RFTools);
 
         loadTimer.endPhase(event);
-        MCModInfo.createMCModInfo(event, "Created by Elec332",
+        MCModInfo.createMCModInfo(event,
+                "Created by Elec332",
                 "E-Flux",
-                "website link", "logo",
-                new String[]{"Elec332"});
+                "website link",
+                "logo",
+                new String[]{"Elec332"}
+        );
     }
 
     @Mod.EventHandler
@@ -177,7 +178,8 @@ public class EFlux { //TODO
         });
         RecipeRegister.registerRecipes();
         EnderNetworkManager.registerSaveHandler();
-        new VillagerRegistry.VillagerCareer(VillagerRegistry.instance().getRegistry().getValue(new ResourceLocation("smith")), "technician").addTrade(0, new EntityVillager.ITradeList() {
+        IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = VillagerRegistry.instance().getRegistry();
+        new VillagerRegistry.VillagerCareer(villagerRegistry.getValue(new ResourceLocation("smith")), "technician").addTrade(1, new EntityVillager.ITradeList() {
 
             @Override
             public void modifyMerchantRecipeList(MerchantRecipeList recipeList, Random random) {
