@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 public class ItemEnderInventory extends AbstractEnderCapabilityItem<IItemHandler> {
 
     public ItemEnderInventory() {
-        super("inv");
+        super("inventoryviewer");
     }
 
     @Override

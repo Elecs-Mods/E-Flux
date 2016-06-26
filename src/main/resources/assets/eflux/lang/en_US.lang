@@ -65,6 +65,16 @@ item.eflux.enderlink.name=Ender-Link device
 item.eflux.enderconfigurator.name=Ender Configurator
 item.eflux.infusedender.name=Infused Enderpearl
 
+item.eflux.playerinventory.name=Ender-Upgrade: Player Inventory
+item.eflux.inventoryviewer.name=Ender Inventory Viewer
+item.eflux.endergy.0.name=Ender-Upgrade: Endergy (Tier 1)
+item.eflux.endergy.1.name=Ender-Upgrade: Endergy (Tier 2)
+item.eflux.endergy.2.name=Ender-Upgrade: Endergy (Tier 3)
+item.eflux.enderinventory.name=Ender-Upgrade: Inventory
+item.eflux.energy_eflux.name=Ender-Upgrade: EFlux Energy
+
+item.eflux.redstoneupgrade.name=Redstone Upgrade
+
 ##BLOCKS
 tile.eflux.lasercore.name=Laser Core
 tile.eflux.heater.name=Heater
@@ -115,6 +125,7 @@ tile.eflux.feeder.name=Feeder
 tile.eflux.spawner.name=EFlux Spawner
 tile.eflux.tank.name=Tank
 tile.eflux.enderchest.name=Ender-Chest
+tile.eflux.poweroutlet.name=Power Outlet
 
 ##TODO: make up better name
 tile.eflux.ender.name=Ender Core

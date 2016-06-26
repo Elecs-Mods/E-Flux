@@ -5,15 +5,18 @@ import com.google.common.collect.Lists;
 import elec332.core.client.IIconRegistrar;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.ElecQuadBakery;
+import elec332.core.client.model.INoJsonItem;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.model.IModelAndTextureLoader;
 import elec332.core.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.client.newstuff.INoJsonItemHandler;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.client.inventory.GuiEnderContainer;
@@ -31,10 +34,13 @@ import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -122,6 +128,8 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, tankRenderer);
         RenderingRegistry.instance().registerLoader(tankRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAreaMover.class, new TESRAreaMover());
+        RenderingRegistry.instance().registerFakeItem(EFlux.creativeTab.getTabIconItem());
+
         /*EFlux.multiBlockRegistry.registerMultiBlockRenderer(MultiBlockEnderContainer.class, new IMultiBlockRenderer<MultiBlockEnderContainer>() {
 
             EntityItem eI = new EntityItem(null, 0, 0, 0, new ItemStack(Items.ENDER_PEARL));

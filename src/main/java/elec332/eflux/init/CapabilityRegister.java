@@ -40,7 +40,7 @@ public enum CapabilityRegister {
         registerWithoutAnything(RedstoneCapability.class);
         playerInventory = registerEnderCapabilityNoItem("playerInventory", EFluxEnderCapabilityPlayerInventory.class);
         registerEnderCapability("endergy", EFluxEnderCapabilityEndergy.class, 3);
-        registerEnderCapability("normalInventory", EFluxEnderCapabilityInventory.class);
+        registerEnderCapability("enderInventory", EFluxEnderCapabilityInventory.class);
         registerEnderCapability("energy_EFlux", EFluxEnderCapabilityEnergy.class);
     }
 

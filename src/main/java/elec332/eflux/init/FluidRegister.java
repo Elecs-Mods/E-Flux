@@ -19,15 +19,15 @@ public final class FluidRegister {
 
     public static final FluidRegister instance = new FluidRegister();
     private FluidRegister(){
-        slib =registerFluid("slib");
+        slib =registerFluid("slib", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(139, 69, 19).getRGB());
         oil = registerFluid("oil", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
-        crudeOil = registerFluid("crudeOil");
-        lubicrant = registerFluid("lubicrant");
-        fuel = registerFluid("fuel");
-        diesel = registerFluid("diesel");
-        petrol = registerFluid("petrol");
-        gas = registerFluid("lpg");
-        brine = registerFluid("brine");
+        crudeOil = registerFluid("crudeOil", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
+        lubicrant = registerFluid("lubicrant", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
+        fuel = registerFluid("fuel", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(255, 140, 0).getRGB());
+        diesel = registerFluid("diesel", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(255, 165, 0).getRGB());
+        petrol = registerFluid("petrol", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
+        gas = registerFluid("lpg", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.WHITE.getRGB());
+        brine = registerFluid("brine", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(205, 133, 63).getRGB());
     }
 
     public static Fluid slib, oil, crudeOil, brine; //Pre-Refinery
@@ -49,7 +49,7 @@ public final class FluidRegister {
             }
         };
         FluidRegistry.registerFluid(ret);
-        final Block block = GameRegistry.register(new BlockFluid(ret).setCreativeTab(EFlux.creativeTab));
+        final Block block = GameRegistry.register(new BlockFluid(ret));
         ret.setBlock(block);
         GameRegistry.register(new ItemBucket((BlockFluid) block).setCreativeTab(EFlux.creativeTab));
         return ret;

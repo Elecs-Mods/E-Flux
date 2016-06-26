@@ -261,6 +261,19 @@ public class BlockTextures {
         };
     }
 
+    public static IBlockTextureProvider getTankProvider(){
+        return getDefaultProvider("tank");
+    }
+
+    public static IBlockTextureProvider getEnderChestProvider(){
+        return getDefaultProvider("enderchest");
+    }
+
+    public static IBlockTextureProvider getEtchingMachineProvider(){
+        return getDefaultProvider("etchingmachine");
+    }
+
+
 /*
     public static IBlockTextureProvider getCoalGenProvider(){
         return forActivatableMachine("coalGenerator");

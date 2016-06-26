@@ -22,6 +22,7 @@ import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
+import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.network.*;
@@ -98,20 +99,23 @@ public class EFlux { //TODO
         logger = event.getModLog();
         loadTimer = new LoadTimer(logger, ModName);
         loadTimer.startPhase(event);
+        creativeTab = new CreativeTabs("EFlux") {
+
+            Item item = new AbstractTexturedEFluxItem("circuit"){};
+
+            @Override
+            @Nonnull
+            @SuppressWarnings("all")
+            public Item getTabIconItem() {
+                return item;
+            }
+        };
         enderCapabilityRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, EnderRegistryCallbacks.INSTANCE);
         circuitRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("circuits"), ICircuitDataProvider.class, RegistryHelper.getNullCallback());
         EFluxAPI.dummyLoad();
         CapabilityRegister.instance.init();
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
-        creativeTab = new CreativeTabs("EFlux") {
-            @Override
-            @Nonnull
-            @SuppressWarnings("all")
-            public Item getTabIconItem() {
-                return Item.getItemFromBlock(Blocks.ANVIL);  //TODO: replace with mod item, once we got a nice one
-            }
-        };
         configWrapper = new ConfigWrapper(config);
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
@@ -152,7 +156,7 @@ public class EFlux { //TODO
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event) throws IOException{
+    public void init(FMLInitializationEvent event) throws IOException {
         loadTimer.startPhase(event);
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         ItemRegister.instance.init(event);
