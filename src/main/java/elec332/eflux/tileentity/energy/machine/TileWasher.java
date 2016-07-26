@@ -211,7 +211,7 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
                     }
                 }
             }
-            return !worldObj.isRemote;
+            return true;//!worldObj.isRemote;
         } else {
             return super.onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
         }

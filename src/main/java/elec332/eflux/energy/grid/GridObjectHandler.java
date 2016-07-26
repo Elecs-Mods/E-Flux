@@ -46,7 +46,8 @@ public enum GridObjectHandler {
 
     private final Set<EnergyGrid> grids;
 
-    private static boolean forceDebug = ElecCore.developmentEnvironment;
+    @SuppressWarnings("all") //Manual switch
+    private static boolean forceDebug = ElecCore.developmentEnvironment && false;
 
     protected void tickEnd(){
         int i = 1;

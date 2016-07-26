@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -103,6 +104,16 @@ public final class BlockRegister {
         enderReader = BlockMachineParts.ENDER.getMultiBlockWrapper();
 
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
+        registerOreDictionary();
+    }
+
+    private void registerOreDictionary(){
+        BlockOres ores = (BlockOres) BlockRegister.ores;
+        for (int i = 0; i < ores.getTypes(); i++) {
+            String s = ores.nameForType(i);
+            String newS = new String(new char[]{s.charAt(0)}).toUpperCase() + s.substring(1); //Look away please...
+            OreDictionary.registerOre("ore"+newS, new ItemStack(ores, 1, i));
+        }
     }
 
     private BlockStateWrapper newBlockStateWrapper(Block block){

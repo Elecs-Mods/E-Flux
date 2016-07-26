@@ -114,7 +114,6 @@ public class EFlux { //TODO
         enderCapabilityRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, EnderRegistryCallbacks.INSTANCE);
         circuitRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("circuits"), ICircuitDataProvider.class, RegistryHelper.getNullCallback());
         EFluxAPI.dummyLoad();
-        CapabilityRegister.instance.init();
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
         configWrapper = new ConfigWrapper(config);
@@ -160,6 +159,7 @@ public class EFlux { //TODO
     public void init(FMLInitializationEvent event) throws IOException {
         loadTimer.startPhase(event);
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
+        CapabilityRegister.instance.init();
         ItemRegister.instance.init(event);
         BlockRegister.instance.init(event);
         MultiPartRegister.init();

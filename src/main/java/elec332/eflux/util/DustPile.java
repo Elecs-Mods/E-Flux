@@ -116,6 +116,7 @@ public class DustPile {
         }
         content.removeAll(toRemove);
         pure = true;
+        total -= i;
         return i;
     }
 
@@ -130,6 +131,7 @@ public class DustPile {
         }
         content.removeAll(toRemove);
         clean = true;
+        total -= i;
         return i;
     }
 

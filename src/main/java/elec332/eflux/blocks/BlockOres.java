@@ -44,7 +44,7 @@ public class BlockOres extends BlockWithMeta implements INoJsonBlock {
         return getUnlocalizedName()+"."+s;
     }
 
-    private String nameForType(int meta){
+    public String nameForType(int meta){
         switch (meta){
             case 0:
                 return "copper";

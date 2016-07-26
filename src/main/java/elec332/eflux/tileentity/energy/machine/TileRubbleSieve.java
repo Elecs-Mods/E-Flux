@@ -74,13 +74,17 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
             if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit()) {
                 return false;
             }
-            sis = getStackInSlot(normal_output_slot);
-            copy.setTagCompound(dustPile.toNBT());
-            if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit()))) {
-                return false;
+            if (dustPile.getSize() > 0) { //Check whether pile is empty
+                sis = getStackInSlot(normal_output_slot);
+                copy.setTagCompound(dustPile.toNBT()); //Returned tag can not be null (check above)
+                if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit()))) {
+                    return false;
+                }
+                sieving = copy;
+            } else {
+                sieving = null;
             }
             decrStackSize(slot, 1);
-            sieving = copy;
             tbo = rubble;
             markDirty();
         }
@@ -97,11 +101,13 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
             }
             setInventorySlotContents(rubble_slot, stack);
         }
-        stack = sieving.copy();
-        if (getStackInSlot(normal_output_slot) != null){
-            stack.stackSize += getStackInSlot(normal_output_slot).stackSize;
+        if (sieving != null) {
+            stack = sieving.copy();
+            if (getStackInSlot(normal_output_slot) != null) {
+                stack.stackSize += getStackInSlot(normal_output_slot).stackSize;
+            }
+            setInventorySlotContents(normal_output_slot, stack);
         }
-        setInventorySlotContents(normal_output_slot, stack);
         tbo = null;
         sieving = null;
     }
@@ -189,7 +195,7 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        if (!(!isInput(side, slot) && !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null))) {
+        if (!isInput(side, slot) || stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) {
             return false;
         }
         DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
