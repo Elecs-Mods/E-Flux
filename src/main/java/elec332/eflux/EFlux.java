@@ -17,6 +17,7 @@ import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.EnderRegistryCallbacks;
+import elec332.eflux.energy.EFluxEnergy;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
@@ -169,6 +170,7 @@ public class EFlux { //TODO
         MultiBlockRegister.init();
         configWrapper.refresh();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new EFluxEnergy());
         registerRecipes();
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new WorldEventHandler());

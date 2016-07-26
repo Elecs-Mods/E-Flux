@@ -54,8 +54,9 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
                 stack = getStackInSlot(1);
                 slot = 1;
             }
-            if (stack == null)
+            if (stack == null) {
                 return false;
+            }
             ItemStack copy = stack.copy();
             copy.stackSize = 1;
             DustPile dustPile = DustPile.fromNBT(copy.getTagCompound());
@@ -70,12 +71,14 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
                 }
             }
             ItemStack sis = getStackInSlot(rubble_slot);
-            if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit())
+            if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit()) {
                 return false;
+            }
             sis = getStackInSlot(normal_output_slot);
             copy.setTagCompound(dustPile.toNBT());
-            if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit())))
+            if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit()))) {
                 return false;
+            }
             decrStackSize(slot, 1);
             sieving = copy;
             tbo = rubble;
@@ -186,7 +189,11 @@ public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IP
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        return isInput(side, slot) && !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null);
+        if (!(!isInput(side, slot) && !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null))) {
+            return false;
+        }
+        DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
+        return dustPile != null && dustPile.scanned;
     }
 
     @Override

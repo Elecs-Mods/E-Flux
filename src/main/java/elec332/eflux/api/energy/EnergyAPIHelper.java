@@ -74,4 +74,5 @@ public class EnergyAPIHelper {
         if (!isEnergyTile(tile))
             throw new IllegalArgumentException("TileEntity isn't instanceof IEnergyTile");
     }
+
 }

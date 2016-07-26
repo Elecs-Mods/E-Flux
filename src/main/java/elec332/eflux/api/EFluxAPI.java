@@ -5,7 +5,7 @@ import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IEndergyCapability;
 import elec332.eflux.api.energy.IEnergyMonitor;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.heat.IHeatReceiver;
 import net.minecraft.nbt.NBTBase;
@@ -23,8 +23,8 @@ public class EFluxAPI {
 
     @CapabilityInject(IEnergyReceiver.class)
     public static Capability<IEnergyReceiver> RECEIVER_CAPABILITY;
-    @CapabilityInject(IEnergySource.class)
-    public static Capability<IEnergySource> PROVIDER_CAPABILITY;
+    @CapabilityInject(IEnergyProvider.class)
+    public static Capability<IEnergyProvider> PROVIDER_CAPABILITY;
     @CapabilityInject(IEnergyTransmitter.class)
     public static Capability<IEnergyTransmitter> TRANSMITTER_CAPABILITY;
     @CapabilityInject(IEnergyMonitor.class)
@@ -47,7 +47,7 @@ public class EFluxAPI {
 
     static {
         registerWithoutStorageAndDefaultInstance(IEnergyReceiver.class);
-        registerWithoutStorageAndDefaultInstance(IEnergySource.class);
+        registerWithoutStorageAndDefaultInstance(IEnergyProvider.class);
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
         registerWithoutStorageAndDefaultInstance(IEnergyMonitor.class);
         registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);

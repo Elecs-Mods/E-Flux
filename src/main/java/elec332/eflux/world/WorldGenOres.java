@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
 import net.minecraft.world.gen.feature.WorldGenLakes;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class WorldGenOres extends WorldGen {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        if (/*!(chunkGenerator instanceof ChunkProviderFlat)*/true) {
+        if (!(chunkGenerator instanceof ChunkProviderFlat)) {
             int dim = WorldHelper.getDimID(world);
             switch (dim) {
                 case 0:

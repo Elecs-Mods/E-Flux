@@ -24,7 +24,7 @@ public class TileEntityHeater extends AbstractTileEntityMultiBlock implements IT
 
     private boolean hasMultiBlock;
     private EnergyContainer energyContainer;
-
+/*
     @Override
     public void onTileUnloaded() {
         if (!worldObj.isRemote) {
@@ -38,7 +38,7 @@ public class TileEntityHeater extends AbstractTileEntityMultiBlock implements IT
             EnergyAPIHelper.postLoadEvent(this);
         }
     }
-
+*/
     @Override
     protected void onMultiBlockCreated() {
         super.onMultiBlockCreated();

@@ -17,7 +17,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
 
     @CapabilityInject(IEnergyReceiver.class)
     private static Capability<IEnergyReceiver> CAPABILITY;
-
+/*
     @Override
     public void onTileUnloaded() {
         if (!worldObj.isRemote) {
@@ -30,8 +30,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
         if (!worldObj.isRemote) {
             EnergyAPIHelper.postLoadEvent(this);
         }
-    }
-
+    }*/
     private int latsRP, lastEF;
 
 

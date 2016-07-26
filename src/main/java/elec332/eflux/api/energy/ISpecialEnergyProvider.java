@@ -3,7 +3,7 @@ package elec332.eflux.api.energy;
 /**
  * Created by Elec332 on 28-4-2015.
  */
-public interface ISpecialEnergySource extends IEnergySource {  //Backup, DO NOT USE
+public interface ISpecialEnergyProvider extends IEnergyProvider {  //Backup, DO NOT USE
 
     /**
      * @param rp

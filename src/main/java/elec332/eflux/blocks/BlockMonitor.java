@@ -140,7 +140,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
          //   Minecraft.getMinecraft().theWorld.markBlockRangeForRenderUpdate(pos, pos);
         //}
 
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty())));
+        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty()).getOpposite()));
     }
 
     /**

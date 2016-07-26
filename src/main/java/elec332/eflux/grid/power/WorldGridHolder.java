@@ -2,6 +2,7 @@ package elec332.eflux.grid.power;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import elec332.core.world.PositionedObjectHolder;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -28,6 +29,10 @@ public class WorldGridHolder {
         this.surroundingData = new PositionedObjectHolder<SurroundingData>();
         this.pending = new ArrayDeque<PowerTile>();
         this.oldInt = 0;
+        this.add = Sets.newHashSet();
+        this.rebuild = Sets.newHashSet();
+        this.remove = Sets.newHashSet();
+        this.add2 = Sets.newHashSet();
     }
 
     private World world;  //Dunno why I have this here (yet)
@@ -35,6 +40,7 @@ public class WorldGridHolder {
     private Queue<PowerTile> pending;
     private PositionedObjectHolder<PowerTile> registeredTiles;
     private PositionedObjectHolder<SurroundingData> surroundingData;
+    private final Set<BlockPos> add, add2, remove, rebuild;
     private int oldInt;
 
     public EFluxCableGrid registerGrid(EFluxCableGrid grid){
@@ -71,6 +77,10 @@ public class WorldGridHolder {
     }
 
     private void rebuild(BlockPos rPos){
+        rebuild.add(rPos);
+    }
+
+    private void rebuild_PS(BlockPos rPos){
         EFlux.systemPrintDebug("rebuidling");
         Set<EFluxCableGrid> grids = getPowerTile(rPos).getGrids();
         for (EFluxCableGrid grid : grids) {
@@ -101,20 +111,33 @@ public class WorldGridHolder {
             if (!WorldHelper.chunkLoaded(world, tile.getPos()) || !EnergyAPIHelper.isEnergyTile(tile)) {
                 return;
             }
-            if (getPowerTile(tile.getPos()) != null) {
+            add.add(tile.getPos());
+        }
+    }
+
+    private void addTile_PS(BlockPos pos){
+        if (!world.isRemote) {
+            if (!WorldHelper.chunkLoaded(world, pos)) {
+                return;
+            }
+            TileEntity tile = WorldHelper.getTileAt(world, pos);
+            if (!EnergyAPIHelper.isEnergyTile(tile)){
+                return;
+            }
+            if (getPowerTile(pos) != null) {
                 //if (!(tile instanceof IMultipartContainer)) {
-               //    throw new IllegalStateException();
+                //    throw new IllegalStateException();
                 //} else {
-                    getPowerTile(tile.getPos()).checkConnector();
-                    surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
-                    for (EnumFacing facing : EnumFacing.VALUES) {
-                        BlockPos o = tile.getPos().offset(facing);
-                        if (getPowerTile(o) != null) {
-                            getPowerTile(o).checkConnector();
-                            surroundingData.put(new SurroundingData(o), o);
-                        }
+                getPowerTile(tile.getPos()).checkConnector();
+                surroundingData.put(new SurroundingData(tile.getPos()), tile.getPos());
+                for (EnumFacing facing : EnumFacing.VALUES) {
+                    BlockPos o = tile.getPos().offset(facing);
+                    if (getPowerTile(o) != null) {
+                        getPowerTile(o).checkConnector();
+                        surroundingData.put(new SurroundingData(o), o);
                     }
-                    return;
+                }
+                return;
                 //}
             }
             PowerTile powerTile = new PowerTile(tile);
@@ -135,6 +158,16 @@ public class WorldGridHolder {
             if (!WorldHelper.chunkLoaded(world, powerTile.getLocation())) {
                 return;
             }
+            add2.add(powerTile.getLocation());
+        }
+    }
+
+    private void addTile_PS2(BlockPos pos){
+        if (!world.isRemote){
+            if (!WorldHelper.chunkLoaded(world, pos)) {
+                return;
+            }
+            PowerTile powerTile = getPowerTile(pos);
             EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString());
             for (EnumFacing direction : EnumFacing.VALUES) {
                 EFlux.systemPrintDebug("Processing tile at " + powerTile.getLocation().toString() + " for side " + direction.toString());
@@ -145,8 +178,9 @@ public class WorldGridHolder {
                         PowerTile powerTile1 = getPowerTile(checkedPos);
                         EFlux.systemPrintDebug("CP");
                         if (powerTile1 == null || !powerTile1.hasInit()) {
-                            pending.add(powerTile);
-                            break;
+                            //pending.add(powerTile);
+                            //break;
+                            throw new IllegalStateException();
                         }
                         EFlux.systemPrintDebug("G_Check");
                         if (canConnect(powerTile, direction, powerTile1)) {
@@ -199,11 +233,17 @@ public class WorldGridHolder {
                 return;
             }*/
             EFlux.systemPrintDebug("RemTile");
-            removeTile(getPowerTile(tile.getPos()), true);
+           remove.add(tile.getPos());
         }
     }
 
-    void removeTile(PowerTile powerTile, boolean reAdd){
+    private void removeTile_PS(BlockPos pos){
+        if (!world.isRemote) {
+            removeTile(getPowerTile(pos), true);
+        }
+    }
+
+    private void removeTile(PowerTile powerTile, boolean reAdd){
         if (!world.isRemote && powerTile != null) {
             surroundingData.remove(powerTile.getLocation());
             registeredTiles.remove(powerTile.getLocation());
@@ -238,7 +278,32 @@ public class WorldGridHolder {
         }
     }
 
-    public void onServerTickInternal(){
+    public void tickEnd(){
+        checkPendingStuff();
+        tickGrids();
+    }
+
+    private void checkPendingStuff(){
+        for (BlockPos pos : remove){
+            removeTile_PS(pos);
+        }
+        remove.clear();
+        for (BlockPos pos : rebuild){
+            rebuild_PS(pos);
+        }
+        rebuild.clear();
+        for (BlockPos pos : add){
+            addTile_PS(pos);
+        }
+        add.clear();
+        checkPendingAdd();
+        for (BlockPos pos : add2){
+            addTile_PS2(pos);
+        }
+        add2.clear();
+    }
+
+    private void checkPendingAdd(){
         if (!pending.isEmpty() && pending.size() == oldInt) {
             for (PowerTile powerTile = pending.poll(); powerTile != null; powerTile = pending.poll()){
                 addTile(powerTile);
@@ -246,6 +311,9 @@ public class WorldGridHolder {
             pending.clear();
         }
         this.oldInt = pending.size();
+    }
+
+    private void tickGrids(){
         int size = grids.size();
         for (int i = 0; i < size; i++) {
             try {

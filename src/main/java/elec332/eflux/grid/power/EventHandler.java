@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  */
 @SuppressWarnings("all")
 public class EventHandler {
-
+/*
     @SubscribeEvent
     public void onEnergyTileAdded(PowerTransmitterEvent.Load event){
         EFlux.systemPrintDebug("AddEvent");
@@ -24,13 +24,13 @@ public class EventHandler {
     public void onEnergyTileRemoved(PowerTransmitterEvent.UnLoad event){
         EFlux.systemPrintDebug("RemEvent");
         WorldRegistry.get(event.getWorld()).getWorldPowerGrid().removeTile(event.transmitterTile);
-    }
+    }*/
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event){
         WorldRegistry.tick(event);
     }
-
+/*
     @SubscribeEvent
     public void onNeighborNotify(BlockEvent.NeighborNotifyEvent event){
         if (!event.getWorld().isRemote) {
@@ -38,5 +38,5 @@ public class EventHandler {
             WorldRegistry.get(event.getWorld()).getWorldPowerGrid().onBlockChange(event.getPos(), event.getNotifiedSides());
         }
     }
-
+*/
 }

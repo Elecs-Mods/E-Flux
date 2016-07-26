@@ -3,6 +3,7 @@ package elec332.eflux.api.energy;
 /**
  * Created by Elec332 on 23-2-2016.
  */
+@Deprecated
 public interface IEnergyMonitor extends IEnergyTile {
 
     /**

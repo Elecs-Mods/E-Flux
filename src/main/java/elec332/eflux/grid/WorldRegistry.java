@@ -40,9 +40,11 @@ public class WorldRegistry {
 
     @SuppressWarnings("all")
     public static void tick(TickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            for (World world : worlds) {
-                get(world).tickInternal();
+        for (World world : worlds) {
+            if (event.phase == TickEvent.Phase.START) {
+                get(world).tickStart();
+            } else {
+                get(world).tickEnd();
             }
         }
     }
@@ -50,7 +52,7 @@ public class WorldRegistry {
     //////////////////////////////////////////////////////
 
     private WorldRegistry(World world) {
-        this.gridHolderPower = new WorldGridHolder(world);
+//        this.gridHolderPower = new WorldGridHolder(world);
         this.tankRegistry = new EFluxDynamicTankWorldHolder(world);
         this.tickables = new ArrayDeque<ITickable>();
         this.world = world;
@@ -63,28 +65,31 @@ public class WorldRegistry {
         }, world);
     }
 
-    private final WorldGridHolder gridHolderPower;
+//    private final WorldGridHolder gridHolderPower;
     private final EFluxDynamicTankWorldHolder tankRegistry;
     private final Queue<ITickable> tickables;
     private final World world;
 
-    public WorldGridHolder getWorldPowerGrid() {
-        return gridHolderPower;
-    }
+//    public WorldGridHolder getWorldPowerGrid() {
+//        return gridHolderPower;
+//    }
 
     public EFluxDynamicTankWorldHolder getTankRegistry(){
         return tankRegistry;
     }
 
-    private void tickInternal() {
-        gridHolderPower.onServerTickInternal();
-        tankRegistry.tick();
+    private void tickStart() {
         Iterator<ITickable> ti = tickables.iterator();
         ITickable tickable;
         while (ti.hasNext()){
             tickable = ti.next();
             tickable.update();
         }
+    }
+
+    private void tickEnd(){
+        tankRegistry.tick();
+//        gridHolderPower.tickEnd();
     }
 
     public void addTickable(ITickable tickable){

@@ -6,6 +6,7 @@ import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.slot.SlotOutput;
 import elec332.core.inventory.widget.FluidTankWidget;
 import elec332.core.inventory.widget.WidgetProgressArrow;
+import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
@@ -189,10 +190,12 @@ public class TileWasher extends TileEntityProcessingMachine implements IFluidHan
                 int used = fill(side, fs, false);
                 if (used > 0 && used == fs.amount){
                     fill(side, fs, true);
-                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                    ItemStack d = FluidContainerRegistry.drainFluidContainer(stack);
-                    if (!player.inventory.addItemStackToInventory(d)){
-                        WorldHelper.dropStack(worldObj, pos.offset(side), d);
+                    if (!PlayerHelper.isPlayerInCreative(player)) {
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                        ItemStack d = FluidContainerRegistry.drainFluidContainer(stack);
+                        if (!player.inventory.addItemStackToInventory(d)) {
+                            WorldHelper.dropStack(worldObj, pos.offset(side), d);
+                        }
                     }
                 }
             } else if (FluidContainerRegistry.isEmptyContainer(stack)){

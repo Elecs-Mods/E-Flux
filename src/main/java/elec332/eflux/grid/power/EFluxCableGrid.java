@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyTransmitter;
-import elec332.eflux.api.energy.ISpecialEnergySource;
+import elec332.eflux.api.energy.ISpecialEnergyProvider;
 import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.multipart.cable.PartAbstractCable;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +29,7 @@ public class EFluxCableGrid {
         this.world = p.getWorld();
         locations.add(p.getLocation());
         if (p.isProvider(direction)) {
-            if (!(p.getProvider(direction) instanceof ISpecialEnergySource)) {
+            if (!(p.getProvider(direction) instanceof ISpecialEnergyProvider)) {
                 providers.add(new GridData(p.getLocation(), direction));
             } else {
                 specialProviders.add(new GridData(p.getLocation(), direction));
@@ -141,11 +141,11 @@ public class EFluxCableGrid {
             if (specialCanProvide > needed){
                 float d = needed/(float)specialCanProvide;
                 for (GridData gridData : specialProviders) {
-                    totalProvided = totalProvided + ((ISpecialEnergySource) getPowerTile(gridData).getProvider(gridData.getDirection())).provideEnergeticFlux(rp, (int) (vs[specialProviders.indexOf(gridData)] * d));
+                    totalProvided = totalProvided + ((ISpecialEnergyProvider) getPowerTile(gridData).getProvider(gridData.getDirection())).provideEnergeticFlux(rp, (int) (vs[specialProviders.indexOf(gridData)] * d));
                 }
             } else {
                 for (GridData gridData : specialProviders) {
-                    totalProvided = totalProvided + ((ISpecialEnergySource) getPowerTile(gridData).getProvider(gridData.getDirection())).provideEnergeticFlux(rp, vs[specialProviders.indexOf(gridData)]);
+                    totalProvided = totalProvided + ((ISpecialEnergyProvider) getPowerTile(gridData).getProvider(gridData.getDirection())).provideEnergeticFlux(rp, vs[specialProviders.indexOf(gridData)]);
                 }
             }
             if (totalProvided > requestedPower) {
@@ -166,7 +166,7 @@ public class EFluxCableGrid {
     }
 
     private WorldGridHolder getWorldHolder(){
-        return WorldRegistry.get(world).getWorldPowerGrid();
+        return null;//WorldRegistry.get(world).getWorldPowerGrid();
     }
 
     private void invalidate(){

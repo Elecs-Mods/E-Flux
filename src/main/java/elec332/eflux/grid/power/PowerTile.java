@@ -87,7 +87,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
         return tile.getCapability(EFluxAPI.RECEIVER_CAPABILITY, side);
     }
 
-    public IEnergySource getProvider(EnumFacing side){
+    public IEnergyProvider getProvider(EnumFacing side){
         return tile.getCapability(EFluxAPI.PROVIDER_CAPABILITY, side);
     }
 
@@ -111,7 +111,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
             }
         } else {
             EFlux.systemPrintDebug("Replace null");
-            throw new IllegalStateException();
+            throw new IllegalStateException("Type: "+tile.getClass().getCanonicalName() +" pos: "+tile.getPos());
         }
     }
 
@@ -174,7 +174,7 @@ public class PowerTile {  //Wrapper for TileEntities, prevents the loading of ch
     }
 
     private EFluxCableGrid newGrid(EnumFacing direction){
-        return WorldRegistry.get(world).getWorldPowerGrid().registerGrid(new EFluxCableGrid(this, direction));
+        return null;//WorldRegistry.get(world).getWorldPowerGrid().registerGrid(new EFluxCableGrid(this, direction));
     }
 
     @Override

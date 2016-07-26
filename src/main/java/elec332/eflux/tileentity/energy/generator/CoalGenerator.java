@@ -11,7 +11,7 @@ import elec332.core.util.BasicInventory;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
@@ -40,7 +40,7 @@ import java.util.Random;
  * Created by Elec332 on 29-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCoalGenerator")
-public class CoalGenerator extends EnergyTileBase implements IEnergySource, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
+public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
     public CoalGenerator(){
         inventory = new BasicInventory("", 1){

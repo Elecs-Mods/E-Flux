@@ -10,7 +10,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.model.MachineFrameQuadProvider;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
-import elec332.eflux.util.UniversalUnlistedProperty;
+import elec332.core.util.UniversalUnlistedProperty;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

@@ -3,7 +3,7 @@ package elec332.eflux.tileentity.multiblock;
 import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.EnergyAPIHelper;
-import elec332.eflux.api.energy.IEnergySource;
+import elec332.eflux.api.energy.IEnergyProvider;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -12,11 +12,11 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 13-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerOutlet")
-public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBlockHandler<IEnergySource> implements IEnergySource {
+public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBlockHandler<IEnergyProvider> implements IEnergyProvider {
 
-    @CapabilityInject(IEnergySource.class)
-    public static Capability<IEnergySource> CAPABILITY;
-
+    @CapabilityInject(IEnergyProvider.class)
+    public static Capability<IEnergyProvider> CAPABILITY;
+/*
     @Override
     public void onTileUnloaded() {
         if (!worldObj.isRemote) {
@@ -29,7 +29,7 @@ public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBloc
         if (!worldObj.isRemote) {
             EnergyAPIHelper.postLoadEvent(this);
         }
-    }
+    }*/
 
     /**
      * @param rp        the RedstonePotential in the network
@@ -39,7 +39,7 @@ public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBloc
      */
     @Override
     public int provideEnergy(int rp, boolean execute) {
-        IEnergySource mb = getMultiBlockHandler();
+        IEnergyProvider mb = getMultiBlockHandler();
         return mb == null ? 0 : mb.provideEnergy(rp, execute);
     }
 
@@ -55,7 +55,7 @@ public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBloc
     }
 
     @Override
-    protected Capability<IEnergySource> getCapability() {
+    protected Capability<IEnergyProvider> getCapability() {
         return CAPABILITY;
     }
 
