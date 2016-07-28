@@ -88,6 +88,11 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
     }
 
     @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+        return super.onItemRightClick(stack, world, player, hand);
+    }
+
+    @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         super.getSubItems(itemIn, tab, subItems);
         if (Config.General.creativeAreaMover){

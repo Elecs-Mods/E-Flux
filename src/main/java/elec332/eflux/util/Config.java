@@ -43,6 +43,14 @@ public class Config {
     }
 
     @Configurable.Class
+    public static class Misc {
+
+        @Configurable(comment = "Sets the maximum range for the area mover")
+        public static int areaMoverRangeMax = 32;
+
+    }
+
+    @Configurable.Class
     public static class MultiBlocks {
 
         @Configurable.Class

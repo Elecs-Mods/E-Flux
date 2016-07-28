@@ -1,10 +1,12 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.schematic.Area;
 import elec332.core.world.schematic.Schematic;
 import elec332.core.world.schematic.SchematicHelper;
+import elec332.eflux.util.Config;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -17,22 +19,50 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @RegisterTile(name = "TileEntityEFluxAreaMover")
 public class TileEntityAreaMover extends TileEntity {
 
-    public static final int MAX_RANGE = 32;
+    private int tier = 0;
 
     public int getRange(){
-        return 2 + getBlockMetadata();
+        return 2 + tier;
+    }
+
+    public void setRange(int range){
+        this.tier = getRange(range);
     }
 
     @Override
-    public int getBlockMetadata() {
-        int i = super.getBlockMetadata();
-        if (i > MAX_RANGE){
-            WorldHelper.setBlockState(worldObj, pos, getBlockType().getDefaultState(), 3);
-            updateContainingBlockInfo();
-        } else {
-            return i;
+    public void validate() {
+        super.validate();
+        ElecCore.tickHandler.registerCall(new Runnable() {
+            @Override
+            public void run() {
+                if (WorldHelper.chunkLoaded(worldObj, pos)){
+                    WorldHelper.markBlockForUpdate(worldObj, pos);
+                }
+            }
+        }, worldObj);
+    }
+
+    public static int getRange(int range){
+        int max = Config.Misc.areaMoverRangeMax;
+        if (range > max){
+            return max;
         }
-        return getBlockMetadata();
+        if (range < 0){
+            return 0;
+        }
+        return range;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setInteger("amTier", tier);
+        return super.writeToNBT(compound);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        this.tier = compound.getInteger("amTier");
     }
 
     public NBTTagCompound removeArea(){
