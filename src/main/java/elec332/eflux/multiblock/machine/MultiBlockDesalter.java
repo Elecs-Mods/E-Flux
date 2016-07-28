@@ -1,5 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
+import elec332.core.main.ElecCore;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
@@ -91,8 +92,13 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
     private void attemptFill(CapabilityHelper.FluidHandlerHelper tank, int fill, Fluid fluid){
         int i = tank.fill(new FluidStack(fluid, fill), true);
         if (i != fill){
-            BlockPos boomPos = getBlockLocAtTranslatedPos(1, 1, 3);
-            WorldHelper.spawnExplosion(getWorldObj(), boomPos.getX(), boomPos.getY(), boomPos.getZ(), 3f);
+            final BlockPos boomPos = getBlockLocAtTranslatedPos(1, 1, 3);
+            ElecCore.tickHandler.registerCall(new Runnable() {
+                @Override
+                public void run() {
+                    WorldHelper.spawnExplosion(getWorldObj(), boomPos.getX(), boomPos.getY(), boomPos.getZ(), 3f);
+                }
+            }, getWorldObj());
         }
     }
 
