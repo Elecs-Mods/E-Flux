@@ -89,7 +89,7 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        return super.onItemRightClick(stack, world, player, hand);
+        return isCreative(stack) ? new ActionResult<ItemStack>(EnumActionResult.PASS, stack) : super.onItemRightClick(stack, world, player, hand);
     }
 
     @Override

@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 /**
  * Created by Elec332 on 14-5-2016.
  */
+
 public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFluxItem {
 
     public AbstractEnderCapabilityItem(String name) {
@@ -42,10 +43,22 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
         return super.onItemRightClick(stack, world, player, hand);
     }
 
+    /**
+     * Gets called when the stack has the IEnderNetworkComponent capability
+     *
+     * @param component The EnderNetworkComponent
+     * @param connection The current ender-connection
+     * @param stack The held ItemStack
+     * @param world The world
+     * @param player The player holding the stack
+     * @param hand The currently used hand
+     *
+     * @return The ActionResult for the performed action.
+     */
     protected ActionResult<ItemStack> onRightClick(@Nonnull IEnderNetworkComponent<T> component, @Nullable IWeakEnderConnection<T> connection, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand){
         if (connection != null && connection.isValid()){
             return execute(component, connection, stack, world, player, hand);
-        } else {
+        } else if (shouldAttemptToConnect(component, stack, world, player, hand)){
             if (!world.isRemote){
                 PlayerHelper.sendMessageToPlayer(player, "Connecting...");
             }
@@ -55,6 +68,39 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
+        return onRightClickLast(component, stack, world, player, hand);
+    }
+
+    /**
+     * Gets called when the EnderComponent does currently not have an active connection
+     *
+     * @param component The EnderNetworkComponent
+     * @param stack The held ItemStack
+     * @param world The world
+     * @param player The player holding the stack
+     * @param hand The currently used hand
+     *
+     * @return Whether a new connection should be made.
+     */
+    protected boolean shouldAttemptToConnect(@Nonnull IEnderNetworkComponent<T> component, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand){
+        return true;
+    }
+
+    /**
+     * Gets called when the EnderComponent does currently not have an active connection,
+     * and {@link AbstractEnderCapabilityItem#shouldAttemptToConnect(IEnderNetworkComponent, ItemStack, World, EntityPlayer, EnumHand)}
+     * returned false.
+     *
+     * @param component The EnderNetworkComponent
+     * @param stack The held ItemStack
+     * @param world The world
+     * @param player The player holding the stack
+     * @param hand The currently used hand
+     *
+     * @return The ActionResult for the performed action.
+     */
+    protected ActionResult<ItemStack> onRightClickLast(@Nonnull IEnderNetworkComponent<T> component, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand){
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     protected IWeakEnderConnection<T> getCurrentConnection(ItemStack stack){
@@ -68,6 +114,19 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
         return null;
     }
 
+    /**
+     * Gets called when the stack has the IEnderNetworkComponent capability and
+     * an currently active ender-connection.
+     *
+     * @param component The EnderNetworkComponent
+     * @param connection The current ender-connection
+     * @param stack The held ItemStack
+     * @param world The world
+     * @param player The player holding the stack
+     * @param hand The currently used hand
+     *
+     * @return The ActionResult for the performed action.
+     */
     protected abstract ActionResult<ItemStack> execute(@Nonnull IEnderNetworkComponent<T> component, @Nonnull IWeakEnderConnection<T> connection, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand);
 
     @Override
