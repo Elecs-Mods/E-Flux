@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -67,6 +68,10 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
 
     public static int[] getValidFequencies(IEnderNetworkComponent component){
         return get(FMLCommonHandler.instance().getEffectiveSide()).get(component.getUuid()).getFrequencies(component.getRequiredCapability());
+    }
+
+    public static void onPacket(NBTTagCompound received, MessageContext messageContext){
+        get(messageContext.side).deserializeNBT(received);
     }
 
     public static EnderNetworkManager get(World world){

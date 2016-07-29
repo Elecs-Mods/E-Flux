@@ -1,7 +1,6 @@
 package elec332.eflux.network;
 
 import elec332.core.network.AbstractPacket;
-import elec332.eflux.EFlux;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +25,7 @@ public class PacketPlayerConnection extends AbstractPacket {
     @Override
     public IMessage onMessageThreadSafe(AbstractPacket abstractPacket, MessageContext messageContext) {
         NBTTagCompound receive = abstractPacket.networkPackageObject;
-        EnderNetworkManager.get(EFlux.proxy.getClientWorld()).deserializeNBT(receive.getCompoundTag("net"));
+        EnderNetworkManager.onPacket(receive.getCompoundTag("net"), messageContext);
         return null;
     }
 
