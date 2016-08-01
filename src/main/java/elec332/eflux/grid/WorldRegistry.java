@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.grid.power.WorldGridHolder;
 import elec332.eflux.grid.tank.EFluxDynamicTankWorldHolder;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;

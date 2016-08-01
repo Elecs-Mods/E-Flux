@@ -1,6 +1,5 @@
 package elec332.eflux.energy;
 
-import elec332.core.world.WorldHelper;
 import elec332.eflux.energy.grid.GridEventInputHandler;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;

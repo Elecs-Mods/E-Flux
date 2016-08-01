@@ -2,7 +2,6 @@ package elec332.eflux.tileentity.basic;
 
 import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.EnergyAPIHelper;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.heat.IHeatReceiver;

@@ -1,6 +1,8 @@
 package elec332.eflux.energy.grid;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.energy.IEFluxEnergyObject;
@@ -10,7 +12,10 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Elec332 on 23-7-2016.

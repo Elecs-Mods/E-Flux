@@ -1,6 +1,5 @@
 package elec332.eflux.multiblock.machine;
 
-import elec332.core.util.PlayerHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;

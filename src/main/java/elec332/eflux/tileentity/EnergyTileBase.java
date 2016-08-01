@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity;
 
 import elec332.core.tile.TileBase;
-import elec332.eflux.api.energy.EnergyAPIHelper;
 
 /**
  * Created by Elec332 on 16-5-2015.

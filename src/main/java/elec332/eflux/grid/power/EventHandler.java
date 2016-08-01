@@ -1,9 +1,6 @@
 package elec332.eflux.grid.power;
 
-import elec332.eflux.EFlux;
-import elec332.eflux.api.event.PowerTransmitterEvent;
 import elec332.eflux.grid.WorldRegistry;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
