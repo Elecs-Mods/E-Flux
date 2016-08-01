@@ -89,7 +89,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public void setContainer(IMultipartContainer container) {
         super.setContainer(container);
-        //ElecCore.tickHandler.registerCall(new ClientChecker(), Side.CLIENT);
+        new ClientChecker().run();
     }
 
     @Override
@@ -102,7 +102,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     @Override
     public IBlockState getExtendedState(IBlockState ibs) {
         IExtendedBlockState state = (IExtendedBlockState) ibs;
-        checkConnectionsNow();
+        //checkConnectionsNow();
         return state.withProperty(DOWN, connected(EnumFacing.DOWN)).withProperty(UP, connected(EnumFacing.UP)).withProperty(NORTH, connected(EnumFacing.NORTH)).withProperty(SOUTH, connected(EnumFacing.SOUTH)).withProperty(WEST, connected(EnumFacing.WEST)).withProperty(EAST, connected(EnumFacing.EAST));
     }
 
@@ -346,14 +346,24 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
 
     private class ClientChecker implements Runnable {
 
+        public ClientChecker(){
+            this(true);
+        }
+
+        private ClientChecker(boolean b){
+            this.b = b;
+        }
+
+        private final boolean b;
+
         @Override
         public void run() {
             if (getWorld() != null) {
                 if (getWorld().isRemote) {
                     checkConnections(true);
                 }
-            } else {
-                ElecCore.tickHandler.registerCall(new ClientChecker(), Side.CLIENT);
+            } else if (b) {
+                ElecCore.tickHandler.registerCall(new ClientChecker(false), Side.CLIENT);
             }
         }
 

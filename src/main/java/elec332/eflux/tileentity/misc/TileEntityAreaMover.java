@@ -93,4 +93,9 @@ public class TileEntityAreaMover extends TileEntity {
         return getUnpositionedAreaBounds().offset(getPos());
     }
 
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
 }
