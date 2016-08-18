@@ -1,16 +1,14 @@
 package elec332.eflux.energy.grid;
 
 import com.google.common.collect.Sets;
+import elec332.core.grid.v2.AbstractGridHandler;
 import elec332.core.main.ElecCore;
 import elec332.core.world.DimensionCoordinate;
-import elec332.core.world.PositionedObjectHolder;
-import elec332.core.world.WorldHelper;
+import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.util.Config;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -20,41 +18,38 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
+
 import java.util.Set;
 
-import static elec332.eflux.api.EFluxAPI.*;
-import static elec332.eflux.api.energy.ConnectionType.*;
+import static elec332.eflux.api.EFluxAPI.PROVIDER_CAPABILITY;
+import static elec332.eflux.api.EFluxAPI.RECEIVER_CAPABILITY;
+import static elec332.eflux.api.EFluxAPI.TRANSMITTER_CAPABILITY;
+import static elec332.eflux.api.energy.ConnectionType.PROVIDER;
+import static elec332.eflux.api.energy.ConnectionType.RECEIVER;
+import static elec332.eflux.api.energy.ConnectionType.TRANSMITTER;
 
 /**
- * Created by Elec332 on 24-7-2016.
+ * Created by Elec332 on 1-8-2016.
  */
-public enum GridObjectHandler {
+public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObject> {
 
-    INSTANCE;
-
-    @SuppressWarnings("all")
-    GridObjectHandler(){
-        this.objects = new Int2ObjectArrayMap<PositionedObjectHolder<EFluxEnergyObject>>();
-        this.extraUnload = Sets.newHashSet();
-        this.changeCheck = Sets.newHashSet();
-        this.add = Sets.newHashSet();
+    public EFluxGridHandler(){
+        super();
         this.grids = Sets.newHashSet();
     }
-
-    private final Int2ObjectMap<PositionedObjectHolder<EFluxEnergyObject>> objects;
-    private final Set<DimensionCoordinate> extraUnload, changeCheck, add;
 
     private final Set<EnergyGrid> grids;
 
     @SuppressWarnings("all") //Manual switch
     private static boolean forceDebug = ElecCore.developmentEnvironment && false;
 
-    protected void tickEnd(){
+    @Override
+    public void tick() {
         int i = 1;
         for (EnergyGrid grid : grids){
-            systemPrintDebug("TickStart "+ i);
+            systemPrintDebug("Start "+i);
             grid.tick();
-            systemPrintDebug("Tick end");
+            systemPrintDebug("End");
             i++;
         }
         if (shouldDebug()) {
@@ -67,141 +62,40 @@ public enum GridObjectHandler {
         }
     }
 
-    //Block changed
-    @SuppressWarnings("all")
-    protected final void checkNotifyStuff(Set<DimensionCoordinate> updates){
-        for (DimensionCoordinate dimCoord : updates) {
-            EFluxEnergyObject o = getObject(dimCoord);
-            if (o == null){
-                continue;
-            }
-            TileEntity tile = dimCoord.getTileEntity();
-            if (tile == null) {
-                if (o != null) {
-                    //o.clearTile(); //Just in case
-                    extraUnload.add(dimCoord);
-                }
-                //Nothing to do, no tile and no energy object.
-                return;
-            } else {
-                if (!o.validTile()){
-                    throw new IllegalStateException(); //Something has gone terribly wrong somewhere...
-                }
-                if (o.checkCapabilities()){
-                    changeCheck.add(dimCoord);
-                    return;
-                }
-                //Insignificant change, nothing more to do.
-            }
-        }
-    }
-
-    //Block added/removed (most likely atleast)
-    protected void checkBlockUpdates(Set<DimensionCoordinate> updates){
-        for (DimensionCoordinate dimCoord : updates){
-            TileEntity tile = dimCoord.getTileEntity();
-            EFluxEnergyObject o = getObject(dimCoord);
-            if (o == null && tile == null){
-                return;
-            }
-            if (o == null && isEnergyObject(tile)){
-                add.add(dimCoord);
-            }
-            if (o != null && tile == null){
-                extraUnload.add(dimCoord);
-            }
-            if (o != null && isEnergyObject(tile)){
-                if (o.checkCapabilities()){
-                    changeCheck.add(dimCoord);
-                }
-            }
-        }
-    }
-
-    protected void worldUnload(World world){
-        PositionedObjectHolder<EFluxEnergyObject> worldObjects = objects.get(WorldHelper.getDimID(world));
-        if (worldObjects != null) {
-            Set<DimensionCoordinate> unload = Sets.newHashSet();
-            for (ChunkPos chunkPos : worldObjects.getChunks()) {
-                for (EFluxEnergyObject o : worldObjects.getObjectsInChunk(chunkPos).values()) {
-                    unload.add(o.getPosition());
-                }
-            }
-            unloadObjects_Internal(unload);
-        }
-    }
-
-    protected void checkChunkUnload(Set<DimensionCoordinate> updates){
-        updates.addAll(extraUnload);
-        updates.addAll(changeCheck);
-        unloadObjects_Internal(updates);
-        extraUnload.clear();
-    }
-
-    private void unloadObjects_Internal(Set<DimensionCoordinate> updates){
-        for (DimensionCoordinate dimCoord : updates){
-            EFluxEnergyObject o = getObject(dimCoord);
-            if (o == null){
-                System.out.println("????_-3"); //???
-                continue;
-            }
-            if (o.isEndPoint()){ //Easier & lightweight
-                EnergyGrid grid = o.getEndPoint();
-                grid.removeObject(o);
-                o.removedFromGrid(grid);
-            } else { //Shame, but 1 more chance
-                Set<EnergyGrid> grids = o.getGrids();
-                if (o.multipleEndpoints()){
-                    for (EnergyGrid grid : grids){
-                        if (grid != null){
-                            grid.removeObject(o);
-                        }
-                        o.removedFromGrid(grid);
+    @Override
+    protected void onObjectRemoved(EFluxEnergyObject o, Set<DimensionCoordinate> updates) {
+        if (o.isEndPoint()){ //Easier & lightweight
+            EnergyGrid grid = o.getEndPoint();
+            grid.removeObject(o);
+            o.removedFromGrid(grid);
+        } else { //Shame, but 1 more chance
+            Set<EnergyGrid> grids = o.getGrids();
+            if (o.multipleEndpoints()){
+                for (EnergyGrid grid : grids){
+                    if (grid != null){
+                        grid.removeObject(o);
                     }
-                } else { //Nope, gotta do it the hard way
-                    for (EnergyGrid grid : grids){
-                        if (grid != null) {
-                            for (EnergyGrid.ConnectionData o2 : grid.getAllConnections()) {
-                                o2.object.setGridForFace(null, o2.facing);
-                                if (!updates.contains(o2.object.getPosition()) && !o.equals(o2.object)) {
-                                    add.add(o2.object.getPosition());
-                                }
+                    o.removedFromGrid(grid);
+                }
+            } else { //Nope, gotta do it the hard way
+                for (EnergyGrid grid : grids){
+                    if (grid != null) {
+                        for (EnergyGrid.ConnectionData o2 : grid.getAllConnections()) {
+                            o2.object.setGridForFace(null, o2.facing);
+                            if (!updates.contains(o2.object.getPosition()) && !o.equals(o2.object)) {
+                                add.add(o2.object.getPosition());
                             }
                         }
-                        o.removedFromGrid(grid);
-                        removeGrid(grid);
                     }
+                    o.removedFromGrid(grid);
+                    removeGrid(grid);
                 }
             }
-            removeObject(dimCoord);
         }
     }
 
-    protected void checkChunkLoad(Set<DimensionCoordinate> updates){
-        Set<DimensionCoordinate> oldUpdates = Sets.newHashSet(updates);
-        updates.addAll(add);
-        updates.addAll(changeCheck);
-        for (DimensionCoordinate dimCoord : updates){
-            TileEntity tile = dimCoord.getTileEntity();
-            if (tile == null || !isEnergyObject(tile)){
-                continue;
-            }
-            EFluxEnergyObject o = getObject(dimCoord);
-            if (o != null){
-                if (oldUpdates.contains(dimCoord)) {
-                    throw new IllegalStateException();
-                }
-            } else {
-                o = createNewObject(tile);
-                o.checkCapabilities(); //Set initial data
-            }
-            internalAdd(o);
-        }
-        add.clear();
-        changeCheck.clear();
-    }
-
-    private void internalAdd(EFluxEnergyObject o){ //Separated to make code more readable
+    @Override
+    protected void internalAdd(EFluxEnergyObject o){ //Separated to make code more readable
         DimensionCoordinate dimCoord = o.getPosition();
         World world = dimCoord.getWorld();
         if (world == null){
@@ -353,38 +247,31 @@ public enum GridObjectHandler {
         grids.remove(grid);
     }
 
-    private static boolean isEnergyObject(ICapabilityProvider capabilityProvider){
-        return GridEventInputHandler.isEnergyObject(capabilityProvider);
-    }
-
-    private EFluxEnergyObject createNewObject(TileEntity tile){
-        EFluxEnergyObject o = new EFluxEnergyObject(tile);
-        objects.get(WorldHelper.getDimID(tile.getWorld())).put(o, tile.getPos());
-        return o;
-    }
-
-    private void removeObject(DimensionCoordinate dimensionCoordinate){
-        getDim(dimensionCoordinate).remove(dimensionCoordinate.getPos());
-    }
-
-    private EFluxEnergyObject getObject(DimensionCoordinate dimensionCoordinate){
-        return getDim(dimensionCoordinate).get(dimensionCoordinate.getPos());
-    }
-
-    private PositionedObjectHolder<EFluxEnergyObject> getDim(DimensionCoordinate dimensionCoordinate){
-        PositionedObjectHolder<EFluxEnergyObject> ret = objects.get(dimensionCoordinate.getDimension());
-        if (ret == null){
-            ret = new PositionedObjectHolder<>();
-            objects.put(dimensionCoordinate.getDimension(), ret);
+    @Override
+    public boolean isValidObject(TileEntity tile) {
+        if (tile == null){
+            return false;
         }
-        return ret;
+        for (EnumFacing facing : EnumFacing.VALUES){
+            if (tile.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.PROVIDER_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, facing)){
+                return true;
+            }
+        }
+        return false;
     }
 
+    @Override
+    protected EFluxEnergyObject createNewObject(TileEntity tile) {
+        return new EFluxEnergyObject(tile);
+    }
+
+    @SuppressWarnings("all")
     protected static boolean shouldDebug(){
         return forceDebug || Config.debugLog;
     }
 
-    private static void systemPrintDebug(Object s){
+    @SuppressWarnings("all")
+    protected static void systemPrintDebug(Object s){
         if (shouldDebug()) {
             System.out.println(s);
         }

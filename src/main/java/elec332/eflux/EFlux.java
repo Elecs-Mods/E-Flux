@@ -2,6 +2,7 @@ package elec332.eflux;
 
 import com.google.common.collect.Lists;
 import elec332.core.config.ConfigWrapper;
+import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
@@ -17,7 +18,8 @@ import elec332.eflux.compat.rf.RFCompat;
 import elec332.eflux.compat.waila.WailaCompatHandler;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.EnderRegistryCallbacks;
-import elec332.eflux.energy.EFluxEnergy;
+import elec332.core.grid.v2.internal.GridEventHandler;
+import elec332.eflux.energy.grid.EFluxGridHandler;
 import elec332.eflux.grid.power.EventHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
@@ -124,6 +126,7 @@ public class EFlux { //TODO
         networkHandler.registerClientPacket(new PacketSendValidNetworkKeys());
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
+        ElecCoreRegistrar.GRIDS_V2.register(new EFluxGridHandler());
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.IRON_INGOT).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
@@ -169,7 +172,7 @@ public class EFlux { //TODO
         MultiBlockRegister.init();
         configWrapper.refresh();
         MinecraftForge.EVENT_BUS.register(new EventHandler());
-        MinecraftForge.EVENT_BUS.register(new EFluxEnergy());
+        MinecraftForge.EVENT_BUS.register(new GridEventHandler());
         registerRecipes();
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new WorldEventHandler());

@@ -27,6 +27,7 @@ public class EFluxAPI {
     public static Capability<IEnergyProvider> PROVIDER_CAPABILITY;
     @CapabilityInject(IEnergyTransmitter.class)
     public static Capability<IEnergyTransmitter> TRANSMITTER_CAPABILITY;
+    @Deprecated
     @CapabilityInject(IEnergyMonitor.class)
     public static Capability<IEnergyMonitor> MONITOR_CAPABILITY;
 

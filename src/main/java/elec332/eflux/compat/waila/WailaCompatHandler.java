@@ -41,7 +41,7 @@ public class WailaCompatHandler extends AbstractCompatHandler.ICompatHandler {
 
             @Override
             public NBTTagCompound getWailaTag(IEnderNetworkComponent capability, EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, BlockPos pos) {
-                if (tag != null){
+                if (tag != null && capability != null){
                     tag.setString("u", String.valueOf(capability.getUuid()));
                     tag.setInteger("i", capability.getFrequency());
                     tag.setBoolean("b", capability.getCurrentConnection() != null);

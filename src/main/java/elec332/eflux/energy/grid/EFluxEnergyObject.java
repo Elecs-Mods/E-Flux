@@ -3,14 +3,12 @@ package elec332.eflux.energy.grid;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.energy.IEFluxEnergyObject;
+import elec332.core.grid.v2.DefaultTileEntityLink;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -20,11 +18,10 @@ import java.util.Set;
 /**
  * Created by Elec332 on 23-7-2016.
  */
-public class EFluxEnergyObject implements IEFluxEnergyObject {
+public class EFluxEnergyObject extends DefaultTileEntityLink {
 
     protected EFluxEnergyObject(TileEntity tile){
-        this.tile = tile;
-        this.coord = DimensionCoordinate.fromTileEntity(tile);
+        super(tile);
         this.capData = newMap();
         this.grids = new EnergyGrid[SIDES];
         this.endPoint = -1;
@@ -32,8 +29,6 @@ public class EFluxEnergyObject implements IEFluxEnergyObject {
         this.uniqueGridsImmutable = ImmutableSet.of();
     }
 
-    private final TileEntity tile;
-    private final DimensionCoordinate coord;
     private Map<Capability, EnumSet<EnumFacing>> capData;
     private EnumSet<EnumFacing> connectors;
     private boolean endPoints;
@@ -42,7 +37,8 @@ public class EFluxEnergyObject implements IEFluxEnergyObject {
     private EnergyGrid[] grids;
     private int endPoint;
 
-    protected boolean checkCapabilities(){
+    @Override
+    public boolean hasChanged() {
         boolean ret = false;
         Map<Capability, EnumSet<EnumFacing>> newMap = newMap();
         for (Capability cap : ENERGY_CAPABILITIES){
@@ -128,18 +124,6 @@ public class EFluxEnergyObject implements IEFluxEnergyObject {
         return grids[side.ordinal()];
     }
 
-    @Nullable
-    @Override
-    public TileEntity getTileEntity() {
-        return tile;//coord.isLoaded() ? tile.get() : null;
-    }
-
-    @Override
-    @Nonnull
-    public DimensionCoordinate getPosition(){
-        return coord;
-    }
-
     protected boolean multipleEndpoints(){
         return endPoints;
     }
@@ -157,14 +141,6 @@ public class EFluxEnergyObject implements IEFluxEnergyObject {
 
     protected boolean isEndPoint(){
         return endPoint != -1;
-    }
-
-    protected boolean validTile(){
-        return coord.isLoaded();//tile.get() != null;
-    }
-
-    protected void clearTile(){
-        //tile.clear();
     }
 
     private Map<Capability, EnumSet<EnumFacing>> newMap(){
@@ -191,32 +167,13 @@ public class EFluxEnergyObject implements IEFluxEnergyObject {
         ENERGY_CAPABILITIES[3] = EFluxAPI.MONITOR_CAPABILITY;
     }
 
-    //Capability tile link-through
-
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        EnumSet<EnumFacing> set = capData.get(capability); //Cached data first
-        if (set != null){
+    protected boolean hasCachedCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        EnumSet<EnumFacing> set = capData.get(capability);
+        if (set != null) {
             return set.contains(facing);
         }
-        if (!coord.isLoaded()){
-            return false;
-        }
-        //TileEntity tile = this.tile.get();
-        return tile != null && tile.hasCapability(capability, facing);
-    }
-
-    @Override
-    @Nullable
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (!coord.isLoaded()){
-            return null;
-        }
-        //TileEntity tile = this.tile.get();
-        if (tile == null){
-            return null;
-        }
-        return tile.getCapability(capability, facing);
+        return super.hasCachedCapability(capability, facing);
     }
 
 }

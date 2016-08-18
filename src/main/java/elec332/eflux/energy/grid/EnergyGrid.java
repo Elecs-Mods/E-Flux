@@ -7,6 +7,7 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergyProvider;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
@@ -37,8 +38,8 @@ public class EnergyGrid {
     private int maxTransfer;
 
     public void tick(){
-        debugStuff();
         distributePower();
+
     }
 
     protected void merge(EnergyGrid grid){
@@ -68,7 +69,7 @@ public class EnergyGrid {
     private void identifyAdd(ConnectionData connectionData){
         ICapabilityProvider c = connectionData.object;
         EnumFacing f = connectionData.facing;
-        if (GridObjectHandler.isValidProvider(c, f)){
+        if (EFluxGridHandler.isValidProvider(c, f)){
             IEnergyProvider provider = c.getCapability(EFluxAPI.PROVIDER_CAPABILITY, f);
             if (provider instanceof ISpecialEnergyProvider){
                 specialProviders.add(connectionData);
@@ -76,10 +77,10 @@ public class EnergyGrid {
                 providers.add(connectionData);
             }
         }
-        if (GridObjectHandler.isValidReceiver(c, f)){
+        if (EFluxGridHandler.isValidReceiver(c, f)){
             receivers.add(connectionData);
         }
-        if (GridObjectHandler.isValidTransmitter(c, f)){
+        if (EFluxGridHandler.isValidTransmitter(c, f)){
             IEnergyTransmitter transmitter = c.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, f);
             int i = transmitter.getMaxEFTransfer();
             checkTransferRate(i);
@@ -196,7 +197,7 @@ public class EnergyGrid {
     }
 
     private void debugStuff(){
-        if (GridObjectHandler.shouldDebug()) {
+        if (EFluxGridHandler.shouldDebug()) {
             for (EFluxEnergyObject o : allObjects) {
                 System.out.println(o.getPosition().toString());
             }
