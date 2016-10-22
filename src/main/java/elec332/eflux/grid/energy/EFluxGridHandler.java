@@ -18,15 +18,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
-import static elec332.eflux.api.EFluxAPI.PROVIDER_CAPABILITY;
-import static elec332.eflux.api.EFluxAPI.RECEIVER_CAPABILITY;
-import static elec332.eflux.api.EFluxAPI.TRANSMITTER_CAPABILITY;
-import static elec332.eflux.api.energy.ConnectionType.PROVIDER;
-import static elec332.eflux.api.energy.ConnectionType.RECEIVER;
-import static elec332.eflux.api.energy.ConnectionType.TRANSMITTER;
+import static elec332.eflux.api.EFluxAPI.*;
+import static elec332.eflux.api.energy.ConnectionType.*;
 
 /**
  * Created by Elec332 on 1-8-2016.

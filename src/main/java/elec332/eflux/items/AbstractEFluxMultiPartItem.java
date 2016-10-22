@@ -3,7 +3,6 @@ package elec332.eflux.items;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import mcmultipart.item.ItemMultiPart;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 10-2-2016.

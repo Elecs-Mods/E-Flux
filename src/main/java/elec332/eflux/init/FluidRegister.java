@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Created by Elec332 on 13-9-2015.

@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.annotations.RegisterTile;
-import elec332.core.tile.TileBase;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.CircuitHelper;

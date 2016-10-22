@@ -2,7 +2,6 @@ package elec332.eflux.tileentity;
 
 import elec332.core.compat.waila.WailaCompatHandler;
 import elec332.core.server.ServerHelper;
-import elec332.core.tile.TileBase;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;

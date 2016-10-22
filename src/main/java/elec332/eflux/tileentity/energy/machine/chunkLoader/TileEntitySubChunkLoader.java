@@ -3,7 +3,6 @@ package elec332.eflux.tileentity.energy.machine.chunkLoader;
 import elec332.core.api.annotations.RegisterTile;
 import elec332.core.main.ElecCore;
 import elec332.core.server.ServerHelper;
-import elec332.core.tile.TileBase;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.TileEntityEFlux;

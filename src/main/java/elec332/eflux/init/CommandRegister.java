@@ -1,7 +1,6 @@
 package elec332.eflux.init;
 
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.Nullable;
 import elec332.core.main.ElecCore;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -9,7 +8,6 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.circuits.IEFluxCircuit;
-import elec332.eflux.util.IEFluxTank;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

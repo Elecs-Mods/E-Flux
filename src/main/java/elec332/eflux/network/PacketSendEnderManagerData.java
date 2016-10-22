@@ -3,7 +3,6 @@ package elec332.eflux.network;
 import elec332.core.network.AbstractPacket;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.endernetwork.EnderNetwork;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

@@ -5,7 +5,6 @@ import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.tile.IInventoryTile;
-import elec332.core.tile.TileBase;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;

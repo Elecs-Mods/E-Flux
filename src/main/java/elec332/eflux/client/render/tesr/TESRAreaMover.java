@@ -3,7 +3,6 @@ package elec332.eflux.client.render.tesr;
 import elec332.core.client.RenderHelper;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.AxisAlignedBB;
 

@@ -16,7 +16,6 @@ import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
-import elec332.eflux.network.PacketSendEnderManagerData;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
