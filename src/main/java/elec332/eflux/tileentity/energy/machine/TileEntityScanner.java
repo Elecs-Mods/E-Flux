@@ -14,6 +14,7 @@ import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
 import elec332.eflux.util.DustPile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -24,9 +25,9 @@ import net.minecraft.util.ResourceLocation;
  * Created by Elec332 on 12-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxScanner")
-public class TileScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots, ITickable {
+public class TileEntityScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots, ITickable, ISidedInventory {
 
-    public TileScanner(){
+    public TileEntityScanner(){
         super(2);
     }
 

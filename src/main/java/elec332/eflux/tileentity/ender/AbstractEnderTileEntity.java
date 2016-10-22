@@ -1,6 +1,5 @@
 package elec332.eflux.tileentity.ender;
 
-import elec332.core.tile.TileBase;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkTile;
 import elec332.eflux.api.ender.internal.DisconnectReason;
@@ -8,6 +7,7 @@ import elec332.eflux.api.ender.internal.IEnderConnection;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.endernetwork.EnderNetwork;
 import elec332.eflux.endernetwork.util.DefaultEnderConnectableTile;
+import elec332.eflux.tileentity.TileEntityEFlux;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,7 +19,7 @@ import static elec332.eflux.endernetwork.EnderNetworkManager.get;
 /**
  * Created by Elec332 on 9-5-2016.
  */
-public abstract class AbstractEnderTileEntity<T> extends TileBase implements DefaultEnderConnectableTile.IConnectionListener {
+public abstract class AbstractEnderTileEntity<T> extends TileEntityEFlux implements DefaultEnderConnectableTile.IConnectionListener {
 
     public AbstractEnderTileEntity(Capability<T> capability){
         this.capability = capability;
@@ -74,7 +74,6 @@ public abstract class AbstractEnderTileEntity<T> extends TileBase implements Def
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         connected = tagCompound.getBoolean("connected");
-        System.out.println("ReadAET");
     }
 
     @Override

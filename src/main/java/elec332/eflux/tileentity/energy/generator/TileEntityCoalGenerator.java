@@ -1,6 +1,8 @@
 package elec332.eflux.tileentity.energy.generator;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.inventory.IDefaultInventory;
+import elec332.core.grid.v2.GridInformation;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
@@ -15,11 +17,11 @@ import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
-import elec332.eflux.tileentity.EnergyTileBase;
+import elec332.eflux.grid.energy.IEnergyGridInformation;
+import elec332.eflux.tileentity.TileEntityEFlux;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -29,20 +31,20 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
  * Created by Elec332 on 29-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCoalGenerator")
-public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, IInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
+public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyProvider, IDefaultInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
-    public CoalGenerator(){
+    public TileEntityCoalGenerator(){
         inventory = new BasicInventory("", 1){
             @Override
             public boolean isItemValidForSlot(int id, ItemStack stack) {
@@ -68,8 +70,15 @@ public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, II
         };
     }
 
+    private int tick;
+
     @Override
     public void update() {
+        if (tick == 20){
+            tick = 0;
+        } else {
+            tick++;
+        }
         if (burnTime > 0) {
             ltp = sppt;
             burnTime--;
@@ -107,8 +116,12 @@ public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, II
             }
             outA = 1;
         }
+        //if (!worldObj.isRemote  && info != null)
+        //System.out.println(pos+"   "+info.getActiveConnections());
     }
 
+    @GridInformation(IEnergyGridInformation.class)
+    private IEnergyGridInformation info;
     private int ltp, sppt, burnTime, outA;
     private byte[] dirData;
     private BasicInventory inventory;
@@ -130,6 +143,12 @@ public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, II
         int ret = (int) ((ltp/(float)outA)/rp);
         ltp -= ret;
         return ret;
+    }
+
+    @Nonnull
+    @Override
+    public BasicInventory getInventory() {
+        return inventory;
     }
 
     @Override
@@ -158,91 +177,6 @@ public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, II
     }
 
     @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int amount) {
-        return inventory.decrStackSize(slot, amount);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        return inventory.removeStackFromSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    @Override
-    public String getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return inventory.getField(id);
-    }
-
-    @Override
-    public int getFieldCount() {
-        return inventory.getFieldCount();
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        inventory.setField(id, value);
-    }
-
-    @Override
-    public void clear() {
-        inventory.clear();
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return inventory.getDisplayName();
-    }
-
-    @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player, EFlux.instance, 0);
     }
@@ -260,10 +194,12 @@ public class CoalGenerator extends EnergyTileBase implements IEnergyProvider, II
     @Override
     public void addSlots(final BaseContainer container) {
         container.addSlotToContainer(new Slot(inventory, 0, 66, 53){
+
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return TileEntityFurnace.isItemFuel(stack);
             }
+
         });
         container.addPlayerInventoryToContainer();
     }

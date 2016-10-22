@@ -1,6 +1,6 @@
 package elec332.eflux.api.energy.container;
 
-import elec332.core.inventory.IHasProgressBar;
+import elec332.core.api.inventory.IHasProgressBar;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.util.CalculationHelper;
@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Created by Elec332 on 24-8-2015.
  */
-public class EnergyContainer implements IHasProgressBar, IEnergyReceiver{
+public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
 
     public EnergyContainer(int energy, IEFluxPowerHandler powerHandler, IBreakableMachine breakableMachine){
         this(energy, powerHandler);

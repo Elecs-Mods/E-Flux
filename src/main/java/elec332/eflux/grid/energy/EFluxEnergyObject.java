@@ -1,4 +1,4 @@
-package elec332.eflux.energy.grid;
+package elec332.eflux.grid.energy;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -18,23 +18,24 @@ import java.util.Set;
 /**
  * Created by Elec332 on 23-7-2016.
  */
-public class EFluxEnergyObject extends DefaultTileEntityLink {
+public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyGridInformation {
 
     protected EFluxEnergyObject(TileEntity tile){
         super(tile);
         this.capData = newMap();
-        this.grids = new EnergyGrid[SIDES];
+        this.grids = new EFluxEnergyGrid[SIDES];
         this.endPoint = -1;
         this.endPoints = false;
         this.uniqueGridsImmutable = ImmutableSet.of();
     }
 
     private Map<Capability, EnumSet<EnumFacing>> capData;
-    private EnumSet<EnumFacing> connectors;
+    private Set<EnumFacing> connectors;
     private boolean endPoints;
 
-    private Set<EnergyGrid> uniqueGridsImmutable;
-    private EnergyGrid[] grids;
+    private Set<EFluxEnergyGrid> uniqueGridsImmutable;
+    private EFluxEnergyGrid[] grids;
+    private int uniqueGrids;
     private int endPoint;
 
     @Override
@@ -49,11 +50,32 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
                 ret = true;
             }
         }
-        this.connectors = newMap.get(EFluxAPI.TRANSMITTER_CAPABILITY);
+        setConnectors(newMap.get(EFluxAPI.TRANSMITTER_CAPABILITY));
         //this.endPoints = connectors.size() > 1;
         this.capData.clear();
         this.capData = newMap;
         return ret;
+    }
+
+    @Override
+    public int getActiveConnections() {
+        return uniqueGrids;
+    }
+
+    @Nullable
+    @Override
+    public Class getInformationType() {
+        return IEnergyGridInformation.class;
+    }
+
+    @Nullable
+    @Override
+    public Object getInformation() {
+        return this;
+    }
+
+    private void setConnectors(EnumSet<EnumFacing> s){
+        connectors = Collections.unmodifiableSet(s);
     }
 
     private void check(Capability cap, EnumSet<EnumFacing> set){
@@ -69,9 +91,9 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
         }
     }
 
-    protected void removedFromGrid(EnergyGrid grid){
+    protected void removedFromGrid(EFluxEnergyGrid grid){
         for (int i = 0; i < grids.length; i++) {
-            EnergyGrid grid1 = grids[i];
+            EFluxEnergyGrid grid1 = grids[i];
             if (grid.equals(grid1)){
                 grids[i] = null;
             }
@@ -79,8 +101,8 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
         checkGridStuff();
     }
 
-    protected void setGridForFace(EnergyGrid grid, EnumFacing facing){
-        if (connectors.contains(facing)) {
+    protected void setGridForFace(EFluxEnergyGrid grid, EnumFacing facing){
+        if (facing == null || connectors.contains(facing)){
             for (EnumFacing facing1 : connectors){
                 grids[facing1.ordinal()] = grid;
             }
@@ -90,13 +112,17 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
         checkGridStuff();
     }
 
+    protected Set<EnumFacing> getConnectorSides(){
+        return connectors;
+    }
+
     private void checkGridStuff(){
-        Set<EnergyGrid> g = Sets.newHashSet();
+        Set<EFluxEnergyGrid> g = Sets.newHashSet();
         uniqueGridsImmutable = Collections.unmodifiableSet(g);
         int i = 0, h = 0;
         boolean d = false;
         for (int j = 0; j < grids.length; j++) {
-            EnergyGrid grid = grids[j];
+            EFluxEnergyGrid grid = grids[j];
             if (grid != null){
                 if (g.add(grid)){
                     i++;
@@ -118,9 +144,10 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
                 endPoints = i > 1;
             }
         }
+        uniqueGrids = uniqueGridsImmutable.size();
     }
 
-    protected EnergyGrid getGrid(EnumFacing side){
+    protected EFluxEnergyGrid getGrid(EnumFacing side){
         return grids[side.ordinal()];
     }
 
@@ -128,11 +155,11 @@ public class EFluxEnergyObject extends DefaultTileEntityLink {
         return endPoints;
     }
 
-    protected Set<EnergyGrid> getGrids(){
+    protected Set<EFluxEnergyGrid> getGrids(){
         return uniqueGridsImmutable;
     }
 
-    protected EnergyGrid getEndPoint(){
+    protected EFluxEnergyGrid getEndPoint(){
         if (!isEndPoint()){
             throw new RuntimeException();
         }

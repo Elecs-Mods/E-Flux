@@ -21,9 +21,6 @@ import java.util.List;
  * Created by Elec332 on 24-2-2015.
  */
 public final class ItemRegister {
-    public static final ItemRegister instance = new ItemRegister();
-    private ItemRegister(){
-    }
 
     public static Item wrench, multimeter,  groundMesh, areaMover, multiBlockCreator, manual, entangledEnder, nullBlueprint;
 
@@ -43,7 +40,7 @@ public final class ItemRegister {
     //Misc
     public static ItemStack redstoneUpgrade;
 
-    public void init(FMLInitializationEvent event){
+    public static void init(){
 
         multimeter = GameRegistry.register(new ItemEFluxMultiMeter());
         wrench = GameRegistry.register(new ItemEFluxWrench());
@@ -100,13 +97,13 @@ public final class ItemRegister {
         enderCapabilityPlayerInventory = GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory());
         enderInventoryViewer = GameRegistry.register(new ItemEnderInventory());
         //What was I doing here again?
-        redstoneUpgrade = new ItemStack(new AbstractEFluxItem("redstoneUpgrade"){}.register().setMaxStackSize(1));
+        redstoneUpgrade = new ItemStack(GameRegistry.register(new AbstractEFluxItem("redstoneUpgrade"){}).setMaxStackSize(1));
 
         registerOreDictionary();
         registerCircuits();
     }
 
-    private void registerOreDictionary(){
+    private static void registerOreDictionary(){
         List<String> components = ((ItemEFluxDusts) dusts).getComponents();
         for (int i = 0; i < components.size(); i++) {
             OreDictionary.registerOre(components.get(i), new ItemStack(dusts, 1, i));
@@ -123,7 +120,7 @@ public final class ItemRegister {
         OreDictionary.registerOre("vanillaCoal", Items.COAL);
     }
 
-    private void registerCircuits() {
+    private static void registerCircuits() {
         GameRegistry.register(new ICircuitDataProvider() {
 
             @Override
@@ -148,7 +145,7 @@ public final class ItemRegister {
         return new ItemStack(components, 1, i);
     }
 
-    void registerMultiPartItems(){
+    static void registerMultiPartItems(){
         cable = GameRegistry.register(new ItemEFluxCable());
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);

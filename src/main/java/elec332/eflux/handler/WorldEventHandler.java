@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Created by Elec332 on 27-4-2016.
@@ -73,7 +74,7 @@ public class WorldEventHandler {
                     public void run() {
                         Vec3d pos = event.getExplosion().getPosition();
                         for (int i = 0; i < pairs2; i++) {
-                            ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew());
+                            ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew(null));
                             //stack.stackSize = 2;
                             WorldHelper.dropStack(event.getWorld(), (int) pos.xCoord, (int) pos.yCoord, (int) pos.zCoord, stack);
                         }

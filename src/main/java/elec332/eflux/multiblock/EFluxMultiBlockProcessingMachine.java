@@ -1,8 +1,8 @@
 package elec332.eflux.multiblock;
 
 import com.google.common.collect.Maps;
+import elec332.core.api.inventory.IHasProgressBar;
 import elec332.core.client.inventory.IResourceLocationProvider;
-import elec332.core.inventory.IHasProgressBar;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
 import elec332.eflux.util.IEFluxMachine;

@@ -2,32 +2,41 @@ package elec332.eflux.grid.tank;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import elec332.core.multiblock.dynamic.AbstractDynamicMultiBlock;
+import com.google.common.collect.Sets;
+import elec332.core.util.FluidTankWrapper;
+import elec332.core.world.DimensionCoordinate;
 import elec332.core.world.WorldHelper;
-import elec332.eflux.util.IEFluxFluidHandler;
 import elec332.eflux.util.IEFluxTank;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Created by Elec332 on 16-4-2016.
+ * Created by Elec332 on 9-10-2016.
  */
-public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTankWorldHolder, EFluxDynamicTank> implements IEFluxFluidHandler {
+@SuppressWarnings("all")
+public class EFluxDynamicTankGrid implements IFluidHandler {
 
-    public EFluxDynamicTank(IEFluxTank tile, EFluxDynamicTankWorldHolder worldHolder) {
-        super((TileEntity) tile, worldHolder);
+    public EFluxDynamicTankGrid(EFluxTankHandler.TileLink o) {
+        IEFluxTank tile = o.getTank();
         tank = new FluidTank(tile.getTankSize());
+        fluidHandler = new FluidTankWrapper() {
+
+            @Override
+            protected IFluidTank getTank() {
+                return tank;
+            }
+
+        };
         NBTTagCompound tag = tile.getSaveData();
         if (tag.hasKey("fluid")) {
             FluidStack stack = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("fluid"));
@@ -40,30 +49,40 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
         rowAmountMap = Maps.newHashMap();
         saveAmountMap = Maps.newHashMap();
         capacityMap = Maps.newHashMap();
-        capacityMap.put(((TileEntity)tile).getPos(), tile.getTankSize());
+        capacityMap.put(o.getPosition(), tile.getTankSize());
+        tanks = Sets.newHashSet(o);
+        tanks_ = Collections.unmodifiableSet(tanks);
         needsSorting = true;
     }
 
     private FluidTank tank;
-    private final Map<Integer, List<BlockPos>> renderData;
+    private Fluid lastFluid;
+    private IFluidHandler fluidHandler;
+    private final Set<EFluxTankHandler.TileLink> tanks, tanks_;
+    private final Map<Integer, List<DimensionCoordinate>> renderData;
     private final Map<Integer, Integer> rowAmountMap;
-    private final Map<BlockPos, Integer> capacityMap;
-    private final Map<BlockPos, Integer> saveAmountMap;
+    private final Map<DimensionCoordinate, Integer> capacityMap;
+    private final Map<DimensionCoordinate, Integer> saveAmountMap;
     private boolean needsSorting;
+    private int timer;
 
-    @Override
     public void tick() {
-        if (world.getWorldTime() % 20 == 0){
-            Fluid fluid = getStoredFluid();
-            forEachTank(TankActions.syncFluidType, fluid);
+        if (timer >= 20){
+            Fluid f = getStoredFluid();
+            forEachTank(TankActions.syncFluidType, f);
             setTankFluidHeights();
-            forEachTank(TankActions.setLastSeenFluid, fluid);
+            forEachTank(TankActions.setLastSeenFluid, f);
+            lastFluid = f;
+            timer = 0;
         }
+        timer++;
     }
 
-    @Override
-    protected void mergeWith(EFluxDynamicTank multiBlock) {
-        super.mergeWith(multiBlock);
+    protected void mergeWith(EFluxDynamicTankGrid multiBlock) {
+        for (EFluxTankHandler.TileLink tile : multiBlock.tanks_){
+            tile.setGrid(this);
+            tanks.add(tile);
+        }
         mergeTank(multiBlock.tank);
         capacityMap.putAll(multiBlock.capacityMap);
         needsSorting = true;
@@ -72,16 +91,32 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
         forEachTank(TankActions.markDirty);
     }
 
-    @Override
     protected void invalidate() {
         forEachTank(TankActions.setSaveData, this);
+    }
+
+    public Set<EFluxTankHandler.TileLink> getConnections(){
+        return tanks_;
+    }
+
+    public void onRemoved(EFluxTankHandler.TileLink o){
+        o.getTank().setSaveData(getSaveData(o.getTank()));
+        o.setGrid(null);
+    }
+
+    protected boolean canMerge(EFluxDynamicTankGrid grid){
+        if (grid == this){
+            return false;
+        }
+        FluidStack fluid = getStoredFluidStack(), otherFluid = grid.getStoredFluidStack();
+        return fluid == null || otherFluid == null || fluid.isFluidEqual(otherFluid);
     }
 
     public NBTTagCompound getSaveData(IEFluxTank tank){
         NBTTagCompound ret = new NBTTagCompound();
         FluidStack stack = this.tank.getFluid();
         if (stack != null) {
-            int amount = getTankContentAmount(((TileEntity) tank).getPos());
+            int amount = getTankContentAmount(DimensionCoordinate.fromTileEntity((TileEntity) tank));
             stack = stack.copy();
             stack.amount = amount;
             NBTTagCompound fluidTag = new NBTTagCompound();
@@ -95,13 +130,13 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
     public void onTankSizeChanged(IEFluxTank tank){
         checkSize();
         forEachTank(TankActions.syncFluidType, getStoredFluid());
-        capacityMap.put(((TileEntity)tank).getPos(), tank.getTankSize());
+        capacityMap.put(DimensionCoordinate.fromTileEntity((TileEntity) tank), tank.getTankSize());
         needsSorting = true;
         setTankFluidHeights();
         forEachTank(TankActions.markDirty);
     }
 
-    public int getTankContentAmount(BlockPos pos){
+    public int getTankContentAmount(DimensionCoordinate pos){
         Integer integer = saveAmountMap.get(pos);
         return integer == null ? 0 : integer;
     }
@@ -119,22 +154,25 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
             renderData.clear();
             rowAmountMap.clear();
 
-            Collections.sort(allLocations, new Comparator<BlockPos>() {
+            List<EFluxTankHandler.TileLink> list = Lists.newArrayList(tanks);
+
+            Collections.sort(list, new Comparator<EFluxTankHandler.TileLink>() {
                 @Override
-                public int compare(BlockPos o1, BlockPos o2) {
-                    return o1.getY() - o2.getY();
+                public int compare(EFluxTankHandler.TileLink o1, EFluxTankHandler.TileLink o2) {
+                    return o1.getPosition().getPos().getY() - o2.getPosition().getPos().getY();
                 }
             });
-            for (BlockPos loc : allLocations){
-                List<BlockPos> list = renderData.get(loc.getY());
-                if (list == null){
-                    renderData.put(loc.getY(), list = Lists.newArrayList());
+            for (EFluxTankHandler.TileLink tile : list){
+                int y = tile.getPosition().getPos().getY();
+                List<DimensionCoordinate> list1 = renderData.get(y);
+                if (list1 == null){
+                    renderData.put(y, list1 = Lists.newArrayList());
                 }
-                list.add(loc);
+                list1.add(tile.getPosition());
             }
             for (Integer i : renderData.keySet()){
-                List<BlockPos> list = renderData.get(i);
-                rowAmountMap.put(i, getSizeFor(list));
+                List<DimensionCoordinate> list2 = renderData.get(i);
+                rowAmountMap.put(i, getSizeFor(list2));
             }
             needsSorting = false;
         }
@@ -143,17 +181,17 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
         List<Integer> y = Lists.newArrayList(renderData.keySet());
         Collections.sort(y);
         for (Integer j : y){
-            List<BlockPos> list = renderData.get(j);
+            List<DimensionCoordinate> list = renderData.get(j);
             float filled = 0.0f;
             if (total > 0) {
                 int i = rowAmountMap.get(j);
                 int toAdd = Math.min(total, i);
                 total -= toAdd;
                 filled = (float) toAdd / i;
-                BlockPos posQ = list.get(list.size() - 1);
-                for (BlockPos pos : list){
+                DimensionCoordinate posQ = list.get(list.size() - 1);
+                for (DimensionCoordinate pos : list){
                     int i1 = capacityMap.get(pos);
-                    int toSave = pos== posQ ? toAdd : Math.min((int)(filled * i1), toAdd);
+                    int toSave = pos == posQ ? toAdd : Math.min((int)(filled * i1), toAdd);
                     toAdd -= toSave;
                     saveAmountMap.put(pos, toSave);
                 }
@@ -163,13 +201,27 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
     }
 
     private void forEachTank(TankIterable tankIterable, Object... data){
-        forEachTank(allLocations, tankIterable, data);
+        for (EFluxTankHandler.TileLink tileLink : tanks){
+            DimensionCoordinate pos = tileLink.getPosition();
+            @Nonnull
+            @SuppressWarnings("all")
+            World world = pos.getWorld();
+            if (WorldHelper.chunkLoaded(world, pos.getPos())) {
+                TileEntity tile = WorldHelper.getTileAt(world, pos.getPos());
+                if (tile instanceof IEFluxTank) {
+                    tankIterable.forTank((IEFluxTank) tile, data);
+                }
+            }
+        }
     }
 
-    private void forEachTank(List<BlockPos> positions, TankIterable tankIterable, Object... data){
-        for (BlockPos pos : positions){
-            if (WorldHelper.chunkLoaded(world, pos)) {
-                TileEntity tile = WorldHelper.getTileAt(world, pos);
+    private void forEachTank(List<DimensionCoordinate> positions, TankIterable tankIterable, Object... data){
+        for (DimensionCoordinate pos : positions){
+            @Nonnull
+            @SuppressWarnings("all")
+            World world = pos.getWorld();
+            if (WorldHelper.chunkLoaded(world, pos.getPos())) {
+                TileEntity tile = WorldHelper.getTileAt(world, pos.getPos());
                 if (tile instanceof IEFluxTank) {
                     tankIterable.forTank((IEFluxTank) tile, data);
                 }
@@ -178,13 +230,17 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
     }
 
     private Fluid getStoredFluid(){
-        FluidStack stack = tank.getFluid();
+        FluidStack stack = getStoredFluidStack();
         return (stack == null || stack.amount <= 0) ? null : stack.getFluid();
+    }
+
+    private FluidStack getStoredFluidStack(){
+        return tank.getFluid();
     }
 
     private void checkSize(){
         FluidStack stack = tank.getFluid();
-        tank = new FluidTank(getSizeFor(allLocations));
+        tank = new FluidTank(getSizeFor(null));
         if (stack != null){
             tank.fill(stack.copy(), true);
         }
@@ -211,21 +267,28 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
         }
     }
 
-    private int getSizeFor(List<BlockPos> positions){
+    private int getSizeFor(List<DimensionCoordinate> positions){
         int[] param = new int[]{0};
-        forEachTank(positions, TankActions.checkCapacity, new Object[]{param});
+        if (positions == null){
+            forEachTank(TankActions.checkCapacity, new Object[]{param});
+        } else {
+            forEachTank(positions, TankActions.checkCapacity, new Object[]{param});
+        }
         return param[0];
     }
 
     //Tank impl
 
     @Override
+    public IFluidTankProperties[] getTankProperties() {
+        return fluidHandler.getTankProperties();
+    }
+
+    @Override
     public int fill(FluidStack resource, boolean doFill) {
-        int ret = tank.fill(resource, doFill);
+        int ret = fluidHandler.fill(resource, doFill);
         if (doFill) {
-            setTankFluidHeights();
-            forEachTank(TankActions.setLastSeenFluid, getStoredFluid());
-            forEachTank(TankActions.markDirty);
+            onDirectChange();
         }
         return ret;
     }
@@ -240,28 +303,22 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
 
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        FluidStack ret = tank.drain(maxDrain, doDrain);
+        FluidStack ret = fluidHandler.drain(maxDrain, doDrain);
         if (doDrain) {
-            setTankFluidHeights();
-            forEachTank(TankActions.setLastSeenFluid, getStoredFluid());
-            forEachTank(TankActions.markDirty);
+            onDirectChange();
         }
         return ret;
     }
 
-    @Override
-    public boolean canFill(Fluid fluid) {
-        return true;
-    }
-
-    @Override
-    public boolean canDrain(Fluid fluid) {
-        return true;
-    }
-
-    @Override
-    public FluidTankInfo[] getTankInfo() {
-        return new FluidTankInfo[] { tank.getInfo() };
+    private void onDirectChange(){
+        setTankFluidHeights();
+        Fluid f = getStoredFluid();
+        if (lastFluid != f){
+            forEachTank(TankActions.syncFluidType, f);
+            this.lastFluid = f;
+        }
+        forEachTank(TankActions.setLastSeenFluid, getStoredFluid());
+        forEachTank(TankActions.markDirty);
     }
 
     private interface TankIterable {
@@ -311,11 +368,19 @@ public class EFluxDynamicTank extends AbstractDynamicMultiBlock<EFluxDynamicTank
 
             @Override
             public void forTank(@Nonnull IEFluxTank tile, Object... data) {
-                tile.setSaveData(((EFluxDynamicTank)data[0]).getSaveData(tile));
+                tile.setSaveData(((EFluxDynamicTankGrid)data[0]).getSaveData(tile));
+            }
+
+        }, markForUpdate {
+
+            @Override
+            public void forTank(@Nonnull IEFluxTank tile, Object... data) {
+                WorldHelper.markBlockForUpdate(((TileEntity)tile).getWorld(), ((TileEntity)tile).getPos());
             }
 
         }
 
     }
+
 
 }

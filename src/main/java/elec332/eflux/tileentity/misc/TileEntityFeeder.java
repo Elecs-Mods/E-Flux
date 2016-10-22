@@ -10,6 +10,7 @@ import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
+import elec332.eflux.tileentity.TileEntityEFlux;
 import elec332.eflux.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -31,7 +32,7 @@ import java.util.List;
  * Created by Elec332 on 19-2-2016.
  */
 @RegisterTile(name = "TileEntityEFluxFeeder")
-public class TileEntityFeeder extends TileBase implements IInventoryTile, ITileWithSlots, ITickable {
+public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile, ITileWithSlots, ITickable {
 
     public TileEntityFeeder(){
         invWrapper = new InvWrapper(new BasicInventory("", 1, this));

@@ -26,7 +26,7 @@ import elec332.eflux.client.render.tesr.TileEntityLaserRenderer;
 import elec332.eflux.client.render.tesr.TileEntityTankRenderer;
 import elec332.eflux.inventory.ContainerEnderContainer;
 import elec332.eflux.multipart.cable.PartBasicCable;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import elec332.eflux.tileentity.misc.TileEntityTank;
@@ -71,8 +71,8 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             case 3:
                 return new GuiManual();
             case 1:
-                if (tile instanceof BreakableMachineTile) {
-                    return ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
+                if (tile instanceof TileEntityBreakableMachine) {
+                    return ((TileEntityBreakableMachine) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
                 }
                 return null;
             case 2:

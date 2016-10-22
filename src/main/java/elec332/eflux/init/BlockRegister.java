@@ -21,23 +21,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Elec332 on 24-2-2015.
  */
 public final class BlockRegister {
-    public static final BlockRegister instance = new BlockRegister();
-    private BlockRegister(){
-    }
 
     public static Block ores, areaMover;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
                                     fluidInlet, fluidOutlet, enderReader, powerOutlet;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
-    public void init(FMLInitializationEvent event){
+    public static void init() {
 
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){
@@ -107,7 +103,7 @@ public final class BlockRegister {
         registerOreDictionary();
     }
 
-    private void registerOreDictionary(){
+    private static void registerOreDictionary(){
         BlockOres ores = (BlockOres) BlockRegister.ores;
         for (int i = 0; i < ores.getTypes(); i++) {
             String s = ores.nameForType(i);
@@ -116,7 +112,7 @@ public final class BlockRegister {
         }
     }
 
-    private BlockStateWrapper newBlockStateWrapper(Block block){
+    private static BlockStateWrapper newBlockStateWrapper(Block block){
         return new BlockStateWrapper(block, OreDictionary.WILDCARD_VALUE);
     }
 

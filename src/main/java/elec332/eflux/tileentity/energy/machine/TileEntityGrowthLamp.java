@@ -3,7 +3,7 @@ package elec332.eflux.tileentity.energy.machine;
 import com.google.common.collect.Lists;
 import elec332.core.api.annotations.RegisterTile;
 import elec332.core.world.WorldHelper;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
@@ -23,9 +23,9 @@ import java.util.List;
  * Created by Elec332 on 16-5-2015.
  */
 @RegisterTile(name = "TileEntityEFluxGrowthLamp")
-public class TileGrowthLamp extends BreakableMachineTile implements ITickable {
+public class TileEntityGrowthLamp extends TileEntityBreakableMachine implements ITickable {
 
-    public TileGrowthLamp(){
+    public TileEntityGrowthLamp(){
         this.blockLocations = Lists.newArrayList();
     }
 

@@ -2,7 +2,7 @@ package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.energy.ISpecialEnergyProvider;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -11,7 +11,7 @@ import net.minecraft.util.EnumFacing;
  * Created by Elec332 on 30-4-2015.
  */
 @RegisterTile(name = "TileEntityEFluxCapacitor")
-public class Capacitor extends BreakableMachineTile implements ISpecialEnergyProvider {
+public class TileEntityCapacitor extends TileEntityBreakableMachine implements ISpecialEnergyProvider {
 
     @Override
     public ItemStack getRandomRepairItem() {

@@ -10,7 +10,7 @@ import elec332.eflux.api.ender.internal.IEnderConnection;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
 import elec332.eflux.inventory.ContainerEnderContainer;
 import elec332.eflux.inventory.ContainerEnderInventory;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.capability.RedstoneCapability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -34,8 +34,8 @@ public class CommonProxy implements IGuiHandler {
         ICapabilityProvider capabilityProvider = tile;
         switch (ID){
             case 1:
-                if (tile instanceof BreakableMachineTile) {
-                    return (Container) ((BreakableMachineTile) tile).getBreakableMachineInventory().brokenGui(Side.SERVER, player);
+                if (tile instanceof TileEntityBreakableMachine) {
+                    return (Container) ((TileEntityBreakableMachine) tile).getBreakableMachineInventory().brokenGui(Side.SERVER, player);
                 }
                 return null;
             case 4:

@@ -12,20 +12,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Created by Elec332 on 11-5-2016.
  */
-public class PacketSendEnderNetworkData extends AbstractPacket {
+public class PacketSendEnderManagerData extends AbstractPacket {
 
-    public PacketSendEnderNetworkData(){
+    public PacketSendEnderManagerData(){
     }
 
-    public PacketSendEnderNetworkData(EnderNetwork network, int i, NBTTagCompound data){
-        super(new NBTHelper().addToTag(network.getNetworkId(), "id").addToTag(data, "tag").addToTag(i, "nr").serializeNBT());
+    public PacketSendEnderManagerData(int i, NBTTagCompound data){
+        super(new NBTHelper().addToTag(data, "tag").addToTag(i, "nr").serializeNBT());
     }
 
     @Override
     public IMessage onMessageThreadSafe(AbstractPacket message, MessageContext ctx) {
-        NBTHelper nbt = new NBTHelper(message.networkPackageObject);
-        EnderNetwork network = EnderNetworkManager.get(EFlux.proxy.getClientWorld()).get(nbt.getUUID("id"));
-        network.onPacket(nbt.getInteger("nr"), nbt.getCompoundTag("tag"));
+        EnderNetworkManager.get(EFlux.proxy.getClientWorld()).onPacket(message.networkPackageObject.getInteger("nr"), message.networkPackageObject.getCompoundTag("tag"));
         return null;
     }
 

@@ -35,6 +35,7 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
 
     public ItemEFluxCable() {
         super("cable");
+        this.setHasSubtypes(true);
     }
 
     @SideOnly(Side.CLIENT)

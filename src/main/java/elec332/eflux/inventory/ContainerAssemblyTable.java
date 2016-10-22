@@ -2,12 +2,12 @@ package elec332.eflux.inventory;
 
 import com.google.common.collect.Lists;
 import elec332.core.inventory.ContainerMachine;
+import elec332.core.main.ElecCore;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
 import elec332.eflux.api.energy.container.EnergyContainer;
-import elec332.eflux.grid.WorldRegistry;
 import elec332.eflux.inventory.slot.SlotAssembly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
@@ -16,6 +16,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,23 +52,23 @@ public class ContainerAssemblyTable extends ContainerMachine {
         addPlayerInventoryToContainer();
         syncSlots();
         if (!player.worldObj.isRemote){
-            tickable = new ITickable() {
+            tickable = new Runnable() {
                 @Override
-                public void update() {
+                public void run() {
                     canClick = assemblyTable.getStoredPower() >= 200;
                     for (IContainerListener crafting : listeners){
                         crafting.sendProgressBarUpdate(ContainerAssemblyTable.this, 3, canClick ? 1 : 0);
                     }
                 }
             };
-            WorldRegistry.get(player.worldObj).addTickable(tickable);
+            ElecCore.tickHandler.registerTickable(tickable, Side.SERVER);
         }
     }
 
     private List<SlotAssembly> assemblies = Lists.newArrayList();
     private InventoryCircuit circuit;
     private EnergyContainer assemblyTable;
-    private ITickable tickable;
+    private Runnable tickable;
 
     public boolean canClick = false;
 
@@ -134,7 +135,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         getSlot(1).inventory.closeInventory(player);
         getSlot(0).inventory.closeInventory(player);
         if (!player.worldObj.isRemote) {
-            WorldRegistry.get(player.worldObj).removeTickable(tickable);
+            ElecCore.tickHandler.removeTickable(tickable);
         }
     }
 

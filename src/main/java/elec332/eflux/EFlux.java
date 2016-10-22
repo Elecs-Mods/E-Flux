@@ -1,9 +1,11 @@
 package elec332.eflux;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.config.IConfigWrapper;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.modBaseUtils.ModInfo;
+import elec332.core.module.IModuleController;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.NetworkHandler;
 import elec332.core.server.ServerHelper;
@@ -13,14 +15,10 @@ import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.compat.Compat;
-import elec332.eflux.compat.rf.RFCompat;
-import elec332.eflux.compat.waila.WailaCompatHandler;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.EnderRegistryCallbacks;
-import elec332.core.grid.v2.internal.GridEventHandler;
-import elec332.eflux.energy.grid.EFluxGridHandler;
-import elec332.eflux.grid.power.EventHandler;
+import elec332.eflux.grid.energy.EFluxGridHandler;
+import elec332.eflux.grid.tank.EFluxTankHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
@@ -36,7 +34,7 @@ import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.RecipeItemStack;
-import elec332.eflux.world.WorldGenOres;
+import elec332.eflux.world.WorldGenRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -73,7 +71,7 @@ import java.util.Random;
  */
 @Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
-public class EFlux { //TODO
+public class EFlux implements IModuleController { //TODO
 
     public static final String ModName = "E-Flux";
     public static final String ModID = "EFlux";
@@ -87,7 +85,7 @@ public class EFlux { //TODO
     public static Configuration config;
     public static CreativeTabs creativeTab;
     public static Logger logger;
-    public static ConfigWrapper configWrapper;
+    public static IConfigWrapper configWrapper, configOres;
     public static Random random;
     public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
@@ -118,11 +116,12 @@ public class EFlux { //TODO
         baseFolder = new File(event.getModConfigurationDirectory(), "E-Flux");
         config = new Configuration(new File(baseFolder, "EFlux.cfg"));
         configWrapper = new ConfigWrapper(config);
+        configOres = new ConfigWrapper(new Configuration(new File(baseFolder, "Ores.cfg")));
         random = new Random();
         networkHandler = new NetworkHandler(ModID);
         networkHandler.registerClientPacket(new PacketSyncEnderNetwork());
         networkHandler.registerClientPacket(new PacketSyncEnderContainerGui());
-        networkHandler.registerClientPacket(new PacketSendEnderNetworkData());
+        networkHandler.registerClientPacket(new PacketSendEnderManagerData());
         networkHandler.registerClientPacket(new PacketSendValidNetworkKeys());
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
@@ -141,11 +140,6 @@ public class EFlux { //TODO
         //setting up mod stuff
         configWrapper.registerConfig(new Config());
         configWrapper.refresh();
-        Compat.instance.loadList();
-        Compat.instance.addHandler(new RFCompat());
-        Compat.instance.addHandler(new WailaCompatHandler());
-        logger.info("RF API loaded: "+Compat.RF);
-        logger.info("RFTools: "+Compat.RFTools);
 
         loadTimer.endPhase(event);
         MCModInfo.createMCModInfo(event,
@@ -161,23 +155,22 @@ public class EFlux { //TODO
     public void init(FMLInitializationEvent event) throws IOException {
         loadTimer.startPhase(event);
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
-        CapabilityRegister.instance.init();
-        ItemRegister.instance.init(event);
-        BlockRegister.instance.init(event);
+        CapabilityRegister.init();
+        ItemRegister.init();
+        BlockRegister.init();
         MultiPartRegister.init();
-        FluidRegister.instance.init();
+        FluidRegister.init();
         proxy.initRenderStuff();
-        new WorldGenOres(new File(baseFolder, "Ores.cfg")).register();
+        WorldGenRegister.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         MultiBlockRegister.init();
+        configOres.refresh();
         configWrapper.refresh();
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
-        MinecraftForge.EVENT_BUS.register(new GridEventHandler());
         registerRecipes();
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
+        ElecCoreRegistrar.GRIDHANDLERS.register(new EFluxTankHandler());
 
-        Compat.instance.init();
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
             @Override
             public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
@@ -216,6 +209,11 @@ public class EFlux { //TODO
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         CommandRegister.instance.init(event);
+    }
+
+    @Override
+    public boolean isModuleEnabled(String s) {
+        return true;
     }
 
     public static void systemPrintDebug(Object s){

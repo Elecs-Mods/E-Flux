@@ -17,6 +17,7 @@ import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.DustPile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,9 +31,9 @@ import java.util.List;
  * Created by Elec332 on 13-9-2015.
  */
 @RegisterTile(name = "TileEntityEFluxWasher")
-public class TileWasher extends TileEntityProcessingMachine implements IFluidHandler {
+public class TileEntityWasher extends TileEntityProcessingMachine implements IFluidHandler, ISidedInventory {
 
-    public TileWasher(){
+    public TileEntityWasher(){
         super(2, 0);
         waterTank = new FluidTank(12 * FluidContainerRegistry.BUCKET_VOLUME);
         slibTank = new FluidTank(9 * FluidContainerRegistry.BUCKET_VOLUME);

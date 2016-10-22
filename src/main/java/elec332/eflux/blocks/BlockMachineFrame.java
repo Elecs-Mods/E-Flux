@@ -29,6 +29,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 13-1-2016.
  */
@@ -67,6 +69,7 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     }
 
     @Override
+    @Nonnull
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }

@@ -3,8 +3,8 @@ package elec332.eflux.items;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntitySubChunkLoader;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntityMainChunkLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -28,9 +28,9 @@ public class ItemBlockEFluxChunkLoader extends ItemBlock {
         BlockMachine block = (BlockMachine) getBlock();
         Class<? extends TileEntity> tile = block.getMachine().getTileClass();
         boolean canSuper = super.canPlaceBlockOnSide(worldIn, pos, side, player, stack);
-        if (tile == MainChunkLoaderTile.class) {
+        if (tile == TileEntityMainChunkLoader.class) {
             return !ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID(player)).hasHandler() && canSuper;
-        } else if (tile == ChunkLoaderSubTile.class){
+        } else if (tile == TileEntitySubChunkLoader.class){
             return canSuper; /* To make future editing easier */
         } else {
             throw new IllegalStateException();

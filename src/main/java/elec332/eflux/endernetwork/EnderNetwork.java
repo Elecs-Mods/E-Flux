@@ -16,7 +16,7 @@ import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
-import elec332.eflux.network.PacketSendEnderNetworkData;
+import elec332.eflux.network.PacketSendEnderManagerData;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -473,7 +473,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     }
 
     private void sendPacket(int i, NBTTagCompound data){
-        EFlux.networkHandler.getNetworkWrapper().sendToAll(new PacketSendEnderNetworkData(this, i, data));
+        EnderNetworkManager.setNetworkData(this, i, data);
     }
 
     void sendCapabilityPacket(int cap, int id, NBTTagCompound data){

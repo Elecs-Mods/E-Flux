@@ -1,7 +1,8 @@
 package elec332.eflux.tileentity;
 
-import elec332.core.compat.handlers.WailaCompatHandler;
+import elec332.core.compat.waila.WailaCompatHandler;
 import elec332.core.server.ServerHelper;
+import elec332.core.tile.TileBase;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -30,9 +31,9 @@ import java.util.List;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class BreakableMachineTile extends EnergyTileBase implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile, IEFluxPowerHandler {
+public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile, IEFluxPowerHandler {
 
-    public BreakableMachineTile(){
+    public TileEntityBreakableMachine(){
         super();
         this.energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
     }

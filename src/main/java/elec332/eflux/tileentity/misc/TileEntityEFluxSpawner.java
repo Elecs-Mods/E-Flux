@@ -6,6 +6,7 @@ import elec332.core.util.InventoryHelper;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.client.EFluxResourceLocation;
+import elec332.eflux.tileentity.TileEntityEFlux;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -29,7 +30,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  * Created by Elec332 on 20-2-2016.
  */
 @RegisterTile(name = "TileEntityEFluxSpawner")
-public class TileEntityEFluxSpawner extends TileBase implements ITickable {
+public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable {
 
     public TileEntityEFluxSpawner(){
         mobSpawner = new EFluxMobSpawner();

@@ -23,7 +23,7 @@ public class PacketSendValidNetworkKeys extends AbstractPacket {
 
     @Override
     public IMessage onMessageThreadSafe(AbstractPacket abstractPacket, MessageContext messageContext) {
-        EnderNetworkManager.get(EFlux.proxy.getClientWorld()).deserializekeys(abstractPacket.networkPackageObject.getTagList("list", NBT.NBTData.STRING.getID()));
+        //EnderNetworkManager.get(EFlux.proxy.getClientWorld()).deserializekeys(abstractPacket.networkPackageObject.getTagList("list", NBT.NBTData.STRING.getID()));
         return null;
     }
 

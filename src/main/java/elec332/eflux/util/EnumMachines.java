@@ -5,10 +5,10 @@ import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.tileentity.ender.TileEntityEnderChest;
-import elec332.eflux.tileentity.energy.generator.CoalGenerator;
+import elec332.eflux.tileentity.energy.generator.TileEntityCoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntitySubChunkLoader;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntityMainChunkLoader;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import elec332.eflux.tileentity.misc.TileEntityFeeder;
 import elec332.eflux.tileentity.misc.TileEntityTank;
@@ -24,16 +24,16 @@ import net.minecraft.util.EnumBlockRenderType;
  */
 public enum EnumMachines implements IEFluxBlockMachineData {
 
-    CAPACITOR(Capacitor.class, BlockTextures.getCapacitorProvider()),
-    COAL_GENERATOR(CoalGenerator.class, BlockTextures.getCoalGenProvider()),
-    ASSEMBLY_TABLE(AssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
-    GROWTHLAMP(TileGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS, BlockTextures.getGrowthLampProvider()),
-    CHUNKMAIN(MainChunkLoaderTile.class, BlockTextures.getChunkMainProvider()),
-    CHUNKSUB(ChunkLoaderSubTile.class, BlockTextures.getChunkSubProvider()),
-    TESLACOIL(TileTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
-    SCANNER(TileScanner.class, BlockTextures.getScannerProvider()),
-    WASHER(TileWasher.class, BlockTextures.getWasherProvider()),
-    RUBBLESIEVE(TileRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
+    CAPACITOR(TileEntityCapacitor.class, BlockTextures.getCapacitorProvider()),
+    COAL_GENERATOR(TileEntityCoalGenerator.class, BlockTextures.getCoalGenProvider()),
+    ASSEMBLY_TABLE(TileEntityAssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
+    GROWTHLAMP(TileEntityGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS, BlockTextures.getGrowthLampProvider()),
+    CHUNKMAIN(TileEntityMainChunkLoader.class, BlockTextures.getChunkMainProvider()),
+    CHUNKSUB(TileEntitySubChunkLoader.class, BlockTextures.getChunkSubProvider()),
+    TESLACOIL(TileEntityTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
+    SCANNER(TileEntityScanner.class, BlockTextures.getScannerProvider()),
+    WASHER(TileEntityWasher.class, BlockTextures.getWasherProvider()),
+    RUBBLESIEVE(TileEntityRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
     ETCHINGMACHINE(TileEntityEtchingMachine.class, BlockTextures.getEtchingMachineProvider()),
 
     FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),

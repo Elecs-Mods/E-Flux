@@ -1,8 +1,9 @@
 package elec332.eflux.compat.waila;
 
-import elec332.core.compat.ElecCoreCompatHandler;
-import elec332.core.compat.handlers.IWailaCapabilityDataProvider;
-import elec332.core.util.AbstractCompatHandler;
+import elec332.core.compat.waila.IWailaCapabilityDataProvider;
+import elec332.core.main.ElecCoreRegistrar;
+import elec332.core.module.ElecModule;
+import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,22 +13,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 import java.util.List;
 
 /**
  * Created by Elec332 on 6-9-2015.
  */
-public class WailaCompatHandler extends AbstractCompatHandler.ICompatHandler {
+@ElecModule(owner = EFlux.ModID, name = "WailaCompat", modDependencies = "Waila")
+public class WailaCompatHandler {
 
-    @Override
-    public String getName() {
-        return "Waila";
-    }
-
-    @Override
-    public void init() {
-        ElecCoreCompatHandler.registerCapabilityDataProvider(EFluxAPI.ENDER_COMPONENT_CAPABILITY, new IWailaCapabilityDataProvider<IEnderNetworkComponent>() {
+    @ElecModule.EventHandler
+    public void init(FMLInitializationEvent event) {
+        ElecCoreRegistrar.WAILA_CAPABILITY_PROVIDER.register(EFluxAPI.ENDER_COMPONENT_CAPABILITY, new IWailaCapabilityDataProvider<IEnderNetworkComponent>() {
 
             @Override
             public List<String> getWailaBody(List<String> currentTip, IEnderNetworkComponent capability, NBTTagCompound tag, EntityPlayer player, RayTraceResult rts, World world, BlockPos pos, TileEntity tile) {
@@ -47,6 +46,11 @@ public class WailaCompatHandler extends AbstractCompatHandler.ICompatHandler {
                     tag.setBoolean("b", capability.getCurrentConnection() != null);
                 }
                 return tag;
+            }
+
+            @Override
+            public boolean isCompatibleCapability(Capability<?> capability) {
+                return capability == EFluxAPI.ENDER_COMPONENT_CAPABILITY;
             }
 
         });

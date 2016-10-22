@@ -27,13 +27,11 @@ import static elec332.eflux.endernetwork.EnderCapabilityHelper.getConstructor;
 /**
  * Created by Elec332 on 2-4-2016.
  */
-public enum CapabilityRegister {
+public final class CapabilityRegister {
 
-    instance;
+    public static IEnderCapabilityFactory playerInventory;
 
-    public IEnderCapabilityFactory playerInventory;
-
-    public void init(){
+    public static void init(){
         registerWithoutAnything(MultiBlockInterfaces.IEFluxMultiBlockFluidHandler.class);
 
         registerWithoutAnything(IEFluxFluidHandler.class);

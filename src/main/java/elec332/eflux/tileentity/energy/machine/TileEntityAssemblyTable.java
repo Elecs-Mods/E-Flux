@@ -8,7 +8,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -23,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
  * Created by Elec332 on 4-5-2015.
  */
 @RegisterTile(name = "TileEntityEFluxAssemblyTable")
-public class AssemblyTable extends BreakableMachineTile implements IInventoryTile{
+public class TileEntityAssemblyTable extends TileEntityBreakableMachine implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
 

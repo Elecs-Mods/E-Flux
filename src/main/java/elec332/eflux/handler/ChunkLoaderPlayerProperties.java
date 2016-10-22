@@ -5,8 +5,8 @@ import elec332.core.server.ElecPlayer;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.NBTHelper;
 import elec332.core.world.WorldHelper;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.ChunkLoaderSubTile;
-import elec332.eflux.tileentity.energy.machine.chunkLoader.MainChunkLoaderTile;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntityMainChunkLoader;
+import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntitySubChunkLoader;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
@@ -30,32 +30,32 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         return (ChunkLoaderPlayerProperties) ServerHelper.instance.getPlayer(uuid).getExtendedProperty("EFluxChunks");//(ChunkLoaderPlayerProperties) player.getExtendedProperties();
     }
 
-    private MainChunkLoaderTile main;
+    private TileEntityMainChunkLoader main;
     private World world;
     private boolean hasHandler;
     private List<BlockPos> blockLocations;
 
-    public void setMainChunkLoader(MainChunkLoaderTile tile){
+    public void setMainChunkLoader(TileEntityMainChunkLoader tile){
         main = tile;
         world = tile == null ? null : tile.getWorld();
         hasHandler = (tile != null);
     }
 
-    public void addLoader(ChunkLoaderSubTile tile){
+    public void addLoader(TileEntitySubChunkLoader tile){
         if (main != null)
             main.addLoader(tile);
         else
             blockLocations.add(tile.getPos());
     }
 
-    public void removeLoader(ChunkLoaderSubTile tile){
+    public void removeLoader(TileEntitySubChunkLoader tile){
         if (main != null)
             main.removeLoader(tile);
         else
             blockLocations.remove(tile.getPos());
     }
 
-    public MainChunkLoaderTile getMain() {
+    public TileEntityMainChunkLoader getMain() {
         return main;
     }
 
@@ -72,7 +72,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
         if (nbtTagCompound.hasKey("mainLoc")) {
             this.hasHandler = nbtTagCompound.getBoolean("handler?");
             this.world = ServerHelper.instance.getMinecraftServer().worldServerForDimension(nbtTagCompound.getInteger("dim"));
-            this.main = (MainChunkLoaderTile) WorldHelper.getTileAt(world, new NBTHelper(nbtTagCompound.getCompoundTag("mainLoc")).getPos());
+            this.main = (TileEntityMainChunkLoader) WorldHelper.getTileAt(world, new NBTHelper(nbtTagCompound.getCompoundTag("mainLoc")).getPos());
             NBTTagList list = nbtTagCompound.getTagList("locations", 10);
             for (int i = 0; i < list.tagCount(); i++) {
                 blockLocations.add(new NBTHelper(list.getCompoundTagAt(i)).getPos());

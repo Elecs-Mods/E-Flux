@@ -1,16 +1,25 @@
 package elec332.eflux.util;
 
-import elec332.core.multiblock.dynamic.IDynamicMultiBlockTile;
-import elec332.eflux.grid.tank.EFluxDynamicTank;
+import elec332.eflux.grid.tank.EFluxDynamicTankGrid;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Elec332 on 17-4-2016.
  */
-public interface IEFluxTank extends IDynamicMultiBlockTile<EFluxDynamicTank>, IFluidHandler {
+public interface IEFluxTank {
+
+    public void setTankGrid(EFluxDynamicTankGrid grid);
+
+    public EFluxDynamicTankGrid getTankGrid();
+
+    public void setSaveData(NBTTagCompound var1);
+
+    public NBTTagCompound getSaveData();
+
+    ///////////////////////////////////////////////////////////
 
     public int getTankSize();
 

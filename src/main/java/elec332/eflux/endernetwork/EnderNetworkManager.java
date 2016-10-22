@@ -1,20 +1,18 @@
 package elec332.eflux.endernetwork;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import elec332.core.api.data.IExternalSaveHandler;
 import elec332.core.nbt.NBTMap;
-import elec332.core.server.ServerHelper;
-import elec332.core.util.NBT;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
-import elec332.eflux.network.PacketSendValidNetworkKeys;
+import elec332.eflux.network.PacketSendEnderManagerData;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -24,15 +22,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 /**
  * Created by Elec332 on 18-2-2016.
  */
-public final class EnderNetworkManager implements INBTSerializable<NBTTagCompound>, ITickable {
+public final class EnderNetworkManager implements IExternalSaveHandler, INBTSerializable<NBTTagCompound>, ITickable {
 
     private EnderNetworkManager(Side side){
         this.side = side;
@@ -42,18 +40,9 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
                 return new EnderNetwork(input, EnderNetworkManager.this.side);
             }
         });
-        validKeys = Lists.newArrayList();
     }
 
     public static void registerSaveHandler(){
-        ServerHelper.instance.registerExtendedProperties("EFluxEnderNetwork", new Callable<INBTSerializable>() {
-
-            @Override
-            public INBTSerializable<NBTTagCompound> call() throws Exception {
-                return get(Side.SERVER);
-            }
-
-        });
         MinecraftForge.EVENT_BUS.register(new Object(){
 
             @SubscribeEvent
@@ -72,6 +61,35 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
 
     public static void onPacket(NBTTagCompound received, MessageContext messageContext){
         get(messageContext.side).deserializeNBT(received);
+    }
+
+    public static void setNetworkData(EnderNetwork network, int i, NBTTagCompound data){
+        if (network.getSide().isClient()){
+            throw new IllegalArgumentException();
+        }
+        get(Side.SERVER).sendPacket(0, new NBTHelper().addToTag(network.getNetworkId(), "id").addToTag(i, "nr").addToTag(data, "tag").serializeNBT());
+    }
+
+    public void onPacket(int id, NBTTagCompound data){
+        switch (id){
+            case 0:
+                onNetworkPacket(data);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+    }
+
+    private void onNetworkPacket(NBTTagCompound tag){
+        NBTHelper nbt = new NBTHelper(tag);
+        EnderNetwork network = EnderNetworkManager.get(EFlux.proxy.getClientWorld()).get(nbt.getUUID("id"));
+        network.onPacket(nbt.getInteger("nr"), nbt.getCompoundTag("tag"));
+    }
+
+    private void sendPacket(int i, NBTTagCompound tag){
+        EFlux.networkHandler.getNetworkWrapper().sendToAll(new PacketSendEnderManagerData(i, tag));
     }
 
     public static EnderNetworkManager get(World world){
@@ -94,46 +112,52 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
     private static final boolean isServer;
 
     private NBTMap<UUID, EnderNetwork> networkData;
-    private List<UUID> validKeys;
     private final Side side;
 
+    @Nullable
     public EnderNetwork get(UUID uuid){
         if (uuid == null){
             return null;
         }
         EnderNetwork ret = networkData.get(uuid);
-        if (ret == null /*&& validKeys.contains(uuid)*/){
+        if (ret == null){
+            if (side.isServer()){
+                return null;
+            }
             ret = new EnderNetwork(uuid, side);
             networkData.put(uuid, ret);
         }
         return ret;
     }
 
-    public UUID generateNew(){
+    public UUID generateNew(@Nullable NBTTagCompound tag){
+        if (!side.isServer()){
+            throw new IllegalAccessError();
+        }
         UUID uuid = UUID.randomUUID();
         while (networkData.keySet().contains(uuid)){
             uuid = UUID.randomUUID();
         }
-        validKeys.add(uuid);
-        networkData.put(uuid, new EnderNetwork(uuid, side)); //Generate the network
-        sendKeyData();
+        EnderNetwork network = new EnderNetwork(uuid, side);
+        networkData.put(uuid, network); //Generate the network
+        if (tag != null){
+            network.deserializeNBT(tag);
+        }
         return uuid;
     }
 
-    public void removeNetwork(UUID uuid){
+    @Nonnull
+    public NBTTagCompound removeNetwork(UUID uuid){
         if (uuid != null) {
-            networkData.remove(uuid);
-            //validKeys.remove(uuid);
-            sendKeyData();
+            EnderNetwork ret = networkData.remove(uuid);
+            if (ret != null){
+                return ret.serializeNBT();
+            }
+            return new NBTTagCompound();
         }
+        throw new IllegalArgumentException();
     }
 
-    public void deleteNetwork(UUID uuid){
-        if (uuid != null) {
-            removeNetwork(uuid);
-            validKeys.remove(uuid);
-        }
-    }
 
     @Override
     public void update() {
@@ -143,33 +167,34 @@ public final class EnderNetworkManager implements INBTSerializable<NBTTagCompoun
     }
 
     @Override
+    public String getName() {
+        return "EFluxEnderNetwork";
+    }
+
+    @Override
+    public void load(ISaveHandler iSaveHandler, WorldInfo worldInfo, NBTTagCompound nbtTagCompound) {
+        deserializeNBT(nbtTagCompound);
+    }
+
+    @Nullable
+    @Override
+    public NBTTagCompound save(ISaveHandler iSaveHandler, WorldInfo worldInfo) {
+        return serializeNBT();
+    }
+
+    @Override
+    public void nullifyData() {
+        networkData.clear();
+    }
+
+    @Override
     public NBTTagCompound serializeNBT() {
-        return new NBTHelper().addToTag(networkData.serializeNBT(), "lEN").addToTag(getValidKeys(), "U_keys").serializeNBT();
+        return new NBTHelper().addToTag(networkData.serializeNBT(), "lEN").serializeNBT();
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         networkData.deserializeNBT(nbt.getTagList("lEN", 10));
-        deserializekeys(nbt.getTagList("U_keys", NBT.NBTData.STRING.getID()));
-    }
-
-    private void sendKeyData(){
-        EFlux.networkHandler.getNetworkWrapper().sendToAll(new PacketSendValidNetworkKeys(getValidKeys()));
-    }
-
-    private NBTTagList getValidKeys(){
-        NBTTagList tagList = new NBTTagList();
-        for (UUID uuid : validKeys){
-            tagList.appendTag(new NBTTagString(uuid.toString()));
-        }
-        return tagList;
-    }
-
-    public void deserializekeys(NBTTagList tagList){
-        validKeys.clear();
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            validKeys.add(UUID.fromString(tagList.getStringTagAt(i)));
-        }
     }
 
     static {

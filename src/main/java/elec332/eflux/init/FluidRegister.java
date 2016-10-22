@@ -1,24 +1,24 @@
 package elec332.eflux.init;
 
-import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockFluid;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.items.ItemBucket;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by Elec332 on 13-9-2015.
  */
 public final class FluidRegister {
 
-    public static final FluidRegister instance = new FluidRegister();
-    private FluidRegister(){
+    public static Fluid slib, oil, crudeOil, brine; //Pre-Refinery
+    public static Fluid lubicrant, fuel, diesel, petrol, gas; //Post-refinery
+
+    public static void init(){
         slib =registerFluid("slib", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(139, 69, 19).getRGB());
         oil = registerFluid("oil", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
         crudeOil = registerFluid("crudeOil", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.BLACK.getRGB());
@@ -29,9 +29,6 @@ public final class FluidRegister {
         gas = registerFluid("lpg", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), Color.WHITE.getRGB());
         brine = registerFluid("brine", new ResourceLocation("blocks/water_still"), new ResourceLocation("blocks/water_flow"), new Color(205, 133, 63).getRGB());
     }
-
-    public static Fluid slib, oil, crudeOil, brine; //Pre-Refinery
-    public static Fluid lubicrant, fuel, diesel, petrol, gas; //Post-refinery
 
     private static Fluid registerFluid(String name){
         return registerFluid(name, new EFluxResourceLocation(name), new EFluxResourceLocation(name));
@@ -51,15 +48,9 @@ public final class FluidRegister {
         FluidRegistry.registerFluid(ret);
         final Block block = GameRegistry.register(new BlockFluid(ret));
         ret.setBlock(block);
-        GameRegistry.register(new ItemBucket((BlockFluid) block).setCreativeTab(EFlux.creativeTab));
+        FluidRegistry.addBucketForFluid(ret);
+        //GameRegistry.register(new ItemBucket((BlockFluid) block).setCreativeTab(EFlux.creativeTab));
         return ret;
-    }
-
-    public void init(){
-        //((BlockFluidClassic)oil.getBlock()).setRenderLayer(BlockRenderLayer.SOLID);
-        //FluidRegistry.registerFluid(slib);
-       // FluidRegistry.registerFluid(oil);
-        //FluidRegistry.registerFluid(crudeOil);
     }
 
 }

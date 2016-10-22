@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class WrappedModel implements IBakedModel {
     private final ItemCameraTransforms transforms;
 
     @Override
+    @Nonnull
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
         return modelB.getQuads(state, side, rand);
     }
@@ -56,16 +58,19 @@ public class WrappedModel implements IBakedModel {
     }
 
     @Override
+    @Nonnull
     public TextureAtlasSprite getParticleTexture() {
         return modelB.getParticleTexture();
     }
 
     @Override
+    @Nonnull
     public ItemCameraTransforms getItemCameraTransforms() {
         return transforms;
     }
 
     @Override
+    @Nonnull
     public ItemOverrideList getOverrides() {
         return modelB.getOverrides();
     }

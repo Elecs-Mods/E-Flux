@@ -1,9 +1,9 @@
 package elec332.eflux.tileentity;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.inventory.IHasProgressBar;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
-import elec332.core.inventory.IHasProgressBar;
 import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.slot.SlotOutput;
 import elec332.core.tile.IInventoryTile;
@@ -61,10 +61,6 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
     private List<Slot> machineSlots;
     private List<SlotUpgrade> upgradeSlots;
     private List<Slot> allSLots;
-
-    public BasicInventory getInventory() {
-        return inventory;
-    }
 
     protected abstract void registerMachineSlots(List<Slot> registerList);
 

@@ -6,6 +6,7 @@ import elec332.core.server.ServerHelper;
 import elec332.core.tile.TileBase;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
+import elec332.eflux.tileentity.TileEntityEFlux;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,8 +17,8 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
-@RegisterTile(name = "TileEntityEFluxChunkLoaderSubTile")
-public class ChunkLoaderSubTile extends TileBase implements IChunkLoader{
+@RegisterTile(name = "TileEntityEFluxSubChunkLoader")
+public class TileEntitySubChunkLoader extends TileEntityEFlux implements IChunkLoader{
 
     private UUID owner;
 
@@ -30,10 +31,10 @@ public class ChunkLoaderSubTile extends TileBase implements IChunkLoader{
                 if (!ServerHelper.isServer(worldObj))
                     return;
                 if (entityLiving instanceof EntityPlayer) {
-                    if (ChunkLoaderSubTile.this.owner == null)
-                        ChunkLoaderSubTile.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
+                    if (TileEntitySubChunkLoader.this.owner == null)
+                        TileEntitySubChunkLoader.this.owner = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
                     PlayerHelper.sendMessageToPlayer((EntityPlayer)entityLiving, "Placed chunkloader at "+getPos());
-                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).addLoader(ChunkLoaderSubTile.this);
+                    ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).addLoader(TileEntitySubChunkLoader.this);
                 }
             }
         }, entityLiving.worldObj);

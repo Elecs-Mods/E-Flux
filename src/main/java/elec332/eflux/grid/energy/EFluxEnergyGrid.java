@@ -1,4 +1,4 @@
-package elec332.eflux.energy.grid;
+package elec332.eflux.grid.energy;
 
 import com.google.common.collect.Sets;
 import elec332.eflux.api.EFluxAPI;
@@ -7,19 +7,20 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.energy.ISpecialEnergyProvider;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
  * Created by Elec332 on 24-7-2016.
  */
-public class EnergyGrid {
+public class EFluxEnergyGrid {
 
-    protected EnergyGrid(){
+    protected EFluxEnergyGrid(){
         this.allObjects = Sets.newHashSet();
         this.allObjectsImmutable = Collections.unmodifiableSet(allObjects);
         this.allConnections = Sets.newHashSet();
@@ -39,12 +40,14 @@ public class EnergyGrid {
 
     public void tick(){
         distributePower();
-
+        //debugStuff();
     }
 
-    protected void merge(EnergyGrid grid){
+    protected void merge(EFluxEnergyGrid grid){
         for (ConnectionData connectionData : grid.allConnections){
-            addObject(connectionData.object, connectionData.facing);
+            for (EnumFacing facing : connectionData.facing) {
+                addObject(connectionData.object, facing);
+            }
         }
     }
 
@@ -59,32 +62,73 @@ public class EnergyGrid {
     }
 
     protected void addObject(EFluxEnergyObject o, EnumFacing side){
+        if (side == null){
+            throw new IllegalArgumentException();
+        }
         o.setGridForFace(this, side);
-        allObjects.add(o);
-        ConnectionData connectionData = new ConnectionData(o, side);
-        allConnections.add(connectionData);
-        identifyAdd(connectionData);
+        ConnectionData connectionData;
+        if (allObjects.add(o)) {
+            connectionData = new ConnectionData(o, side);
+        } else {
+            Set<EnumFacing> conn = o.getConnectorSides();
+            Set<ConnectionData> c = getConnections(o);
+            if (conn.isEmpty() || !conn.contains(side)){
+                for (ConnectionData cd : c){
+                    if (cd.connectedFacing == side){
+                        return;
+                    }
+                }
+                connectionData = new ConnectionData(o, side);
+            } else {
+                EnumSet<EnumFacing> rC = EnumSet.noneOf(EnumFacing.class);
+                Set<ConnectionData> c2 = Sets.newHashSet();
+                c.add(new ConnectionData(o, side));
+                for (ConnectionData d : c) {
+                    for (EnumFacing facing : d.facing) {
+                        if (conn.contains(facing)) {
+                            c2.add(d);
+                            rC.addAll(d.facing);
+                            break;
+                        }
+                    }
+                }
+                removeConnections(c2);
+                connectionData = new ConnectionData(o, rC);
+            }
+        }
+        identifyAdd(connectionData, side);
     }
 
-    private void identifyAdd(ConnectionData connectionData){
+    private void identifyAdd(ConnectionData connectionData, EnumFacing backup){
         ICapabilityProvider c = connectionData.object;
-        EnumFacing f = connectionData.facing;
+        EnumFacing f = connectionData.connectedFacing;
+        boolean b = false;
         if (EFluxGridHandler.isValidProvider(c, f)){
             IEnergyProvider provider = c.getCapability(EFluxAPI.PROVIDER_CAPABILITY, f);
             if (provider instanceof ISpecialEnergyProvider){
                 specialProviders.add(connectionData);
+                b = true;
             } else {
                 providers.add(connectionData);
+                b = true;
             }
         }
         if (EFluxGridHandler.isValidReceiver(c, f)){
             receivers.add(connectionData);
+            b = true;
         }
-        if (EFluxGridHandler.isValidTransmitter(c, f)){
-            IEnergyTransmitter transmitter = c.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, f);
+        if (EFluxGridHandler.isValidTransmitter(c, backup)){
+            IEnergyTransmitter transmitter = c.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, backup);
             int i = transmitter.getMaxEFTransfer();
             checkTransferRate(i);
             transmitters.add(connectionData.object);
+            b = true;
+        }
+        if (b){
+            allConnections.add(connectionData);
+        } else {
+            System.out.println("conn: "+connectionData.connectedFacing+" r:"+backup + "    "+connectionData.object.getTileEntity()+"  "+connectionData.facing);
+            throw new RuntimeException();
         }
     }
 
@@ -102,16 +146,25 @@ public class EnergyGrid {
     protected void removeObject(EFluxEnergyObject o){
         allObjects.remove(o);
         transmitters.remove(o);
+        removeConnections(getConnections(o));
+    }
+
+    private Set<ConnectionData> removeConnections(Set<ConnectionData> remove){
+        allConnections.removeAll(remove);
+        receivers.removeAll(remove);
+        providers.removeAll(remove);
+        specialProviders.removeAll(remove);
+        return remove;
+    }
+
+    private Set<ConnectionData> getConnections(EFluxEnergyObject o){
         Set<ConnectionData> remove = Sets.newHashSet();
         for (ConnectionData connectionData : allConnections){
             if (connectionData.object.equals(o)){
                 remove.add(connectionData);
             }
         }
-        allConnections.removeAll(remove);
-        receivers.removeAll(remove);
-        providers.removeAll(remove);
-        specialProviders.removeAll(remove);
+        return remove;
     }
 
     protected void validate(){
@@ -142,21 +195,22 @@ public class EnergyGrid {
 
         int counter = 0;
         for (ConnectionData gridData : this.receivers) {
-            IEnergyReceiver receiver = gridData.object.getCapability(EFluxAPI.RECEIVER_CAPABILITY, gridData.facing);
+            IEnergyReceiver receiver = gridData.object.getCapability(EFluxAPI.RECEIVER_CAPABILITY, gridData.connectedFacing);
             rp = Math.max(rp, receiver.requestedRP());
             vReceivers[counter] = receiver;
             counter++;
         }
         counter = 0;
         for (ConnectionData gridData : providers) {
-            totalProvided += gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.facing).provideEnergy(rp, true);
+            totalProvided += gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.connectedFacing).provideEnergy(rp, true);
         }
         for (ConnectionData gridData : specialProviders) {
-            ISpecialEnergyProvider energyProvider = (ISpecialEnergyProvider) gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.facing);
+            ISpecialEnergyProvider energyProvider = (ISpecialEnergyProvider) gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.connectedFacing);
             int e = energyProvider.provideEnergy(rp, false);
             vs[counter] = e;
             specialCanProvide += e;
             vProviders[counter] = energyProvider;
+            counter++;
         }
         for (int i = 0; i < vReceivers.length; i++) {
             IEnergyReceiver receiver = vReceivers[i];
@@ -202,27 +256,34 @@ public class EnergyGrid {
                 System.out.println(o.getPosition().toString());
             }
         }
+        System.out.println("start");
+        Set<BlockPos> s = Sets.newHashSet();
+        for (ConnectionData connectionData : allConnectionsImmutable){
+            System.out.println(connectionData.object.getPosition()+"   "+connectionData.object+"   "+connectionData.object.getTileEntity()+"   "+ connectionData.facing);
+            if (!s.add(connectionData.object.getPosition().getPos())){
+                System.out.println("Double pos: "+connectionData.object.getPosition());
+            }
+        }
+        System.out.println("stop");
     }
 
     public class ConnectionData {
 
         private ConnectionData(EFluxEnergyObject object, EnumFacing facing){
             this.object = object;
+            this.facing = EnumSet.of(facing);
+            this.connectedFacing = facing;
+        }
+
+        private ConnectionData(EFluxEnergyObject object, EnumSet<EnumFacing> facing){
+            this.object = object;
             this.facing = facing;
+            this.connectedFacing = null;
         }
 
         protected final EFluxEnergyObject object;
-        protected final EnumFacing facing;
-/*
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof ConnectionData && ((ConnectionData) obj).object.equals(object) && ((ConnectionData) obj).facing == facing;
-        }
-
-        @Override
-        public int hashCode() {
-            return object.hashCode() * 31 + facing.hashCode();
-        }*/
+        protected final EnumSet<EnumFacing> facing;
+        protected final EnumFacing connectedFacing;
 
     }
 

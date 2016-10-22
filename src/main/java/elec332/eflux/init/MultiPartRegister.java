@@ -15,7 +15,7 @@ public final class MultiPartRegister {
         MultipartRegistry.registerPart(PartNormalCable.class, "PartEFluxNormalCable");
         MultipartRegistry.registerPart(PartBasicCable.class, "PartEFluxBasicCable");
 
-        ItemRegister.instance.registerMultiPartItems();
+        ItemRegister.registerMultiPartItems();
     }
 
 }

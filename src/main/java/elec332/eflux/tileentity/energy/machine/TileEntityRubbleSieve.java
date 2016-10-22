@@ -6,6 +6,7 @@ import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
 import elec332.eflux.util.DustPile;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,9 +16,9 @@ import net.minecraft.util.ITickable;
  * Created by Elec332 on 17-10-2015.
  */
 @RegisterTile(name = "TileEntityEFluxRubbleSieve")
-public class TileRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine, ITickable {
+public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine, ITickable, ISidedInventory {
 
-    public TileRubbleSieve() {
+    public TileEntityRubbleSieve() {
         super(4);
         energyContainer.setProgressMachine(this);
     }

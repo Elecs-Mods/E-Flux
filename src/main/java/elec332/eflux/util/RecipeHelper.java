@@ -9,7 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraftforge.oredict.RecipeSorter;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -93,39 +95,46 @@ public class RecipeHelper {
 
     public static final Function<Data, ShapedRecipes> SHAPED_RECIPE_FUNCTION, SHAPED_RECIPE_WITH_NBT_CHECK;
 
-    static {
-        SHAPED_RECIPE_FUNCTION = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output);
-        SHAPED_RECIPE_WITH_NBT_CHECK = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output){
+    private static class ShapedNBTRecipe extends ShapedRecipes {
 
-            @Override
-            public boolean checkMatch(InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
-                for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; j < 3; ++j) {
-                        int k = i - p_77573_2_;
-                        int l = j - p_77573_3_;
-                        ItemStack itemstack = null;
+        public ShapedNBTRecipe(int width, int height, ItemStack[] input, ItemStack output) {
+            super(width, height, input, output);
+        }
 
-                        if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
-                            if (p_77573_4_) {
-                                itemstack = this.recipeItems[this.recipeWidth - k - 1 + l * this.recipeWidth];
-                            } else {
-                                itemstack = this.recipeItems[k + l * this.recipeWidth];
-                            }
+        @Override
+        public boolean checkMatch(@Nonnull InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    int k = i - p_77573_2_;
+                    int l = j - p_77573_3_;
+                    ItemStack itemstack = null;
+
+                    if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
+                        if (p_77573_4_) {
+                            itemstack = this.recipeItems[this.recipeWidth - k - 1 + l * this.recipeWidth];
+                        } else {
+                            itemstack = this.recipeItems[k + l * this.recipeWidth];
                         }
+                    }
 
-                        ItemStack itemstack1 = p_77573_1_.getStackInRowAndColumn(i, j);
+                    ItemStack itemstack1 = p_77573_1_.getStackInRowAndColumn(i, j);
 
-                        if (itemstack1 != null || itemstack != null) {
-                            if (!InventoryHelper.areEqualNoSize(itemstack, itemstack1)){
-                                return false;
-                            }
+                    if (itemstack1 != null || itemstack != null) {
+                        if (!InventoryHelper.areEqualNoSize(itemstack, itemstack1)){
+                            return false;
                         }
                     }
                 }
-                return true;
             }
+            return true;
+        }
 
-        };
+    }
+
+    static {
+        RecipeSorter.register("eflux:shapedNBT", ShapedNBTRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+        SHAPED_RECIPE_FUNCTION = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output);
+        SHAPED_RECIPE_WITH_NBT_CHECK = (Data data) -> new ShapedNBTRecipe(data.width, data.height, data.ingredients, data.output);
     }
 
 }

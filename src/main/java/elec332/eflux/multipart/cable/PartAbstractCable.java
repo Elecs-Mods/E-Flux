@@ -224,15 +224,12 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         GL11.glLineWidth(2.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
-        AxisAlignedBB aabb;
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (connectData.get(facing.getIndex())) {
-                aabb = HITBOXES[facing.ordinal()];
-                RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
+                RenderHelper.drawExpandedSelectionBoundingBox(HITBOXES[facing.ordinal()]);
             }
         }
-        aabb = HITBOXES[6];
-        RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)/*.offset(-d0, -d1, -d2)*/);
+        RenderHelper.drawExpandedSelectionBoundingBox(HITBOXES[6]);
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
@@ -240,6 +237,10 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     }
 
     private boolean canConnectToSide(EnumFacing side) {
+        //if (side == null){
+        //    System.out.println("MEEEEEP "+getPos());
+        //    return false;
+        //}
         ISlottedPart part = getContainer().getPartInSlot(PartSlot.getFaceSlot(side));
         boolean ret = !(part instanceof IMicroblock.IFaceMicroblock && ((IMicroblock.IFaceMicroblock) part).isFaceHollow()) && OcclusionHelper.occlusionTest(getContainer().getParts(), new Predicate<IMultipart>() {
             @Override

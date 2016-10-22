@@ -1,6 +1,7 @@
 package elec332.eflux.init;
 
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.Nullable;
 import elec332.core.main.ElecCore;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -18,6 +19,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 24-2-2015.
  */
+@SuppressWarnings("all")
 public final class CommandRegister {
     public static final CommandRegister instance = new CommandRegister();
     private CommandRegister(){
@@ -63,8 +67,11 @@ public final class CommandRegister {
                 if (ElecCore.developmentEnvironment) {
                     if (arg.equals("oil")) {
                         TileEntity tile = WorldHelper.getTileAt(((EntityPlayer) sender).worldObj, PlayerHelper.getPosPlayerIsLookingAt((EntityPlayer) sender, 5D).getBlockPos());
-                        if (tile instanceof IEFluxTank) {
-                            ((IEFluxTank) tile).fill(null, new FluidStack(FluidRegister.oil, 1000), true);
+                        if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
+                            IFluidHandler fluidHandler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                            if (fluidHandler != null){
+                                fluidHandler.fill(new FluidStack(FluidRegister.oil, 1000), true);
+                            }
                         }
                     } else if (arg.equals("circuit")){
                         ItemStack stack = ItemRegister.normalUnrefinedBoard.copy();

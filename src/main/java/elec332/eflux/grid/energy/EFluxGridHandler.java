@@ -1,4 +1,4 @@
-package elec332.eflux.energy.grid;
+package elec332.eflux.grid.energy;
 
 import com.google.common.collect.Sets;
 import elec332.core.grid.v2.AbstractGridHandler;
@@ -38,7 +38,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         this.grids = Sets.newHashSet();
     }
 
-    private final Set<EnergyGrid> grids;
+    private final Set<EFluxEnergyGrid> grids;
 
     @SuppressWarnings("all") //Manual switch
     private static boolean forceDebug = ElecCore.developmentEnvironment && false;
@@ -46,7 +46,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     @Override
     public void tick() {
         int i = 1;
-        for (EnergyGrid grid : grids){
+        for (EFluxEnergyGrid grid : grids){
             systemPrintDebug("Start "+i);
             grid.tick();
             systemPrintDebug("End");
@@ -65,23 +65,24 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     @Override
     protected void onObjectRemoved(EFluxEnergyObject o, Set<DimensionCoordinate> updates) {
         if (o.isEndPoint()){ //Easier & lightweight
-            EnergyGrid grid = o.getEndPoint();
+            EFluxEnergyGrid grid = o.getEndPoint();
             grid.removeObject(o);
             o.removedFromGrid(grid);
         } else { //Shame, but 1 more chance
-            Set<EnergyGrid> grids = o.getGrids();
+            Set<EFluxEnergyGrid> grids = o.getGrids();
             if (o.multipleEndpoints()){
-                for (EnergyGrid grid : grids){
+                for (EFluxEnergyGrid grid : grids){
                     if (grid != null){
                         grid.removeObject(o);
                     }
                     o.removedFromGrid(grid);
                 }
             } else { //Nope, gotta do it the hard way
-                for (EnergyGrid grid : grids){
+                for (EFluxEnergyGrid grid : grids){
                     if (grid != null) {
-                        for (EnergyGrid.ConnectionData o2 : grid.getAllConnections()) {
-                            o2.object.setGridForFace(null, o2.facing);
+                        for (EFluxEnergyGrid.ConnectionData o2 : grid.getAllConnections()) {
+                            o2.object.setGridForFace(null, o2.connectedFacing);
+                            //o2.object.removedFromGrid(grid);
                             if (!updates.contains(o2.object.getPosition()) && !o.equals(o2.object)) {
                                 add.add(o2.object.getPosition());
                             }
@@ -112,21 +113,25 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
             if (!canConnect(o, facing, offsetObject)){
                 continue;
             }
-            EnergyGrid oGrid = o.getGrid(facing), offsetGrid = offsetObject.getGrid(facing.getOpposite());
+            EFluxEnergyGrid oGrid = o.getGrid(facing), offsetGrid = offsetObject.getGrid(facing.getOpposite());
             if (oGrid == null){
                 if (offsetGrid == null){
-                    EnergyGrid newGrid = addGrid();
+                    EFluxEnergyGrid newGrid = addGrid();
                     newGrid.addObject(o, facing);
                     newGrid.addObject(offsetObject, facing.getOpposite());
                 } else {
                     offsetGrid.addObject(o, facing);
+                    //Added
+                    offsetGrid.addObject(offsetObject, facing.getOpposite());
                 }
             } else {
                 if (offsetGrid == null){
                     oGrid.addObject(offsetObject, facing.getOpposite());
+                    //Added
+                    oGrid.addObject(o, facing);
                 } else {
                     if (oGrid != offsetGrid) {
-                        oGrid.merge(offsetGrid);
+                        oGrid.merge(offsetGrid);System.out.println("merge: "+oGrid+"  "+offsetGrid);
                         removeGrid(offsetGrid);
                     }
                     oGrid.addObject(o, facing);
@@ -235,14 +240,14 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         return capabilityProvider.hasCapability(capability, facing) && capabilityProvider.getCapability(capability, facing) != null;
     }
 
-    private EnergyGrid addGrid(){
-        EnergyGrid newGrid = new EnergyGrid();
+    private EFluxEnergyGrid addGrid(){
+        EFluxEnergyGrid newGrid = new EFluxEnergyGrid();
         grids.add(newGrid);
         newGrid.validate();
         return newGrid;
     }
 
-    private void removeGrid(EnergyGrid grid){
+    private void removeGrid(EFluxEnergyGrid grid){
         grid.invalidate();
         grids.remove(grid);
     }

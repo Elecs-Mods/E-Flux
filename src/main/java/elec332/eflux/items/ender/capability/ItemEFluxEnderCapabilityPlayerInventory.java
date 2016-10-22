@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.FakePlayer;
 public class ItemEFluxEnderCapabilityPlayerInventory extends ItemEFluxEnderCapability {
 
     public ItemEFluxEnderCapabilityPlayerInventory() {
-        super(CapabilityRegister.instance.playerInventory);
+        super(CapabilityRegister.playerInventory);
     }
 
     @Override

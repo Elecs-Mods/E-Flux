@@ -19,9 +19,4 @@ public abstract class AbstractEFluxItem extends Item {
 
     protected final String name;
 
-    public AbstractEFluxItem register(){
-        GameRegistry.register(this);
-        return this;
-    }
-
 }

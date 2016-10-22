@@ -49,7 +49,7 @@ public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends T
             float u2 = fluidTexture.getMaxU();
             float v2 = fluidTexture.getMaxV() - ((fluidTexture.getMaxV() - fluidTexture.getMinV()) * (1 - height));
             tessellator.setColorRGBA(255, 255, 255, 128);
-            tessellator.setBrightness(240);
+            tessellator.setBrightness(te.getWorld().getCombinedLight(te.getPos(), fluid.getLuminosity()));
 
             renderBlocks.renderFaceYPos(0, height - 1, 0, fluidTexture); //Im lazy
 
@@ -79,6 +79,7 @@ public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends T
             TileEntity tile = WorldHelper.getTileAt(te.getWorld(), te.getPos().offset(facing));
             map.put(facing, tile != null && tile instanceof IEFluxTank && te.getClientRenderFluid() == ((IEFluxTank) tile).getClientRenderFluid());
         }
+        tessellator.setBrightness(te.getWorld().getCombinedLight(te.getPos(), 0));
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (!map.get(facing)) {
                 if (facing == EnumFacing.DOWN) {

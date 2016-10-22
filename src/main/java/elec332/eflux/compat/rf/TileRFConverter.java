@@ -1,10 +1,10 @@
 package elec332.eflux.compat.rf;
 
 import cofh.api.energy.IEnergyProvider;
+import elec332.core.tile.TileBase;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.tileentity.EnergyTileBase;
 import elec332.eflux.util.Config;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +15,7 @@ import net.minecraftforge.common.capabilities.Capability;
 /**
  * Created by Elec332 on 20-7-2015.
  */
-public class TileRFConverter extends EnergyTileBase implements IEnergyReceiver, IEnergyProvider, ITickable {
+public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnergyProvider, ITickable {
 
     private int storedPower;
 

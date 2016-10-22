@@ -1,5 +1,6 @@
 package elec332.eflux.client.render.tesr;
 
+import elec332.core.client.RenderHelper;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -22,7 +23,7 @@ public class TESRAreaMover extends TileEntitySpecialRenderer<TileEntityAreaMover
         GlStateManager.depthMask(false);
         GlStateManager.translate(x, y, z);
         AxisAlignedBB aabb = te.getUnpositionedAreaBounds();
-        RenderGlobal.drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D));
+        RenderHelper.drawExpandedSelectionBoundingBox(aabb);
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();

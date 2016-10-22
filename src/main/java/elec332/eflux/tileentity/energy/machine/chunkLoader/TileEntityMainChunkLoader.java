@@ -7,7 +7,7 @@ import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
-import elec332.eflux.tileentity.BreakableMachineTile;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,10 +27,10 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
-@RegisterTile(name = "TileEntityEFluxChunkLoaderMainTile")
-public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkLoader, ITickable {
+@RegisterTile(name = "TileEntityEFluxMainChunkLoader")
+public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implements IChunkLoader, ITickable {
 
-    public MainChunkLoaderTile(){
+    public TileEntityMainChunkLoader(){
         repairItems = Lists.newArrayList(new ItemStack(Items.ENDER_EYE), new ItemStack(Items.ENDER_PEARL));
         active = true;
         this.changed = true;
@@ -89,13 +89,13 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
         this.neededPower = 12*loadedChunks*33;
     }
 
-    public void addLoader(ChunkLoaderSubTile tile){
+    public void addLoader(TileEntitySubChunkLoader tile){
         getLocations().add(tile.getPos());
         changed = true;
         loadedChunks++;
     }
 
-    public void removeLoader(ChunkLoaderSubTile tile){
+    public void removeLoader(TileEntitySubChunkLoader tile){
         getLocations().remove(tile.getPos());
         changed = true;
         loadedChunks--;
@@ -161,13 +161,13 @@ public class MainChunkLoaderTile extends BreakableMachineTile implements IChunkL
                     if (entityLiving instanceof EntityPlayer) {
                         UUID uuid = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);
                         if (!ChunkLoaderPlayerProperties.get(uuid).hasHandler()) {
-                            if (MainChunkLoaderTile.this.owner == null)
-                                MainChunkLoaderTile.this.owner = uuid;
+                            if (TileEntityMainChunkLoader.this.owner == null)
+                                TileEntityMainChunkLoader.this.owner = uuid;
                             PlayerHelper.sendMessageToPlayer((EntityPlayer) entityLiving, "Placed chunkloader at " + getPos());
-                            ChunkLoaderPlayerProperties.get(MainChunkLoaderTile.this.owner).setMainChunkLoader(MainChunkLoaderTile.this);
-                            MainChunkLoaderTile.this.getLocations().add(getPos());
-                            MainChunkLoaderTile.this.loadedChunks = MainChunkLoaderTile.this.getLocations().size();
-                            MainChunkLoaderTile.this.changed = true;
+                            ChunkLoaderPlayerProperties.get(TileEntityMainChunkLoader.this.owner).setMainChunkLoader(TileEntityMainChunkLoader.this);
+                            TileEntityMainChunkLoader.this.getLocations().add(getPos());
+                            TileEntityMainChunkLoader.this.loadedChunks = TileEntityMainChunkLoader.this.getLocations().size();
+                            TileEntityMainChunkLoader.this.changed = true;
                             markDirty();
                         }
                     }
