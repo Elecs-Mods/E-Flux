@@ -1,6 +1,6 @@
 package elec332.eflux.network;
 
-import elec332.core.network.AbstractPacket;
+import elec332.core.network.packets.AbstractPacket;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

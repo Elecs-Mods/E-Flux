@@ -1,6 +1,8 @@
 package elec332.eflux.tileentity;
 
-import elec332.core.compat.waila.WailaCompatHandler;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInfoProvider;
+import elec332.core.api.info.IInformation;
 import elec332.core.server.ServerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
@@ -10,8 +12,6 @@ import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,16 +21,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, WailaCompatHandler.IWailaInfoTile, IEFluxPowerHandler {
+public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, IInfoProvider, IEFluxPowerHandler {
 
     public TileEntityBreakableMachine(){
         super();
@@ -139,19 +137,17 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        NBTTagCompound tag = accessor.getNBTData();
-        if (tag != null){
-            currentTip.add("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
-            if (tag.getBoolean("broken")){
-                currentTip.add(SpecialChars.ALIGNCENTER+SpecialChars.ITALIC+"Broken");
-            }
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        NBTTagCompound tag = hitData.getData();
+        information.addInformation("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
+        if (tag.getBoolean("broken")){
+            information.addInformation(SpecialChars.ALIGNCENTER+SpecialChars.ITALIC+"Broken");
         }
-        return currentTip;
     }
 
+    @Nonnull
     @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
         tag.setInteger("energy", energyContainer.getStoredPower());
         tag.setInteger("maxEnergy", energyContainer.getMaxStoredEnergy());
         tag.setBoolean("broken", broken);

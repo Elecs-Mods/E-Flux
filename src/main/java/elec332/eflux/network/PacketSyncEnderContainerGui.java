@@ -1,6 +1,6 @@
 package elec332.eflux.network;
 
-import elec332.core.network.AbstractPacket;
+import elec332.core.network.packets.AbstractPacket;
 import elec332.eflux.inventory.ContainerEnderContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Container;

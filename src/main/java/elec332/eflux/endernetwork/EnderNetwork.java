@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -228,13 +229,11 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
 
     @Override
     public void syncToClient(){
-        EFlux.networkHandler.getNetworkWrapper().sendToAll(new PacketSyncEnderNetwork(this));
-        //System.out.println("synctoclient");
+        EFlux.networkHandler.sendToAll(new PacketSyncEnderNetwork(this));
     }
 
     public void syncToClient(EntityPlayerMP player){
-        EFlux.networkHandler.getNetworkWrapper().sendTo(new PacketSyncEnderNetwork(this), player);
-        //System.out.println("synctoclient");
+        EFlux.networkHandler.sendTo(new PacketSyncEnderNetwork(this), player);
     }
 
     @Override
@@ -479,6 +478,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         sendPacket(1, new NBTHelper().addToTag(cap, "cap").addToTag(id, "id").addToTag(data, "data").serializeNBT());
     }
 
+    @SideOnly(Side.CLIENT)
     public void onPacket(int id, NBTTagCompound data){
         switch (id){
             case 0:

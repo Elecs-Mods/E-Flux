@@ -27,7 +27,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     }
 
     public static ChunkLoaderPlayerProperties get(@Nonnull UUID uuid){
-        return (ChunkLoaderPlayerProperties) ServerHelper.instance.getPlayer(uuid).getExtendedProperty("EFluxChunks");//(ChunkLoaderPlayerProperties) player.getExtendedProperties();
+        return (ChunkLoaderPlayerProperties) ServerHelper.instance.getPlayer(uuid).getExtendedProperty("EFluxChunks");
     }
 
     private TileEntityMainChunkLoader main;
@@ -49,10 +49,11 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     }
 
     public void removeLoader(TileEntitySubChunkLoader tile){
-        if (main != null)
+        if (main != null) {
             main.removeLoader(tile);
-        else
+        } else {
             blockLocations.remove(tile.getPos());
+        }
     }
 
     public TileEntityMainChunkLoader getMain() {

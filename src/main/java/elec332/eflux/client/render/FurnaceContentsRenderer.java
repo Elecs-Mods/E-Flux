@@ -1,10 +1,10 @@
 package elec332.eflux.client.render;
 
-import elec332.core.client.ElecTessellator;
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.ITextureLoader;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.ITextureLoader;
 import elec332.core.client.RenderHelper;
 import elec332.core.client.model.RenderingRegistry;
+import elec332.core.client.tesselator.ElecTessellator;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
 import net.minecraft.client.Minecraft;

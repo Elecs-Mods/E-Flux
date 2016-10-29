@@ -1,6 +1,6 @@
 package elec332.eflux.compat.rf;
 
-import elec332.core.module.ElecModule;
+import elec332.core.api.module.ElecModule;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
@@ -34,6 +34,7 @@ public class RFCompat {
 
     static {
         DATA = new AbstractEFluxBlockMachineData() {
+
             @Override
             public Class<? extends TileEntity> getTileClass() {
                 return TileRFConverter.class;
@@ -48,6 +49,7 @@ public class RFCompat {
             public String getName() {
                 return "RFConverter";
             }
+
         };
     }
 

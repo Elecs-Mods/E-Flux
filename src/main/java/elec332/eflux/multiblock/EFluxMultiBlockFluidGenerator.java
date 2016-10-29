@@ -1,32 +1,46 @@
 package elec332.eflux.multiblock;
 
+import elec332.core.util.FluidTankWrapper;
 import elec332.eflux.handler.FluidEnergyProviderHandler;
-import elec332.eflux.util.IEFluxFluidHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 13-9-2015.
  */
-public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGenerator implements IEFluxFluidHandler {
+public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGenerator {
 
     public EFluxMultiBlockFluidGenerator(int capacity){
-        fluidTank = new FluidTank(capacity);
+        final FluidTank fluidT = new FluidTank(capacity);
+        fluidTank = new FluidTankWrapper() {
+
+            @Override
+            protected IFluidTank getTank() {
+                return fluidT;
+            }
+
+            @Override
+            protected boolean canFillFluidType(FluidStack fluidStack) {
+                return isFluidValid(fluidStack);
+            }
+
+            @Override
+            protected boolean canDrainFluidType(FluidStack fluidStack) {
+                return isFluidValid(fluidStack);
+            }
+
+        };
     }
 
-    @CapabilityInject(IEFluxFluidHandler.class)
-    private static Capability<IEFluxFluidHandler> CAPABILITY;
-
-    private FluidTank fluidTank;
+    private FluidTankWrapper fluidTank;
     private int countDownTimer;
     private int powerTick;
 
@@ -62,15 +76,14 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        NBTTagCompound fluid = new NBTTagCompound();
-        fluidTank.writeToNBT(fluid);
+        NBTTagCompound fluid = fluidTank.serializeNBT();
         tagCompound.setTag("fluidStorage", fluid);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        fluidTank.readFromNBT(tagCompound.getCompoundTag("fluidStorage"));
+        fluidTank.deserializeNBT(tagCompound.getCompoundTag("fluidStorage"));
     }
 
     /**
@@ -82,41 +95,9 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     protected abstract boolean isFluidValid(FluidStack stack);
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        if (fluidTank.getFluid() == null || !isFluidValid(resource))
-            return 0;
-        return fluidTank.fill(resource, doFill);
-    }
-
-    @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        return null;
-    }
-
-    @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        return null;
-    }
-
-    @Override
-    public boolean canFill(Fluid fluid) {
-        return true;
-    }
-
-    @Override
-    public boolean canDrain(Fluid fluid) {
-        return false;
-    }
-
-    @Override
-    public FluidTankInfo[] getTankInfo() {
-        return new FluidTankInfo[]{fluidTank.getInfo()};
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
     }
 
 }

@@ -1,8 +1,8 @@
 package elec332.eflux.endernetwork.capabilities.factory;
 
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -55,7 +55,7 @@ public class DefaultMetaItemFactory extends DefaultFactory {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         models = new IBakedModel[textures.length];
         for (int i = 0; i < textures.length; i++) {
             models[i] = modelBakery.itemModelForTextures(textures[i]);

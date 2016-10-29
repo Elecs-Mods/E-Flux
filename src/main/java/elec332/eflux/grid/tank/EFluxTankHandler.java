@@ -1,8 +1,8 @@
 package elec332.eflux.grid.tank;
 
 import com.google.common.collect.Sets;
-import elec332.core.grid.v2.AbstractGridHandler;
-import elec332.core.grid.v2.DefaultTileEntityLink;
+import elec332.core.grid.AbstractGridHandler;
+import elec332.core.grid.DefaultTileEntityLink;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.util.IEFluxTank;
 import net.minecraft.tileentity.TileEntity;

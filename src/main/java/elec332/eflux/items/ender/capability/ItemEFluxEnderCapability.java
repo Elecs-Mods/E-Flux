@@ -1,11 +1,11 @@
 package elec332.eflux.items.ender.capability;
 
 import com.google.common.collect.Lists;
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.INoJsonItem;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.client.model.loading.INoJsonItem;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderCapabilityContainingItem;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
@@ -78,7 +78,7 @@ public class ItemEFluxEnderCapability extends Item implements INoJsonItem, IEnde
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
     }
 
 }

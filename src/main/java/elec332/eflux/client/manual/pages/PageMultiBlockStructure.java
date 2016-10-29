@@ -75,8 +75,8 @@ public class PageMultiBlockStructure extends AbstractManualPage {
         ItemStack mouseOver = null;
         List<String> note = null;
 
-        //int startX = (width/2) + ((((lengthFactorX * (multiBlockStructure.getLength()- 1))) + widthFactorX * (multiBlockStructure.getWidth() - 1)) / 2);
-        //int startY = (height/2) + (((lengthFactorY * (multiBlockStructure.getLength() - 1)) + (widthFactorY * (multiBlockStructure.getWidth() - 1) + (heightFactor * (multiBlockStructure.getHeight() - 1)))) / 2);
+        //int startX = (width/2) + ((((lengthFactorX * (multiBlockStructure.getBlockLength()- 1))) + widthFactorX * (multiBlockStructure.getBlockWidth() - 1)) / 2);
+        //int startY = (height/2) + (((lengthFactorY * (multiBlockStructure.getBlockLength() - 1)) + (widthFactorY * (multiBlockStructure.getBlockWidth() - 1) + (heightFactor * (multiBlockStructure.getBlockHeight() - 1)))) / 2);
 
         int pass = 0;
         render:

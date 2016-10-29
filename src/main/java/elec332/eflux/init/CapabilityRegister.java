@@ -8,8 +8,6 @@ import elec332.eflux.endernetwork.EnderCapabilityHelper;
 import elec332.eflux.endernetwork.capabilities.*;
 import elec332.eflux.endernetwork.capabilities.factory.DefaultFactory;
 import elec332.eflux.endernetwork.capabilities.factory.DefaultMetaItemFactory;
-import elec332.eflux.multiblock.MultiBlockInterfaces;
-import elec332.eflux.util.IEFluxFluidHandler;
 import elec332.eflux.util.capability.RedstoneCapability;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
@@ -32,10 +30,12 @@ public final class CapabilityRegister {
     public static IEnderCapabilityFactory playerInventory;
 
     public static void init(){
-        registerWithoutAnything(MultiBlockInterfaces.IEFluxMultiBlockFluidHandler.class);
-
-        registerWithoutAnything(IEFluxFluidHandler.class);
         registerWithoutAnything(RedstoneCapability.class);
+
+        registerEnderCapabilities();
+    }
+
+    private static void registerEnderCapabilities(){
         playerInventory = registerEnderCapabilityNoItem("playerInventory", EFluxEnderCapabilityPlayerInventory.class);
         registerEnderCapability("endergy", EFluxEnderCapabilityEndergy.class, 3);
         registerEnderCapability("enderInventory", EFluxEnderCapabilityInventory.class);

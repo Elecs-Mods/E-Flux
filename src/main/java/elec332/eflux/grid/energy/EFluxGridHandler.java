@@ -1,7 +1,7 @@
 package elec332.eflux.grid.energy;
 
 import com.google.common.collect.Sets;
-import elec332.core.grid.v2.AbstractGridHandler;
+import elec332.core.grid.AbstractGridHandler;
 import elec332.core.main.ElecCore;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.api.EFluxAPI;

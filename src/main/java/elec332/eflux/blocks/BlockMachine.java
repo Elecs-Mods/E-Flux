@@ -1,10 +1,10 @@
 package elec332.eflux.blocks;
 
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.INoJsonBlock;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.client.model.loading.INoJsonBlock;
 import elec332.core.tile.BlockTileBase;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BlockStateHelper;
@@ -120,7 +120,7 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), new BlockMachineQuadProvider(textures, quadBakery)/*modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(textures[i]))*/);
     }
 

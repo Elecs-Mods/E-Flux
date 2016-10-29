@@ -1,5 +1,7 @@
 package elec332.eflux.multiblock;
 
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInformation;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.InventoryHelper;
 import elec332.eflux.EFlux;
@@ -10,8 +12,6 @@ import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
 import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.MultiBlockLogic;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Created by Elec332 on 28-7-2015.
@@ -102,10 +101,10 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        currentTip.add("Power: "+energyContainer.getStoredPower());
-        currentTip.add("Broken: "+broken);
-        return super.getWailaBody(itemStack, currentTip, accessor, config);
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        information.add("Power: "+energyContainer.getStoredPower());
+        information.add("Broken: "+broken);
+        super.addInformation(information, hitData);
     }
 
     public int getStoredPower(){

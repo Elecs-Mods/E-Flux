@@ -2,12 +2,12 @@ package elec332.eflux;
 
 import com.google.common.collect.Lists;
 import elec332.core.api.config.IConfigWrapper;
+import elec332.core.api.module.IModuleController;
+import elec332.core.api.network.ModNetworkHandler;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.main.ElecCoreRegistrar;
-import elec332.core.modBaseUtils.ModInfo;
-import elec332.core.module.IModuleController;
 import elec332.core.multiblock.MultiBlockRegistry;
-import elec332.core.network.NetworkHandler;
+import elec332.core.network.IElecNetworkHandler;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.LoadTimer;
 import elec332.core.util.MCModInfo;
@@ -20,13 +20,16 @@ import elec332.eflux.endernetwork.EnderRegistryCallbacks;
 import elec332.eflux.grid.energy.EFluxGridHandler;
 import elec332.eflux.grid.tank.EFluxTankHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
+import elec332.eflux.handler.EnderNetworkInfoProvider;
 import elec332.eflux.handler.PlayerEventHandler;
 import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
-import elec332.eflux.network.*;
+import elec332.eflux.network.PacketPlayerConnection;
+import elec332.eflux.network.PacketSyncEnderContainerGui;
+import elec332.eflux.network.PacketSyncEnderNetwork;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
@@ -69,8 +72,8 @@ import java.util.Random;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
-        acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:Forge@[#FORGE_VER#,);required-after:ElecCore@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
+        acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
 public class EFlux implements IModuleController { //TODO
 
     public static final String ModName = "E-Flux";
@@ -82,12 +85,13 @@ public class EFlux implements IModuleController { //TODO
 
     @Mod.Instance(ModID)
     public static EFlux instance;
+    @ModNetworkHandler
+    public static IElecNetworkHandler networkHandler;
     public static Configuration config;
     public static CreativeTabs creativeTab;
     public static Logger logger;
     public static IConfigWrapper configWrapper, configOres;
     public static Random random;
-    public static NetworkHandler networkHandler;
     public static MultiBlockRegistry multiBlockRegistry;
     public static FMLControlledNamespacedRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
     public static FMLControlledNamespacedRegistry<ICircuitDataProvider> circuitRegistry;
@@ -118,14 +122,11 @@ public class EFlux implements IModuleController { //TODO
         configWrapper = new ConfigWrapper(config);
         configOres = new ConfigWrapper(new Configuration(new File(baseFolder, "Ores.cfg")));
         random = new Random();
-        networkHandler = new NetworkHandler(ModID);
         networkHandler.registerClientPacket(new PacketSyncEnderNetwork());
         networkHandler.registerClientPacket(new PacketSyncEnderContainerGui());
-        networkHandler.registerClientPacket(new PacketSendEnderManagerData());
-        networkHandler.registerClientPacket(new PacketSendValidNetworkKeys());
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
-        ElecCoreRegistrar.GRIDS_V2.register(new EFluxGridHandler());
+        ElecCoreRegistrar.GRIDHANDLERS.register(new EFluxGridHandler());
 
         //DEBUG///////////////////
         logger.info(new RecipeItemStack(Items.IRON_INGOT).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
@@ -170,6 +171,7 @@ public class EFlux implements IModuleController { //TODO
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
         ElecCoreRegistrar.GRIDHANDLERS.register(new EFluxTankHandler());
+        ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new EnderNetworkInfoProvider());
 
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
             @Override

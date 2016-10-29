@@ -3,11 +3,14 @@ package elec332.eflux.endernetwork;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import elec332.core.api.data.IExternalSaveHandler;
+import elec332.core.api.network.ElecByteBuf;
+import elec332.core.api.network.object.INetworkObject;
+import elec332.core.api.network.object.INetworkObjectHandler;
+import elec332.core.main.ElecCore;
 import elec332.core.nbt.NBTMap;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
-import elec332.eflux.network.PacketSendEnderManagerData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
@@ -30,15 +33,17 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 18-2-2016.
  */
-public final class EnderNetworkManager implements IExternalSaveHandler, INBTSerializable<NBTTagCompound>, ITickable {
+public final class EnderNetworkManager implements IExternalSaveHandler, INBTSerializable<NBTTagCompound>, ITickable, INetworkObject {
 
     private EnderNetworkManager(Side side){
         this.side = side;
         networkData = NBTMap.newNBTMap(UUID.class, EnderNetwork.class, new Function<UUID, EnderNetwork>() {
+
             @Override
             public EnderNetwork apply(UUID input) {
                 return new EnderNetwork(input, EnderNetworkManager.this.side);
             }
+
         });
     }
 
@@ -63,17 +68,26 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         get(messageContext.side).deserializeNBT(received);
     }
 
-    public static void setNetworkData(EnderNetwork network, int i, NBTTagCompound data){
+    static void setNetworkData(EnderNetwork network, int i, NBTTagCompound data){
         if (network.getSide().isClient()){
             throw new IllegalArgumentException();
         }
         get(Side.SERVER).sendPacket(0, new NBTHelper().addToTag(network.getNetworkId(), "id").addToTag(i, "nr").addToTag(data, "tag").serializeNBT());
     }
 
-    public void onPacket(int id, NBTTagCompound data){
+    @Override
+    public void setNetworkObjectHandler(INetworkObjectHandler handler) {
+        if (side.isServer()){
+            sender = handler;
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onPacket(int id, ElecByteBuf data) {
         switch (id){
             case 0:
-                onNetworkPacket(data);
+                onNetworkPacket(data.readNBTTagCompoundFromBuffer());
                 break;
             case 1:
                 break;
@@ -82,6 +96,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         }
     }
 
+    @SuppressWarnings("all")
     private void onNetworkPacket(NBTTagCompound tag){
         NBTHelper nbt = new NBTHelper(tag);
         EnderNetwork network = EnderNetworkManager.get(EFlux.proxy.getClientWorld()).get(nbt.getUUID("id"));
@@ -89,7 +104,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
     }
 
     private void sendPacket(int i, NBTTagCompound tag){
-        EFlux.networkHandler.getNetworkWrapper().sendToAll(new PacketSendEnderManagerData(i, tag));
+        sender.sendToAll(i, tag);
     }
 
     public static EnderNetworkManager get(World world){
@@ -113,6 +128,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
 
     private NBTMap<UUID, EnderNetwork> networkData;
     private final Side side;
+    private INetworkObjectHandler sender;
 
     @Nullable
     public EnderNetwork get(UUID uuid){
@@ -157,7 +173,6 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         }
         throw new IllegalArgumentException();
     }
-
 
     @Override
     public void update() {
@@ -205,9 +220,12 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
                 for (Side sideT : Side.values()){
                     INSTANCES.put(sideT, new EnderNetworkManager(sideT));
                 }
+                ElecCore.networkHandler.registerNetworkObject(INSTANCES.get(Side.CLIENT), INSTANCES.get(Side.SERVER));
                 break;
             case SERVER:
                 INSTANCE = new EnderNetworkManager(Side.SERVER);
+                ElecCore.networkHandler.registerNetworkObject(null, INSTANCE);
+                break;
         }
         isServer = side.isServer();
     }

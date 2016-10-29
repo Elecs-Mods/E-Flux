@@ -1,13 +1,13 @@
 package elec332.eflux.blocks;
 
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.api.client.model.map.IBakedModelMetaRotationMap;
 import elec332.core.api.wrench.IWrenchable;
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.INoJsonBlock;
+import elec332.core.client.model.loading.INoJsonBlock;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
-import elec332.core.client.model.map.IBakedModelMetaRotationMap;
-import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BlockStateHelper;
 import elec332.core.util.DirectionHelper;
@@ -162,7 +162,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(final ElecQuadBakery quadBakery, ElecModelBakery modelBakery, final ElecTemplateBakery templateBakery) {
+    public void registerModels(final IElecQuadBakery quadBakery, IElecModelBakery modelBakery, final IElecTemplateBakery templateBakery) {
         rotationMap = new BakedModelMetaRotationMap<IBakedModel>();
         rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorF))));
         rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorR))));

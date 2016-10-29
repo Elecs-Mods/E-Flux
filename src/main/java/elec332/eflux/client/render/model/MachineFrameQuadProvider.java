@@ -2,13 +2,13 @@ package elec332.eflux.client.render.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.RenderingRegistry;
-import elec332.core.client.model.model.IModelAndTextureLoader;
-import elec332.core.client.model.model.IQuadProvider;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockMachineFrame;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -73,8 +73,8 @@ public class MachineFrameQuadProvider implements IQuadProvider, IModelAndTexture
 
     private TextureAtlasSprite main;
     private TextureAtlasSprite[] lines;
-    private ElecQuadBakery quadBakery;
-    private ElecTemplateBakery templateBakery;
+    private IElecQuadBakery quadBakery;
+    private IElecTemplateBakery templateBakery;
 
     private List<BakedQuad> renderFacing(EnumFacing facing, Map<EnumFacing, Boolean> map){
         ImmutableList.Builder<BakedQuad> quadBuilder = new ImmutableList.Builder<BakedQuad>();
@@ -140,7 +140,7 @@ public class MachineFrameQuadProvider implements IQuadProvider, IModelAndTexture
      * use this to make your quads. (This always comes AFTER the textures are loaded)
      */
     @Override
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         this.quadBakery = quadBakery;
         this.templateBakery = templateBakery;
     }

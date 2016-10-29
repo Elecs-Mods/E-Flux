@@ -2,7 +2,7 @@ package elec332.eflux.items;
 
 import elec332.core.api.wrench.IRightClickCancel;
 import elec332.core.api.wrench.IWrenchable;
-import elec332.core.client.model.INoJsonItem;
+import elec332.core.client.model.loading.INoJsonItem;
 import elec332.core.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;

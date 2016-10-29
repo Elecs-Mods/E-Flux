@@ -1,18 +1,18 @@
 package elec332.eflux.items;
 
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.INoJsonItem;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.api.client.model.map.IBakedModelMetaMap;
+import elec332.core.client.model.loading.INoJsonItem;
 import elec332.core.client.model.map.BakedModelMetaMap;
-import elec332.core.client.model.map.IBakedModelMetaMap;
-import elec332.core.client.model.model.IItemModel;
-import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.multipart.cable.PartAdvancedCable;
 import elec332.eflux.multipart.cable.PartBasicCable;
 import elec332.eflux.multipart.cable.PartNormalCable;
 import mcmultipart.multipart.IMultipart;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,7 +39,7 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
     }
 
     @SideOnly(Side.CLIENT)
-    private IBakedModelMetaMap<IItemModel> models;
+    private IBakedModelMetaMap<IBakedModel> models;
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite[] textures;
 
@@ -72,7 +72,7 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IItemModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
         return models.forMeta(stack.getItemDamage());
     }
 
@@ -82,8 +82,8 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
-        models = new BakedModelMetaMap<IItemModel>();
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
+        models = new BakedModelMetaMap<IBakedModel>();
         for (int i = 0; i < textures.length; i++) {
             models.setModelForMeta(i, modelBakery.itemModelForTextures(textures[i]));
         }

@@ -1,6 +1,6 @@
 package elec332.eflux.client.render.tesr;
 
-import elec332.core.client.ITessellator;
+import elec332.core.api.client.ITessellator;
 import elec332.core.client.RenderHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.basic.TileEntityLaser;

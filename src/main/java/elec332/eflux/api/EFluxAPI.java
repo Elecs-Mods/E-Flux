@@ -3,7 +3,6 @@ package elec332.eflux.api;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IEndergyCapability;
-import elec332.eflux.api.energy.IEnergyMonitor;
 import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
@@ -27,9 +26,6 @@ public class EFluxAPI {
     public static Capability<IEnergyProvider> PROVIDER_CAPABILITY;
     @CapabilityInject(IEnergyTransmitter.class)
     public static Capability<IEnergyTransmitter> TRANSMITTER_CAPABILITY;
-    @Deprecated
-    @CapabilityInject(IEnergyMonitor.class)
-    public static Capability<IEnergyMonitor> MONITOR_CAPABILITY;
 
     @CapabilityInject(IHeatReceiver.class)
     public static Capability<IHeatReceiver> HEAT_CAPABILITY;
@@ -50,7 +46,6 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(IEnergyReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnergyProvider.class);
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
-        registerWithoutStorageAndDefaultInstance(IEnergyMonitor.class);
         registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnderNetworkComponent.class);
         registerWithoutStorageAndDefaultInstance(IEndergyCapability.class);

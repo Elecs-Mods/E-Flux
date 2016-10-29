@@ -1,10 +1,10 @@
 package elec332.eflux.items;
 
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.INoJsonItem;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.client.model.loading.INoJsonItem;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockFluid;
 import elec332.eflux.client.ClientHelper;
@@ -120,7 +120,7 @@ public class ItemBucket extends net.minecraft.item.ItemBucket implements INoJson
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery elecQuadBakery, ElecModelBakery elecModelBakery, ElecTemplateBakery elecTemplateBakery) {
+    public void registerModels(IElecQuadBakery elecQuadBakery, IElecModelBakery elecModelBakery, IElecTemplateBakery elecTemplateBakery) {
         model = WrappedModel.wrapWithDefaultItemTransforms(new ModelDynBucket(BUCKET_BACK, fluidRL, BUCKET_FRONT, fluid, true).bake(ClientHelper.DEFAULT_ITEM_STATE, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter()));
     }
 

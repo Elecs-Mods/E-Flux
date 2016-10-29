@@ -1,10 +1,10 @@
 package elec332.eflux.endernetwork.capabilities.factory;
 
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.model.IModelAndTextureLoader;
-import elec332.core.client.model.template.ElecTemplateBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
@@ -67,7 +67,7 @@ public class DefaultFactory extends IEnderCapabilityFactory implements IModelAnd
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         model = modelBakery.itemModelForTextures(textures);
     }
 

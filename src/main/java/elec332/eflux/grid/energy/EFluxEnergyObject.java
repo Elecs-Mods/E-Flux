@@ -3,8 +3,9 @@ package elec332.eflux.grid.energy;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import elec332.core.grid.v2.DefaultTileEntityLink;
+import elec332.core.grid.DefaultTileEntityLink;
 import elec332.eflux.api.EFluxAPI;
+import elec332.eflux.api.energy.IEnergyGridInformation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -187,11 +188,10 @@ public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyG
 
     static {
         SIDES = EnumFacing.VALUES.length;
-        ENERGY_CAPABILITIES = new Capability[4];
+        ENERGY_CAPABILITIES = new Capability[3];
         ENERGY_CAPABILITIES[0] = EFluxAPI.RECEIVER_CAPABILITY;
         ENERGY_CAPABILITIES[1] = EFluxAPI.PROVIDER_CAPABILITY;
         ENERGY_CAPABILITIES[2] = EFluxAPI.TRANSMITTER_CAPABILITY;
-        ENERGY_CAPABILITIES[3] = EFluxAPI.MONITOR_CAPABILITY;
     }
 
     @Override

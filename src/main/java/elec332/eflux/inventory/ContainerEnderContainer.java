@@ -124,7 +124,7 @@ public class ContainerEnderContainer extends BaseContainer implements WidgetButt
     }
 
     private void sendPacket(NBTTagCompound data){
-        EFlux.networkHandler.getNetworkWrapper().sendTo(new PacketSyncEnderContainerGui(data), (EntityPlayerMP) thePlayer);
+        EFlux.networkHandler.sendTo(new PacketSyncEnderContainerGui(data), (EntityPlayerMP) thePlayer);
     }
 
     @Override

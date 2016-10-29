@@ -1,4 +1,4 @@
-package elec332.eflux.grid.energy;
+package elec332.eflux.api.energy;
 
 /**
  * Created by Elec332 on 9-10-2016.

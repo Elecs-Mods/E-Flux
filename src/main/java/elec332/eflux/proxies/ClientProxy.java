@@ -2,15 +2,15 @@ package elec332.eflux.proxies;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import elec332.core.client.IIconRegistrar;
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
+import elec332.core.api.client.IIconRegistrar;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.api.client.model.map.IBakedModelMetaMap;
+import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.RenderingRegistry;
+import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.core.client.model.map.BakedModelMetaMap;
-import elec332.core.client.model.map.IBakedModelMetaMap;
-import elec332.core.client.model.model.IModelAndTextureLoader;
-import elec332.core.client.model.model.IQuadProvider;
-import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.world.WorldHelper;
@@ -151,7 +151,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
      */
     @Override
     @SuppressWarnings("all")
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         models = new BakedModelMetaMap<IBakedModel>();
         for (int i = 0; i < textures.length; i++) {
             models.setModelForMeta(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]).setTexture(textures[i])));
@@ -174,7 +174,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
     private TextureAtlasSprite[] textures;
     private IBakedModelMetaMap<IBakedModel> models;
-    private ElecQuadBakery quadBakery;
+    private IElecQuadBakery quadBakery;
 
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {

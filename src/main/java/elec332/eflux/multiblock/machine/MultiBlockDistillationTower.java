@@ -1,26 +1,23 @@
 package elec332.eflux.multiblock.machine;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInformation;
 import elec332.core.multiblock.AbstractMultiBlock;
+import elec332.core.util.FluidTankWrapper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.heat.IHeatReceiver;
-import elec332.eflux.api.util.CapabilityHelper;
 import elec332.eflux.util.Config;
-import elec332.eflux.util.IEFluxFluidHandler;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -32,21 +29,18 @@ import static elec332.eflux.init.FluidRegister.*;
  */
 public class MultiBlockDistillationTower extends AbstractMultiBlock implements IHeatReceiver {
 
-    @CapabilityInject(IEFluxFluidHandler.class)
-    private static Capability<IEFluxFluidHandler> CAPABILITY;
-
     /**
      * Initialise your multiblock here, all fields provided by @link IMultiblock have already been given a value
      */
     @Override
     public void init() {
-        oilTank = CapabilityHelper.forCapacity(6000);   // Input Tank
+        oilTank = FluidTankWrapper.withCapacity(6000);   // Input Tank
         setPositions();
-        lubeTank = CapabilityHelper.forCapacity(500);  // 2%
-        fuelTank = CapabilityHelper.forCapacity(5000);  // 49%
-        dieselTank = CapabilityHelper.forCapacity(4000);// 30%
-        petrolTank = CapabilityHelper.forCapacity(2000);// 12%
-        gasTank = CapabilityHelper.forCapacity(1000);   // 7%
+        lubeTank = FluidTankWrapper.withCapacity(500);  // 2%
+        fuelTank = FluidTankWrapper.withCapacity(5000);  // 49%
+        dieselTank = FluidTankWrapper.withCapacity(4000);// 30%
+        petrolTank = FluidTankWrapper.withCapacity(2000);// 12%
+        gasTank = FluidTankWrapper.withCapacity(1000);   // 7%
     }
 
     private void setPositions(){
@@ -66,8 +60,8 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
         }
     }
 
-    private CapabilityHelper.FluidHandlerHelper oilTank;
-    private CapabilityHelper.FluidHandlerHelper lubeTank, fuelTank, dieselTank, petrolTank, gasTank;
+    private FluidTankWrapper oilTank;
+    private FluidTankWrapper lubeTank, fuelTank, dieselTank, petrolTank, gasTank;
     private int heat, backup;
     private BlockPos oilIn1, oilIn2, lubeOut, gasOut, petrolOut, fuelOut, dieselOut;
     private List<BlockPos> heatInputs;
@@ -122,7 +116,7 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
         backup = heat;
     }
 
-    private void attemptFill(CapabilityHelper.FluidHandlerHelper tank, int fill, Fluid fluid){
+    private void attemptFill(FluidTankWrapper tank, int fill, Fluid fluid){
         int i = tank.fill(new FluidStack(fluid, fill), true);
         if (i != fill){
             BlockPos boomPos = getBlockLocAtTranslatedPos(1, 2, 5);
@@ -155,7 +149,7 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        if (capability == CAPABILITY){
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
             if (pos.equals(oilIn1) || pos.equals(oilIn2)){
                 return (T) oilTank;
             } else if (pos.equals(fuelOut)){
@@ -185,29 +179,26 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        NBTTagCompound tag = accessor.getNBTData();
-        if (tag != null){
-            if (tag.hasKey("h")){
-                currentTip.add("Heat: "+tag.getInteger("h"));
-            }
-            if (tag.hasKey("o")){
-                currentTip.add("Oil: "+tag.getInteger("o")+"mB");
-            }
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        NBTTagCompound tag = hitData.getData();
+        if (tag.hasKey("h")){
+            information.addInformation("Heat: "+tag.getInteger("h"));
         }
-        return super.getWailaBody(itemStack, currentTip, accessor, config);
+        if (tag.hasKey("o")){
+            information.addInformation("Oil: "+tag.getInteger("o")+"mB");
+        }
+        super.addInformation(information, hitData);
     }
 
+    @Nonnull
     @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
-        if (tag != null){
-            tag.setInteger("h", backup);
-            if (heatInputs.contains(pos)){
-                FluidStack fluid = oilTank.getTankInfo()[0].fluid;
-                tag.setInteger("o", fluid == null ? 0 : fluid.amount);
-            }
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+        tag.setInteger("h", backup);
+        if (heatInputs.contains(hitData.getPos())){
+            FluidStack fluid = oilTank.getTankProperties()[0].getContents();
+            tag.setInteger("o", fluid == null ? 0 : fluid.amount);
         }
-        return super.getWailaTag(player, te, tag, world, pos);
+        return super.getInfoNBTData(tag, tile, player, hitData);
     }
 
 }

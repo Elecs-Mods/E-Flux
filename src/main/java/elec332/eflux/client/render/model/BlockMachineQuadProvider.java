@@ -2,8 +2,8 @@ package elec332.eflux.client.render.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import elec332.core.client.model.ElecQuadBakery;
-import elec332.core.client.model.model.IQuadProvider;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
 import elec332.eflux.blocks.BlockMachine;
 import net.minecraft.block.state.IBlockState;
@@ -21,13 +21,13 @@ import java.util.List;
  */
 public class BlockMachineQuadProvider implements IQuadProvider {
 
-    public BlockMachineQuadProvider(TextureAtlasSprite[][] textures, ElecQuadBakery quadBakery){
+    public BlockMachineQuadProvider(TextureAtlasSprite[][] textures, IElecQuadBakery quadBakery){
         this.textures = textures;
         this.quadBakery = quadBakery;
     }
 
     private final TextureAtlasSprite[][] textures;
-    private final ElecQuadBakery quadBakery;
+    private final IElecQuadBakery quadBakery;
 
     @Override
     public List<BakedQuad> getBakedQuads(@Nullable IBlockState state, EnumFacing side, long random) {

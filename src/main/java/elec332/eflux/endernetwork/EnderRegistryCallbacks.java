@@ -2,9 +2,9 @@ package elec332.eflux.endernetwork;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Lists;
-import elec332.core.client.ITextureLoader;
+import elec332.core.api.client.ITextureLoader;
 import elec332.core.client.model.RenderingRegistry;
-import elec332.core.client.model.model.IModelLoader;
+import elec332.core.client.model.loading.IModelLoader;
 import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.items.ender.capability.ItemEFluxEnderCapability;

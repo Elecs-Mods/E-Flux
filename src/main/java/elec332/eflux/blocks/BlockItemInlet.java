@@ -1,10 +1,10 @@
 package elec332.eflux.blocks;
 
-import elec332.core.client.model.ElecModelBakery;
-import elec332.core.client.model.ElecQuadBakery;
+import elec332.core.api.client.model.IElecModelBakery;
+import elec332.core.api.client.model.IElecQuadBakery;
+import elec332.core.api.client.model.IElecTemplateBakery;
+import elec332.core.api.client.model.map.IBakedModelMetaRotationMap;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
-import elec332.core.client.model.map.IBakedModelMetaRotationMap;
-import elec332.core.client.model.template.ElecTemplateBakery;
 import elec332.core.util.DirectionHelper;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
@@ -59,7 +59,7 @@ public class BlockItemInlet extends BlockMachine {
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerModels(ElecQuadBakery quadBakery, ElecModelBakery modelBakery, ElecTemplateBakery templateBakery) {
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
         rotationMap = new BakedModelMetaRotationMap<IBakedModel>(true, true);
         for (int i = 0; i < 2; i++) {
             rotationMap.setModelsForRotation(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]), true, true));

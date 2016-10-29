@@ -1,16 +1,16 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInfoProvider;
+import elec332.core.api.info.IInformation;
 import elec332.core.client.util.KeyHelper;
-import elec332.core.compat.waila.WailaCompatHandler;
 import elec332.core.util.FluidHelper;
 import elec332.core.util.NBTHelper;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.grid.tank.EFluxDynamicTankGrid;
 import elec332.eflux.tileentity.TileEntityEFlux;
 import elec332.eflux.util.IEFluxTank;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,8 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -30,13 +28,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Created by Elec332 on 16-4-2016.
  */
 @RegisterTile(name = "TileEntityEFluxTank")
-public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, WailaCompatHandler.IWailaInfoTile {
+public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, IInfoProvider {
 
     public TileEntityTank(){
         this.multiBlockTag = new NBTTagCompound();
@@ -172,26 +169,26 @@ public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, Waila
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> list, IWailaDataAccessor iWailaDataAccessor, IWailaConfigHandler iWailaConfigHandler) {
-        NBTTagCompound tag = iWailaDataAccessor.getNBTData();
-        if (tag != null && tag.hasKey("c")){
-            list.add("Fluid: "+(getClientRenderFluid() == null ? "null" : getClientRenderFluid().getLocalizedName(null)));
-            list.add("Amount: "+tag.getInteger("c")+" / "+tag.getInteger("t"));
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        NBTTagCompound tag = hitData.getData();
+        if (tag.hasKey("c")){
+            information.addInformation("Fluid: "+(getClientRenderFluid() == null ? "null" : getClientRenderFluid().getLocalizedName(null)));
+            information.addInformation("Amount: "+tag.getInteger("c")+" / "+tag.getInteger("t"));
             if (KeyHelper.isShiftDown()){
-                list.add("Internal stored: "+tag.getInteger("i")+" / "+getTankSize());
+                information.addInformation("Internal stored: "+tag.getInteger("i")+" / "+getTankSize());
             }
         }
-        return list;
     }
 
+    @Nonnull
     @Override
-    public NBTTagCompound getWailaTag(EntityPlayerMP entityPlayerMP, TileEntity tileEntity, NBTTagCompound nbtTagCompound, World world, BlockPos blockPos) {
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
         if (tankMultiBlock != null) {
-            nbtTagCompound.setInteger("c", tankMultiBlock.getTotalStoredAmount());
-            nbtTagCompound.setInteger("t", tankMultiBlock.getCapacity());
-            nbtTagCompound.setInteger("i", tankMultiBlock.getTankContentAmount(DimensionCoordinate.fromTileEntity(this)));
+            tag.setInteger("c", tankMultiBlock.getTotalStoredAmount());
+            tag.setInteger("t", tankMultiBlock.getCapacity());
+            tag.setInteger("i", tankMultiBlock.getTankContentAmount(DimensionCoordinate.fromTileEntity(this)));
         }
-        return nbtTagCompound;
+        return tag;
     }
 
 }

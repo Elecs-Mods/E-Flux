@@ -1,29 +1,29 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInformation;
+import elec332.core.api.inventory.IDefaultInventory;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 4-9-2015.
  */
 //TODO: Interface
 @RegisterTile(name = "TileEntityEFluxMultiBlockItemGate")
-public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IActivatableMachine, ITickable {
+public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IDefaultInventory, IActivatableMachine, ITickable {
 
     public TileEntityMultiBlockItemGate(){
         super();
@@ -101,19 +101,11 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     public boolean canFaceUpOrDown() {
         return true;
     }
-/*
-    @Override
-    public boolean onBlockActivatedBy(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!worldObj.isRemote){
-            player.addChatComponentMessage(new TextComponentString("Mode: " + (isOutputMode() ? "output" : "input")));
-        }
-        return super.onBlockActivatedBy(state, player, hand, stack, side, hitX, hitY, hitZ);
-    }*/
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        currentTip.add("Mode: " + (isOutputMode() ? "output" : "input"));
-        return currentTip;
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        information.addInformation("Mode: " + (isOutputMode() ? "output" : "input"));
+        super.addInformation(information, hitData);
     }
 
     @Override
@@ -147,96 +139,15 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
         return mode == 1;
     }
 
+    @Nonnull
     @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int amount) {
-        return inventory.decrStackSize(slot, amount);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    @Override
-    public String getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    /**
-     * Get the formatted ChatComponent that will be used for the sender's username in chat
-     */
-    @Override
-    public ITextComponent getDisplayName() {
-        return null;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-
+    public IInventory getInventory() {
+        return inventory;
     }
 
     @Override
     public boolean isActive() {
         return isInputMode();
     }
+
 }
