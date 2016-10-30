@@ -1,9 +1,12 @@
 package elec332.eflux;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.IElecCoreMod;
 import elec332.core.api.config.IConfigWrapper;
+import elec332.core.api.data.IExternalSaveHandler;
 import elec332.core.api.module.IModuleController;
 import elec332.core.api.network.ModNetworkHandler;
+import elec332.core.api.registry.ISingleRegister;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.multiblock.MultiBlockRegistry;
@@ -38,6 +41,7 @@ import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenRegister;
+import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -56,7 +60,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
@@ -74,7 +77,7 @@ import java.util.Random;
  */
 @Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:Forge@[#FORGE_VER#,);required-after:ElecCore@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
-public class EFlux implements IModuleController { //TODO
+public class EFlux implements IModuleController, IElecCoreMod {
 
     public static final String ModName = "E-Flux";
     public static final String ModID = "EFlux";
@@ -113,6 +116,7 @@ public class EFlux implements IModuleController { //TODO
             public Item getTabIconItem() {
                 return item;
             }
+
         };
         enderCapabilityRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, EnderRegistryCallbacks.INSTANCE);
         circuitRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("circuits"), ICircuitDataProvider.class, RegistryHelper.getNullCallback());
@@ -174,13 +178,14 @@ public class EFlux implements IModuleController { //TODO
         ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new EnderNetworkInfoProvider());
 
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
+
             @Override
             public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
                 //Dummy, just load my chunks please.....
             }
+
         });
         RecipeRegister.registerRecipes();
-        EnderNetworkManager.registerSaveHandler();
         IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = VillagerRegistry.instance().getRegistry();
         new VillagerRegistry.VillagerCareer(villagerRegistry.getValue(new ResourceLocation("smith")), "technician").addTrade(1, new EntityVillager.ITradeList() {
 
@@ -208,9 +213,14 @@ public class EFlux implements IModuleController { //TODO
         loadTimer.endPhase(event);
     }
 
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        CommandRegister.instance.init(event);
+    @Override
+    public void registerServerCommands(ISingleRegister<ICommand> commandRegistry) {
+        CommandRegister.instance.init(commandRegistry);
+    }
+
+    @Override
+    public void registerSaveHandlers(ISingleRegister<IExternalSaveHandler> saveHandlerRegistry) {
+        EnderNetworkManager.registerSaveHandler(saveHandlerRegistry);
     }
 
     @Override

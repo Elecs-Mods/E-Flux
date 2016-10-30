@@ -1,6 +1,7 @@
 package elec332.eflux.init;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.registry.ISingleRegister;
 import elec332.core.main.ElecCore;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -10,6 +11,7 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.circuits.IEFluxCircuit;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.List;
 
@@ -32,8 +33,8 @@ public final class CommandRegister {
     private CommandRegister(){
     }
 
-    public void init(FMLServerStartingEvent event){
-        event.registerServerCommand(new CommandBase() {
+    public void init(ISingleRegister<ICommand> commandRegistry){
+        commandRegistry.register(new CommandBase() {
 
             private static final String reloadConfig = "reloadConfig";
 

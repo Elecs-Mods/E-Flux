@@ -25,6 +25,7 @@ public class EFluxFurnaceRecipes extends FurnaceRecipes {
     private final List<IEFluxFurnaceRecipe> recipes;
 
     @Override
+    @SuppressWarnings("all")
     public ItemStack getSmeltingResult(ItemStack stack) {
         /* When the vanilla smelting recipes are registered, my list is still null... :( */
         if (stack != null && recipes != null) {

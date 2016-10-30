@@ -6,6 +6,7 @@ import elec332.core.api.data.IExternalSaveHandler;
 import elec332.core.api.network.ElecByteBuf;
 import elec332.core.api.network.object.INetworkObject;
 import elec332.core.api.network.object.INetworkObjectHandler;
+import elec332.core.api.registry.ISingleRegister;
 import elec332.core.main.ElecCore;
 import elec332.core.nbt.NBTMap;
 import elec332.core.util.NBTHelper;
@@ -47,7 +48,8 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         });
     }
 
-    public static void registerSaveHandler(){
+    public static void registerSaveHandler(ISingleRegister<IExternalSaveHandler> saveHandlerRegistry){
+        saveHandlerRegistry.register(get(Side.SERVER));
         MinecraftForge.EVENT_BUS.register(new Object(){
 
             @SubscribeEvent
@@ -75,38 +77,6 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         get(Side.SERVER).sendPacket(0, new NBTHelper().addToTag(network.getNetworkId(), "id").addToTag(i, "nr").addToTag(data, "tag").serializeNBT());
     }
 
-    @Override
-    public void setNetworkObjectHandler(INetworkObjectHandler handler) {
-        if (side.isServer()){
-            sender = handler;
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onPacket(int id, ElecByteBuf data) {
-        switch (id){
-            case 0:
-                onNetworkPacket(data.readNBTTagCompoundFromBuffer());
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-    }
-
-    @SuppressWarnings("all")
-    private void onNetworkPacket(NBTTagCompound tag){
-        NBTHelper nbt = new NBTHelper(tag);
-        EnderNetwork network = EnderNetworkManager.get(EFlux.proxy.getClientWorld()).get(nbt.getUUID("id"));
-        network.onPacket(nbt.getInteger("nr"), nbt.getCompoundTag("tag"));
-    }
-
-    private void sendPacket(int i, NBTTagCompound tag){
-        sender.sendToAll(i, tag);
-    }
-
     public static EnderNetworkManager get(World world){
         return get(!world.isRemote ? Side.SERVER : Side.CLIENT);
     }
@@ -128,7 +98,6 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
 
     private NBTMap<UUID, EnderNetwork> networkData;
     private final Side side;
-    private INetworkObjectHandler sender;
 
     @Nullable
     public EnderNetwork get(UUID uuid){
@@ -181,6 +150,8 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         }
     }
 
+    //IO
+
     @Override
     public String getName() {
         return "EFluxEnderNetwork";
@@ -210,6 +181,42 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         networkData.deserializeNBT(nbt.getTagList("lEN", 10));
+    }
+
+    //Network
+
+    private INetworkObjectHandler sender;
+
+    @Override
+    public void setNetworkObjectHandler(INetworkObjectHandler handler) {
+        if (side.isServer()){
+            sender = handler;
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onPacket(int id, ElecByteBuf data) {
+        switch (id){
+            case 0:
+                onNetworkPacket(data.readNBTTagCompoundFromBuffer());
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+    }
+
+    @SuppressWarnings("all")
+    private void onNetworkPacket(NBTTagCompound tag){
+        NBTHelper nbt = new NBTHelper(tag);
+        EnderNetwork network = EnderNetworkManager.get(EFlux.proxy.getClientWorld()).get(nbt.getUUID("id"));
+        network.onPacket(nbt.getInteger("nr"), nbt.getCompoundTag("tag"));
+    }
+
+    private void sendPacket(int i, NBTTagCompound tag){
+        sender.sendToAll(i, tag);
     }
 
     static {
