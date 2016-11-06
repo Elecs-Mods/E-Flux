@@ -29,7 +29,7 @@ public class WorldGenOilLakes extends WorldGenerator {
             //
         }
 
-        if (position.getY() <= 4) {
+        if (position.getY() <= 12) {
             return false;
         } else {
             position = position.down(4);
@@ -40,9 +40,9 @@ public class WorldGenOilLakes extends WorldGenerator {
                 double d0 = rand.nextDouble() * 6.0D + 3.0D;
                 double d1 = rand.nextDouble() * 4.0D + 2.0D;
                 double d2 = rand.nextDouble() * 6.0D + 3.0D;
-                double d3 = rand.nextDouble() * (16.0D - d0 - 2.0D) + 1.0D + d0 / 2.0D;
+                double d3 = rand.nextDouble() * (12.0D - d0 - 2.0D) + 1.0D + d0 / 2.0D;
                 double d4 = rand.nextDouble() * (5.0D - d1 - 3.0D) + 2.0D + d1 / 2.0D;
-                double d5 = rand.nextDouble() * (16.0D - d2 - 2.0D) + 1.0D + d2 / 2.0D;
+                double d5 = rand.nextDouble() * (12.0D - d2 - 2.0D) + 1.0D + d2 / 2.0D;
 
                 for (int l = 1; l < 15; ++l) {
                     for (int i1 = 1; i1 < 15; ++i1) {

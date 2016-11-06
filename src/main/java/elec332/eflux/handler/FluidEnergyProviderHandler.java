@@ -19,14 +19,24 @@ public class FluidEnergyProviderHandler {
     private Map<String, FluidBurnData> burnDataMap;
 
     public FluidBurnData getPowerFromFluid(FluidStack stack){
-        if (stack == null)
+        if (stack == null) {
             return null;
-        return getPowerFromFluid(stack.getFluid());
+        }
+        FluidBurnData ret = getPowerFromFluid(stack.getFluid());
+        if (ret == null){
+            return null;
+        }
+        if (ret.fuelCost > stack.amount){
+            float diff = ((float) stack.amount) / ((float) ret.fuelCost);
+            return ret.modify(diff, diff, diff);
+        }
+        return ret;
     }
 
-    public FluidBurnData getPowerFromFluid(Fluid fluid){
-        if (fluid == null)
+    private FluidBurnData getPowerFromFluid(Fluid fluid){
+        if (fluid == null) {
             return null;
+        }
         return burnDataMap.get(fluid.getName().toLowerCase());
     }
 
@@ -35,8 +45,9 @@ public class FluidEnergyProviderHandler {
     }
 
     public void registerFuelData(String fluid, int fuelCost, int burnTime, int powerProvided){
-        if (burnDataMap.get(fluid) != null)
-            throw new IllegalArgumentException("FuelData for \""+fluid+"\" is already registered!");
+        if (burnDataMap.get(fluid) != null) {
+            throw new IllegalArgumentException("FuelData for \"" + fluid + "\" is already registered!");
+        }
         fluid = fluid.toLowerCase();
         burnDataMap.put(fluid, new FluidBurnData(fluid, fuelCost, burnTime, powerProvided));
     }

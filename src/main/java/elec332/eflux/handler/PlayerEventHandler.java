@@ -17,7 +17,7 @@ public class PlayerEventHandler {
     @SubscribeEvent
     public void onPlayerConnected(PlayerEvent.PlayerLoggedInEvent event){
         if (event.player instanceof EntityPlayerMP){
-            EFlux.logger.info("Sending connection packet...");
+            EFlux.logger.info("Sending connection packet to "+event.player.getDisplayNameString());
             EFlux.networkHandler.sendTo(new PacketPlayerConnection((EntityPlayerMP) event.player), (EntityPlayerMP) event.player);
         }
     }

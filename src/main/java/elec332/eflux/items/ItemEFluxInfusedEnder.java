@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import com.google.common.base.Objects;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
@@ -26,6 +27,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
     public ItemEFluxInfusedEnder() {
         super("infusedEnder");
         setMaxStackSize(1);
+        setHasSubtypes(true);
     }
 
     @Override
@@ -43,6 +45,11 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
         tooltip.add("Network ID: "+getUUID(stack));
     }
 
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        return isActive(stack);
+    }
+
     @Nullable
     public static UUID getUUID(ItemStack stack){
         if (stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nUUID")){
@@ -51,13 +58,28 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
         return null;
     }
 
+    @Nullable
+    public static NBTTagCompound getNetworkData(ItemStack stack){
+        if (stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nData")){
+            return stack.getTagCompound().getCompoundTag("nData");
+        }
+        return null;
+    }
+
     @Nonnull
-    public static ItemStack createStack(@Nonnull UUID uuid){
+    public static ItemStack createStack(@Nonnull UUID uuid, @Nullable NBTTagCompound data){
         ItemStack stack = new ItemStack(ItemRegister.entangledEnder);
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("nUUID", uuid.toString());
+        if (data != null) {
+            tag.setTag("nData", data);
+        }
         stack.setTagCompound(tag);
         return stack;
+    }
+
+    public static boolean isActive(ItemStack stack) {
+        return stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.getItemDamage() == 0;
     }
 
 }

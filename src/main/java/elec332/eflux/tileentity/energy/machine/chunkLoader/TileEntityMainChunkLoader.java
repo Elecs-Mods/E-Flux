@@ -2,6 +2,8 @@ package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
 import com.google.common.collect.Lists;
 import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInformation;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -11,15 +13,18 @@ import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeChunkManager;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -44,24 +49,6 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
     public boolean changed;
     private int loadedChunks;
     private boolean recentlyWithoutPower;
-/*
-    @Override
-    public void validate() {
-        System.out.println("validating: "+toString());
-        super.validate();
-    }
-
-    @Override
-    public void invalidate() {
-        System.out.println("Invalidating: "+toString());
-        super.invalidate();
-    }
-
-    @Override
-    public boolean isInvalid() {
-        System.out.println("Invalid: "+super.isInvalid()+" for "+toString());
-        return super.isInvalid();
-    }*/
 
     private List<ForgeChunkManager.Ticket> tickets;
 
@@ -233,12 +220,15 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
     }
 
     @Override
-    public String[] getProvidedData() {
-        return new String[]{
-                "Stored power: "+energyContainer.getStoredPower(),
-                "Max stored power: "+energyContainer.getMaxStoredEnergy(),
-                "In working order: "+!isBroken(),
-                "Loaded chunks: "+loadedChunks
-        };
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        super.addInformation(information, hitData);
+        information.addInformation("Loaded chunks: "+hitData.getData().getInteger("chunksL"));
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+        tag.setInteger("chunksL", loadedChunks);
+        return super.getInfoNBTData(tag, tile, player, hitData);
     }
 }

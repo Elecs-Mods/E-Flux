@@ -5,6 +5,7 @@ import elec332.core.grid.AbstractGridHandler;
 import elec332.core.main.ElecCore;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.api.EFluxAPI;
+import elec332.eflux.api.energy.IEnergyGridInformation;
 import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
@@ -126,7 +127,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
                     oGrid.addObject(o, facing);
                 } else {
                     if (oGrid != offsetGrid) {
-                        oGrid.merge(offsetGrid);System.out.println("merge: "+oGrid+"  "+offsetGrid);
+                        oGrid.merge(offsetGrid);
                         removeGrid(offsetGrid);
                     }
                     oGrid.addObject(o, facing);
@@ -201,6 +202,10 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
             return source != null && receiver != null && source.canConnectTo(PROVIDER, o2.getTileEntity(), RECEIVER, receiver) && receiver.canConnectTo(RECEIVER, o1.getTileEntity(), PROVIDER, source);
         }
         return false;
+    }
+
+    public IEnergyGridInformation getInformationFor(DimensionCoordinate dimensionCoordinate){
+        return super.getObject(dimensionCoordinate);
     }
 
     private IEnergyReceiver getReceiver(ICapabilityProvider capabilityProvider, EnumFacing facing){

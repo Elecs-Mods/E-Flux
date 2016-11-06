@@ -56,7 +56,8 @@ public class ManualInit {
     private static final PageMultiBlockStructure.IMultiBlockStructureManualHelper compressorManual, grinderManual, furnaceManual, laserManual;
 
     static {
-        compressorManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper.DefaultImpl(){
+        compressorManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper(){
+
             @Override
             public void getNote(int length, int width, int height, List<String> list) {
                 if (width == 1){
@@ -83,8 +84,10 @@ public class ManualInit {
                     list.add("Should be facing inwards.");
                 }
             }
+
         };
-        grinderManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper.DefaultImpl(){
+        grinderManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper(){
+
             @Override
             public void getNote(int length, int width, int height, List<String> list) {
                 if (width == 1){
@@ -96,8 +99,10 @@ public class ManualInit {
                     }
                 }
             }
+
         };
-        furnaceManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper.DefaultImpl(){
+        furnaceManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper(){
+
             @Override
             public void getNote(int length, int width, int height, List<String> list) {
                 if (width == 1){
@@ -118,8 +123,10 @@ public class ManualInit {
                     list.add("Should be facing towards the inside.");
                 }
             }
+
         };
-        laserManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper.DefaultImpl(){
+        laserManual = new PageMultiBlockStructure.IMultiBlockStructureManualHelper(){
+
             @Override
             public void getNote(int length, int width, int height, List<String> list) {
                 if (height == 1){
@@ -140,6 +147,7 @@ public class ManualInit {
                     list.add("Should be in output mode.");
                 }
             }
+
         };
     }
 

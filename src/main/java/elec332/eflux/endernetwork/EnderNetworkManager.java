@@ -2,6 +2,7 @@ package elec332.eflux.endernetwork;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import elec332.core.api.data.IExternalSaveHandler;
 import elec332.core.api.network.ElecByteBuf;
 import elec332.core.api.network.object.INetworkObject;
@@ -10,9 +11,11 @@ import elec332.core.api.registry.ISingleRegister;
 import elec332.core.main.ElecCore;
 import elec332.core.nbt.NBTMap;
 import elec332.core.util.NBTHelper;
+import elec332.core.util.NBTTypes;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.ender.IEnderNetworkComponent;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.ISaveHandler;
@@ -29,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -38,7 +42,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
 
     private EnderNetworkManager(Side side){
         this.side = side;
-        networkData = NBTMap.newNBTMap(UUID.class, EnderNetwork.class, new Function<UUID, EnderNetwork>() {
+        this.networkData = NBTMap.newNBTMap(UUID.class, EnderNetwork.class, new Function<UUID, EnderNetwork>() {
 
             @Override
             public EnderNetwork apply(UUID input) {
@@ -46,13 +50,18 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
             }
 
         });
+        this.validNetworks = Sets.newHashSet();
     }
 
     public static void registerSaveHandler(ISingleRegister<IExternalSaveHandler> saveHandlerRegistry){
+        if (registered){
+            throw new IllegalStateException();
+        }
         saveHandlerRegistry.register(get(Side.SERVER));
         MinecraftForge.EVENT_BUS.register(new Object(){
 
             @SubscribeEvent
+            @SuppressWarnings("unused")
             public void onTick(TickEvent.ServerTickEvent event){
                 if (event.phase == TickEvent.Phase.START){
                     get(Side.SERVER).update();
@@ -60,11 +69,10 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
             }
 
         });
+        registered = true;
     }
 
-    public static int[] getValidFequencies(IEnderNetworkComponent component){
-        return get(FMLCommonHandler.instance().getEffectiveSide()).get(component.getUuid()).getFrequencies(component.getRequiredCapability());
-    }
+    private static boolean registered;
 
     public static void onPacket(NBTTagCompound received, MessageContext messageContext){
         get(messageContext.side).deserializeNBT(received);
@@ -97,6 +105,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
     private static final boolean isServer;
 
     private NBTMap<UUID, EnderNetwork> networkData;
+    private Set<UUID> validNetworks;
     private final Side side;
 
     @Nullable
@@ -106,16 +115,17 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         }
         EnderNetwork ret = networkData.get(uuid);
         if (ret == null){
-            if (side.isServer()){
+            if (!validNetworks.contains(uuid)){
                 return null;
             }
-            ret = new EnderNetwork(uuid, side);
-            networkData.put(uuid, ret);
+            throw new RuntimeException();
+            // = new EnderNetwork(uuid, side);
+            //networkData.put(uuid, ret);
         }
         return ret;
     }
 
-    public UUID generateNew(@Nullable NBTTagCompound tag){
+    public UUID generateNewKey(){
         if (!side.isServer()){
             throw new IllegalAccessError();
         }
@@ -123,22 +133,51 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         while (networkData.keySet().contains(uuid)){
             uuid = UUID.randomUUID();
         }
+        return uuid;
+    }
+
+    public EnderNetwork createNetwork(@Nonnull UUID uuid, @Nullable NBTTagCompound tag){
+        if (!side.isServer()){
+            throw new IllegalAccessError();
+        }
+        EnderNetwork ret = createNetwork_(uuid, tag);
+        boolean hasTag = tag != null;
+        ElecByteBuf byteBuf = sender.createByteBuf().writeBoolean(hasTag);
+        if (hasTag){
+            byteBuf.writeNBTTagCompoundToBuffer(tag);
+        }
+        sender.sendToAll(1, byteBuf);
+        return ret;
+    }
+
+    private EnderNetwork createNetwork_(@Nonnull UUID uuid, @Nullable NBTTagCompound tag){
+        if (networkData.get(uuid) != null){
+            throw new IllegalStateException();
+        }
         EnderNetwork network = new EnderNetwork(uuid, side);
         networkData.put(uuid, network); //Generate the network
         if (tag != null){
             network.deserializeNBT(tag);
         }
-        return uuid;
+        validNetworks.add(uuid);
+        return network;
     }
 
     @Nonnull
     public NBTTagCompound removeNetwork(UUID uuid){
-        if (uuid != null) {
-            EnderNetwork ret = networkData.remove(uuid);
-            if (ret != null){
-                return ret.serializeNBT();
-            }
-            return new NBTTagCompound();
+        if (side.isServer() && uuid != null && networkData.containsKey(uuid)) {
+            sender.sendToAll(2, sender.createByteBuf().writeUuid(uuid));
+            return removeNetwork_(uuid).serializeNBT();
+        }
+        throw new IllegalArgumentException();
+    }
+
+    @Nonnull
+    private EnderNetwork removeNetwork_(@Nonnull UUID uuid) {
+        EnderNetwork ret = networkData.remove(uuid);
+        if (ret != null) {
+            validNetworks.remove(uuid);
+            return ret;
         }
         throw new IllegalArgumentException();
     }
@@ -175,12 +214,29 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return new NBTHelper().addToTag(networkData.serializeNBT(), "lEN").serializeNBT();
+        return new NBTHelper().addToTag(networkData.serializeNBT(), "lEN").addToTag(serializeKeys(), "Ukeys").serializeNBT();
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         networkData.deserializeNBT(nbt.getTagList("lEN", 10));
+        deserializeKeys(nbt.getTagList("Ukeys", NBTTypes.STRING.getID()));
+    }
+
+    private NBTTagList serializeKeys(){
+        NBTTagList ret = new NBTTagList();
+        for (UUID uuid : validNetworks){
+            ret.appendTag(new NBTTagString(uuid.toString()));
+        }
+        return ret;
+    }
+
+    private void deserializeKeys(NBTTagList tagList) {
+        Set<UUID> ret = Sets.newHashSet();
+        for (int i = 0; i < tagList.tagCount(); i++) {
+            ret.add(UUID.fromString(tagList.getStringTagAt(i)));
+        }
+        this.validNetworks = ret;
     }
 
     //Network
@@ -202,8 +258,10 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
                 onNetworkPacket(data.readNBTTagCompoundFromBuffer());
                 break;
             case 1:
+                createNetwork_(data.readUuid(), data.readBoolean() ? data.readNBTTagCompoundFromBuffer() : null);
                 break;
             case 2:
+                removeNetwork_(data.readUuid());
                 break;
         }
     }

@@ -82,19 +82,21 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     }
 
     @Override
-    public void onWrenched(EnumFacing forgeDirection) {
-        if (getMultiBlock() == null && forgeDirection == getTileFacing()) {
-            if (mode == 0) {
-                mode = 1;
-            } else {
-                mode = 0;
+    public boolean onWrenched(EnumFacing forgeDirection) {
+        if (getMultiBlock() == null) {
+            if (forgeDirection == getTileFacing()) {
+                if (mode == 0) {
+                    mode = 1;
+                } else {
+                    mode = 0;
+                }
+                markDirty();
+                syncData();
+                reRenderBlock();
             }
-            markDirty();
-        } else {
-            super.onWrenched(forgeDirection);
+            return true;
         }
-        syncData();
-        reRenderBlock();
+        return false;
     }
 
     @Override

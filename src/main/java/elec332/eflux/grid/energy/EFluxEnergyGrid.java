@@ -38,6 +38,8 @@ public class EFluxEnergyGrid {
 
     private int maxTransfer;
 
+    int processedEF, processedRP;
+
     public void tick(){
         distributePower();
         //debugStuff();
@@ -248,6 +250,8 @@ public class EFluxEnergyGrid {
                 }
             }
         }
+        processedRP = rp;
+        processedEF = totalProvided;
     }
 
     private void debugStuff(){

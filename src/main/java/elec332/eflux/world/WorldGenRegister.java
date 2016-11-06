@@ -16,7 +16,7 @@ public final class WorldGenRegister {
         register(FeatureWorldGenMinable.newOreGenerator("Tin", 8, 52, 9, BlockRegister.oreTin.getBlockState(), FeatureWorldGenMinable.STONE));
         register(FeatureWorldGenMinable.newOreGenerator("Zinc", 4, 40, 8, BlockRegister.oreZinc.getBlockState(), FeatureWorldGenMinable.STONE));
         register(FeatureWorldGenMinable.newOreGenerator("Silver", 3, 40, 6, BlockRegister.oreSilver.getBlockState(), FeatureWorldGenMinable.STONE));
-        register(FeatureWorldGenerator.wrap("OilLakes", new WorldGenOilLakes()).setGenerationMultiplier(0.05f).setMaxY(128));
+        register(FeatureWorldGenerator.wrap("OilLakes", new WorldGenOilLakes()).setGenerationMultiplier(0.15f).setMaxY(128));
     }
 
     private static void register(FeatureWorldGenerator fwgm){

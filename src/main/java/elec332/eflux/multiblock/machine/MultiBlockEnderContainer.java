@@ -7,6 +7,8 @@ import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.widget.WidgetButton;
 import elec332.core.inventory.widget.WidgetButtonArrow;
 import elec332.core.multiblock.AbstractMultiBlock;
+import elec332.core.tile.TileBase;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -18,6 +20,7 @@ import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.endernetwork.EnderNetwork;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.inventory.slot.SlotScrollable;
+import elec332.eflux.items.ItemEFluxInfusedEnder;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockEnderReader;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
@@ -92,12 +95,13 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
         return container;
     }
 
-    public void setUUID(TileEntityMultiBlockEnderReader tile){
-        if (((network != null && !network.getNetworkId().equals(tile.getNetworkID())) || network == null)){
+    public void setUUID(EnderNetwork tile, TileBase dropper){
+        if (((network != null && !network.getNetworkId().equals(tile.getNetworkId())) || network == null)){
             if (network != null) {
-                EnderNetworkManager.get(getWorldObj()).removeNetwork(network.getNetworkId());
+                ItemStack stack = ItemEFluxInfusedEnder.createStack(network.getNetworkId(), EnderNetworkManager.get(getWorldObj()).removeNetwork(network.getNetworkId()));
+                WorldHelper.dropStack(dropper.getWorld(), dropper.getPos().offset(dropper.getTileFacing()), stack);
             }
-            network = EnderNetworkManager.get(getWorldObj()).get(tile.getNetworkID());
+            network = tile;
             markDirty();
         }
     }

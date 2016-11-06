@@ -3,7 +3,6 @@ package elec332.eflux.tileentity.multiblock;
 import elec332.core.api.annotations.RegisterTile;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
-import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -12,7 +11,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 28-7-2015.
  */
 @RegisterTile(name = "TileEntityEFluxMultiBlockPowerInlet")
-public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<IEnergyReceiver> implements IEnergyReceiver, IMultiMeterDataProviderMultiLine {
+public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<IEnergyReceiver> implements IEnergyReceiver {
 
     @CapabilityInject(IEnergyReceiver.class)
     private static Capability<IEnergyReceiver> CAPABILITY;
@@ -63,19 +62,6 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
         latsRP = rp;
         IEnergyReceiver mb = getMultiBlockHandler();
         return mb == null ? ef : mb.receivePower(rp, ef);
-    }
-
-    @Override
-    public String[] getProvidedData() {
-        String[] ret = new String[]{
-                //"Power: "+((EFluxMultiBlockMachine)getMultiBlock()).getStoredPower(),
-                //"Broken: "+((EFluxMultiBlockMachine)getMultiBlock()).isBroken(),
-                "RP: "+latsRP,
-                "EF: "+lastEF
-        };
-        latsRP = 0;
-        lastEF = 0;
-        return ret;
     }
 
     @Override

@@ -10,9 +10,7 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
-import elec332.eflux.api.util.IMultiMeterDataProviderMultiLine;
 import elec332.eflux.util.BreakableMachineInventory;
-import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IMultiMeterDataProviderMultiLine, IBreakableMachine, IInfoProvider, IEFluxPowerHandler {
+public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IBreakableMachine, IInfoProvider, IEFluxPowerHandler {
 
     public TileEntityBreakableMachine(){
         super();
@@ -140,9 +138,6 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
         NBTTagCompound tag = hitData.getData();
         information.addInformation("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
-        if (tag.getBoolean("broken")){
-            information.addInformation(SpecialChars.ALIGNCENTER+SpecialChars.ITALIC+"Broken");
-        }
     }
 
     @Nonnull
@@ -150,18 +145,7 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
         tag.setInteger("energy", energyContainer.getStoredPower());
         tag.setInteger("maxEnergy", energyContainer.getMaxStoredEnergy());
-        tag.setBoolean("broken", broken);
         return tag;
-    }
-
-    @Override
-    public String[] getProvidedData() {
-        return new String[]{
-            "energy: "+energyContainer.getStoredPower(),
-                "maxEnergy: "+energyContainer.getMaxStoredEnergy(),
-                "broken: "+broken,
-                "facing: "+getTileFacing()
-        };
     }
 
     protected boolean canAcceptEnergyFrom(EnumFacing direction) {

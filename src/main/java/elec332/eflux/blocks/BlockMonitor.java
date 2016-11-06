@@ -82,15 +82,14 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public ItemStack ItemDropped(World world, BlockPos pos) {
+    public ItemStack itemDropped(World world, BlockPos pos) {
         return new ItemStack(this, 1, WorldHelper.getBlockMeta(world, pos));
     }
 
     @Override
-    public void onWrenched(World world, BlockPos pos, EnumFacing forgeDirection) {
+    public boolean onWrenched(World world, BlockPos pos, EnumFacing forgeDirection) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
-        if (tile instanceof TileBase)
-            ((TileBase) tile).onWrenched(forgeDirection);
+        return tile instanceof TileBase && ((TileBase) tile).onWrenched(forgeDirection);
     }
 
     @Override

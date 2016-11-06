@@ -1,6 +1,7 @@
 package elec332.eflux.handler;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
 import elec332.core.util.InventoryHelper;
 import elec332.core.world.WorldHelper;
@@ -31,6 +32,8 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+
 /**
  * Created by Elec332 on 27-4-2016.
  */
@@ -41,6 +44,7 @@ public class WorldEventHandler {
         if (!event.getWorld().isRemote) {
             int ender = 0, blaze = 0, gold = 0;
             boolean enderman = false;
+            final List<EntityItem> list = Lists.newArrayList();
             for (Entity entity : event.getAffectedEntities()) {
                 if (entity instanceof EntityEnderman) {
                     enderman = true;
@@ -55,6 +59,8 @@ public class WorldEventHandler {
                             blaze += stack.stackSize;
                         } else if (InventoryHelper.areEqualNoSizeNoNBT(stack, ItemRegister.dustGold)) {
                             gold += stack.stackSize;
+                        } else if (item == ItemRegister.enderLink){
+                            list.add((EntityItem) entity);
                         }
                     }
                 }
@@ -73,13 +79,19 @@ public class WorldEventHandler {
                     public void run() {
                         Vec3d pos = event.getExplosion().getPosition();
                         for (int i = 0; i < pairs2; i++) {
-                            ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNew(null));
+                            ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNewKey(), null);
                             //stack.stackSize = 2;
                             WorldHelper.dropStack(event.getWorld(), (int) pos.xCoord, (int) pos.yCoord, (int) pos.zCoord, stack);
+                        }
+                        for (EntityItem item : list){
+                            if (item.getEntityItem().getItemDamage() > 0) {
+                                item.getEntityItem().setItemDamage(0);
+                            }
                         }
                     }
                 }, event.getWorld());
             }
+            event.getAffectedEntities().removeAll(list);
         }
     }
 

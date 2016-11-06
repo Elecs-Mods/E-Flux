@@ -38,7 +38,7 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
         this.upgradeSlotsCounter = upgradeSlots;
         List<Slot> list = Lists.newArrayList();
         registerMachineSlots(list);
-        this.machineSlots = Utils.copyOf(list);
+        this.machineSlots = Lists.newArrayList(list);
         registerStorageSlots(list);
         int startIndex = list.size();
         registerUpgradeSlots(list);
@@ -46,7 +46,7 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
         for (Slot slot : list.subList(startIndex, list.size())){
             upgradeSlotsList.add((SlotUpgrade) slot);
         }
-        this.upgradeSlots = Utils.copyOf(upgradeSlotsList);
+        this.upgradeSlots = Lists.newArrayList(upgradeSlotsList);
         this.allSLots = list;
     }
 

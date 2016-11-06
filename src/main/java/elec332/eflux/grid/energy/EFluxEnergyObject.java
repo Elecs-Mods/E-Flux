@@ -63,6 +63,16 @@ public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyG
         return uniqueGrids;
     }
 
+    @Override
+    public int getCurrentRP(EnumFacing side) {
+        return getGrid(side).processedRP;
+    }
+
+    @Override
+    public int getLastProcessedEF(EnumFacing side) {
+        return getGrid(side).processedEF;
+    }
+
     @Nullable
     @Override
     public Class getInformationType() {
@@ -149,7 +159,16 @@ public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyG
     }
 
     protected EFluxEnergyGrid getGrid(EnumFacing side){
-        return grids[side.ordinal()];
+        int or;
+        if (side == null){
+            if (connectors.size() == 0){
+                throw new IllegalArgumentException();
+            }
+            or = connectors.iterator().next().ordinal();
+        } else {
+            or = side.ordinal();
+        }
+        return grids[or];
     }
 
     protected boolean multipleEndpoints(){

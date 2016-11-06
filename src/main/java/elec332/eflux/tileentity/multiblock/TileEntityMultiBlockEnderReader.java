@@ -55,11 +55,11 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
         int current = player.inventory.currentItem;
         IInventory playerInv = player.inventory;
         stack = playerInv.getStackInSlot(current);
-        if (InventoryHelper.areEqualNoSizeNoNBT(stack, new ItemStack(ItemRegister.entangledEnder))){
+        if (ItemEFluxInfusedEnder.isActive(stack)){
             if (!worldObj.isRemote) {
                 this.networkID = ItemEFluxInfusedEnder.getUUID(stack);
                 if (getMultiBlock() != null) {
-                    ((MultiBlockEnderContainer) getMultiBlock()).setUUID(this);
+                    ((MultiBlockEnderContainer) getMultiBlock()).setUUID(EnderNetworkManager.get(worldObj).createNetwork(this.networkID, ItemEFluxInfusedEnder.getNetworkData(stack)), this);
                 }
                 playerInv.decrStackSize(current, 1);
                 NBTTagCompound send = new NBTTagCompound();
@@ -82,7 +82,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     public void setMultiBlock(IMultiBlock multiBlock, EnumFacing facing, String structure) {
         super.setMultiBlock(multiBlock, facing, structure);
         if (!worldObj.isRemote) {
-            ((MultiBlockEnderContainer) multiBlock).setUUID(this);
+            ((MultiBlockEnderContainer) multiBlock).setUUID(EnderNetworkManager.get(worldObj).get(getNetworkID()), this);
         }
     }
 
@@ -119,7 +119,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 networkID = UUID.fromString(tag.getString("u"));
                 AbstractMultiBlock mb = getMultiBlock();
                 if (mb != null) {
-                    ((MultiBlockEnderContainer) mb).setUUID(this);
+                    ((MultiBlockEnderContainer) mb).setUUID(EnderNetworkManager.get(worldObj).get(getNetworkID()), this);
                 }
             }
             return;

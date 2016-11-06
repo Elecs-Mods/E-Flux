@@ -58,14 +58,15 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
         if (countDownTimer <= 0){
             powerTick = 0;
             FluidEnergyProviderHandler.FluidBurnData burnData = modifyBurnData(FluidEnergyProviderHandler.instance.getPowerFromFluid(fluidTank.getFluid()));
-            if (burnData == null){
+            if (burnData == null || burnData.burnTime <= 0){
                 countDownTimer = 10;
+                powerTick = 0;
                 return;
             }
-            float f = Math.min(((float)fluidTank.getFluidAmount()/burnData.fuelCost), 1);
-            fluidTank.drain((int) (burnData.fuelCost * f), true);
-            countDownTimer = (int) (burnData.burnTime * f);
-            powerTick = (int) (burnData.powerPerTick * f);
+            fluidTank.drain(burnData.fuelCost, true);
+            countDownTimer = burnData.burnTime;
+            powerTick = burnData.powerPerTick;
+            generatePower(powerTick);
         } else {
             generatePower(powerTick);
         }
@@ -76,14 +77,17 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        NBTTagCompound fluid = fluidTank.serializeNBT();
-        tagCompound.setTag("fluidStorage", fluid);
+        tagCompound.setTag("fluidStorage", fluidTank.serializeNBT());
+        tagCompound.setInteger("powerTick", powerTick);
+        tagCompound.setInteger("ctdTim", countDownTimer);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         fluidTank.deserializeNBT(tagCompound.getCompoundTag("fluidStorage"));
+        this.powerTick = tagCompound.getInteger("powerTick");
+        this.countDownTimer = tagCompound.getInteger("ctdTim");
     }
 
     /**
@@ -97,7 +101,7 @@ public abstract class EFluxMultiBlockFluidGenerator extends EFluxMultiBlockGener
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, facing, pos);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) fluidTank : super.getCapability(capability, facing, pos);
     }
 
 }

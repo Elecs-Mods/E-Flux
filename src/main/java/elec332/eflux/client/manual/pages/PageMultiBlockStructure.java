@@ -22,7 +22,7 @@ import java.util.List;
 public class PageMultiBlockStructure extends AbstractManualPage {
 
     public PageMultiBlockStructure(String unLocalisedTitle, BlockStructure structure, int startX, int startY){
-        this(unLocalisedTitle, structure, startX, startY, new IMultiBlockStructureManualHelper.DefaultImpl());
+        this(unLocalisedTitle, structure, startX, startY, new DefaultImpl());
     }
 
     public PageMultiBlockStructure(String unLocalisedTitle, BlockStructure structure, int startX, int startY, IMultiBlockStructureManualHelper manualData){
@@ -125,25 +125,24 @@ public class PageMultiBlockStructure extends AbstractManualPage {
 
     public interface IMultiBlockStructureManualHelper{
 
-        public ItemStack getRenderingStack(int length, int width, int height, BlockStateWrapper original);
+        default public ItemStack getRenderingStack(int length, int width, int height, BlockStateWrapper original){
+            ItemStack renderStack = original.toItemStack();
+            if (renderStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                renderStack.setItemDamage(0);
+            }
+            return renderStack;
+        }
 
         public void getNote(int length, int width, int height, List<String> noteList);
 
-        public static class DefaultImpl implements IMultiBlockStructureManualHelper {
 
-            @Override
-            public ItemStack getRenderingStack(int length, int width, int height, BlockStateWrapper original) {
-                ItemStack renderStack = original.toItemStack();
-                if (renderStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                    renderStack.setItemDamage(0);
-                }
-                return renderStack;
-            }
 
-            @Override
-            public void getNote(int length, int width, int height, List<String> list) {
-            }
+    }
 
+    private static class DefaultImpl implements IMultiBlockStructureManualHelper {
+
+        @Override
+        public void getNote(int length, int width, int height, List<String> list) {
         }
 
     }
