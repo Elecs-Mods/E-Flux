@@ -162,7 +162,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
 
     @Override
     public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector) {
-        return otherType == ConnectionType.TRANSMITTER && (!(otherConnector instanceof PartAbstractCable) || getUniqueIdentifier().equals(((PartAbstractCable) otherConnector).getUniqueIdentifier()));
+        return otherType != ConnectionType.TRANSMITTER || (!(otherConnector instanceof PartAbstractCable) || getUniqueIdentifier().equals(((PartAbstractCable) otherConnector).getUniqueIdentifier()));
     }
 
     @Override
