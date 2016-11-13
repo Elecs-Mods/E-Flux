@@ -44,7 +44,7 @@ public class ItemBlockEFluxSpawner extends ItemBlock {
             IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, hitX, hitY, hitZ, p_180614_9_, i, playerIn);
 
             if (placeBlockAt(stack, playerIn, worldIn, pos, hitX, hitY, hitZ, p_180614_9_, iblockstate1)) {
-                SoundType soundtype = this.block.getSoundType();
+                SoundType soundtype = this.block.getSoundType(iblockstate1, worldIn, pos, playerIn);
                 worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 --stack.stackSize;
             }

@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.NBTHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
@@ -28,7 +28,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 /**
  * Created by Elec332 on 20-2-2016.
  */
-@RegisterTile(name = "TileEntityEFluxSpawner")
+@RegisteredTileEntity("TileEntityEFluxSpawner")
 public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable {
 
     public TileEntityEFluxSpawner(){

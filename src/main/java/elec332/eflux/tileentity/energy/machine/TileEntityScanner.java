@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
@@ -12,19 +12,21 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
 import elec332.eflux.util.DustPile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 12-9-2015.
  */
-@RegisterTile(name = "TileEntityEFluxScanner")
+@RegisteredTileEntity("TileEntityEFluxScanner")
 public class TileEntityScanner extends BreakableMachineTileWithSlots implements IInventoryTile, ITileWithSlots, ITickable, ISidedInventory {
 
     public TileEntityScanner(){
@@ -47,7 +49,7 @@ public class TileEntityScanner extends BreakableMachineTileWithSlots implements 
     }
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player, EFlux.instance, 0);
     }
 

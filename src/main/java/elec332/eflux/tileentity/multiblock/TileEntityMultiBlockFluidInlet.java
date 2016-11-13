@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.util.FluidHelper;
 import elec332.core.util.FluidTankWrapper;
 import net.minecraft.util.EnumFacing;
@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 /**
  * Created by Elec332 on 13-9-2015.
  */
-@RegisterTile(name = "TileEntityEFluxMultiBlockFluidInlet")
+@RegisteredTileEntity("TileEntityEFluxMultiBlockFluidInlet")
 public class TileEntityMultiBlockFluidInlet extends AbstractTileEntityMultiBlockFluidHandler implements ITickable {
 
     public TileEntityMultiBlockFluidInlet(){

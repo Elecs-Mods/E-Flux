@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import net.minecraft.util.EnumFacing;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-@RegisterTile(name = "TileEntityEFluxMultiBlockPowerInlet")
+@RegisteredTileEntity("TileEntityEFluxMultiBlockPowerInlet")
 public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<IEnergyReceiver> implements IEnergyReceiver {
 
     @CapabilityInject(IEnergyReceiver.class)

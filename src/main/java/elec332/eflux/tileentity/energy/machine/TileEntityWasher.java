@@ -1,13 +1,13 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.slot.SlotOutput;
 import elec332.core.inventory.widget.FluidTankWidget;
 import elec332.core.inventory.widget.WidgetProgressArrow;
-import elec332.core.util.PlayerHelper;
-import elec332.core.world.WorldHelper;
+import elec332.core.util.FluidHelper;
+import elec332.core.util.FluidTankWrapper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
@@ -15,6 +15,7 @@ import elec332.eflux.items.ItemEFluxGroundMesh;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import elec332.eflux.tileentity.TileEntityProcessingMachine;
 import elec332.eflux.util.DustPile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
@@ -22,49 +23,116 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Elec332 on 13-9-2015.
  */
-@RegisterTile(name = "TileEntityEFluxWasher")
-public class TileEntityWasher extends TileEntityProcessingMachine implements IFluidHandler, ISidedInventory {
+@RegisteredTileEntity("TileEntityEFluxWasher")
+public class TileEntityWasher extends TileEntityProcessingMachine implements ISidedInventory {
 
     public TileEntityWasher(){
         super(2, 0);
-        waterTank = new FluidTank(12 * FluidContainerRegistry.BUCKET_VOLUME);
-        slibTank = new FluidTank(9 * FluidContainerRegistry.BUCKET_VOLUME);
+        waterTank = new FluidTank(12 * Fluid.BUCKET_VOLUME) {
+
+            @Override
+            public boolean canFillFluidType(FluidStack fluidStack) {
+                return fluidStack != null && fluidStack.getFluid() == FluidRegistry.WATER;
+            }
+
+            @Override
+            public boolean canDrainFluidType(FluidStack fluidStack) {
+                return fluidStack == null || fluidStack.getFluid() == FluidRegistry.WATER;
+            }
+        };
+        slibTank = new FluidTank(9 * Fluid.BUCKET_VOLUME) {
+
+            @Override
+            public boolean canFillFluidType(FluidStack fluidStack) {
+                return fluidStack != null && fluidStack.getFluid() == FluidRegister.slib;
+            }
+
+            @Override
+            public boolean canDrainFluidType(FluidStack fluidStack) {
+                return fluidStack == null || fluidStack.getFluid() == FluidRegister.slib;
+            }
+
+        };
+        wTnk = new FluidTankWrapper() {
+
+            @Override
+            protected IFluidTank getTank() {
+                return waterTank;
+            }
+
+            @Override
+            protected boolean canDrain() {
+                return false;
+            }
+
+            @Override
+            protected boolean canFillFluidType(FluidStack fluidStack) {
+                return waterTank.canDrainFluidType(fluidStack);
+            }
+
+        };
+        sTnk = new FluidTankWrapper() {
+
+            @Override
+            protected IFluidTank getTank() {
+                return slibTank;
+            }
+
+            @Override
+            protected boolean canFill() {
+                return false;
+            }
+
+            @Override
+            protected boolean canDrainFluidType(FluidStack fluidStack) {
+                return slibTank.canDrainFluidType(fluidStack);
+            }
+
+        };
+
+
+        capability = new FluidHandlerFluidMap();
+        capability.addHandler(FluidRegistry.WATER, waterTank);
+        capability.addHandler(FluidRegister.slib, slibTank);
     }
 
     private FluidTank waterTank, slibTank;
+    private FluidTankWrapper wTnk, sTnk;
+    private FluidHandlerFluidMap capability;
     private ItemStack gonnaBeOutputted;
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        NBTTagCompound tag = new NBTTagCompound();
-        waterTank.writeToNBT(tag);
-        tagCompound.setTag("wTank", tag);
-        tag = new NBTTagCompound();
-        slibTank.writeToNBT(tag);
-        tagCompound.setTag("sTank", tag);
+        tagCompound.setTag("wTank", wTnk.serializeNBT());
+        tagCompound.setTag("sTank", sTnk.serializeNBT());
         if (gonnaBeOutputted != null){
-            tag = new NBTTagCompound();
+            NBTTagCompound tag = new NBTTagCompound();
             gonnaBeOutputted.writeToNBT(tag);
             tagCompound.setTag("GBO", tag);
         }
         return tagCompound;
     }
 
-
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        waterTank.readFromNBT(tagCompound.getCompoundTag("wTank"));
-        slibTank.readFromNBT(tagCompound.getCompoundTag("sTank"));
+        wTnk.deserializeNBT(tagCompound.getCompoundTag("wTank"));
+        sTnk.deserializeNBT(tagCompound.getCompoundTag("sTank"));
         if (tagCompound.hasKey("GBO"))
             gonnaBeOutputted = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("GBO"));
     }
@@ -125,7 +193,6 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements IFl
         return waterTank.getFluidAmount() >= i && slibTank.getFluidAmount() + i <= slibTank.getCapacity();
     }
 
-
     private boolean checkOutput(){
         if (gonnaBeOutputted == null){
             DustPile dustPile = DustPile.fromNBT(getStackInSlot(0).getTagCompound());
@@ -182,40 +249,8 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements IFl
     }
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        ItemStack stack = ItemStack.copyItemStack(player.inventory.getCurrentItem());
-        if (stack != null && FluidContainerRegistry.isBucket(stack)){
-
-            if (FluidContainerRegistry.isFilledContainer(stack)) {
-                FluidStack fs = FluidContainerRegistry.getFluidForFilledItem(stack);
-                int used = fill(side, fs, false);
-                if (used > 0 && used == fs.amount){
-                    fill(side, fs, true);
-                    if (!PlayerHelper.isPlayerInCreative(player)) {
-                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                        ItemStack d = FluidContainerRegistry.drainFluidContainer(stack);
-                        if (!player.inventory.addItemStackToInventory(d)) {
-                            WorldHelper.dropStack(worldObj, pos.offset(side), d);
-                        }
-                    }
-                }
-            } else if (FluidContainerRegistry.isEmptyContainer(stack)){
-                int i = FluidContainerRegistry.getContainerCapacity(stack);
-                FluidStack fs = drain(side, i, false);
-                if (fs != null && fs.amount == i){
-                    ItemStack add = FluidContainerRegistry.fillFluidContainer(fs, stack);
-                    if (add != null) {
-                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                        if (!player.inventory.addItemStackToInventory(add)) {
-                            WorldHelper.dropStack(worldObj, pos.offset(side), add);
-                        }
-                    }
-                }
-            }
-            return true;//!worldObj.isRemote;
-        } else {
-            return super.onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
-        }
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return FluidHelper.tryDrainItem(player, hand, wTnk) || FluidHelper.tryFillItem(player, hand, sTnk) || super.onBlockActivatedSafe(state, player, hand, stack, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -238,39 +273,6 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements IFl
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-        return waterTank.fill(resource, doFill);
-    }
-
-    @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        if (resource == null || !resource.isFluidEqual(slibTank.getFluid())) {
-            return null;
-        }
-        return slibTank.drain(resource.amount, doDrain);
-    }
-
-    @Override
-    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-        return slibTank.drain(maxDrain, doDrain);
-    }
-
-    @Override
-    public boolean canFill(EnumFacing from, Fluid fluid) {
-        return fluid == FluidRegistry.WATER;
-    }
-
-    @Override
-    public boolean canDrain(EnumFacing from, Fluid fluid) {
-        return fluid == FluidRegister.slib;
-    }
-
-    @Override
-    public FluidTankInfo[] getTankInfo(EnumFacing from) {
-        return new FluidTankInfo[]{waterTank.getInfo(), slibTank.getInfo()};
-    }
-
-    @Override
     public EnumRecipeMachine getMachine() {
         return null;
     }
@@ -278,25 +280,40 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements IFl
     @Override
     public Object getGuiClient(EntityPlayer player) {
         return new BaseGuiContainer(getGuiServer(player)) {
+
             @Override
             public ResourceLocation getBackgroundImageLocation() {
                 return new EFluxResourceLocation("gui/washer.png");
             }
+
         };
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
+    @Nonnull
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
         return new int[]{0, 1};
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
+    public boolean canInsertItem(int slot, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
         return slot == 0 && ItemEFluxGroundMesh.isValidMesh(stack);
     }
 
     @Override
-    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
+    public boolean canExtractItem(int slot, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
         return slot == 1;
     }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this.capability :super.getCapability(capability, facing);
+    }
+
 }

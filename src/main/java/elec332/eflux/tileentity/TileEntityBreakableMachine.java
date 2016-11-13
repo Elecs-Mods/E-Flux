@@ -85,10 +85,10 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (broken) return openBrokenGui(player);
-        return onBlockActivatedSafe(player, side, hitX, hitY, hitZ);
+        return onBlockActivatedSafe(state, player, hand, stack, side, hitX, hitY, hitZ);
     }
 
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZZ){
         return false;
     }
 

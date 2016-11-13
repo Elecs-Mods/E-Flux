@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.client.RenderHelper;
 import elec332.core.client.inventory.BaseGuiContainer;
 import elec332.core.inventory.BaseContainer;
@@ -39,7 +39,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 4-5-2016.
  */
-@RegisterTile(name = "TileEntityEFluxMultiBlockEnderReader")
+@RegisteredTileEntity("TileEntityEFluxMultiBlockEnderReader")
 public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBlock implements IInventoryTile {
 
     public TileEntityMultiBlockEnderReader(){

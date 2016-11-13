@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.ender;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.EFlux;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * Created by Elec332 on 9-5-2016.
  */
-@RegisterTile(name = "testert")
+@RegisteredTileEntity("testert")
 public class TileEntityEnderChest extends AbstractEnderTileEntity<IItemHandler> {
 
     public TileEntityEnderChest() {

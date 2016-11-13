@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.generator;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.inventory.IDefaultInventory;
 import elec332.core.grid.GridInformation;
 import elec332.core.inventory.BaseContainer;
@@ -13,9 +13,7 @@ import elec332.core.util.BasicInventory;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergyGridInformation;
-import elec332.eflux.api.energy.IEnergyProvider;
-import elec332.eflux.api.energy.IEnergyTransmitter;
+import elec332.eflux.api.energy.*;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.tileentity.TileEntityEFlux;
@@ -26,6 +24,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -41,7 +40,7 @@ import java.util.Random;
 /**
  * Created by Elec332 on 29-4-2015.
  */
-@RegisterTile(name = "TileEntityEFluxCoalGenerator")
+@RegisteredTileEntity("TileEntityEFluxCoalGenerator")
 public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyProvider, IDefaultInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
     public TileEntityCoalGenerator(){
@@ -53,8 +52,9 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
         };
         dirData = new byte[6];
         transmitter = new IEnergyTransmitter() {
+
             @Override
-            public boolean canConnectTo(IEnergyTransmitter otherTransmitter) {
+            public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector) {
                 return true;
             }
 
@@ -241,6 +241,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
     }
 
     @Override
+    @SuppressWarnings("all")
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         boolean ret = ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
         EFlux.systemPrintDebug("req: " + facing + " " + capability.getName() + " ret: " + ret);
@@ -248,7 +249,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         return capability == EFluxAPI.PROVIDER_CAPABILITY ? (facing != getTileFacing() ? (T)this : null) : (capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (facing != getTileFacing() ? (T)transmitter : null) : super.getCapability(capability, facing));
     }

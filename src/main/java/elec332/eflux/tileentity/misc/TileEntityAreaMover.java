@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.util.Area;
 import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by Elec332 on 17-1-2016.
  */
-@RegisterTile(name = "TileEntityEFluxAreaMover")
+@RegisteredTileEntity("TileEntityEFluxAreaMover")
 public class TileEntityAreaMover extends TileEntity {
 
     private int tier = 0;

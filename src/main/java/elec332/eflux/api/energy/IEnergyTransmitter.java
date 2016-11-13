@@ -10,12 +10,7 @@ import javax.annotation.Nonnull;
 public interface IEnergyTransmitter extends IEnergyTile {
 
     @Override
-    default public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector){
-        return otherType != ConnectionType.TRANSMITTER || canConnectTo((IEnergyTransmitter) otherConnector);
-    }
-
-    @Deprecated
-    public boolean canConnectTo(IEnergyTransmitter otherTransmitter);
+    public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector);
 
     public int getMaxEFTransfer();
 

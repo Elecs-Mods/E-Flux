@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
@@ -15,7 +15,7 @@ import net.minecraft.util.ITickable;
 /**
  * Created by Elec332 on 17-10-2015.
  */
-@RegisterTile(name = "TileEntityEFluxRubbleSieve")
+@RegisteredTileEntity("TileEntityEFluxRubbleSieve")
 public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine, ITickable, ISidedInventory {
 
     public TileEntityRubbleSieve() {

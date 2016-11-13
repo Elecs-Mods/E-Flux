@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInfoProvider;
 import elec332.core.api.info.IInformation;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 /**
  * Created by Elec332 on 16-4-2016.
  */
-@RegisterTile(name = "TileEntityEFluxTank")
+@RegisteredTileEntity("TileEntityEFluxTank")
 public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, IInfoProvider {
 
     public TileEntityTank(){

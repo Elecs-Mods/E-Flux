@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
@@ -9,6 +9,7 @@ import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.inventory.ContainerAssemblyTable;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -17,12 +18,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Elec332 on 4-5-2015.
  */
-@RegisterTile(name = "TileEntityEFluxAssemblyTable")
+@RegisteredTileEntity("TileEntityEFluxAssemblyTable")
 public class TileEntityAssemblyTable extends TileEntityBreakableMachine implements IInventoryTile{
 
     private BasicInventory inv = new BasicInventory("SolderStuff", 1){
@@ -73,7 +75,7 @@ public class TileEntityAssemblyTable extends TileEntityBreakableMachine implemen
     }
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         openGui(player, EFlux.instance, 0);
         return true;
     }

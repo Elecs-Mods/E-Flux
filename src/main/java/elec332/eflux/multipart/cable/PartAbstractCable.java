@@ -6,7 +6,9 @@ import elec332.core.client.RenderHelper;
 import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
+import elec332.eflux.api.energy.ConnectionType;
 import elec332.eflux.api.energy.EnergyAPIHelper;
+import elec332.eflux.api.energy.IEnergyTile;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multipart.AbstractEnergyMultiPart;
@@ -39,6 +41,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.List;
@@ -56,7 +59,6 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
 
     public void setGridIdentifier(UUID uuid){
         this.gridIdentifier = uuid;
-        //sendPacket(9, new NBTHelper().addToTag(uuid.toString(), "uuid").toNBT());
         sendUpdatePacket(true);
     }
 
@@ -159,8 +161,8 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     }
 
     @Override
-    public boolean canConnectTo(IEnergyTransmitter otherTransmitter) {
-        return (!(otherTransmitter instanceof PartAbstractCable) || getUniqueIdentifier().equals(((PartAbstractCable) otherTransmitter).getUniqueIdentifier()));
+    public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector) {
+        return otherType == ConnectionType.TRANSMITTER && (!(otherConnector instanceof PartAbstractCable) || getUniqueIdentifier().equals(((PartAbstractCable) otherConnector).getUniqueIdentifier()));
     }
 
     @Override
@@ -232,22 +234,19 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-        return true;//return false;
+        return true;
     }
 
     private boolean canConnectToSide(EnumFacing side) {
-        //if (side == null){
-        //    System.out.println("MEEEEEP "+getPos());
-        //    return false;
-        //}
         ISlottedPart part = getContainer().getPartInSlot(PartSlot.getFaceSlot(side));
-        boolean ret = !(part instanceof IMicroblock.IFaceMicroblock && ((IMicroblock.IFaceMicroblock) part).isFaceHollow()) && OcclusionHelper.occlusionTest(getContainer().getParts(), new Predicate<IMultipart>() {
+        boolean ret = !(part instanceof IMicroblock.IFaceMicroblock && ((IMicroblock.IFaceMicroblock) part).isFaceHollow()) && OcclusionHelper.occlusionTest(OcclusionHelper.boxes(HITBOXES[side.ordinal()]), new Predicate<IMultipart>() {
+
             @Override
             public boolean apply(IMultipart input) {
                 return input == PartAbstractCable.this;
             }
-        }, HITBOXES[side.ordinal()]);
-        //System.out.println("CCC: "+ret+"   "+side+"   "+getPos());
+
+        }, getContainer().getParts());
         return ret;
     }
 
@@ -274,6 +273,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
     private void checkConnectionsNow(){
         if (MultipartHelper.getPartContainer(getWorld(), getPos()) != null) {
             connectData.clear();
+            TileEntity my = WorldHelper.getTileAt(getWorld(), getPos());
             for (EnumFacing side : EnumFacing.VALUES) {
                 BlockPos pos = getPos().offset(side);
                 TileEntity tile = WorldHelper.getTileAt(getWorld(), pos);
@@ -282,7 +282,7 @@ public abstract class PartAbstractCable extends AbstractEnergyMultiPart implemen
                         connectData.set(side.getIndex());
                     } else {
                         IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
-                        if (transmitter2 != null && transmitter2.canConnectTo(PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(transmitter2)) {
+                        if (transmitter2 != null && transmitter2.canConnectTo(ConnectionType.TRANSMITTER, my, ConnectionType.TRANSMITTER, PartAbstractCable.this) && PartAbstractCable.this.canConnectTo(ConnectionType.TRANSMITTER, tile, ConnectionType.TRANSMITTER, transmitter2)) {
                             connectData.set(side.getIndex());
                         }
                     }

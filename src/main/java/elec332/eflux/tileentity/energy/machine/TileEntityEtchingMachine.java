@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
@@ -18,12 +18,14 @@ import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.items.circuits.IEFluxCircuit;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,7 +34,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 4-6-2016.
  */
-@RegisterTile(name = "TileEntityEFluxEtchingMachine")
+@RegisteredTileEntity("TileEntityEFluxEtchingMachine")
 public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots implements IProgressMachine, IInventoryTile, ITileWithSlots, ITickable, ISidedInventory {
 
     public TileEntityEtchingMachine() {
@@ -43,7 +45,7 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
     private ItemStack result;
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player, EFlux.instance, 0);
     }
 

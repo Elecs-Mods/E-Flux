@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.basic;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
@@ -14,7 +14,7 @@ import net.minecraftforge.common.capabilities.Capability;
 /**
  * Created by Elec332 on 15-4-2016.
  */
-@RegisterTile(name = "TileEntityEFluxHeater")
+@RegisteredTileEntity("TileEntityEFluxHeater")
 public class TileEntityHeater extends AbstractTileEntityMultiBlock implements ITickable, IEFluxPowerHandler {
 
     public TileEntityHeater(){

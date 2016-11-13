@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.misc;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.inventory.BaseContainer;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.inventory.ITileWithSlots;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 19-2-2016.
  */
-@RegisterTile(name = "TileEntityEFluxFeeder")
+@RegisteredTileEntity("TileEntityEFluxFeeder")
 public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile, ITileWithSlots, ITickable {
 
     public TileEntityFeeder(){

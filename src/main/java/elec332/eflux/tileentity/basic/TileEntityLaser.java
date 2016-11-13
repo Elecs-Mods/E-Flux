@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.basic;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.util.NBTHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Created by Elec332 on 16-1-2016.
  */
-@RegisterTile(name = "TileEntityEFluxLaser")
+@RegisteredTileEntity("TileEntityEFluxLaser")
 public class TileEntityLaser extends TileEntityBlockMachine {
 
     private BlockPos pos = BlockPos.ORIGIN;

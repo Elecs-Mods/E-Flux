@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
 import elec332.core.api.inventory.IDefaultInventory;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * Created by Elec332 on 4-9-2015.
  */
 //TODO: Interface
-@RegisterTile(name = "TileEntityEFluxMultiBlockItemGate")
+@RegisteredTileEntity("TileEntityEFluxMultiBlockItemGate")
 public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IDefaultInventory, IActivatableMachine, ITickable {
 
     public TileEntityMultiBlockItemGate(){

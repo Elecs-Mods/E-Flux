@@ -1,7 +1,7 @@
 package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
 import com.google.common.collect.Lists;
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
 import elec332.core.server.ServerHelper;
@@ -32,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 25-5-2015.
  */
-@RegisterTile(name = "TileEntityEFluxMainChunkLoader")
+@RegisteredTileEntity("TileEntityEFluxMainChunkLoader")
 public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implements IChunkLoader, ITickable {
 
     public TileEntityMainChunkLoader(){

@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.basic;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.location.BlockStateWrapper;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Created by Elec332 on 14-1-2016.
  */
-@RegisterTile(name = "TileEntityEFluxMonitor")
+@RegisteredTileEntity("TileEntityEFluxMonitor")
 public class TileEntityMonitor extends TileEntityBlockMachine {
 
     private int monitorSide;

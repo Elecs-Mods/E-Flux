@@ -15,10 +15,13 @@ import elec332.eflux.inventory.slot.SlotUpgrade;
 import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.IEFluxMachine;
 import elec332.eflux.util.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -121,7 +124,7 @@ public abstract class TileEntityProcessingMachine extends BreakableMachineTileWi
     }
 
     @Override
-    public boolean onBlockActivatedSafe(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player);
     }
 

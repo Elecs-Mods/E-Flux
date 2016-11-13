@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.Utils;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 21-7-2015.
  */
-@RegisterTile(name = "TileEntityEFluxTeslaCoil")
+@RegisteredTileEntity("TileEntityEFluxTeslaCoil")
 public class TileEntityTeslaCoil extends TileEntityBreakableMachine implements ITickable {
 
     public static final DamageSource teslaCoilDamageSource = new DamageSource("TeslaCoil").setDamageBypassesArmor().setDamageAllowedInCreativeMode();

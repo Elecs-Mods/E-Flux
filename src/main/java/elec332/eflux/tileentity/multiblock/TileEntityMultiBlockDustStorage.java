@@ -1,6 +1,6 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.annotations.RegisterTile;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import net.minecraft.block.Block;
@@ -14,7 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Created by Elec332 on 10-9-2015.
  */
-@RegisterTile(name = "TileEntityEFluxDustStorage")
+@RegisteredTileEntity("TileEntityEFluxDustStorage")
 public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements ISidedInventory{
 
     private ItemStack stored;

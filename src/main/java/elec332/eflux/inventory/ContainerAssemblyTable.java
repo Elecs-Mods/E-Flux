@@ -17,6 +17,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
@@ -160,7 +161,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         private ItemStack stack;
 
         @Override
-        public void openInventory(EntityPlayer player) {
+        public void openInventory(@Nonnull EntityPlayer player) {
             checkOpen();
         }
 
@@ -180,7 +181,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         @Override
-        public void closeInventory(EntityPlayer player) {
+        public void closeInventory(@Nonnull EntityPlayer player) {
             checkClose();
         }
 
