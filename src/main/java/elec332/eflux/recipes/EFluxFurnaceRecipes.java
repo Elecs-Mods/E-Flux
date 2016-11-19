@@ -1,6 +1,7 @@
 package elec332.eflux.recipes;
 
 import com.google.common.collect.Lists;
+import elec332.core.util.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
@@ -28,7 +29,7 @@ public class EFluxFurnaceRecipes extends FurnaceRecipes {
     @SuppressWarnings("all")
     public ItemStack getSmeltingResult(ItemStack stack) {
         /* When the vanilla smelting recipes are registered, my list is still null... :( */
-        if (stack != null && recipes != null) {
+        if (ItemStackHelper.isStackValid(stack) && recipes != null) {
             for (IEFluxFurnaceRecipe recipe : recipes) {
                 if (recipe.accepts(stack)) {
                     return recipe.getOutput(stack);
@@ -41,7 +42,7 @@ public class EFluxFurnaceRecipes extends FurnaceRecipes {
     @Override
     @SuppressWarnings("all")
     public float getSmeltingExperience(ItemStack stack) {
-        if (stack != null) {
+        if (ItemStackHelper.isStackValid(stack)) {
             for (IEFluxFurnaceRecipe recipe : recipes) {
                 if (recipe.accepts(stack)) {
                     return recipe.getExperience(stack);

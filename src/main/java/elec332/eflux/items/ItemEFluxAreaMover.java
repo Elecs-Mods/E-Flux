@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.StructureTemplate;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.schematic.Schematic;
@@ -111,7 +112,7 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
     }
 
     private boolean isCreative(ItemStack stack){
-        return stack != null && stack.getItem() != null && (stack.getMetadata() == CREATIVE_META || (stack.hasTagCompound() && stack.getTagCompound().hasKey("creative") && stack.getTagCompound().getBoolean("creative")));
+        return ItemStackHelper.isStackValid(stack) && (stack.getMetadata() == CREATIVE_META || (stack.hasTagCompound() && stack.getTagCompound().hasKey("creative") && stack.getTagCompound().getBoolean("creative")));
     }
 
     @Override

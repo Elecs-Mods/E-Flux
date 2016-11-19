@@ -88,7 +88,7 @@ public class RecipeRegistry {
     }
 
     private boolean isStackValidForCrafting(ItemStack recipeStack, ItemStack toCheck){
-        return recipeStack != null && toCheck != null && recipeStack.getItem() == toCheck.getItem() && toCheck.stackSize >= recipeStack.stackSize &&(toCheck.getItemDamage() == Short.MAX_VALUE || recipeStack.getItemDamage() == toCheck.getItemDamage()) || recipeStack == null && toCheck == null;
+        return recipeItemStackHelper.isStackValid(stack) && toCheck != null && recipeStack.getItem() == toCheck.getItem() && toCheck.stackSize >= recipeStack.stackSize &&(toCheck.getItemDamage() == Short.MAX_VALUE || recipeStack.getItemDamage() == toCheck.getItemDamage()) || recipe!ItemStackHelper.isStackValid(stack) && toCheck == null;
     }*/
 
     static {

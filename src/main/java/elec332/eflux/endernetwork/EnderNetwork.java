@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import elec332.core.nbt.NBTMap;
 import elec332.core.util.BasicInventory;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.NBTHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -62,7 +63,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
 
             @Override
             public boolean isItemValidForSlot(int id, ItemStack stack) {
-                return stack == null || stack.getItem() instanceof IEnderCapabilityContainingItem;
+                return !ItemStackHelper.isStackValid(stack) || stack.getItem() instanceof IEnderCapabilityContainingItem;
             }
 
             @Override

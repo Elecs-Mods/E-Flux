@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import com.google.common.base.Objects;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.endernetwork.EnderConnectionHelper;
@@ -52,7 +53,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
     @Nullable
     public static UUID getUUID(ItemStack stack){
-        if (stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nUUID")){
+        if (ItemStackHelper.isStackValid(stack) && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nUUID")){
             return UUID.fromString(stack.getTagCompound().getString("nUUID"));
         }
         return null;
@@ -60,7 +61,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
     @Nullable
     public static NBTTagCompound getNetworkData(ItemStack stack){
-        if (stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nData")){
+        if (ItemStackHelper.isStackValid(stack) && stack.getItem() == ItemRegister.entangledEnder && stack.hasTagCompound() && stack.getTagCompound().hasKey("nData")){
             return stack.getTagCompound().getCompoundTag("nData");
         }
         return null;
@@ -79,7 +80,7 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
     }
 
     public static boolean isActive(ItemStack stack) {
-        return stack != null && stack.getItem() == ItemRegister.entangledEnder && stack.getItemDamage() == 0;
+        return ItemStackHelper.isStackValid(stack) && stack.getItem() == ItemRegister.entangledEnder && stack.getItemDamage() == 0;
     }
 
 }

@@ -103,15 +103,14 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements ISi
 
         };
 
-
         capability = new FluidHandlerFluidMap();
         capability.addHandler(FluidRegistry.WATER, waterTank);
         capability.addHandler(FluidRegister.slib, slibTank);
     }
 
-    private FluidTank waterTank, slibTank;
-    private FluidTankWrapper wTnk, sTnk;
-    private FluidHandlerFluidMap capability;
+    private final FluidTank waterTank, slibTank;
+    private final FluidTankWrapper wTnk, sTnk;
+    private final FluidHandlerFluidMap capability;
     private ItemStack gonnaBeOutputted;
 
     @Override
@@ -313,7 +312,7 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements ISi
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this.capability :super.getCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this.capability : super.getCapability(capability, facing);
     }
 
 }

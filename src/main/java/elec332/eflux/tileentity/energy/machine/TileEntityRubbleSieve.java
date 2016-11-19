@@ -1,6 +1,7 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.registration.RegisteredTileEntity;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
@@ -51,11 +52,11 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
         if (sieving == null){
             int slot = 0;
             ItemStack stack = getStackInSlot(0);
-            if (stack == null){
+            if (!ItemStackHelper.isStackValid(stack)){
                 stack = getStackInSlot(1);
                 slot = 1;
             }
-            if (stack == null) {
+            if (!ItemStackHelper.isStackValid(stack)) {
                 return false;
             }
             ItemStack copy = stack.copy();
@@ -196,7 +197,7 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        if (!isInput(side, slot) || stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) {
+        if (!isInput(side, slot) || !ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) {
             return false;
         }
         DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());

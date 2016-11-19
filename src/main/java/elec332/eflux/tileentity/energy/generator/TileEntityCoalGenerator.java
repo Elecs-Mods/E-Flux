@@ -10,6 +10,7 @@ import elec332.core.tile.IActivatableMachine;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.tile.IRandomDisplayTickProviderTile;
 import elec332.core.util.BasicInventory;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
@@ -86,7 +87,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
             ltp = 0;
             sppt = 0;
             ItemStack stack = inventory.getStackInSlot(0);
-            if (stack != null) {
+            if (ItemStackHelper.isStackValid(stack)) {
                 int burnTime = TileEntityFurnace.getItemBurnTime(stack.copy());
                 if (burnTime > 0) {
                     inventory.decrStackSize(0, 1);

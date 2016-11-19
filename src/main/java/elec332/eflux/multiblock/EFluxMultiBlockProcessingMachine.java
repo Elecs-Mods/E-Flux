@@ -5,6 +5,7 @@ import elec332.core.api.inventory.IHasProgressBar;
 import elec332.core.client.inventory.IResourceLocationProvider;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.util.IEFluxMachine;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -48,7 +49,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     @Override
     public ItemStack inject(ItemStack stack) {
-        if (stack == null)
+        if (!ItemStackHelper.isStackValid(stack))
             return null;
         final int s = stack.stackSize;
         for (int i = 0; i < s; i++) {
@@ -86,7 +87,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
                 for (int i = 0; i < inventory.getSizeInventory(); i++) {
                     int q = progressMap.get(i);
                     ItemStack stack = inventory.getStackInSlot(i);
-                    if (stack == null){
+                    if (!ItemStackHelper.isStackValid(stack)){
                         resetProgressData(i);
                         continue;
                     }

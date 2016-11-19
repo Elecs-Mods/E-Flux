@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.core.main.ElecCore;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.StatCollector;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
@@ -28,7 +29,7 @@ public class ItemEFluxBluePrint extends AbstractTexturedEFluxItem {
     @SuppressWarnings("all")
     @Nullable
     public ICircuitDataProvider getBlueprintData(ItemStack stack){
-        if (stack != null && stack.getItem() == this && stack.hasTagCompound() && stack.getTagCompound().hasKey("bp")){
+        if (ItemStackHelper.isStackValid(stack) && stack.getItem() == this && stack.hasTagCompound() && stack.getTagCompound().hasKey("bp")){
             return EFlux.circuitRegistry.getObject(new ResourceLocation(stack.getTagCompound().getString("bp")));
         }
         return null;

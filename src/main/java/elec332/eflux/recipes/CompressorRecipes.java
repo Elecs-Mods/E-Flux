@@ -2,6 +2,7 @@ package elec332.eflux.recipes;
 
 import com.google.common.collect.Lists;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.item.ItemStack;
 
@@ -21,7 +22,7 @@ public class CompressorRecipes {
     private List<IRecipeHandler> recipes;
 
     public void registerRecipe(ItemStack in, ItemStack out, boolean nbt){
-        if (!isValidStack(in) || !isValidStack(out)){
+        if (!ItemStackHelper.isStackValid(in) || !ItemStackHelper.isStackValid(out)){
             return;
         }
         registerRecipe(new StackRecipe(in, out, nbt));
@@ -74,10 +75,6 @@ public class CompressorRecipes {
             return out.copy();
         }
 
-    }
-
-    private static boolean isValidStack(ItemStack stack){
-        return stack != null && stack.getItem() != null;
     }
 
 }

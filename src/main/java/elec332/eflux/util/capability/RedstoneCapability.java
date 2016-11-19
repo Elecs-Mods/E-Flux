@@ -6,6 +6,7 @@ import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.widget.WidgetButton;
 import elec332.core.inventory.widget.WidgetEnumChange;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
@@ -36,7 +37,7 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
             upgraded = true;
             return true;
         }
-        if (stack == null && upgraded) {
+        if (!ItemStackHelper.isStackValid(stack) && upgraded) {
             if (!player.worldObj.isRemote) {
                 BlockPos pos = PlayerHelper.getPosPlayerIsLookingAt(player, 6D).getBlockPos();
                 player.openGui(EFlux.instance, 2, player.worldObj, pos.getX(), pos.getY(), pos.getZ());

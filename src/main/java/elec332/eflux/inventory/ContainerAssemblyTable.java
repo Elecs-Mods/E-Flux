@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import elec332.core.inventory.ContainerMachine;
 import elec332.core.main.ElecCore;
 import elec332.core.util.BasicInventory;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
@@ -174,7 +175,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         protected void checkOpen(){
-            if (stack != null) {
+            if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
                 inventoryContents = circuit.getSolderedComponents();
             }
@@ -186,7 +187,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         protected void checkClose(){
-            if (stack != null) {
+            if (ItemStackHelper.isStackValid(stack)) {
                 markDirty();
                 inventoryContents = new ItemStack[0];
             }
@@ -194,7 +195,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
 
         @Override
         public void markDirty() {
-            if (stack != null) {
+            if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
                 circuit.setSolderedComponents(inventoryContents);;
             }
@@ -206,7 +207,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         private boolean isValid(){
-            if (stack != null) {
+            if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
                 circuit.validate();
                 return circuit.isValidCircuit();

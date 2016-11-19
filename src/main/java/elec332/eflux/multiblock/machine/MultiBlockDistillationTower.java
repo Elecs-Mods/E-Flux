@@ -5,6 +5,7 @@ import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.FluidTankWrapper;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.heat.IHeatReceiver;

@@ -1,6 +1,7 @@
 package elec332.eflux.init;
 
 import elec332.core.java.JavaHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.OredictHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -187,7 +188,7 @@ public final class RecipeRegister {
             int total = 0;
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 ItemStack stack = inv.getStackInSlot(i);
-                if (stack != null){
+                if (ItemStackHelper.isStackValid(stack)){
                     Item item = stack.getItem();
                     if (item == null || item != ItemRegister.groundMesh){
                         return false;
@@ -210,7 +211,7 @@ public final class RecipeRegister {
             dustPile.pure = true;
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 ItemStack stack = inv.getStackInSlot(i);
-                if (stack != null && stack.getItem() == ItemRegister.groundMesh){
+                if (ItemStackHelper.isStackValid(stack) && stack.getItem() == ItemRegister.groundMesh){
                     DustPile d2 = DustPile.fromNBT(stack.getTagCompound());
                     dustPile.add(d2);
                 }

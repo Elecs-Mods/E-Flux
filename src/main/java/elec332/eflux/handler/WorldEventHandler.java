@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import elec332.core.main.ElecCore;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.endernetwork.EnderNetworkManager;
@@ -51,7 +52,7 @@ public class WorldEventHandler {
                 }
                 if (entity instanceof EntityItem) {
                     ItemStack stack = ((EntityItem) entity).getEntityItem();
-                    if (stack != null && stack.getItem() != null) {
+                    if (ItemStackHelper.isStackValid(stack)) {
                         Item item = stack.getItem();
                         if (item == Items.ENDER_PEARL) {
                             ender += stack.stackSize;

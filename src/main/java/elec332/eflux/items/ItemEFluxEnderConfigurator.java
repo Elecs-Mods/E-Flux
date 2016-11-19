@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -28,7 +29,7 @@ public class ItemEFluxEnderConfigurator extends AbstractTexturedEFluxItem {
         if (worldIn.isRemote){
             return EnumActionResult.SUCCESS;
         }
-        if (stack == null || stack.getItem() != this){
+        if (!ItemStackHelper.isStackValid(stack) || stack.getItem() != this){
             return EnumActionResult.SUCCESS;
         }
         TileEntity tile = WorldHelper.getTileAt(worldIn, pos);

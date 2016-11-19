@@ -1,5 +1,6 @@
 package elec332.eflux.inventory.slot;
 
+import elec332.core.util.ItemStackHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
@@ -34,7 +35,7 @@ public class SlotScrollableItemHandler extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (stack == null)
+        if (!ItemStackHelper.isStackValid(stack))
             return false;
         IItemHandler handler = getItemHandler();
         if (handler == null){

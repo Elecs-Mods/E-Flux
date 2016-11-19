@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.circuit.CircuitHelper;
@@ -105,7 +106,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
 
         private boolean breakComponent(int i){
             ItemStack stack = components[i];
-            if (stack != null && stack.getItem() instanceof IElectricComponent){
+            if (ItemStackHelper.isStackValid(stack) && stack.getItem() instanceof IElectricComponent){
                 IElectricComponent component = (IElectricComponent) stack.getItem();
                 if (!component.isBroken(stack)){
                     components[i] = component.getBroken(stack);

@@ -8,6 +8,7 @@ import elec332.core.inventory.widget.WidgetButton;
 import elec332.core.inventory.widget.WidgetButtonArrow;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.tile.TileBase;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
@@ -80,7 +81,7 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
 
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
-        if (network != null && stack == null && !getWorldObj().isRemote && network.isPowered()){
+        if (network != null && !ItemStackHelper.isStackValid(stack) && !getWorldObj().isRemote && network.isPowered()){
             openGui(player, EFlux.instance);
         }
         return true;

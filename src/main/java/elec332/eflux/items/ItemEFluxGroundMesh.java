@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
@@ -20,7 +21,7 @@ public class ItemEFluxGroundMesh extends AbstractTexturedEFluxItem {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advancedToolTips) {
         super.addInformation(stack, player, tooltip, advancedToolTips);
-        if (!(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null)) {
+        if (!(!ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null)) {
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
             if (isValidMesh(stack)) {
                 for (GrinderRecipes.OreDictStack dustPart : dustPile.getContent()) {
@@ -33,7 +34,7 @@ public class ItemEFluxGroundMesh extends AbstractTexturedEFluxItem {
     }
 
     public static boolean isValidMesh(ItemStack stack){
-        return !(stack == null || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) && stack.getTagCompound().getBoolean("dusts_scanned");
+        return !(!ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) && stack.getTagCompound().getBoolean("dusts_scanned");
     }
 
 }

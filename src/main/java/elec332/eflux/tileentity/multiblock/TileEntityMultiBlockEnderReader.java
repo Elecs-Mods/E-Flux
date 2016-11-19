@@ -11,6 +11,7 @@ import elec332.core.multiblock.IMultiBlock;
 import elec332.core.tile.IInventoryTile;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
@@ -152,7 +153,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
 
                 @Override
                 public boolean isItemValidForSlot(int id, ItemStack stack) {
-                    return stack == null || (stack.getItem() != null && (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null) || stack.getItem() instanceof IEnderNetworkItem));
+                    return !ItemStackHelper.isStackValid(stack) || (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null) || stack.getItem() instanceof IEnderNetworkItem);
                 }
 
             };
@@ -184,7 +185,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 checkUpDown();
                 boolean b = false;
                 ItemStack stack = inventory.getStackInSlot(0);
-                if (stack != null && stack.getItem() != null) {
+                if (ItemStackHelper.isStackValid(stack)) {
                     if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
                         IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
                         if (component != null) {
@@ -277,7 +278,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 checkFreq();
             } else if (button == set){
                 ItemStack stack = inventory.getStackInSlot(0);
-                if (stack != null && stack.getItem() != null){
+                if (ItemStackHelper.isStackValid(stack)){
                     if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
                         IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
                         if (component != null) {
@@ -292,7 +293,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 }
             } else if (button == clear){
                 ItemStack stack = inventory.getStackInSlot(0);
-                if (stack != null && stack.getItem() != null){
+                if (ItemStackHelper.isStackValid(stack)){
                     if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
                         IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
                         if (component != null) {

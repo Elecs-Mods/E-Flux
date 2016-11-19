@@ -1,5 +1,6 @@
 package elec332.eflux.items.ender;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
@@ -32,7 +33,7 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         stack = player.getHeldItem(hand); //Just to make sure.
-        if (stack != null && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)){
+        if (ItemStackHelper.isStackValid(stack) && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)){
             @SuppressWarnings("unchecked")
             IEnderNetworkComponent<T> component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
             if (component != null){
@@ -104,7 +105,7 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
     }
 
     protected IWeakEnderConnection<T> getCurrentConnection(ItemStack stack){
-        if (stack != null && stack.getItem() == this && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
+        if (ItemStackHelper.isStackValid(stack) && stack.getItem() == this && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
             @SuppressWarnings("unchecked")
             IEnderNetworkComponent<T> component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
             if (component != null) {

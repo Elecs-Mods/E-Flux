@@ -142,7 +142,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         }
         EnderNetwork ret = createNetwork_(uuid, tag);
         boolean hasTag = tag != null;
-        ElecByteBuf byteBuf = sender.createByteBuf().writeBoolean(hasTag);
+        ElecByteBuf byteBuf = sender.createByteBuf().writeUuid(uuid).writeBoolean(hasTag);
         if (hasTag){
             byteBuf.writeNBTTagCompoundToBuffer(tag);
         }

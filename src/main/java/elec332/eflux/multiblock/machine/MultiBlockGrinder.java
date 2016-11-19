@@ -1,5 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
@@ -109,7 +110,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float startup) {
-        if (startup > .8f && stack != null){
+        if (startup > .8f && ItemStackHelper.isStackValid(stack)){
             oldProgress++;
             if (oldProgress > 100){
                 inventory.setInventorySlotContents(slot, null);

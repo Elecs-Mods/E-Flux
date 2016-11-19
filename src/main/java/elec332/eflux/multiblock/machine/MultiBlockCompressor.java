@@ -1,5 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
@@ -68,7 +69,7 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public int updateProgressOnItem(int oldProgress, ItemStack stack, int slot, float startup) {
-        return oldProgress + (((EFlux.random.nextFloat()*2 * (startup+0.1f)) > .5f  && stack != null) ? 1 : 0);
+        return oldProgress + (((EFlux.random.nextFloat()*2 * (startup+0.1f)) > .5f  && ItemStackHelper.isStackValid(stack)) ? 1 : 0);
     }
 
     @Override
