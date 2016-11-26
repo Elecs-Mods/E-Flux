@@ -2,6 +2,7 @@ package elec332.eflux.items;
 
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
+import elec332.core.util.MinecraftList;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.circuit.CircuitHelper;
@@ -19,6 +20,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -39,7 +42,8 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    @SideOnly(Side.CLIENT)
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (EnumCircuit type : EnumCircuit.VALUES){
             subItems.add(createNewEmptyCircuit(type));
         }
@@ -49,10 +53,14 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         ICircuit circuit = CircuitHelper.getCircuit(stack);
-        tooltip.add("Etched: "+circuit.isEtchedCircuit());
-        tooltip.add("Type: "+circuit.getCircuitName());
-        tooltip.add("Valid: "+circuit.isValidCircuit());
-        tooltip.add("Board: "+circuit.getDifficulty().name());
+        if (circuit != null) {
+            tooltip.add("Etched: " + circuit.isEtchedCircuit());
+            tooltip.add("Type: " + circuit.getCircuitName());
+            tooltip.add("Valid: " + circuit.isValidCircuit());
+            tooltip.add("Board: " + circuit.getDifficulty().name());
+        } else {
+            tooltip.add("ERROR");
+        }
     }
 
     public ItemStack createNewEmptyCircuit(EnumCircuit circuit){
@@ -77,7 +85,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
         private EnumCircuit diff;
         private boolean etched, valid;
         private ICircuitDataProvider circuit;
-        private ItemStack[] components;
+        private MinecraftList<ItemStack> components;
 
         @Override
         public int boardSize() {
@@ -92,24 +100,24 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
             if (circuit == null){
                 return null;
             }
-            return ItemStack.copyItemStack(circuit.getComponents()[slot]);
+            return ItemStackHelper.copyItemStack(circuit.getComponents()[slot]);
         }
 
         @Override
         public void breakRandomComponent() {
             if (isEtchedCircuit()){
-                if (components != null && components.length > 0 && !breakComponent(EFlux.random.nextInt(components.length - 1))){
+                if (components != null && components.size() > 0 && !breakComponent(EFlux.random.nextInt(components.size() - 1))){
                     breakRandomComponent();
                 }
             }
         }
 
         private boolean breakComponent(int i){
-            ItemStack stack = components[i];
+            ItemStack stack = components.get(i);
             if (ItemStackHelper.isStackValid(stack) && stack.getItem() instanceof IElectricComponent){
                 IElectricComponent component = (IElectricComponent) stack.getItem();
                 if (!component.isBroken(stack)){
-                    components[i] = component.getBroken(stack);
+                    components.set(i, component.getBroken(stack));
                     valid = false;
                     return true;
                 }
@@ -119,9 +127,9 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
 
         @Override
         public void validate() {
-            if (components != null && components.length == boardSize()){
-                for (int i = 0; i < components.length; i++) {
-                    if (!InventoryHelper.areEqualNoSizeNoNBT(components[i], getRequiredComponent(i))){
+            if (components != null && components.size() == boardSize()){
+                for (int i = 0; i < components.size(); i++) {
+                    if (!InventoryHelper.areEqualNoSizeNoNBT(components.get(i), getRequiredComponent(i))){
                         valid = false;
                         return;
                     }
@@ -159,16 +167,19 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
 
         @Override
         @Nonnull
-        public ItemStack[] getSolderedComponents() {
+        public List<ItemStack> getSolderedComponents() {
             if (components == null){
-                components = new ItemStack[boardSize()];
+                components = InventoryHelper.newItemStackList(boardSize());
             }
             return components;
         }
 
         @Override
-        public void setSolderedComponents(ItemStack[] components) {
-            this.components = components;
+        public void setSolderedComponents(List<ItemStack> components) {
+            if (!(components instanceof MinecraftList)){
+                throw new UnsupportedOperationException();
+            }
+            this.components = (MinecraftList<ItemStack>) components;
         }
 
         private void clear(){
@@ -188,7 +199,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
             } else {
                tag.setByte("diff", diff.getCircuitLevel());
             }
-            tag.setTag("components", InventoryHelper.writeStacksToNBT(components));
+            tag.setTag("components", InventoryHelper.writeItemsToNBT(components));
             return tag;
         }
 
@@ -208,7 +219,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
                     this.diff = EnumCircuit.SMALL;
                 }
             }
-            this.components = InventoryHelper.readStacksFromNBT(nbt.getCompoundTag("components"));
+            InventoryHelper.readItemsFromNBT(nbt.getCompoundTag("components"), this.components);
         }
 
         @Override

@@ -135,10 +135,10 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         if (tagCompound.hasKey("sievingStack")){
-            sieving = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("sievingStack"));
+            sieving = ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("sievingStack"));
         }
         if (tagCompound.hasKey("tbo")){
-            tbo = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("tbo"));
+            tbo = ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("tbo"));
         }
         r = tagCompound.getInteger("sA");
     }

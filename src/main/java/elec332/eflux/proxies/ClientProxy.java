@@ -123,7 +123,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, tankRenderer);
         RenderingRegistry.instance().registerLoader(tankRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAreaMover.class, new TESRAreaMover());
-        RenderingRegistry.instance().registerFakeItem(EFlux.creativeTab.getTabIconItem());
+        RenderingRegistry.instance().registerFakeItem(EFlux.creativeTab.getTabIconItem().getItem());
 
         /*EFlux.multiBlockRegistry.registerMultiBlockRenderer(MultiBlockEnderContainer.class, new IMultiBlockRenderer<MultiBlockEnderContainer>() {
 

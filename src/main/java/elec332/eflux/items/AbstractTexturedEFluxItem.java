@@ -52,7 +52,7 @@ public abstract class AbstractTexturedEFluxItem extends AbstractEFluxItem implem
     @Override
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
-        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("items/"+name));
+        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("items/"+getRegistryName().getResourcePath()));
     }
 
 }

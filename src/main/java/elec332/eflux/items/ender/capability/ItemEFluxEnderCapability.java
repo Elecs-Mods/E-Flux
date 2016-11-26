@@ -6,6 +6,7 @@ import elec332.core.api.client.model.IElecModelBakery;
 import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.client.model.loading.INoJsonItem;
+import elec332.core.item.AbstractItem;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderCapabilityContainingItem;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
@@ -18,12 +19,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Elec332 on 7-5-2016.
  */
-public class ItemEFluxEnderCapability extends Item implements INoJsonItem, IEnderCapabilityContainingItem {
+public class ItemEFluxEnderCapability extends AbstractItem implements INoJsonItem, IEnderCapabilityContainingItem {
 
     public ItemEFluxEnderCapability(IEnderCapabilityFactory enderCapabilityFactory) {
         super();
@@ -42,13 +44,14 @@ public class ItemEFluxEnderCapability extends Item implements INoJsonItem, IEnde
     private final List<Integer> types;
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i : types){
             subItems.add(new ItemStack(this, 1, i));
         }
     }
 
     @Override
+    @Nonnull
     public String getUnlocalizedName(ItemStack stack) {
         String ret = super.getUnlocalizedName(stack);
         if (hasSubtypes){

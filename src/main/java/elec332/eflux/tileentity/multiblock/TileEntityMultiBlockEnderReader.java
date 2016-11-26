@@ -49,13 +49,13 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     private UUID networkID;
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (hand == EnumHand.OFF_HAND){
             return false;
         }
         int current = player.inventory.currentItem;
         IInventory playerInv = player.inventory;
-        stack = playerInv.getStackInSlot(current);
+        ItemStack stack = player.getHeldItem(hand);
         if (ItemEFluxInfusedEnder.isActive(stack)){
             if (!worldObj.isRemote) {
                 this.networkID = ItemEFluxInfusedEnder.getUUID(stack);

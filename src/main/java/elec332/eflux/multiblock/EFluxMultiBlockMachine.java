@@ -4,6 +4,7 @@ import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
@@ -96,7 +97,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         energyContainer.readFromNBT(tagCompound);
         this.broken = tagCompound.getBoolean("broken");
         if (broken) {
-            this.breakableMachineInventory = new BreakableMachineInventory(this, ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("itemRep")));
+            this.breakableMachineInventory = new BreakableMachineInventory(this, ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("itemRep")));
         }
     }
 
@@ -137,13 +138,13 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
-    public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
+    public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         if (broken)
             return openGui(player);
-        return onAnyBlockActivatedSafe(player, hand, stack, pos, state);
+        return onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state){
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state){
         return false;
     }
 

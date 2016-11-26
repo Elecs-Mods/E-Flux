@@ -8,6 +8,7 @@ import elec332.core.inventory.widget.FluidTankWidget;
 import elec332.core.inventory.widget.WidgetProgressArrow;
 import elec332.core.util.FluidHelper;
 import elec332.core.util.FluidTankWrapper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
@@ -133,7 +134,7 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements ISi
         wTnk.deserializeNBT(tagCompound.getCompoundTag("wTank"));
         sTnk.deserializeNBT(tagCompound.getCompoundTag("sTank"));
         if (tagCompound.hasKey("GBO"))
-            gonnaBeOutputted = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("GBO"));
+            gonnaBeOutputted = ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("GBO"));
     }
 
     @Override
@@ -248,8 +249,8 @@ public class TileEntityWasher extends TileEntityProcessingMachine implements ISi
     }
 
     @Override
-    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return FluidHelper.tryDrainItem(player, hand, wTnk) || FluidHelper.tryFillItem(player, hand, sTnk) || super.onBlockActivatedSafe(state, player, hand, stack, side, hitX, hitY, hitZ);
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return FluidHelper.tryDrainItem(player, hand, wTnk) || FluidHelper.tryFillItem(player, hand, sTnk) || super.onBlockActivatedSafe(state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

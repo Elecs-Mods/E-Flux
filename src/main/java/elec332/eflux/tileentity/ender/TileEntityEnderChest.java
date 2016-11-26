@@ -21,7 +21,7 @@ public class TileEntityEnderChest extends AbstractEnderTileEntity<IItemHandler> 
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldObj.isRemote && getEnderHandler().getCurrentConnection() != null && getEnderHandler().getCurrentConnection().get() != null){
             System.out.println("opening");
             openGui(player, EFlux.instance, 5);

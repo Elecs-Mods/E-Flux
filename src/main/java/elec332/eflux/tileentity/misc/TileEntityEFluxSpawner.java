@@ -40,8 +40,9 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
     private boolean redstoneActivated;
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         boolean b = false;
+        ItemStack stack = player.getHeldItem(hand);
         if (CircuitHelper.isCircuitType(stack, new EFluxResourceLocation("shock")) && CircuitHelper.isValidCircuit(stack)){
             brainDead = b = true;
         }
@@ -56,7 +57,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
             markDirty();
             return true;
         }
-        return super.onBlockActivated(state, player, hand, stack, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

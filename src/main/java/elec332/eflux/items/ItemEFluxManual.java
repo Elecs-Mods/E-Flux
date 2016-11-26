@@ -7,6 +7,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 30-1-2016.
  */
@@ -17,9 +19,10 @@ public class ItemEFluxManual extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(EntityPlayer playerIn, @Nonnull EnumHand hand, World worldIn) {
         playerIn.openGui(EFlux.instance, 3, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+        return super.onItemRightClick(playerIn, hand, worldIn);
     }
 
 }

@@ -13,7 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -36,13 +39,14 @@ public class ItemEFluxBluePrint extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    @SideOnly(Side.CLIENT)
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         if (EFlux.circuitRegistry.getKeys().size() > 0 && ElecCore.developmentEnvironment) {
             for (ICircuitDataProvider circuitData : EFlux.circuitRegistry) {
                 subItems.add(createBlueprint(circuitData));
             }
         } else {
-            super.getSubItems(itemIn, tab, subItems);
+            super.getSubItems(item, subItems, creativeTab);
         }
     }
 

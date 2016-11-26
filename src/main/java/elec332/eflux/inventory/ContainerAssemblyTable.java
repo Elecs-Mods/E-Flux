@@ -5,6 +5,7 @@ import elec332.core.inventory.ContainerMachine;
 import elec332.core.main.ElecCore;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.ItemStackHelper;
+import elec332.core.util.MinecraftList;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
@@ -113,10 +114,11 @@ public class ContainerAssemblyTable extends ContainerMachine {
     }
 
     @Override
+    @Nonnull
     public ItemStack slotClick(int slotID, int dragType, ClickType clickTypeIn, EntityPlayer player) {
         if (slotID > 0 && slotID < 10 && (player.worldObj.isRemote || !assemblyTable.drainPower(200)) && !canClick) {
             detectAndSendChanges();
-            return null;
+            return ItemStackHelper.NULL_STACK;
         }
         if (slotID < 10) {
             syncSlots();
@@ -167,8 +169,8 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         @Override
-        public void setInventorySlotContents(int slotID, ItemStack stack) {
-            if (slotID >= inventoryContents.length){
+        public void setInventorySlotContents(int slotID, @Nonnull ItemStack stack) {
+            if (slotID >= inventoryContents.size()){
                 return;
             }
             super.setInventorySlotContents(slotID, stack);
@@ -177,7 +179,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         protected void checkOpen(){
             if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
-                inventoryContents = circuit.getSolderedComponents();
+                inventoryContents = (MinecraftList<ItemStack>) circuit.getSolderedComponents();
             }
         }
 
@@ -189,7 +191,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         protected void checkClose(){
             if (ItemStackHelper.isStackValid(stack)) {
                 markDirty();
-                inventoryContents = new ItemStack[0];
+                inventoryContents = MinecraftList.create(0, ItemStackHelper.NULL_STACK);
             }
         }
 
@@ -216,7 +218,7 @@ public class ContainerAssemblyTable extends ContainerMachine {
         }
 
         @Override
-        public boolean isItemValidForSlot(int id, ItemStack stack) {
+        public boolean isItemValidForSlot(int id, @Nonnull ItemStack stack) {
             return stack.getItem() instanceof IElectricComponent;
         }
 

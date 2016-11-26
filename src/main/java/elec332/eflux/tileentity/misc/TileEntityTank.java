@@ -48,8 +48,8 @@ public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, IInfo
     private float clientFluidHeight;
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return worldObj.isRemote || FluidHelper.onTankActivated(player, hand, tankMultiBlock, tankMultiBlock.getCapacity()) || super.onBlockActivated(state, player, hand, stack, side, hitX, hitY, hitZ);
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return worldObj.isRemote || FluidHelper.onTankActivated(player, hand, tankMultiBlock, tankMultiBlock.getCapacity()) || super.onBlockActivated(state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

@@ -35,10 +35,11 @@ public class ItemEFluxWrench extends AbstractTexturedEFluxItem implements IRight
         return new ItemStack(this, 1, itemStack.getItemDamage() + 1);
     }
 
-    @Override
     @Nonnull
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    @Override
+    protected EnumActionResult onItemUse(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
+            ItemStack stack = player.getHeldItem(hand);
             Block block = WorldHelper.getBlockAt(world, pos);
             if (block instanceof IWrenchable) {
                 if (player.isSneaking()) {
@@ -56,5 +57,4 @@ public class ItemEFluxWrench extends AbstractTexturedEFluxItem implements IRight
         }
         return EnumActionResult.SUCCESS;
     }
-
 }

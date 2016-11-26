@@ -1,12 +1,12 @@
 package elec332.eflux.items;
 
+import elec332.core.item.AbstractItemBlock;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,20 +18,22 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 21-2-2016.
  */
-public class ItemBlockEFluxSpawner extends ItemBlock {
+public class ItemBlockEFluxSpawner extends AbstractItemBlock {
 
     public ItemBlockEFluxSpawner(Block block) {
         super(block);
     }
 
+    @Nonnull
     @Override
-    @SuppressWarnings("all")
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand side, EnumFacing hitX, float hitY, float hitZ, float p_180614_9_) {
+    protected EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = WorldHelper.getTileAt(worldIn, pos);
-
+        ItemStack stack = playerIn.getHeldItem(hand);
         if (!(tile instanceof TileEntityMobSpawner)/* || !hasLink(stack)*/) {
             return EnumActionResult.FAIL;
         }
@@ -39,11 +41,11 @@ public class ItemBlockEFluxSpawner extends ItemBlock {
         NBTTagCompound spawnerTag = new NBTTagCompound();
         ((TileEntityMobSpawner) tile).getSpawnerBaseLogic().writeToNBT(spawnerTag);
 
-        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, hitX, stack) && worldIn.canBlockBePlaced(this.block, pos, false, hitX, null, stack)) {
+        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && worldIn.func_190527_a(this.block, pos, false, facing, null)) {
             int i = this.getMetadata(stack.getMetadata());
-            IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, hitX, hitY, hitZ, p_180614_9_, i, playerIn);
+            IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn);
 
-            if (placeBlockAt(stack, playerIn, worldIn, pos, hitX, hitY, hitZ, p_180614_9_, iblockstate1)) {
+            if (placeBlockAt(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1)) {
                 SoundType soundtype = this.block.getSoundType(iblockstate1, worldIn, pos, playerIn);
                 worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 --stack.stackSize;

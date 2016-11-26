@@ -49,7 +49,7 @@ public class TileEntityScanner extends BreakableMachineTileWithSlots implements 
     }
 
     @Override
-    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openGui(player, EFlux.instance, 0);
     }
 

@@ -30,9 +30,10 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
         super(name);
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        stack = player.getHeldItem(hand); //Just to make sure.
+    protected ActionResult<ItemStack> onItemRightClick(EntityPlayer player, @Nonnull EnumHand hand, World world) {
+        ItemStack stack = player.getHeldItem(hand);
         if (ItemStackHelper.isStackValid(stack) && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)){
             @SuppressWarnings("unchecked")
             IEnderNetworkComponent<T> component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
@@ -41,7 +42,7 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
                 return onRightClick(component, connection, stack, world, player, hand);
             }
         }
-        return super.onItemRightClick(stack, world, player, hand);
+        return super.onItemRightClick(player, hand, world);
     }
 
     /**

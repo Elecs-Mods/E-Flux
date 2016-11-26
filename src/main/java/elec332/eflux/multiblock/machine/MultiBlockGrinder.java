@@ -98,14 +98,14 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
 
     @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         /*if (!getWorldObj().isRemote){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
             }
             PlayerHelper.sendMessageToPlayer(player, ""+dustPile.getSize());
         }*/
-        return super.onAnyBlockActivatedSafe(player, hand, stack, pos, state);
+        return super.onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
     @Override

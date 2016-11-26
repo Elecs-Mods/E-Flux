@@ -15,6 +15,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 9-5-2016.
  */
@@ -25,10 +27,12 @@ public class ItemEFluxEnderConfigurator extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @Nonnull
+    public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote){
             return EnumActionResult.SUCCESS;
         }
+        ItemStack stack = playerIn.getHeldItem(hand);
         if (!ItemStackHelper.isStackValid(stack) || stack.getItem() != this){
             return EnumActionResult.SUCCESS;
         }

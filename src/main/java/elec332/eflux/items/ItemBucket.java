@@ -11,10 +11,8 @@ import elec332.eflux.client.ClientHelper;
 import elec332.eflux.client.WrappedModel;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +32,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 import static net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple.FLUID_NBT_KEY;
 
@@ -98,11 +95,6 @@ public class ItemBucket extends net.minecraft.item.ItemBucket implements INoJson
         new FluidStack(fluid, Fluid.BUCKET_VOLUME).writeToNBT(fluidTag);
         nbt.setTag(FLUID_NBT_KEY, fluidTag);
         return true;
-    }
-
-    @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        super.getSubItems(itemIn, tab, subItems);
     }
 
     @Override

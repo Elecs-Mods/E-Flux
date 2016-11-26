@@ -16,18 +16,21 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Elec332 on 17-5-2015.
  */
-public class ItemEFluxGenerics extends Item implements INoJsonItem {
+public class ItemEFluxGenerics extends AbstractEFluxItem implements INoJsonItem {
 
     public ItemEFluxGenerics(){
+        super(null);
         this.setHasSubtypes(true);
         setRegistryName(new EFluxResourceLocation(getName()));
         setUnlocalizedName(getRegistryName().toString().replace(":", ".").toLowerCase());
@@ -56,16 +59,15 @@ public class ItemEFluxGenerics extends Item implements INoJsonItem {
     }
 
     @Override
+    @Nonnull
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName(stack)+"."+components[stack.getItemDamage()].toLowerCase();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list){
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i = 0; i < components.length; i++){
-            list.add(new ItemStack(item, 1, i));
+            subItems.add(new ItemStack(item, 1, i));
         }
     }
 

@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.item.AbstractItem;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.item.Item;
@@ -7,15 +8,11 @@ import net.minecraft.item.Item;
 /**
  * Created by Elec332 on 10-9-2015.
  */
-public abstract class AbstractEFluxItem extends Item {
+public abstract class AbstractEFluxItem extends AbstractItem {
 
     public AbstractEFluxItem(String name){
-        this.name = name;
-        setRegistryName(new EFluxResourceLocation(name));
-        setUnlocalizedName(getRegistryName().toString().replace(":", ".").toLowerCase());
+        super(new EFluxResourceLocation(name));
         setCreativeTab(EFlux.creativeTab);
     }
-
-    protected final String name;
 
 }

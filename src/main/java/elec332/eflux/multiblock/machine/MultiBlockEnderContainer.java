@@ -80,8 +80,8 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     @Override
-    public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
-        if (network != null && !ItemStackHelper.isStackValid(stack) && !getWorldObj().isRemote && network.isPowered()){
+    public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
+        if (network != null && !ItemStackHelper.isStackValid(player.getHeldItem(hand)) && !getWorldObj().isRemote && network.isPowered()){
             openGui(player, EFlux.instance);
         }
         return true;

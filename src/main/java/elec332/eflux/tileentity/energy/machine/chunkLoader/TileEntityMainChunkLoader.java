@@ -185,8 +185,8 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return isOwner(player) && super.onBlockActivated(state, player, hand, stack, side, hitX, hitY, hitZ);
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return isOwner(player) && super.onBlockActivated(state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

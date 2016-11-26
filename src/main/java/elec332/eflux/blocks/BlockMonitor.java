@@ -8,6 +8,7 @@ import elec332.core.api.client.model.map.IBakedModelMetaRotationMap;
 import elec332.core.api.wrench.IWrenchable;
 import elec332.core.client.model.loading.INoJsonBlock;
 import elec332.core.client.model.map.BakedModelMetaRotationMap;
+import elec332.core.tile.AbstractBlock;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BlockStateHelper;
 import elec332.core.util.DirectionHelper;
@@ -38,10 +39,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 14-1-2016.
  */
-public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, ITileEntityProvider {
+public class BlockMonitor extends AbstractBlock implements IWrenchable, INoJsonBlock, ITileEntityProvider {
 
     public BlockMonitor() {
         super(Material.ROCK);
@@ -64,11 +67,11 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand side, ItemStack hitX, EnumFacing hitY, float hitZ, float p_180639_9_, float p_180639_10_) {
+    protected boolean onBlockActivated(World world, BlockPos pos, EntityPlayer player, EnumHand hand, IBlockState state, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileBase)
-            return ((TileBase) tile).onBlockActivated(state, playerIn, side, hitX, hitY, hitZ, p_180639_9_, p_180639_10_);
-        return super.onBlockActivated(world, pos, state, playerIn, side, hitX, hitY, hitZ, p_180639_9_, p_180639_10_);
+            return ((TileBase) tile).onBlockActivated(state, player, hand, facing, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, player, hand, state, facing, hitX, hitY, hitZ);
     }
 
     @Override
@@ -111,14 +114,14 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+    protected void neighborChanged(World world, BlockPos pos, IBlockState state, Block neighbor, BlockPos p_189540_5_) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityMonitor) {
             ((TileEntityMonitor) tile).pokeCheckStuff();
         } else if (tile instanceof TileBase) {
-            ((TileBase) tile).onNeighborBlockChange(block);
+            ((TileBase) tile).onNeighborBlockChange(neighbor);
         } else {
-            super.neighborChanged(state, world, pos, block);
+            super.neighborChanged(world, pos, state, neighbor, p_189540_5_);
         }
     }
 
@@ -201,11 +204,12 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityMonitor();
     }
 
     @Override
+    @Nonnull
     public IBlockState getStateFromMeta(int meta) {
         return BlockStateHelper.FACING_NORMAL.getStateForMeta(this, meta);
     }
@@ -216,6 +220,7 @@ public class BlockMonitor extends Block implements IWrenchable, INoJsonBlock, IT
     }
 
     @Override
+    @Nonnull
     protected BlockStateContainer createBlockState() {
         return BlockStateHelper.FACING_NORMAL.createMetaBlockState(this);
     }

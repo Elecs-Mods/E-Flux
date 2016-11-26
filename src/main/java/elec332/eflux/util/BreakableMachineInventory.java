@@ -4,6 +4,7 @@ import elec332.core.inventory.BaseContainer;
 import elec332.core.main.ElecCore;
 import elec332.core.util.BasicInventory;
 import elec332.core.util.InventoryHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.inventory.GuiStandardFormat;
@@ -138,7 +139,7 @@ public class BreakableMachineInventory implements IInventory {
                     this.zLevel = 100.0F;
                     this.itemRender.zLevel = 100.0F;
 
-                    if (itemstack == null)
+                    if (ItemStackHelper.isStackValid(itemstack))
                     {
                         TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
 
@@ -172,14 +173,14 @@ public class BreakableMachineInventory implements IInventory {
                 {
                     ItemStack itemstack = this.mc.thePlayer.inventory.getItemStack();
 
-                    if (itemstack != null && this.dragSplitting)
+                    if (ItemStackHelper.isStackValid(itemstack) && this.dragSplitting)
                     {
                         this.dragSplittingRemnant = itemstack.stackSize;
 
                         for (Slot slot : this.dragSplittingSlots)
                         {
                             ItemStack itemstack1 = itemstack.copy();
-                            int i = slot.getStack() == null ? 0 : slot.getStack().stackSize;
+                            int i = ItemStackHelper.isStackValid(slot.getStack()) ? 0 : slot.getStack().stackSize;
                             Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack1, i);
 
                             if (itemstack1.stackSize > itemstack1.getMaxStackSize())
@@ -204,6 +205,11 @@ public class BreakableMachineInventory implements IInventory {
     @Override
     public int getSizeInventory() {
         return 1;
+    }
+
+    @Override
+    public boolean func_191420_l() {
+        return false;
     }
 
     @Override
@@ -248,7 +254,7 @@ public class BreakableMachineInventory implements IInventory {
     @Override
     public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
         this.inventoryContent[p_70299_1_] = p_70299_2_;
-        if(p_70299_2_ != null && p_70299_2_.stackSize > this.getInventoryStackLimit()) {
+        if(ItemStackHelper.isStackValid(p_70299_2_) && p_70299_2_.stackSize > this.getInventoryStackLimit()) {
             p_70299_2_.stackSize = this.getInventoryStackLimit();
         }
         this.markDirty();

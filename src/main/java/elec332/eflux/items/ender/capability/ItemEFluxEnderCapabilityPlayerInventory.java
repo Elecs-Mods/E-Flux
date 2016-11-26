@@ -10,6 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 7-5-2016.
  */
@@ -20,14 +22,16 @@ public class ItemEFluxEnderCapabilityPlayerInventory extends ItemEFluxEnderCapab
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(EntityPlayer player, @Nonnull EnumHand hand, World world) {
         if (!(player instanceof FakePlayer)) {
+            ItemStack itemStack = player.getHeldItem(hand);
             if (!itemStack.hasTagCompound()) {
                 itemStack.setTagCompound(new NBTTagCompound());
             }
             itemStack.getTagCompound().setString("enderPlayer", PlayerHelper.getPlayerUUID(player).toString());
         }
-        return super.onItemRightClick(itemStack, world, player, hand);
+        return super.onItemRightClick(player, hand, world);
     }
 
 }

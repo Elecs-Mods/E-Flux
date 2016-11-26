@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -59,13 +60,14 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i = 0; i < 3; i++) {
-            subItems.add(new ItemStack(itemIn, 1, i));
+            subItems.add(new ItemStack(item, 1, i));
         }
     }
 
     @Override
+    @Nonnull
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName(stack) + "." + stack.getItemDamage();
     }

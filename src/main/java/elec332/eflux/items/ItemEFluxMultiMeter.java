@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.core.api.util.IRightClickCancel;
+import elec332.core.util.PlayerHelper;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyGridInformation;
@@ -26,17 +27,16 @@ public class ItemEFluxMultiMeter extends AbstractTexturedEFluxItem implements IR
         setMaxStackSize(1);
     }
 
-    @Override
     @Nonnull
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @Override
+    protected EnumActionResult onItemUse(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             IEnergyGridInformation info = EFlux.gridHandler.getInformationFor(new DimensionCoordinate(world, pos));
             if (info != null){
-                player.addChatComponentMessage(new TextComponentString("Current RP: "+info.getCurrentRP(facing)));
-                player.addChatComponentMessage(new TextComponentString("Provided EF: "+info.getLastProcessedEF(facing)));
+                PlayerHelper.sendMessageToPlayer(player, "Current RP: "+info.getCurrentRP(facing));
+                PlayerHelper.sendMessageToPlayer(player, "Provided EF: "+info.getLastProcessedEF(facing));
             }
         }
         return EnumActionResult.SUCCESS;
     }
-
 }

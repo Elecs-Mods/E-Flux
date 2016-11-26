@@ -1,6 +1,7 @@
 package elec332.eflux.client.manual;
 
 import com.google.common.collect.Lists;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.client.ClientHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,7 +38,7 @@ public class ManualCategory {
     }
 
     public ManualCategory setDisplayStack(ItemStack displayStack) {
-        this.displayStack = ItemStack.copyItemStack(displayStack);
+        this.displayStack = ItemStackHelper.copyItemStack(displayStack);
         return this;
     }
 

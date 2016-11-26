@@ -1,5 +1,6 @@
 package elec332.eflux.blocks;
 
+import elec332.core.tile.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -10,21 +11,24 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Elec332 on 21-7-2015.
  */
-public abstract class BlockWithMeta extends Block {
+public abstract class BlockWithMeta extends AbstractBlock {
 
     public BlockWithMeta(Material mat, String blockName, String modID) {
         super(mat);
         this.setDefaultState(getStateFromMeta(0));
         this.setUnlocalizedName(modID + "." + blockName);
+        this.setRegistryName(new ResourceLocation(modID, blockName));
         this.blockName = blockName;
     }
 
@@ -42,6 +46,7 @@ public abstract class BlockWithMeta extends Block {
     }
 
     @Override
+    @Nonnull
     public IBlockState getStateFromMeta(int meta) {
         return getBlockState().getBaseState().withProperty(getProperty(), meta);
     }
@@ -52,11 +57,13 @@ public abstract class BlockWithMeta extends Block {
     }
 
     public BlockWithMeta register(){
-        GameRegistry.registerBlock(this, MetaItemBlock.class, blockName);
+        GameRegistry.register(this);
+        GameRegistry.register(new MetaItemBlock(this));
         return this;
     }
 
     @Override
+    @Nonnull
     protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this, new IProperty[]{getProperty()}, getUnlistedProperties());
     }
@@ -66,18 +73,13 @@ public abstract class BlockWithMeta extends Block {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public final void getSubBlocks(Item item, CreativeTabs creativeTab, List list) {
-        getSubBlocks(list, item, creativeTab);
+    protected void getSubBlocks(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
+        for (int i = 0; i < getTypes(); i++) {
+            subBlocks.add(new ItemStack(item, 1, i));
+        }
     }
 
     public abstract int getTypes();
-
-    public void getSubBlocks(List<ItemStack> list, Item item, CreativeTabs creativeTab){
-        for (int i = 0; i < getTypes(); i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
 
     @Override
     public int damageDropped(IBlockState state) {

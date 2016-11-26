@@ -10,14 +10,13 @@ import elec332.core.api.info.IInformation;
 import elec332.core.api.module.IModuleController;
 import elec332.core.api.network.ModNetworkHandler;
 import elec332.core.api.registry.ISingleRegister;
+import elec332.core.api.util.IDependencyHandler;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.IElecNetworkHandler;
 import elec332.core.server.ServerHelper;
-import elec332.core.util.LoadTimer;
-import elec332.core.util.MCModInfo;
-import elec332.core.util.RegistryHelper;
+import elec332.core.util.*;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.util.IBreakableMachine;
@@ -48,10 +47,9 @@ import elec332.eflux.world.WorldGenRegister;
 import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,6 +70,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -83,12 +82,14 @@ import java.util.Random;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:Forge@[#FORGE_VER#,);required-after:ElecCore@[#ELECCORE_VER#,);required-after:mcmultipart@[1.1.0,)",
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:ElecCore;required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
-public class EFlux implements IModuleController, IElecCoreMod {
+public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandler {
 
     public static final String ModName = "E-Flux";
-    public static final String ModID = "EFlux";
+    public static final String ModID = "eflux";
+    private static final String FORGE_VERSION = "#FORGE_VER#";
+    private static final String ELECCORE_VERSION = "#ELECCORE_VER#";
     public static File baseFolder;
 
     @SidedProxy(clientSide = "elec332.eflux.proxies.ClientProxy", serverSide = "elec332.eflux.proxies.CommonProxy")
@@ -112,18 +113,15 @@ public class EFlux implements IModuleController, IElecCoreMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
+        logger = LogManager.getLogger("EFlux");
         loadTimer = new LoadTimer(logger, ModName);
         loadTimer.startPhase(event);
-        creativeTab = new CreativeTabs("EFlux") {
+        creativeTab = new AbstractCreativeTab("EFlux") {
 
-            Item item = new AbstractTexturedEFluxItem("circuit"){};
-
-            @Override
             @Nonnull
-            @SuppressWarnings("all")
-            public Item getTabIconItem() {
-                return item;
+            @Override
+            protected ItemStack getDisplayStack() {
+                return new ItemStack(new AbstractTexturedEFluxItem("circuit"){});
             }
 
         };
@@ -195,14 +193,14 @@ public class EFlux implements IModuleController, IElecCoreMod {
 
         });
         RecipeRegister.registerRecipes();
-        IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = VillagerRegistry.instance().getRegistry();
-        new VillagerRegistry.VillagerCareer(villagerRegistry.getValue(new ResourceLocation("smith")), "technician").addTrade(1, new EntityVillager.ITradeList() {
+        IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = RegistryHelper.getVillagerRegistry();
+        new VillagerRegistry.VillagerCareer(villagerRegistry.getValue(new ResourceLocation("smith")), "technician").addTrade(1, IElecTradeList.wrap(new IElecTradeList() {
 
             @Override
-            public void modifyMerchantRecipeList(MerchantRecipeList recipeList, Random random) {
+            public void modifyMerchantRecipeList(IMerchant merchant, @Nonnull MerchantRecipeList tradeList, @Nonnull Random random) {
                 ICircuitDataProvider randomCircuit = getRandomBlueprint(random);
                 int i = 14 + random.nextInt(9) * (randomCircuit.getCircuitType().getCircuitLevel() + 1);
-                recipeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, i), ItemEFluxBluePrint.createBlueprint(randomCircuit)));
+                tradeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, i), ItemEFluxBluePrint.createBlueprint(randomCircuit)));
             }
 
             private ICircuitDataProvider getRandomBlueprint(Random random){
@@ -210,7 +208,7 @@ public class EFlux implements IModuleController, IElecCoreMod {
                 return circuits.get(random.nextInt(circuits.size()));
             }
 
-        });
+        }));
         ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new IInfoProvider() {
 
             @Override
@@ -254,6 +252,16 @@ public class EFlux implements IModuleController, IElecCoreMod {
     @Override
     public boolean isModuleEnabled(String s) {
         return true;
+    }
+
+    @Override
+    public String getRequiredForgeVersion(String mcVersion) {
+        return mcVersion.equals("1.11") ? FORGE_VERSION : null;
+    }
+
+    @Override
+    public String getRequiredElecCoreVersion(String mcVersion) {
+        return mcVersion.equals("1.11") ? ELECCORE_VERSION : null; //TODO
     }
 
     public static void systemPrintDebug(Object s){

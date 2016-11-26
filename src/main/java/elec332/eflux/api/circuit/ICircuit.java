@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by Elec332 on 4-5-2015.
@@ -27,9 +28,9 @@ public interface ICircuit {
     public boolean isEtchedCircuit();
 
     @Nonnull
-    public ItemStack[] getSolderedComponents();
+    public List<ItemStack> getSolderedComponents();
 
-    public void setSolderedComponents(ItemStack[] components);
+    public void setSolderedComponents(List<ItemStack> components);
 
     @Nullable
     public ResourceLocation getCircuitName();

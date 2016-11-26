@@ -4,6 +4,7 @@ import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInfoProvider;
 import elec332.core.api.info.IInformation;
 import elec332.core.server.ServerHelper;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.IEnergyReceiver;
@@ -83,12 +84,12 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (broken) return openBrokenGui(player);
-        return onBlockActivatedSafe(state, player, hand, stack, side, hitX, hitY, hitZ);
+        return onBlockActivatedSafe(state, player, hand, side, hitX, hitY, hitZ);
     }
 
-    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZZ){
+    public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZZ){
         return false;
     }
 
@@ -118,7 +119,7 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
         energyContainer.readFromNBT(tagCompound);
         this.broken = tagCompound.getBoolean("broken");
         if (broken) {
-            this.breakableMachineInventory = new BreakableMachineInventory(this, ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("itemRep")));
+            this.breakableMachineInventory = new BreakableMachineInventory(this, ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("itemRep")));
         }
     }
 

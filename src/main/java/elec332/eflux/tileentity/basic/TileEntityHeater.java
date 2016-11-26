@@ -1,6 +1,7 @@
 package elec332.eflux.tileentity.basic;
 
 import elec332.core.api.registration.RegisteredTileEntity;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
@@ -42,14 +43,14 @@ public class TileEntityHeater extends AbstractTileEntityMultiBlock implements IT
     protected void onMultiBlockCreated() {
         super.onMultiBlockCreated();
         hasMultiBlock = true;
-        worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
+        WorldHelper.notifyNeighborsOfStateChange(worldObj, pos, getBlockType());
     }
 
     @Override
     protected void onMultiBlockRemoved() {
         super.onMultiBlockRemoved();
         hasMultiBlock = false;
-        worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
+        WorldHelper.notifyNeighborsOfStateChange(worldObj, pos, getBlockType());
     }
 
     @Override

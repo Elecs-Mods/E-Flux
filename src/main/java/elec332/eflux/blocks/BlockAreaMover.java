@@ -5,6 +5,9 @@ import elec332.core.api.client.model.IElecModelBakery;
 import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.client.model.loading.INoJsonBlock;
+import elec332.core.item.AbstractItemBlock;
+import elec332.core.tile.AbstractBlock;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -31,12 +34,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Created by Elec332 on 17-1-2016.
  */
-public class BlockAreaMover extends Block implements INoJsonBlock, ITileEntityProvider {
+public class BlockAreaMover extends AbstractBlock implements INoJsonBlock, ITileEntityProvider {
 
     public BlockAreaMover() {
         super(Material.ROCK);
@@ -56,9 +60,9 @@ public class BlockAreaMover extends Block implements INoJsonBlock, ITileEntityPr
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    protected void getSubBlocks(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
         for (int i = 0; i < 3; i++) {
-            list.add(new ItemStack(this, 1, i));
+            subBlocks.add(new ItemStack(this, 1, i));
         }
     }
 
@@ -121,7 +125,7 @@ public class BlockAreaMover extends Block implements INoJsonBlock, ITileEntityPr
         tooltip.add("Range: "+range);
     }
 
-    public class BAMItemBlock extends ItemBlock {
+    public class BAMItemBlock extends AbstractItemBlock {
 
         public BAMItemBlock(Block block) {
             super(block);
@@ -134,8 +138,10 @@ public class BlockAreaMover extends Block implements INoJsonBlock, ITileEntityPr
         }
 
         @Override
-        public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-            EnumActionResult ret = super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+        @Nonnull
+        public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+            ItemStack stack = ItemStackHelper.copyItemStack(playerIn.getHeldItem(hand));
+            EnumActionResult ret = super.onItemUse(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
             if (ret == EnumActionResult.SUCCESS){
                 IBlockState iblockstate = worldIn.getBlockState(pos);
                 Block block = iblockstate.getBlock();

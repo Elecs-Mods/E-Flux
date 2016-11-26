@@ -126,13 +126,13 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     }
 
     @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, ItemStack stack, BlockPos pos, IBlockState state) {
+    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         if (player instanceof EntityPlayerMP)
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
             }
 
-        return super.onAnyBlockActivatedSafe(player, hand, stack, pos, state);
+        return super.onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
     @Override

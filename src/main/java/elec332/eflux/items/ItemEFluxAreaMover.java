@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.core.util.ItemStackHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.core.world.StructureTemplate;
 import elec332.core.world.WorldHelper;
 import elec332.core.world.schematic.Schematic;
@@ -18,13 +19,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -43,7 +42,8 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
 
     @Override
     @SuppressWarnings("all")
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+    public EnumActionResult onItemUseFirst(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack stack = player.getHeldItem(hand);
         boolean creative = isCreative(stack);
         IWeakEnderConnection<IEndergyCapability> connection = creative ? null : getCurrentConnection(stack);
         TileEntity tile = WorldHelper.getTileAt(world, pos);
@@ -70,7 +70,7 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
                             for (int k = 0; k < 2 * range + 1; k++) {
                                 BlockPos m = newPos.add(i, j, k);
                                 if (!world.isAirBlock(m)) {
-                                    player.addChatComponentMessage(new TextComponentString("There is a block at: " + m + " that has to be removed before the structure can be placed."));
+                                    PlayerHelper.sendMessageToPlayer(player, "There is a block at: " + m + " that has to be removed before the structure can be placed.");
                                     return EnumActionResult.FAIL;
                                 }
                             }
@@ -89,15 +89,18 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        return isCreative(stack) ? new ActionResult<ItemStack>(EnumActionResult.PASS, stack) : super.onItemRightClick(stack, world, player, hand);
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(EntityPlayer player, @Nonnull EnumHand hand, World world) {
+        ItemStack stack = player.getHeldItem(hand);
+        return isCreative(stack) ? new ActionResult<ItemStack>(EnumActionResult.PASS, stack) : super.onItemRightClick(player, hand, world);
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        super.getSubItems(itemIn, tab, subItems);
+    @SideOnly(Side.CLIENT)
+    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+        super.getSubItems(item, subItems, creativeTab);
         if (Config.General.creativeAreaMover){
-            subItems.add(new ItemStack(itemIn, 1, CREATIVE_META));
+            subItems.add(new ItemStack(item, 1, CREATIVE_META));
         }
     }
 
@@ -107,6 +110,7 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
     }
 
     @Override
+    @Nonnull
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName(stack) + (isCreative(stack) ? ".creative" : "");
     }
