@@ -82,7 +82,7 @@ import java.util.Random;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:ElecCore;required-after:mcmultipart@[1.1.0,)",
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:eleccore;required-after:mcmultipart@[1.1.0,)",
         acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
 public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandler {
 
