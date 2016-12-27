@@ -51,7 +51,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
         if (getWorldObj().isRemote && frt == null){
             //System.out.println("Set renderer");
             FurnaceRenderTile frt = new FurnaceRenderTile();
-            frt.setWorldObj(getWorldObj());
+            frt.setWorld(getWorldObj());
             frt.setPos(getBlockLocAtTranslatedPos(1, 1, 1));
             frt.setMultiBlock(this, getMultiBlockFacing(), "unknown");
             this.frt = frt;
@@ -127,10 +127,10 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
-        if (player instanceof EntityPlayerMP)
-            for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
-            }
+        //if (player instanceof EntityPlayerMP)
+        //    for (int i = 0; i < inventory.getSizeInventory(); i++) {
+        //        PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
+        //    }
 
         return super.onAnyBlockActivatedSafe(player, hand, pos, state);
     }

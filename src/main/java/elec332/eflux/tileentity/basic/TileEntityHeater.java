@@ -16,7 +16,7 @@ import net.minecraftforge.common.capabilities.Capability;
  * Created by Elec332 on 15-4-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxHeater")
-public class TileEntityHeater extends AbstractTileEntityMultiBlock implements ITickable, IEFluxPowerHandler {
+public class TileEntityHeater extends TileEntityBlockMachine implements ITickable, IEFluxPowerHandler {
 
     public TileEntityHeater(){
         energyContainer = new EnergyContainer(500, this);
@@ -43,14 +43,14 @@ public class TileEntityHeater extends AbstractTileEntityMultiBlock implements IT
     protected void onMultiBlockCreated() {
         super.onMultiBlockCreated();
         hasMultiBlock = true;
-        WorldHelper.notifyNeighborsOfStateChange(worldObj, pos, getBlockType());
+        WorldHelper.notifyNeighborsOfStateChange(getWorld(), pos, getBlockType());
     }
 
     @Override
     protected void onMultiBlockRemoved() {
         super.onMultiBlockRemoved();
         hasMultiBlock = false;
-        WorldHelper.notifyNeighborsOfStateChange(worldObj, pos, getBlockType());
+        WorldHelper.notifyNeighborsOfStateChange(getWorld(), pos, getBlockType());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TileEntityHeater extends AbstractTileEntityMultiBlock implements IT
             return;
         }
         EnumFacing facing = getTileFacing(); //TODO: Require power
-        IHeatReceiver heatReceiver = HeatHelper.getHeatReceiver(worldObj, pos, facing);
+        IHeatReceiver heatReceiver = HeatHelper.getHeatReceiver(getWorld(), pos, facing);
         if (heatReceiver != null){
             heatReceiver.addHeat(20);
         }

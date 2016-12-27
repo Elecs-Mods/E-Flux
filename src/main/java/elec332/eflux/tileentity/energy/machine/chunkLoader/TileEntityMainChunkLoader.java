@@ -1,9 +1,9 @@
 package elec332.eflux.tileentity.energy.machine.chunkLoader;
 
 import com.google.common.collect.Lists;
-import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.server.ServerHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -58,7 +58,7 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
 
     @Override
     public void update() {
-        if (worldObj.isRemote)
+        if (getWorld().isRemote)
             return;
         calculatePower();
         if (energyContainer.drainPower(neededPower) && active){
@@ -89,7 +89,7 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
     }
 
     private void handle(boolean b) {
-        if ((changed || !b) && !worldObj.isRemote) {
+        if ((changed || !b) && !getWorld().isRemote) {
             if (!b && tickets.isEmpty()) {
                 return;
             }
@@ -100,11 +100,11 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
             //loadedChunks = 0;
             if (b) {
                 for (BlockPos loc : getLocations()) {
-                    ForgeChunkManager.Ticket ticket = WorldHelper.requestTicket(worldObj, loc, EFlux.instance);
+                    ForgeChunkManager.Ticket ticket = WorldHelper.requestTicket(getWorld(), loc, EFlux.instance);
                     //loadedChunks++;
                     tickets.add(ticket);
                     WorldHelper.forceChunk(ticket);
-                    PlayerHelper.sendMessageToPlayer(worldObj.getPlayerEntityByUUID(owner), "Put ticket on blockLoc: " + loc.toString());
+                    PlayerHelper.sendMessageToPlayer(getWorld().getPlayerEntityByUUID(owner), "Put ticket on blockLoc: " + loc.toString());
                 }
             }
             loadedChunks = tickets.size();
@@ -143,7 +143,7 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
         //    new Runnable() {
         //        @Override
         //        public void run() {
-                    if (!ServerHelper.isServer(worldObj))
+                    if (!ServerHelper.isServer(getWorld()))
                         return;
                     if (entityLiving instanceof EntityPlayer) {
                         UUID uuid = PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving);

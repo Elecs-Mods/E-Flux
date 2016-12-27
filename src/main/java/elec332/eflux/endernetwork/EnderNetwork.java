@@ -3,7 +3,7 @@ package elec332.eflux.endernetwork;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import elec332.core.nbt.NBTMap;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.NBTHelper;
 import elec332.core.world.WorldHelper;
@@ -59,27 +59,28 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         this.activeConnections = new List[maxID];
         this.capabilityNetworkHandlers = new CapabilityNetworkHandler[maxID];
         this.tickables = Lists.newArrayList();
-        this.upgradeInventory = new BasicInventory("", maxID){
+        this.upgradeInventory = new BasicItemHandler(maxID){
 
             @Override
-            public boolean isItemValidForSlot(int id, ItemStack stack) {
+            public boolean isStackValidForSlot(int slot, @Nonnull ItemStack stack) {
                 return !ItemStackHelper.isStackValid(stack) || stack.getItem() instanceof IEnderCapabilityContainingItem;
+
             }
 
             @Override
-            public int getInventoryStackLimit() {
+            protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
                 return 1;
             }
 
             @Override
-            public void setInventorySlotContents(int slotID, ItemStack stack) {
-                super.setInventorySlotContents(slotID, stack);
+            protected void onContentsChanged(int slot) {
                 if (EnderNetwork.this.side.isServer()) {
-                    if (stack != null) {
+                    ItemStack stack = getStackInSlot(slot);
+                    if (ItemStackHelper.isStackValid(stack)) {
                         IEnderCapabilityFactory factory = ((IEnderCapabilityContainingItem) stack.getItem()).getCapabilityFactory(stack);
-                        setCapability(new EnderCapabilityWrapper(factory, stack, EnderNetwork.this), slotID);
+                        setCapability(new EnderCapabilityWrapper(factory, stack, EnderNetwork.this), slot);
                     } else {
-                        setCapability(null, slotID);
+                        setCapability(null, slot);
                     }
                 }
             }
@@ -106,7 +107,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     List<IStableEnderConnection>[] activeConnections;
     private CapabilityNetworkHandler[] capabilityNetworkHandlers;
     private List<ITickable> tickables;
-    private BasicInventory upgradeInventory;
+    private BasicItemHandler upgradeInventory;
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -142,7 +143,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
             }
         }
         powered = nbt.getBoolean("powered");
-        upgradeInventory.readFromNBT(nbt);
+        upgradeInventory.deserializeNBT(nbt);
         calculatePower();
         maxID = nbt.getInteger("mxI");
         if (side.isServer()){
@@ -224,7 +225,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         return maxID;
     }
 
-    public BasicInventory getUpgradeInventory() {
+    public BasicItemHandler getUpgradeInventory() {
         return upgradeInventory;
     }
 

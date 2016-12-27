@@ -1,18 +1,17 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ContainerMachine;
-import elec332.core.inventory.ITileWithSlots;
-import elec332.core.inventory.slot.SlotOutput;
 import elec332.core.inventory.widget.WidgetProgressArrow;
-import elec332.core.tile.IInventoryTile;
-import elec332.eflux.EFlux;
+import elec332.core.inventory.widget.slot.WidgetSlot;
+import elec332.core.inventory.widget.slot.WidgetSlotOutput;
+import elec332.core.inventory.window.ISimpleWindowFactory;
+import elec332.core.inventory.window.Window;
+import elec332.core.util.BasicItemHandler;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.energy.container.IProgressMachine;
-import elec332.eflux.client.ClientHelper;
-import elec332.eflux.client.inventory.GuiMachine;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
@@ -21,13 +20,10 @@ import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -35,10 +31,22 @@ import javax.annotation.Nonnull;
  * Created by Elec332 on 4-6-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxEtchingMachine")
-public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots implements IProgressMachine, IInventoryTile, ITileWithSlots, ITickable, ISidedInventory {
+public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots implements ISimpleWindowFactory, IProgressMachine, ITickable {
 
     public TileEntityEtchingMachine() {
-        super(3);
+        super(new BasicItemHandler(3){
+
+            @Override
+            public boolean canInsert(int slot, @Nonnull ItemStack stack) {
+                return slot < 2;
+            }
+
+            @Override
+            public boolean canExtract(int slot) {
+                return slot == 2;
+            }
+
+        });
         energyContainer.setProgressMachine(this);
     }
 
@@ -46,7 +54,7 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
 
     @Override
     public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return openGui(player, EFlux.instance, 0);
+        return openLocalWindow(player);
     }
 
     @Override
@@ -80,22 +88,6 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
     }
 
     @Override
-    @Nonnull
-    public int[] getSlotsForFace(EnumFacing side) {
-        return new int[]{0, 1, 2};
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        return index < 2;
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return index == 2;
-    }
-
-    @Override
     public int getRequiredPowerPerTick() {
         return 48;
     }
@@ -108,10 +100,10 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
     @Override
     public boolean canProcess() {
         if (result == null){
-            ItemStack circuit = getStackInSlot(1);
-            ItemStack blueprint = getStackInSlot(0);
+            ItemStack circuit = inventory.getStackInSlot(1);
+            ItemStack blueprint = inventory.getStackInSlot(0);
             ICircuit iCircuit = CircuitHelper.getCircuit(circuit);
-            if (!(iCircuit instanceof IEFluxCircuit) || blueprint == null || blueprint.getItem() != ItemRegister.nullBlueprint){
+            if (!(iCircuit instanceof IEFluxCircuit) || !ItemStackHelper.isStackValid(blueprint) || blueprint.getItem() != ItemRegister.nullBlueprint){
                 return false;
             }
             ICircuitDataProvider data = ((ItemEFluxBluePrint)blueprint.getItem()).getBlueprintData(blueprint);
@@ -119,8 +111,8 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
                 return false;
             }
             ItemStack out = circuit.copy();
-            decrStackSize(0, 1);
-            decrStackSize(1, 1);
+            inventory.extractItem(0, 1, false);
+            inventory.extractItem(1, 1, false);
             ((IEFluxCircuit)CircuitHelper.getCircuit(out)).etch(data);
             this.result = out;
             return true;
@@ -130,34 +122,18 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
 
     @Override
     public void onProcessDone() {
-        setInventorySlotContents(2, result.copy());
+        inventory.setStackInSlot(2, result.copy());
         result = null;
     }
 
     @Override
-    public BaseContainer getGuiServer(EntityPlayer player) {
-        return new ContainerMachine(this, player, 0);
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return new GuiMachine(getGuiServer(player)) {
-
-            @Override
-            public ResourceLocation getBackgroundImageLocation() {
-                return ClientHelper.DEFAULT_GUI_LOCATION;
-            }
-
-        };
-    }
-
-    @Override
-    public void addSlots(BaseContainer container) {
-        container.addPlayerInventoryToContainer();
-        container.addSlotToContainer(new Slot(this, 0, 20, 20));
-        container.addSlotToContainer(new Slot(this, 1, 20, 40));
-        container.addSlotToContainer(new SlotOutput(this, 2, 60, 30));
-        container.addWidget(new WidgetProgressArrow(30, 30, energyContainer, true));
+    public void modifyWindow(Window window, Object... args) {
+        window.setBackground(new EFluxResourceLocation("gui/guinull_.png"));
+        window.addPlayerInventoryToContainer();
+        window.addWidget(new WidgetSlot(inventory, 0, 20, 20));
+        window.addWidget(new WidgetSlot(inventory, 1, 20, 40));
+        window.addWidget(new WidgetSlotOutput(inventory, 2, 60, 30));
+        window.addWidget(new WidgetProgressArrow(30, 30, energyContainer, true));
     }
 
 }

@@ -1,0 +1,190 @@
+##TAB
+itemGroup.EFlux=EFlux
+
+##ITEMS
+item.eflux.multimeter.name=Multimeter
+item.eflux.wrench.name=Wrench
+item.eflux.genericitems.carbonplate.name=Carbon Plate
+item.eflux.genericitems.scrap.name=Scrap
+item.eflux.genericitems.carbonmesh.name=Carbon Mesh
+item.eflux.genericitems.plantmesh.name=Plant Mesh
+item.eflux.groundmesh.name=Ground Mesh
+item.eflux.ingots.copper.name=Copper Ingot
+item.eflux.ingots.tin.name=Tin Ingot
+item.eflux.ingots.zinc.name=Zinc Ingot
+item.eflux.ingots.silver.name=Silver Ingot
+item.eflux.ingots.compressed.name=Compressed Ingot
+item.eflux.ingots.conductive.name=Conductive Ingot
+item.eflux.coils.co.name=Copper Coil
+item.eflux.coils.si.name=Silver Coil
+item.eflux.coils.cond.name=Conductive Coil
+item.eflux.itemareamover.name=Area Mover
+item.eflux.multiblockcreator.name=MultiBlock Toolkit
+
+item.eflux.dusts.dustiron.name=Iron Dust
+item.eflux.dusts.dustgold.name=Gold Dust
+item.eflux.dusts.dustcopper.name=Copper Dust
+item.eflux.dusts.dustzinc.name=Zinc Dust
+item.eflux.dusts.dustsilver.name=Silver Dust
+item.eflux.dusts.dustcoal.name=Coal Dust
+item.eflux.dusts.duststone.name=Stone Dust
+item.eflux.dusts.dusttin.name=Tin Dust
+item.eflux.dusts.dustconductive.name=Conductive Dust
+
+item.eflux.cable.0.name=Basic Cable
+item.eflux.cable.1.name=Normal Cable
+item.eflux.cable.2.name=Advanced Cable
+
+item.eflux.brine.name=Brine Bucket
+item.eflux.lpg.name=LPG Bucket
+item.eflux.petrol.name=Petrol Bucket
+item.eflux.diesel.name=Diesel Bucket
+item.eflux.fuel.name=Fuel Bucket
+item.eflux.lubicrant.name=Lubicrant Bucket
+item.eflux.crudeoil.name=Crude Oil Bucket
+item.eflux.oil.name=Oil Bucket
+item.eflux.slib.name=Slib Bucket
+
+item.eflux.manual.name=Manual
+
+item.eflux.components.resistor.name=Resistor
+item.eflux.components.capacitor.name=Capacitor
+item.eflux.components.transistor.name=Transistor
+item.eflux.components.coil.name=Coil
+item.eflux.components.diode.name=Diode
+item.eflux.brokencomponents.resistor.name=Broken Resistor
+item.eflux.brokencomponents.capacitor.name=Broken Capacitor
+item.eflux.brokencomponents.transistor.name=Broken Transistor
+item.eflux.brokencomponents.coil.name=Broken Coil
+item.eflux.brokencomponents.diode.name=Broken Diode
+
+item.eflux.circuit.name=Circuit
+item.eflux.blueprint.name=Blueprint
+
+item.eflux.enderlink.name=Ender-Link device
+item.eflux.enderconfigurator.name=Ender Configurator
+item.eflux.infusedender.name=Infused Enderpearl
+
+item.eflux.playerinventory.name=Ender-Upgrade: Player Inventory
+item.eflux.inventoryviewer.name=Ender Inventory Viewer
+item.eflux.endergy.0.name=Ender-Upgrade: Endergy (Tier 1)
+item.eflux.endergy.1.name=Ender-Upgrade: Endergy (Tier 2)
+item.eflux.endergy.2.name=Ender-Upgrade: Endergy (Tier 3)
+item.eflux.enderinventory.name=Ender-Upgrade: Inventory
+item.eflux.energy_eflux.name=Ender-Upgrade: EFlux Energy
+
+item.eflux.redstoneupgrade.name=Redstone Upgrade
+
+##BLOCKS
+tile.eflux.lasercore.name=Laser Core
+tile.eflux.heater.name=Heater
+tile.eflux.duststorage.name=Dust Storage
+tile.eflux.radiator.name=Radiator
+tile.eflux.motor.name=Motor
+tile.eflux.precision_motor.name=Precision Motor
+tile.eflux.glass.name=Heat-Resistant Glass
+tile.eflux.laserlens.name=Laser Lens
+
+
+tile.eflux.powerinlet.name=Power Inlet
+
+tile.eflux.ore.copper.name=Copper Ore
+tile.eflux.ore.tin.name=Tin Ore
+tile.eflux.ore.zinc.name=Zinc Ore
+tile.eflux.ore.silver.name=Silver Ore
+
+tile.eflux.blockFrame.0.name=Basic Machine Frame
+tile.eflux.blockFrame.1.name=Normal Machine Frame
+tile.eflux.blockFrame.2.name=Advanced Machine Frame
+
+tile.eflux.iteminlet.name=Item Gate
+
+tile.efluxmonitor.name=Monitor
+
+tile.eflux.areaMover.0.name=Area Mover (Tier 1)
+tile.eflux.areaMover.1.name=Area Mover (Tier 2)
+tile.eflux.areaMover.2.name=Area Mover (Tier 3)
+
+tile.eflux.capacitor.name=Capacitor
+tile.eflux.coal_generator.name=Coal Generator
+tile.eflux.assembly_table.name=Assembly Table
+tile.eflux.growthlamp.name=Growth Lamp
+tile.eflux.chunkmain.name=ChunkLoader Controller
+tile.eflux.chunksub.name=ChunkLoader
+tile.eflux.teslacoil.name=Tesla Coil
+tile.eflux.scanner.name=Scanner
+tile.eflux.washer.name=Washer
+tile.eflux.rubblesieve.name=Rubble Sieve
+tile.eflux.etchingmachine.name=Etching Machine
+
+tile.eflux.rfconverter.name=RF Converter
+
+tile.eflux.fluidinlet.name=Fluid Inlet
+tile.eflux.fluidoutlet.name=Fluid Outlet
+tile.eflux.feeder.name=Feeder
+tile.eflux.spawner.name=EFlux Spawner
+tile.eflux.tank.name=Tank
+tile.eflux.enderchest.name=Ender-Chest
+tile.eflux.poweroutlet.name=Power Outlet
+
+##TODO: make up better name
+tile.eflux.ender.name=Ender Core
+
+
+##MANUAL
+eflux.manual.main=E-Flux Manual
+eflux.manual.text.main=This is the E-Flux manual, in here you can find (almost) everything there is to know about this mod!
+
+eflux.manual.powerSystem=Power System
+eflux.manual.text.powerSystem=The E-Flux power system has 2 variables, RP and EF. RP stands for 'Redstone Potential', and EF stands for 'Energetic Flux'. If you multiply these 2, you have the 'energy' value. The RP value of your energy grid is determined by the machine that wants the highest RP. So if you e.g. have 2 machines on a grid, one that wants 6 RP, and one that wants to operate at 12 RP, the RP value of the grid would be 12. The problem is, that all machines have a certain tolerance for the RP, big machines, like engines have a high tolerance, but machines that have sensitive circuitry in the typically have a very low tolerance. 
+eflux.manual.text.powerSystem.1=In the abovementioned setup, it is very likely that the machine with 6 RP would break. You should also note, that when a machine is not operating it its optimum RP value, its power draw will increase, and the speed reduced. This means that you have to think very carefully about which machines to hook on to which power systems.
+
+eflux.manual.multiBlocks=MultiBlocks
+eflux.manual.text.multiBlocks=These are the coolest and best machines in E-Flux, you can see more detailed information about each multiblock on the tabs on the right. \n\nWhen you've placed all the block in the correct position, you must right click a certain block on the front side with the "MultiBlock Toolkit" item. This "key" block is always defined the the chapter about the multiblock.
+
+eflux.manual.machines=Machines
+eflux.manual.text.machines=E-Flux has a lot of machines, (almost) all machines that are not multiblocks are covered in this category.
+
+eflux.manual.oreProcessing=A tech mod is no tech mod without ore processing, right? ;)
+eflux.manual.text.oreProcessing=Setting up your first basic ore-porcessing machines is quite expensive. First, you have to make a grinder multiblock (Structure on multiblocks page), Once you have one set up, and you have a way to properly power it, you will see, that if you throw an ore in there, you will get some weird black items. This is 'Ground Mesh'. You have no idea what in there, it could be iron, it could be stone dust, it could even be scrap. To find out what's in there, you will have to scan it first. To do this, just make a scanner, put the item you want to scan in the left slot, and the scanned item will come out on the right.
+
+eflux.manual.oreProcessing.1=Hey, The output is still ground mesh, y u lying?
+eflux.manual.text.oreProcessing.1=Yes, its still ground mesh, but just hover over it. The tooltip will show you whats in it. If you got lucky, its pure dust. In that case, you can simply go ahead and smelt it. But most likely the mesh is incomplete, or there are impurities in it.
+
+eflux.manual.oreProcessing.2=Incomplete mesh, what?
+eflux.manual.text.oreProcessing.2=Yes, a 'complete' mesh has 9 "units", you can simply see them as nuggets. A piece of ground mesh can contain EG 3 gold dust, 5 stone dust and 1 rubble. And 'incomplete' mesh doesn't have the full 9 units, but EG only 6. Even before you scanned your mesh, you can see the amount of units it contains. If you have a mesh that contains 4 units, ,one that contains 3 and one that contains 2, you can combine them in a crafting table. A mesh can NEVER contain more than 9 units!
+
+eflux.manual.oreProcessing.3=But how do I get rid of those impurities then?
+eflux.manual.text.oreProcessing.3=To get rid of the rubble in your Ground Mesh, you have to sieve it. To do this, just insert it into a sieve (machine), and you will get Ground Mesh without rubble as output. You will also get some rubble for every 9 rubble-units removed. The sieve does not have a gui, you will have to use hoppers, or pipes from another mod.
+
+eflux.manual.oreProcessing.4=And what about the stone dust?
+eflux.manual.text.oreProcessing.4=To remove the stone dust from your Ground Mesh, you will have to "wash" it in a washer. The washer needs 0.2 buckets of water to remove 1 unit of stone dust.
+
+eflux.manual.oreProcessing.5=Am I done now?
+eflux.manual.text.oreProcessing.5=Yes, but by now your Ground Mesh probably doesn't contain the full 9 units required to make a dust, to do this, just combine them in the crafting table until you have a dust. You will get an average of 1,7 ingots per ore.
+
+eflux.manual.oreProcessing.6=Hold on a second, how do I actually get the ground mesh out of the grinder?
+eflux.manual.text.oreProcessing.6=The grinder has a block called a "Dust Storage" block. If you put something with an inventory under it, and you give it a redstone pulse, it will eject one ground mesh. Just remember that grinding results are combined. So if you are processing EG Iron and gold at the same time, you might get a little bit of both in your Ground Mesh. Make sure that you do not overfill the dust storage, otherwise the machine will break!
+
+eflux.manual.compressor=Compressor
+eflux.manual.text.compressor=The compressor is one of the most important multiblock in the E-Flux progression line. A lot of the higher tier machines require components that are made in the compressor. \n(e.g.: cabon mesh -> carbon plate) \n\nThe "key" is the monitor on the front. 
+
+eflux.manual.grinder=Grinder
+eflux.manual.text.grinder=The grinder is the key machine for your ore processing, it crushes the ores into dust, which you can then process to get more ingots from your ores. \n\nYou can use one of the frame blocks as the "key".
+
+eflux.manual.furnace=Furnace
+eflux.manual.text.furnace=Unfortunately this furnace is not well-know for it's high speed, being only a little bit faster than the vanilla furnace. \nIt does have one very big advantage though, being that it can smelt 8 items at a time instead of just one! \n\nThe "key" is the Heat-Resistant on the front.
+
+eflux.manual.laser=Laser
+eflux.manual.text.laser=The mining laser, one of the more end-game machines. This large multiblock will cut through the rocks with its powerful laser, and will collect the items for you. You should keep in mind that it will start consuming more power the harder the rock is. \n\nThis is the only multiblock that has it's "key" not where you expect the front side to be, but you have to use one of the 2 monitors to create the multiblock.
+
+eflux.manual.chunkLoader=Chunk Loader
+eflux.manual.text.chunkLoader=Yes, this mod has chunkloaders, but these are different! To make sure you can load any chunks whatsoever, you must first make a Chunkloader-controller. BUT, you can only have one chunkloader-controller as a player. Once you've got the controller setup, you can start placing Chunkloader-Subblocks, these blocks will load the chunk they're in. \n(The chunkloader-controller also counts as a chunkloader.)
+eflux.manual.text.chunkLoader.1=Of course, the controller consumes a certain amount of power for every chunk you want to load, and once the controller runs out of power, all chunks will unload. The chunkloader, and it's subblocks are "personal", meaning only you can destroy them.
+
+eflux.manual.areaMover=Area Mover
+eflux.manual.text.areaMover=Currently only tier one of this block is craftable. (Tier one has a 5x5x5 radius, tier 2 7x7x7, tier 3 9x9x9, ect). Place this in the middle of a piece of land you want to move. The range of the tier one is: 5 blocks up, and 2 blocks to either side, resulting in a 5x5x5 cube. To move it, right click the area mover block with the area mover item. If you want to place it, just right click the ground with it. Just make sure the area is clear before you place it, otherwise it will fail to place.
+
+eflux.manual.miscMachines=Other Machines
+eflux.manual.text.miscMachines=Growth lamp\n\nThis machine will encourage growth on all plants below it. (5x5 square area)\n\n\nTesla Coil\n\nThis will, as you would expect, kill everything that comes near it. Has a 3 block range.\n\n\nAssembly table\n\nWIP
+eflux.manual.text.miscMachines.1=Multimeter\n\nRight-click with it on machines, and you will get some (power-related) info.\n\n\nWrench\n\nUse this to rotate machines, or toggle its mode (input/output mode on in item gate)

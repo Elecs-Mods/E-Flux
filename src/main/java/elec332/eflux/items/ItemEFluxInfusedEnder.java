@@ -1,6 +1,5 @@
 package elec332.eflux.items;
 
-import com.google.common.base.Objects;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.ender.IEnderNetworkComponent;

@@ -1,7 +1,7 @@
 package elec332.eflux.client.manual;
 
-import elec332.eflux.client.manual.gui.GuiManual;
-import net.minecraft.client.gui.GuiButton;
+import elec332.core.inventory.widget.WidgetButton;
+import elec332.eflux.client.manual.gui.WindowManual;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,16 +37,16 @@ public abstract class ManualPage {
         return category;
     }
 
-    public void onPageOpened(GuiManual manual){
+    public void onPageOpened(WindowManual manual){
     }
 
-    public void onPageFlip(GuiManual manual){
+    public void onPageFlip(WindowManual manual){
     }
 
-    public void onButtonPress(GuiButton button){
+    public void onButtonPress(WidgetButton button){
     }
 
     @SideOnly(Side.CLIENT)
-    public abstract void renderPage(int width, int height, int mouseX, int mouseY, GuiManual manual);
+    public abstract void renderPage(int width, int height, int mouseX, int mouseY, WindowManual manual);
 
 }

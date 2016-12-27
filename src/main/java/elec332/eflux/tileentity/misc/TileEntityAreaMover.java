@@ -35,11 +35,11 @@ public class TileEntityAreaMover extends TileEntity {
         ElecCore.tickHandler.registerCall(new Runnable() {
             @Override
             public void run() {
-                if (WorldHelper.chunkLoaded(worldObj, pos)){
-                    WorldHelper.markBlockForUpdate(worldObj, pos);
+                if (WorldHelper.chunkLoaded(getWorld(), pos)){
+                    WorldHelper.markBlockForUpdate(getWorld(), pos);
                 }
             }
-        }, worldObj);
+        }, getWorld());
     }
 
     public static int getRange(int range){
@@ -67,18 +67,18 @@ public class TileEntityAreaMover extends TileEntity {
 
     public NBTTagCompound removeArea(){
         Area area = new Area(pos.add(getRange(), 0, getRange()), pos.add(-getRange(), 2 * getRange(), -getRange()));
-        Schematic schematic = SchematicHelper.INSTANCE.createModSchematic(worldObj, area, (short)0);
+        Schematic schematic = SchematicHelper.INSTANCE.createModSchematic(getWorld(), area, (short)0);
         NBTTagCompound tag = SchematicHelper.INSTANCE.writeSchematic(schematic);
 
-        worldObj.restoringBlockSnapshots = true;
+        getWorld().restoringBlockSnapshots = true;
         for (int i = -getRange(); i < getRange() + 1; i++) {
             for (int j = -getRange(); j < getRange() + 1; j++) {
                 for (int k = 0; k < getRange() * 2 + 1; k++) {
-                    worldObj.setBlockToAir(pos.add(i, k, j));
+                    getWorld().setBlockToAir(pos.add(i, k, j));
                 }
             }
         }
-        worldObj.restoringBlockSnapshots = false;
+        getWorld().restoringBlockSnapshots = false;
 
         return tag;
     }

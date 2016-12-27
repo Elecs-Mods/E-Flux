@@ -1,7 +1,10 @@
 package elec332.eflux.util;
 
+import elec332.core.util.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 15-5-2016.
@@ -23,7 +26,7 @@ public class SafeWrappedInventory implements IItemHandlerModifiable {
     }
 
     @Override
-    public void setStackInSlot(int slot, ItemStack stack) {
+    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         if (itemHandler == null){
             return;
         }
@@ -36,18 +39,25 @@ public class SafeWrappedInventory implements IItemHandlerModifiable {
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInSlot(int slot) {
-        return itemHandler == null ? null : itemHandler.getStackInSlot(slot);
+        return itemHandler == null ? ItemStackHelper.NULL_STACK : itemHandler.getStackInSlot(slot);
     }
 
     @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+    @Nonnull
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         return itemHandler == null ? stack : itemHandler.insertItem(slot, stack, simulate);
     }
 
     @Override
+    @Nonnull
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return itemHandler == null ? null : itemHandler.extractItem(slot, amount, simulate);
+        return itemHandler == null ? ItemStackHelper.NULL_STACK : itemHandler.extractItem(slot, amount, simulate);
     }
 
+    @Override
+    public int getSlotLimit(int slot) {
+        return itemHandler == null ? 0 : itemHandler.getSlotLimit(slot);
+    }
 }

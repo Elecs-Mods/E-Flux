@@ -17,7 +17,7 @@ public class PacketPlayerConnection extends AbstractPacket {
 
     public PacketPlayerConnection(EntityPlayerMP player){
         NBTTagCompound send = new NBTTagCompound();
-        EnderNetworkManager networkManager = EnderNetworkManager.get(player.worldObj);
+        EnderNetworkManager networkManager = EnderNetworkManager.get(player.getEntityWorld());
         send.setTag("net", networkManager.serializeNBT());
         networkPackageObject = send;
     }

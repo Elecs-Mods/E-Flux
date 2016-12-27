@@ -191,6 +191,10 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
                 return null;
             }
 
+            @Override
+            public int getSlotLimit(int slot) {
+                return 0;
+            }
         };
     }
 

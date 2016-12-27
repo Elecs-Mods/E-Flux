@@ -1,41 +1,37 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.tile.IInventoryTile;
-import elec332.core.util.BasicInventory;
-import elec332.eflux.EFlux;
+import elec332.core.inventory.window.IWindowFactory;
+import elec332.core.inventory.window.Window;
+import elec332.core.util.BasicItemHandler;
 import elec332.eflux.api.circuit.CircuitHelper;
-import elec332.eflux.client.inventory.GuiStandardFormat;
-import elec332.eflux.inventory.ContainerAssemblyTable;
+import elec332.eflux.inventory.WindowAssemblyTable;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 4-5-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxAssemblyTable")
-public class TileEntityAssemblyTable extends TileEntityBreakableMachine implements IInventoryTile{
+public class TileEntityAssemblyTable extends TileEntityBreakableMachine implements IWindowFactory {
 
-    private BasicInventory inv = new BasicInventory("SolderStuff", 1){
+    private BasicItemHandler inv = new BasicItemHandler(1){
 
         @Override
-        public boolean isItemValidForSlot(int id, ItemStack stack) {
+        public boolean isStackValidForSlot(int slot, @Nonnull ItemStack stack) {
             return CircuitHelper.getCircuit(stack) != null;
         }
 
         @Override
-        public int getInventoryStackLimit() {
+        protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
             return 1;
         }
 
@@ -71,33 +67,13 @@ public class TileEntityAssemblyTable extends TileEntityBreakableMachine implemen
     @Override
     public void readItemStackNBT(NBTTagCompound tagCompound) {
         super.readItemStackNBT(tagCompound);
-        inv.readFromNBT(tagCompound);
+        inv.deserializeNBT(tagCompound);
     }
 
     @Override
     public boolean onBlockActivatedSafe(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        openGui(player, EFlux.instance, 0);
+        openLocalWindow(player);
         return true;
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return new GuiStandardFormat((BaseContainer)getGuiServer(player), new ResourceLocation("textures/gui/container/crafting_table.png")){
-            @Override //handleMouseClick
-            protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, ClickType clickType) {
-                if ((!((ContainerAssemblyTable)inventorySlots).canClick) && slotId > 0 && slotId < 10) {
-                    //System.out.println("nope   "+((ContainerAssemblyTable)inventorySlots).canClick);
-                    return;
-                }
-                super.handleMouseClick(slotIn, slotId, clickedButton, clickType);
-            }
-
-        };
-    }
-
-    @Override
-    public Container getGuiServer(EntityPlayer player) {
-        return new ContainerAssemblyTable(player, inv, energyContainer);
     }
 
     @Override
@@ -112,6 +88,11 @@ public class TileEntityAssemblyTable extends TileEntityBreakableMachine implemen
     @Override
     public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return direction == EnumFacing.DOWN;
+    }
+
+    @Override
+    public Window createWindow(Object... args) {
+        return new WindowAssemblyTable(inv, energyContainer);
     }
 
 }

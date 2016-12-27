@@ -34,7 +34,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
     @Override
     public void update() {
         EnumFacing tf = getTileFacing();
-        TileEntity tile = WorldHelper.getTileAt(worldObj, pos.offset(tf.getOpposite()));
+        TileEntity tile = WorldHelper.getTileAt(world, pos.offset(tf.getOpposite()));
         if (tile instanceof cofh.api.energy.IEnergyReceiver){
             cofh.api.energy.IEnergyReceiver receiver = (cofh.api.energy.IEnergyReceiver) tile;
             if (receiver.canConnectEnergy(tf)){

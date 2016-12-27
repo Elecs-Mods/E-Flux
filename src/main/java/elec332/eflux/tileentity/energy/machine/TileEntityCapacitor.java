@@ -1,7 +1,6 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.api.energy.ISpecialEnergyProvider;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.init.Items;

@@ -1,5 +1,6 @@
 package elec332.eflux.items;
 
+import elec332.core.inventory.window.WindowManager;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
@@ -43,7 +44,7 @@ public class ItemEFluxEnderConfigurator extends AbstractTexturedEFluxItem {
                 PlayerHelper.sendMessageToPlayer(playerIn, "You cannot configure an unlinked tile!");
                 return EnumActionResult.SUCCESS;
             }
-            playerIn.openGui(EFlux.instance, 4, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            WindowManager.openWindow(playerIn, EFlux.proxy, worldIn, pos, (byte) 4);
         }
         return EnumActionResult.SUCCESS;
     }

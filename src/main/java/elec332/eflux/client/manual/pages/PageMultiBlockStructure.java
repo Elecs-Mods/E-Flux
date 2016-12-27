@@ -1,9 +1,12 @@
 package elec332.eflux.client.manual.pages;
 
 import com.google.common.collect.Lists;
+import elec332.core.client.util.GuiDraw;
+import elec332.core.inventory.tooltip.ToolTip;
+import elec332.core.main.ElecCore;
 import elec332.core.multiblock.BlockStructure;
 import elec332.core.world.location.BlockStateWrapper;
-import elec332.eflux.client.manual.gui.GuiManual;
+import elec332.eflux.client.manual.gui.WindowManual;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -52,7 +55,7 @@ public class PageMultiBlockStructure extends AbstractManualPage {
     private final IMultiBlockStructureManualHelper manualData;
 
     @Override
-    public void renderBody(int width, int height, int mouseX, int mouseY, GuiManual manual) {
+    public void renderBody(int width, int height, int mouseX, int mouseY, WindowManual manual) {
         if (time == 0L){
             time = System.currentTimeMillis();
         } else if (System.currentTimeMillis() - time > 800){
@@ -123,7 +126,7 @@ public class PageMultiBlockStructure extends AbstractManualPage {
         RenderHelper.disableStandardItemLighting();
     }
 
-    public interface IMultiBlockStructureManualHelper{
+    public interface IMultiBlockStructureManualHelper {
 
         default public ItemStack getRenderingStack(int length, int width, int height, BlockStateWrapper original){
             ItemStack renderStack = original.toItemStack();
@@ -147,8 +150,9 @@ public class PageMultiBlockStructure extends AbstractManualPage {
 
     }
 
-    protected void renderToolTip(ItemStack stack, int x, int y, GuiManual manual, List<String> note) {
-        List<String> list = stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+    protected void renderToolTip(ItemStack stack, int x, int y, WindowManual manual, List<String> note) {
+        //GlStateManager.translate(x, y, 0);
+        List<String> list = stack.getTooltip(ElecCore.proxy.getClientPlayer(), Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
                 list.set(i, stack.getRarity().rarityColor + list.get(i));
@@ -161,8 +165,8 @@ public class PageMultiBlockStructure extends AbstractManualPage {
             list.add("Note"+(note.size() == 1 ? "" : "s")+":");
             list.addAll(note);
         }
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
-        manual.drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
+        new ToolTip(list).renderTooltip(x, y, 0, 0);
+        //GuiDraw.drawHoveringText(list, x, y, stack.getItem().getFontRenderer(stack));
     }
 
     static {

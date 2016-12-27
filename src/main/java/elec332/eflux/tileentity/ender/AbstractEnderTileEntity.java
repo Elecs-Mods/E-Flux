@@ -50,7 +50,7 @@ public abstract class AbstractEnderTileEntity<T> extends TileEntityEFlux impleme
     public void onTileLoaded() {
         if (connected){
             UUID id = enderHandler.getUuid();
-            EnderNetwork net = get(worldObj).get(id);
+            EnderNetwork net = get(getWorld()).get(id);
             net.connect(enderHandler);
         }
     }

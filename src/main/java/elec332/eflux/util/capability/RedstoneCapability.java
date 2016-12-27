@@ -1,10 +1,11 @@
 package elec332.eflux.util.capability;
 
 import com.google.common.base.Predicate;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ITileWithSlots;
 import elec332.core.inventory.widget.WidgetButton;
 import elec332.core.inventory.widget.WidgetEnumChange;
+import elec332.core.inventory.window.ISimpleWindowFactory;
+import elec332.core.inventory.window.Window;
+import elec332.core.inventory.window.WindowManager;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
@@ -22,7 +23,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 /**
  * Created by Elec332 on 27-4-2016.
  */
-public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTTagCompound>, WidgetButton.IButtonEvent {
+public class RedstoneCapability implements ISimpleWindowFactory, INBTSerializable<NBTTagCompound>, WidgetButton.IButtonEventListener {
 
     @CapabilityInject(RedstoneCapability.class)
     public static Capability<RedstoneCapability> CAPABILITY;
@@ -38,9 +39,9 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
             return true;
         }
         if (!ItemStackHelper.isStackValid(stack) && upgraded) {
-            if (!player.worldObj.isRemote) {
+            if (!player.getEntityWorld().isRemote) {
                 BlockPos pos = PlayerHelper.getPosPlayerIsLookingAt(player, 6D).getBlockPos();
-                player.openGui(EFlux.instance, 2, player.worldObj, pos.getX(), pos.getY(), pos.getZ());
+                WindowManager.openWindow(player, EFlux.proxy, pos, (byte) 2);
             }
             return true;
         }
@@ -64,10 +65,10 @@ public class RedstoneCapability implements ITileWithSlots, INBTSerializable<NBTT
     }
 
     @Override
-    public void addSlots(BaseContainer baseContainer) {
+    public void modifyWindow(Window window, Object... args) {
         WidgetEnumChange<IRedstoneUpgradable.Mode> widget = new WidgetEnumChange<IRedstoneUpgradable.Mode>(20, 20, 70, 20, IRedstoneUpgradable.Mode.class);
         widget.setEnum(mode);
-        baseContainer.addWidget(widget.addButtonEvent(this));
+        window.addWidget(widget.addButtonEvent(this));
     }
 
     @Override

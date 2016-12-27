@@ -1,6 +1,7 @@
 package elec332.eflux.endernetwork;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import elec332.core.api.data.IExternalSaveHandler;
@@ -53,6 +54,9 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
         this.validNetworks = Sets.newHashSet();
     }
 
+    public static void dummy(){
+    }
+
     public static void registerSaveHandler(ISingleRegister<IExternalSaveHandler> saveHandlerRegistry){
         if (registered){
             throw new IllegalStateException();
@@ -86,7 +90,7 @@ public final class EnderNetworkManager implements IExternalSaveHandler, INBTSeri
     }
 
     public static EnderNetworkManager get(World world){
-        return get(!world.isRemote ? Side.SERVER : Side.CLIENT);
+        return get(!Preconditions.checkNotNull(world).isRemote ? Side.SERVER : Side.CLIENT);
     }
 
     private static EnderNetworkManager get(Side side){

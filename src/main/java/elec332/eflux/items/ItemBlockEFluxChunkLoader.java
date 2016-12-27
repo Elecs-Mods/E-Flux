@@ -8,7 +8,6 @@ import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntityMainChunkLo
 import elec332.eflux.tileentity.energy.machine.chunkLoader.TileEntitySubChunkLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

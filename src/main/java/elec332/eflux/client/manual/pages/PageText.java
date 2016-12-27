@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import elec332.core.client.RenderHelper;
 import elec332.eflux.client.ClientHelper;
 import elec332.eflux.client.manual.ManualCategory;
-import elec332.eflux.client.manual.gui.GuiManual;
+import elec332.eflux.client.manual.gui.WindowManual;
 
 /**
  * Created by Elec332 on 31-1-2016.
@@ -51,7 +51,7 @@ public class PageText extends AbstractManualPage {
     }
 
     @Override
-    public void renderBody(int width, int height, int mouseX, int mouseY, GuiManual manual) {
+    public void renderBody(int width, int height, int mouseX, int mouseY, WindowManual manual) {
         if (!Strings.isNullOrEmpty(text)) {
             String text = unLocalised ? ClientHelper.translateToLocal(this.text) : this.text;
             RenderHelper.getMCFontrenderer().drawSplitString(text, 8, 20, width - 8, 0);

@@ -1,11 +1,6 @@
 package elec332.eflux.multiblock.machine;
 
-import elec332.core.client.RenderHelper;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ContainerMachine;
-import elec332.core.inventory.ITileWithSlots;
-import elec332.core.inventory.widget.WidgetButton;
-import elec332.core.inventory.widget.WidgetButtonArrow;
+import elec332.core.inventory.window.Window;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.tile.TileBase;
 import elec332.core.util.ItemStackHelper;
@@ -16,37 +11,26 @@ import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
-import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.inventory.GuiMachine;
 import elec332.eflux.endernetwork.EnderNetwork;
 import elec332.eflux.endernetwork.EnderNetworkManager;
-import elec332.eflux.inventory.slot.SlotScrollable;
+import elec332.eflux.inventory.WindowEnderMultiBlock;
 import elec332.eflux.items.ItemEFluxInfusedEnder;
-import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockEnderReader;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Elec332 on 3-5-2016.
  */
-public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFluxPowerHandler, IBreakableMachine, ITileWithSlots {
+public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFluxPowerHandler, IBreakableMachine {
 
     public MultiBlockEnderContainer(){
         energyContainer = new EnergyContainer(1200, this, this);
@@ -82,19 +66,12 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         if (network != null && !ItemStackHelper.isStackValid(player.getHeldItem(hand)) && !getWorldObj().isRemote && network.isPowered()){
-            openGui(player, EFlux.instance);
+            openWindow(player, EFlux.proxy);
         }
         return true;
     }
 
-    @Override
-    public Object getGui(EntityPlayer player, boolean client) {
-        ServerContainer container = new ServerContainer(player);
-        if (client){
-            return new ClientGui(container);
-        }
-        return container;
-    }
+
 
     public void setUUID(EnderNetwork tile, TileBase dropper){
         if (((network != null && !network.getNetworkId().equals(tile.getNetworkId())) || network == null)){
@@ -176,10 +153,12 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     @Override
-    public void addSlots(BaseContainer container) {
+    public Window createWindow(Object... args) {
+        return new WindowEnderMultiBlock(network);
     }
 
-    private final class ServerContainer extends ContainerMachine implements WidgetButton.IButtonEvent {
+    /*
+    private final class ServerContainer extends ContainerMachine implements WidgetButton.IButtonEventListener {
 
         private ServerContainer(EntityPlayer player) {
             super(MultiBlockEnderContainer.this, player, 0);
@@ -233,7 +212,7 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
         }
 
     }
-
+*
     @SideOnly(Side.CLIENT)
     private final class ClientGui extends GuiMachine {
 
@@ -280,6 +259,6 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
             return new EFluxResourceLocation("gui/GuiNull.png");
         }
 
-    }
+    }*/
 
 }

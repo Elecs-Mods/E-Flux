@@ -58,7 +58,7 @@ public class TileEntityMultiBlockFluidOutlet extends AbstractTileEntityMultiBloc
 
             EnumFacing facing = getTileFacing();
 
-            IFluidHandler fluidHandler = FluidHelper.getFluidHandler(worldObj, pos.offset(facing), facing.getOpposite());
+            IFluidHandler fluidHandler = FluidHelper.getFluidHandler(getWorld(), pos.offset(facing), facing.getOpposite());
             if (fluidHandler == null) {
                 return;
             }

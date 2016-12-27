@@ -11,7 +11,7 @@ public interface IEFluxFurnaceRecipe {
 
     public boolean accepts(@Nonnull ItemStack input);
 
-    public ItemStack getOutput(@Nonnull ItemStack stack);
+    public ItemStack getOutput(@Nonnull ItemStack input);
 
     public float getExperience(@Nonnull ItemStack input);
 

@@ -2,6 +2,8 @@ package elec332.eflux.multiblock;
 
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
+import elec332.core.inventory.window.IWindowFactory;
+import elec332.core.inventory.window.Window;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
@@ -22,14 +24,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, IEFluxPowerHandler {
+public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, IEFluxPowerHandler, IWindowFactory {
 
     public EFluxMultiBlockMachine(){
         super();
@@ -140,7 +141,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     @Override
     public boolean onAnyBlockActivated(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         if (broken)
-            return openGui(player);
+            return openWindow(player);
         return onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
@@ -149,14 +150,14 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     @Override
-    public final Object getGui(EntityPlayer player, boolean client) {
+    public Window createWindow(Object... args) {
         if (broken)
-            return breakableMachineInventory.brokenGui(client ? Side.CLIENT : Side.SERVER, player);
-        return getMachineGui(player, client);
+            return breakableMachineInventory.brokenGui();
+        return getMachineWindow();
     }
 
     @SuppressWarnings("unused")
-    public Object getMachineGui(EntityPlayer player, boolean client){
+    public Window getMachineWindow(){
         return null;
     }
 
@@ -164,8 +165,8 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
         return this.energyContainer;
     }
 
-    public boolean openGui(EntityPlayer player){
-        return openGui(player, EFlux.instance);
+    public boolean openWindow(EntityPlayer player){
+        return openWindow(player, EFlux.proxy);
     }
 
     protected abstract int getMaxStoredPower();

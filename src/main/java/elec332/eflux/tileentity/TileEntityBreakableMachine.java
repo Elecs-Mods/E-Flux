@@ -50,9 +50,9 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
 
     @Override
     public void onBroken(){
-        if (!worldObj.isRemote) {
+        if (!getWorld().isRemote) {
             breakableMachineInventory = new BreakableMachineInventory(this, getRandomRepairItem());
-            for (EntityPlayerMP playerMP : ServerHelper.instance.getAllPlayersWatchingBlock(worldObj, pos)){
+            for (EntityPlayerMP playerMP : ServerHelper.instance.getAllPlayersWatchingBlock(getWorld(), pos)){
                 playerMP.connection.sendPacket(getUpdatePacket());
             }
         }
@@ -94,7 +94,7 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     }
 
     private boolean openBrokenGui(EntityPlayer player){
-        player.openGui(EFlux.instance, 1, worldObj, pos.getX(), pos.getY(), pos.getZ());
+        openWindow(player, EFlux.proxy, 1);
         return true;
     }
 

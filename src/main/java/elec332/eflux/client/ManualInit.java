@@ -63,7 +63,7 @@ public class ManualInit {
                 if (width == 1){
                     if (height == 1){
                         if (length != 1){
-                            list.add("Should be facing inwards.");
+                            list.add("Should be facing outwards.");
                             return;
                         }
                     }

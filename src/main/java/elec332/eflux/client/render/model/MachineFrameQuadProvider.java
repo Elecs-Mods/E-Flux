@@ -9,12 +9,12 @@ import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.loading.IModelAndTextureLoader;
+import elec332.core.main.ElecCore;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.blocks.BlockMachineFrame;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.multiblock.AbstractTileEntityMultiBlock;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +43,7 @@ public class MachineFrameQuadProvider implements IQuadProvider, IModelAndTexture
         boolean one = false;
         Map<EnumFacing, Boolean> cache = Maps.newHashMap();
         if (state != null) {
-            World world = Minecraft.getMinecraft().theWorld;
+            World world = ElecCore.proxy.getClientWorld();
             BlockPos pos = new BlockPos(((IExtendedBlockState)state).getValue(BlockMachineFrame.FRAME_POS_PROPERTY));
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos offset = pos.offset(facing);

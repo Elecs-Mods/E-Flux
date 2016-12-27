@@ -26,11 +26,11 @@ public class TileEntityMonitor extends TileEntityBlockMachine {
             if (direction == EnumFacing.UP || direction == EnumFacing.DOWN)
                 continue;
             BlockPos toCheck = pos.offset(direction);
-            Block block = WorldHelper.getBlockAt(worldObj, toCheck);
-            int meta = WorldHelper.getBlockMeta(worldObj, toCheck);
+            Block block = WorldHelper.getBlockAt(getWorld(), toCheck);
+            int meta = WorldHelper.getBlockMeta(getWorld(), toCheck);
             if (new BlockStateWrapper(block, meta).equals(BlockRegister.monitor)) {
                 neighbour = true;
-                TileEntityMonitor tile = (TileEntityMonitor) WorldHelper.getTileAt(worldObj, toCheck);
+                TileEntityMonitor tile = (TileEntityMonitor) WorldHelper.getTileAt(getWorld(), toCheck);
                 if (monitorSide == 0 && tile.getTileFacing() == getTileFacing()){
                     if (DirectionHelper.rotateLeft(getTileFacing()) == direction){
                         monitorSide = 1;

@@ -18,13 +18,14 @@ import java.util.List;
 @RegisteredTileEntity("TileEntityEFluxTeslaCoil")
 public class TileEntityTeslaCoil extends TileEntityBreakableMachine implements ITickable {
 
+    @SuppressWarnings("all")
     public static final DamageSource teslaCoilDamageSource = new DamageSource("TeslaCoil").setDamageBypassesArmor().setDamageAllowedInCreativeMode();
 
     @Override
     public void update() {
         if (timeCheck()) {
             @SuppressWarnings("unchecked")
-            List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, Utils.getAABBAroundBlock(getPos(), 2, 2, 2, 2, 2, 2));
+            List<EntityLivingBase> entities = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, Utils.getAABBAroundBlock(getPos(), 2, 2, 2, 2, 2, 2));
             for (EntityLivingBase entity : entities) {
                 float hp = entity.getHealth();
                 int energy = (int) (hp * 120);

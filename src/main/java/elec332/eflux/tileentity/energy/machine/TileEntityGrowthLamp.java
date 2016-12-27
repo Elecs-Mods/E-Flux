@@ -38,10 +38,10 @@ public class TileEntityGrowthLamp extends TileEntityBreakableMachine implements 
                 if (blockLocations.isEmpty()) {
                     remakeList();
                 }
-                Collections.shuffle(blockLocations, worldObj.rand);
+                Collections.shuffle(blockLocations, getWorld().rand);
                 BlockPos randomLoc = blockLocations.get(0);
-                if (!worldObj.isAirBlock(randomLoc) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
-                    WorldHelper.scheduleBlockUpdate(worldObj, randomLoc);
+                if (!getWorld().isAirBlock(randomLoc) && isValidCrop(randomLoc) && !isFullyGrownCrop(randomLoc)) {
+                    WorldHelper.scheduleBlockUpdate(getWorld(), randomLoc);
                 }
                 blockLocations.remove(randomLoc);
             }
@@ -49,13 +49,13 @@ public class TileEntityGrowthLamp extends TileEntityBreakableMachine implements 
     }
 
     private boolean isFullyGrownCrop(BlockPos blockLoc){
-        Block block = WorldHelper.getBlockAt(worldObj, blockLoc);
-        int meta = WorldHelper.getBlockMeta(worldObj, blockLoc);
-        return block instanceof IGrowable && !((IGrowable) block).canGrow(worldObj, blockLoc, WorldHelper.getBlockState(worldObj, blockLoc), worldObj.isRemote) || block instanceof BlockCrops && meta == 7;
+        Block block = WorldHelper.getBlockAt(getWorld(), blockLoc);
+        int meta = WorldHelper.getBlockMeta(getWorld(), blockLoc);
+        return block instanceof IGrowable && !((IGrowable) block).canGrow(getWorld(), blockLoc, WorldHelper.getBlockState(getWorld(), blockLoc), getWorld().isRemote) || block instanceof BlockCrops && meta == 7;
     }
 
     private boolean isValidCrop(BlockPos blockLoc){
-        IBlockState state = WorldHelper.getBlockState(worldObj, blockLoc);
+        IBlockState state = WorldHelper.getBlockState(getWorld(), blockLoc);
         Block block = state.getBlock();
         return block instanceof IGrowable && block.getMaterial(state) != Material.GRASS;
     }

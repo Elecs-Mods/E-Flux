@@ -22,7 +22,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
@@ -118,12 +117,13 @@ public class BlockAreaMover extends AbstractBlock implements INoJsonBlock, ITile
         return new TileEntityAreaMover();
     }
 
+    /* TODO: Update with compat
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         int range = TileEntityAreaMover.getRange(stack.getItemDamage());
         tooltip.add("Range: "+range);
-    }
+    }*/
 
     public class BAMItemBlock extends AbstractItemBlock {
 
@@ -132,6 +132,7 @@ public class BlockAreaMover extends AbstractBlock implements INoJsonBlock, ITile
         }
 
         @Override
+        @Nonnull
         public String getUnlocalizedName(ItemStack stack) {
             boolean creative = stack.getItemDamage() > 3;
             return super.getUnlocalizedName(stack) + "." + (creative ? "creative" : stack.getItemDamage());

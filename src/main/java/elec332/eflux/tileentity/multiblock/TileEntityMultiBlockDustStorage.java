@@ -28,8 +28,8 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
 
     @Override
     public void onNeighborBlockChange(Block block) {
-        if (!worldObj.isRemote) {
-            boolean b = worldObj.isBlockIndirectlyGettingPowered(pos) != 0;
+        if (!getWorld().isRemote) {
+            boolean b = getWorld().isBlockIndirectlyGettingPowered(pos) != 0;
             if (redstone != b) {
                 if (b) {
                     pulse();
@@ -135,7 +135,7 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
     }
 
     @Override
-    public boolean isUseableByPlayer(@Nonnull EntityPlayer p_70300_1_) {
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer p_70300_1_) {
         return true;
     }
 

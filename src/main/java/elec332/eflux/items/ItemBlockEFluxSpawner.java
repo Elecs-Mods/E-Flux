@@ -41,9 +41,9 @@ public class ItemBlockEFluxSpawner extends AbstractItemBlock {
         NBTTagCompound spawnerTag = new NBTTagCompound();
         ((TileEntityMobSpawner) tile).getSpawnerBaseLogic().writeToNBT(spawnerTag);
 
-        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && worldIn.func_190527_a(this.block, pos, false, facing, null)) {
+        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && WorldHelper.canBlockBePlaced(worldIn, this.block, pos, false, facing, null)) {
             int i = this.getMetadata(stack.getMetadata());
-            IBlockState iblockstate1 = this.block.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn);
+            IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn, hand);
 
             if (placeBlockAt(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1)) {
                 SoundType soundtype = this.block.getSoundType(iblockstate1, worldIn, pos, playerIn);

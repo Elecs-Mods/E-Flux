@@ -58,7 +58,7 @@ public abstract class BlockWithMeta extends AbstractBlock {
 
     public BlockWithMeta register(){
         GameRegistry.register(this);
-        GameRegistry.register(new MetaItemBlock(this));
+        GameRegistry.register(new MetaItemBlock(this).setRegistryName(getRegistryName()));
         return this;
     }
 

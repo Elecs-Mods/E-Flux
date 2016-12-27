@@ -11,7 +11,9 @@ import elec332.core.api.module.IModuleController;
 import elec332.core.api.network.ModNetworkHandler;
 import elec332.core.api.registry.ISingleRegister;
 import elec332.core.api.util.IDependencyHandler;
+import elec332.core.client.model.RenderingRegistry;
 import elec332.core.config.ConfigWrapper;
+import elec332.core.inventory.window.WindowManager;
 import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.IElecNetworkHandler;
@@ -34,7 +36,6 @@ import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.ItemEFluxBluePrint;
 import elec332.eflux.items.circuits.ICircuitDataProvider;
 import elec332.eflux.network.PacketPlayerConnection;
-import elec332.eflux.network.PacketSyncEnderContainerGui;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
@@ -66,10 +67,11 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -82,7 +84,7 @@ import java.util.Random;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:eleccore;required-after:mcmultipart@[1.1.0,)",
+@Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:eleccore;",
         acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
 public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandler {
 
@@ -118,10 +120,11 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         loadTimer.startPhase(event);
         creativeTab = new AbstractCreativeTab("EFlux") {
 
+            @SideOnly(Side.CLIENT)
             @Nonnull
             @Override
             protected ItemStack getDisplayStack() {
-                return new ItemStack(new AbstractTexturedEFluxItem("circuit"){});
+                return new ItemStack(RenderingRegistry.instance().registerFakeItem(new AbstractTexturedEFluxItem("circuit"){}));
             }
 
         };
@@ -134,7 +137,6 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         configOres = new ConfigWrapper(new Configuration(new File(baseFolder, "WorldGen.cfg")));
         random = new Random();
         networkHandler.registerClientPacket(new PacketSyncEnderNetwork());
-        networkHandler.registerClientPacket(new PacketSyncEnderContainerGui());
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
         ElecCoreRegistrar.GRIDHANDLERS.register(gridHandler = new EFluxGridHandler());
@@ -168,13 +170,13 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         loadTimer.startPhase(event);
         ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
         CapabilityRegister.init();
-        ItemRegister.init();
         BlockRegister.init();
+        ItemRegister.init();
         MultiPartRegister.init();
         FluidRegister.init();
         proxy.initRenderStuff();
         WorldGenRegister.init();
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+        WindowManager.INSTANCE.register(proxy);
         MultiBlockRegister.init();
         configOres.refresh();
         configWrapper.refresh();
@@ -228,6 +230,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
             }
 
         });
+        EnderNetworkManager.dummy();
         //register items/blocks
         loadTimer.endPhase(event);
     }

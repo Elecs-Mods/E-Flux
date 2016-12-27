@@ -32,7 +32,7 @@ public class BlockItemInlet extends BlockMachine {
     }
 
     private static IEFluxBlockMachineData DATA;
-
+/*
     @SideOnly(Side.CLIENT)
     protected IBakedModelMetaRotationMap<IBakedModel> rotationMap;
 
@@ -56,7 +56,7 @@ public class BlockItemInlet extends BlockMachine {
     /**
      * A helper method to prevent you from having to hook into the event,
      * use this to make your quads. (This always comes AFTER the textures are loaded)
-     */
+     *
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
@@ -64,7 +64,7 @@ public class BlockItemInlet extends BlockMachine {
         for (int i = 0; i < 2; i++) {
             rotationMap.setModelsForRotation(i, modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures[i]), true, true));
         }
-    }
+    }*/
 
     static {
         DATA = new AbstractEFluxBlockMachineData() {

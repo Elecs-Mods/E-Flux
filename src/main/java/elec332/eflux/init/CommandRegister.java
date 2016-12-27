@@ -39,17 +39,17 @@ public final class CommandRegister {
             private static final String reloadConfig = "reloadConfig";
 
             @Override
-            public String getCommandName() {
+            public String getName() {
                 return "EFlux";
             }
 
             @Override
-            public String getCommandUsage(ICommandSender sender) {
+            public String getUsage(ICommandSender sender) {
                 return "UsageString";
             }
 
             @Override
-            public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
                 return Lists.newArrayList(reloadConfig);
             }
 
@@ -65,7 +65,7 @@ public final class CommandRegister {
                 }
                 if (ElecCore.developmentEnvironment) {
                     if (arg.equals("oil")) {
-                        TileEntity tile = WorldHelper.getTileAt(((EntityPlayer) sender).worldObj, PlayerHelper.getPosPlayerIsLookingAt((EntityPlayer) sender, 5D).getBlockPos());
+                        TileEntity tile = WorldHelper.getTileAt(((EntityPlayer) sender).getEntityWorld(), PlayerHelper.getPosPlayerIsLookingAt((EntityPlayer) sender, 5D).getBlockPos());
                         if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
                             IFluidHandler fluidHandler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                             if (fluidHandler != null){

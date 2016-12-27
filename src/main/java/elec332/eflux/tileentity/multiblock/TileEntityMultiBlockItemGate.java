@@ -1,9 +1,9 @@
 package elec332.eflux.tileentity.multiblock;
 
-import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
 import elec332.core.api.inventory.IDefaultInventory;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
@@ -63,7 +63,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
 
     @Override
     public void onBlockRemoved() {
-        InventoryHelper.dropInventoryItems(worldObj, pos, this);
+        InventoryHelper.dropInventoryItems(getWorld(), pos, this);
         super.onBlockRemoved();
     }
 
@@ -74,7 +74,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
+        if (!getWorld().isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 inventory.setInventorySlotContents(i, (((EFluxMultiBlockMachine)getMultiBlock())).inject(inventory.getStackInSlot(i)));
             }
@@ -90,10 +90,12 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
                 } else {
                     mode = 0;
                 }
-                markDirty();
-                syncData();
-                reRenderBlock();
+            } else {
+                setFacing(forgeDirection);
             }
+            markDirty();
+            syncData();
+            reRenderBlock();
             return true;
         }
         return false;

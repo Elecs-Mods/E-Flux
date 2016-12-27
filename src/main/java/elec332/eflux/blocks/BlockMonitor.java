@@ -96,8 +96,8 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, INoJsonB
     }
 
     @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        pokeCheck(worldIn, pos);
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        pokeCheck(world, pos);
         return getBlockState().getBaseState().withProperty(BlockStateHelper.FACING_NORMAL.getProperty(), DirectionHelper.getFacingOnPlacement(placer));
     }
 
@@ -142,7 +142,7 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, INoJsonB
          //   Minecraft.getMinecraft().theWorld.markBlockRangeForRenderUpdate(pos, pos);
         //}
 
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty()).getOpposite()));
+        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty())));
     }
 
     /**

@@ -1,9 +1,9 @@
 package elec332.eflux.tileentity.misc;
 
-import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInfoProvider;
 import elec332.core.api.info.IInformation;
+import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.client.util.KeyHelper;
 import elec332.core.util.FluidHelper;
 import elec332.core.util.NBTHelper;
@@ -14,7 +14,6 @@ import elec332.eflux.util.IEFluxTank;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -49,7 +48,7 @@ public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, IInfo
 
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return worldObj.isRemote || FluidHelper.onTankActivated(player, hand, tankMultiBlock, tankMultiBlock.getCapacity()) || super.onBlockActivated(state, player, hand, side, hitX, hitY, hitZ);
+        return getWorld().isRemote || FluidHelper.onTankActivated(player, hand, tankMultiBlock, tankMultiBlock.getCapacity()) || super.onBlockActivated(state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override
@@ -164,7 +163,7 @@ public class TileEntityTank extends TileEntityEFlux implements IEFluxTank, IInfo
     private void setClientFluid_(Fluid fluid){
         if (this.clientFluid != fluid){
             this.clientFluid = fluid;
-            worldObj.checkLight(pos);
+            getWorld().checkLight(pos);
         }
     }
 

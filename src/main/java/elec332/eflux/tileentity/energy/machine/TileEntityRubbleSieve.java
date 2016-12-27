@@ -1,40 +1,67 @@
 package elec332.eflux.tileentity.energy.machine;
 
 import elec332.core.api.registration.RegisteredTileEntity;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
+import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.DustPile;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 17-10-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxRubbleSieve")
-public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots implements IProgressMachine, ITickable, ISidedInventory {
+public class TileEntityRubbleSieve extends TileEntityBreakableMachine implements IProgressMachine, ITickable {
 
     public TileEntityRubbleSieve() {
-        super(4);
+        super();
+        input = new BasicItemHandler(2){
+
+            @Override
+            public boolean canInsert(int slot, @Nonnull ItemStack stack) {
+                if (!ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) {
+                    return false;
+                }
+                DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
+                return dustPile != null && dustPile.scanned;
+            }
+
+        };
+        output = new BasicItemHandler(2);
         energyContainer.setProgressMachine(this);
     }
 
-    private static final int rubble_slot = 2;
-    private static final int normal_output_slot = 3;
+    private static final int rubble_slot = 0;
+    private static final int normal_output_slot = 1;
+
+    private final BasicItemHandler input, output;
 
     private ItemStack sieving, tbo;
     private int r;
 
     @Override
     public void update() {
-        if (!worldObj.isRemote){
+        if (!getWorld().isRemote){
             energyContainer.tick();
         }
+    }
+
+    @Override
+    public void onBlockRemoved() {
+        WorldHelper.dropInventoryItems(getWorld(), pos, input);
+        WorldHelper.dropInventoryItems(getWorld(), pos, output);
+        super.onBlockRemoved();
     }
 
     @Override
@@ -51,9 +78,9 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
     public boolean canProcess() {
         if (sieving == null){
             int slot = 0;
-            ItemStack stack = getStackInSlot(0);
+            ItemStack stack = input.getStackInSlot(0);
             if (!ItemStackHelper.isStackValid(stack)){
-                stack = getStackInSlot(1);
+                stack = input.getStackInSlot(1);
                 slot = 1;
             }
             if (!ItemStackHelper.isStackValid(stack)) {
@@ -72,21 +99,21 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
                     rubble.stackSize += 1;
                 }
             }
-            ItemStack sis = getStackInSlot(rubble_slot);
-            if (rubble != null && sis != null && sis.stackSize + rubble.stackSize > getInventoryStackLimit()) {
+            ItemStack sis = output.getStackInSlot(rubble_slot);
+            if (rubble != null && ItemStackHelper.isStackValid(sis) && sis.stackSize + rubble.stackSize > 64) {
                 return false;
             }
             if (dustPile.getSize() > 0) { //Check whether pile is empty
-                sis = getStackInSlot(normal_output_slot);
+                sis = output.getStackInSlot(normal_output_slot);
                 copy.setTagCompound(dustPile.toNBT()); //Returned tag can not be null (check above)
-                if (sis != null && (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > getInventoryStackLimit()))) {
+                if (ItemStackHelper.isStackValid(sis)&& (!ItemStack.areItemStackTagsEqual(sis, copy) || !(copy.stackSize + sis.stackSize > 64))) {
                     return false;
                 }
                 sieving = copy;
             } else {
                 sieving = null;
             }
-            decrStackSize(slot, 1);
+            input.extractItem(slot, 1, true);
             tbo = rubble;
             markDirty();
         }
@@ -98,23 +125,24 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
         ItemStack stack;
         if (tbo != null) {
             stack = tbo.copy();
-            if (getStackInSlot(rubble_slot) != null) {
-                stack.stackSize += getStackInSlot(rubble_slot).stackSize;
+            if (ItemStackHelper.isStackValid(output.getStackInSlot(rubble_slot))) {
+                stack.stackSize += output.getStackInSlot(rubble_slot).stackSize;
             }
-            setInventorySlotContents(rubble_slot, stack);
+            output.setStackInSlot(rubble_slot, stack);
         }
         if (sieving != null) {
             stack = sieving.copy();
-            if (getStackInSlot(normal_output_slot) != null) {
-                stack.stackSize += getStackInSlot(normal_output_slot).stackSize;
+            if (ItemStackHelper.isStackValid(output.getStackInSlot(normal_output_slot))) {
+                stack.stackSize += output.getStackInSlot(normal_output_slot).stackSize;
             }
-            setInventorySlotContents(normal_output_slot, stack);
+            output.setStackInSlot(normal_output_slot, stack);
         }
         tbo = null;
         sieving = null;
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         if (sieving != null){
@@ -128,6 +156,8 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
             tagCompound.setTag("tbo", tag);
         }
         tagCompound.setInteger("sA", r);
+        tagCompound.setTag("input", input.serializeNBT());
+        tagCompound.setTag("output", output.serializeNBT());
         return tagCompound;
     }
 
@@ -140,6 +170,8 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
         if (tagCompound.hasKey("tbo")){
             tbo = ItemStackHelper.loadItemStackFromNBT(tagCompound.getCompoundTag("tbo"));
         }
+        input.deserializeNBT(tagCompound.getCompoundTag("input"));
+        output.deserializeNBT(tagCompound.getCompoundTag("output"));
         r = tagCompound.getInteger("sA");
     }
 
@@ -174,39 +206,18 @@ public class TileEntityRubbleSieve extends BreakableMachineTileWithSlots impleme
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        switch (side){
-            case UP:
-                return new int[]{0, 1};
-            case DOWN:
-                return new int[]{rubble_slot, normal_output_slot};
-            default:
-                return new int[0];
-        }
-    }
-
-    private boolean isInput(EnumFacing side, int slot){
-        int[] i = getSlotsForFace(side);
-        return i.length != 0 && i[0] == 0 && slot >= 0 && slot <= 1;
-    }
-
-    private boolean isOutput(EnumFacing side, int slot){
-        int[] i = getSlotsForFace(side);
-        return i.length != 0 && i[0] == rubble_slot && slot >= 2 && slot <= 3;
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return isItemSide(capability, facing) || super.hasCapability(capability, facing);
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        if (!isInput(side, slot) || !ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null) {
-            return false;
-        }
-        DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
-        return dustPile != null && dustPile.scanned;
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return isItemSide(capability, facing) ? (T) (facing == EnumFacing.UP ? input : output) : super.getCapability(capability, facing);
     }
 
-    @Override
-    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
-        return isOutput(side, slot);
+    private boolean isItemSide(Capability<?> capability, EnumFacing facing){
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.UP || facing == EnumFacing.DOWN);
     }
 
 }

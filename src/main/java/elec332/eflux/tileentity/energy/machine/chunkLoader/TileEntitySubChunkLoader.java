@@ -27,7 +27,7 @@ public class TileEntitySubChunkLoader extends TileEntityEFlux implements IChunkL
         ElecCore.tickHandler.registerCall(new Runnable() {
             @Override
             public void run() {
-                if (!ServerHelper.isServer(worldObj))
+                if (!ServerHelper.isServer(getWorld()))
                     return;
                 if (entityLiving instanceof EntityPlayer) {
                     if (TileEntitySubChunkLoader.this.owner == null)
@@ -36,7 +36,7 @@ public class TileEntitySubChunkLoader extends TileEntityEFlux implements IChunkL
                     ChunkLoaderPlayerProperties.get(PlayerHelper.getPlayerUUID((EntityPlayer) entityLiving)).addLoader(TileEntitySubChunkLoader.this);
                 }
             }
-        }, entityLiving.worldObj);
+        }, entityLiving.getEntityWorld());
     }
 
     @Override

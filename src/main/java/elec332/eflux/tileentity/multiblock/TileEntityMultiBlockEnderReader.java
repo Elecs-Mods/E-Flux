@@ -1,47 +1,30 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.client.RenderHelper;
-import elec332.core.client.inventory.BaseGuiContainer;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.widget.WidgetButton;
-import elec332.core.inventory.widget.WidgetButtonArrow;
+import elec332.core.inventory.window.IWindowFactory;
+import elec332.core.inventory.window.Window;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.multiblock.IMultiBlock;
-import elec332.core.tile.IInventoryTile;
-import elec332.core.util.BasicInventory;
-import elec332.core.util.InventoryHelper;
-import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.ender.IEnderNetworkComponent;
-import elec332.eflux.api.ender.internal.IEnderNetworkItem;
-import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.inventory.GuiEnderContainer;
 import elec332.eflux.endernetwork.EnderNetworkManager;
-import elec332.eflux.init.ItemRegister;
+import elec332.eflux.inventory.WindowEnderReader;
 import elec332.eflux.items.ItemEFluxInfusedEnder;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 
-import java.awt.*;
 import java.util.UUID;
 
 /**
  * Created by Elec332 on 4-5-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxMultiBlockEnderReader")
-public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBlock implements IInventoryTile {
+public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBlock implements IWindowFactory {
 
     public TileEntityMultiBlockEnderReader(){
     }
@@ -57,10 +40,10 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
         IInventory playerInv = player.inventory;
         ItemStack stack = player.getHeldItem(hand);
         if (ItemEFluxInfusedEnder.isActive(stack)){
-            if (!worldObj.isRemote) {
+            if (!getWorld().isRemote) {
                 this.networkID = ItemEFluxInfusedEnder.getUUID(stack);
                 if (getMultiBlock() != null) {
-                    ((MultiBlockEnderContainer) getMultiBlock()).setUUID(EnderNetworkManager.get(worldObj).createNetwork(this.networkID, ItemEFluxInfusedEnder.getNetworkData(stack)), this);
+                    ((MultiBlockEnderContainer) getMultiBlock()).setUUID(EnderNetworkManager.get(getWorld()).createNetwork(this.networkID, ItemEFluxInfusedEnder.getNetworkData(stack)), this);
                 }
                 playerInv.decrStackSize(current, 1);
                 NBTTagCompound send = new NBTTagCompound();
@@ -70,9 +53,9 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 sendPacket(2, send);
             }
             return true;
-        } else if (getMultiBlock() != null && networkID != null && EnderNetworkManager.get(worldObj).get(networkID) != null){
-            if (!worldObj.isRemote){
-                openGui(player, EFlux.instance, 0);
+        } else if (getMultiBlock() != null && networkID != null && EnderNetworkManager.get(getWorld()).get(networkID) != null){
+            if (!getWorld().isRemote){
+                openWindow(player, EFlux.proxy, 0);
             }
             return true;
         }
@@ -82,8 +65,8 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     @Override
     public void setMultiBlock(IMultiBlock multiBlock, EnumFacing facing, String structure) {
         super.setMultiBlock(multiBlock, facing, structure);
-        if (!worldObj.isRemote) {
-            ((MultiBlockEnderContainer) multiBlock).setUUID(EnderNetworkManager.get(worldObj).get(getNetworkID()), this);
+        if (!getWorld().isRemote) {
+            ((MultiBlockEnderContainer) multiBlock).setUUID(EnderNetworkManager.get(getWorld()).get(getNetworkID()), this);
         }
     }
 
@@ -120,7 +103,7 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
                 networkID = UUID.fromString(tag.getString("u"));
                 AbstractMultiBlock mb = getMultiBlock();
                 if (mb != null) {
-                    ((MultiBlockEnderContainer) mb).setUUID(EnderNetworkManager.get(worldObj).get(getNetworkID()), this);
+                    ((MultiBlockEnderContainer) mb).setUUID(EnderNetworkManager.get(getWorld()).get(getNetworkID()), this);
                 }
             }
             return;
@@ -129,6 +112,11 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     }
 
     @Override
+    public Window createWindow(Object... args) {
+        return new WindowEnderReader(this);
+    }
+/*
+    @Override
     public Container getGuiServer(EntityPlayer player) {
         return new InternalContainer(player);
     }
@@ -136,204 +124,6 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     @Override
     public Object getGuiClient(EntityPlayer player) {
         return new InternalGui((InternalContainer) getGuiServer(player));
-    }
-
-    private class InternalContainer extends BaseContainer implements WidgetButton.IButtonEvent{
-
-        private InternalContainer(EntityPlayer player) {
-            super(player);
-            valid = new int[0];
-            inventory = new BasicInventory("", 1){
-
-                @Override
-                public void setInventorySlotContents(int slotID, ItemStack stack) {
-                    super.setInventorySlotContents(slotID, stack);
-                    checkInitialBtn();
-                }
-
-                @Override
-                public boolean isItemValidForSlot(int id, ItemStack stack) {
-                    return !ItemStackHelper.isStackValid(stack) || (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null) || stack.getItem() instanceof IEnderNetworkItem);
-                }
-
-            };
-            addPlayerInventoryToContainer();
-            addSlotToContainer(new Slot(inventory, 0, 50, 32));
-            up = addWidget(new WidgetButtonArrow(20, 15, WidgetButtonArrow.Direction.UP).addButtonEvent(this));
-            down = addWidget(new WidgetButtonArrow(20, 55, WidgetButtonArrow.Direction.DOWN).addButtonEvent(this));
-            set = addWidget(new WidgetButton(80, 24, 0, 0, 30, 15, this)).setDisplayString("set");
-            clear = addWidget(new WidgetButton(80, 44, 0, 0, 30, 15, this)).setDisplayString("clear");
-
-            maxID = EnderNetworkManager.get(worldObj).get(networkID).getMaxID();
-            checkInitialBtn();
-        }
-
-        private WidgetButtonArrow up, down;
-        private WidgetButton set, clear;
-        private IInventory inventory;
-
-        private int freq;
-        private final int maxID;
-        private int[] valid;
-
-        private void checkInitialBtn(){
-            if (inventory.getStackInSlot(0) == null){
-                deactivateAll();
-                valid = new int[0];
-                freq = 0;
-            } else {
-                checkUpDown();
-                boolean b = false;
-                ItemStack stack = inventory.getStackInSlot(0);
-                if (ItemStackHelper.isStackValid(stack)) {
-                    if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
-                        IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
-                        if (component != null) {
-                            valid = EnderNetworkManager.get(worldObj).get(networkID).getFrequencies(component.getRequiredCapability());
-                            freq = Math.max(component.getFrequency(), 0);
-                            b = true;
-                            if (!clear.isActive()){
-                                clear.setActive(true);
-                            }
-                            checkFreq();
-                            checkUpDown();
-                        }
-                    } else if (stack.getItem() instanceof IEnderNetworkItem){
-                        b = true;
-                        valid = new int[0];
-                        freq = 0;
-                        if (!clear.isActive()){
-                            clear.setActive(true);
-                        }
-                        if (!set.isActive()){
-                            set.setActive(true);
-                        }
-                        up.setActive(false);
-                    }
-                }
-                if (!b){
-                    deactivateAll();
-                }
-            }
-        }
-
-        private void deactivateAll(){
-            if (up.isActive()){
-                up.setActive(false);
-            }
-            if (down.isActive()){
-                down.setActive(false);
-            }
-            if (set.isActive()){
-                set.setActive(false);
-            }
-            if (clear.isActive()){
-                clear.setActive(false);
-            }
-        }
-
-        private void checkFreq(){
-            if (!set.isActive()){
-                set.setActive(true);
-            }
-            if (!isValidFreq(freq)&& set.isActive()){
-                set.setActive(false);
-            }
-        }
-
-        private void checkUpDown(){
-            if (freq >= (maxID - 1)) {
-                up.setActive(false);
-            } else {
-                up.setActive(true);
-            }
-            if (freq <= 0) {
-                down.setActive(false);
-            } else {
-                down.setActive(true);
-            }
-        }
-
-        @Override
-        public void onButtonClicked(WidgetButton button) {
-            if (button == up){
-                freq++;
-                if (freq >= (maxID - 1)){
-                    up.setActive(false);
-                    freq = maxID - 1;
-                }
-                if (!down.isActive()){
-                    down.setActive(true);
-                }
-                checkFreq();
-            } else if (button == down){
-                freq--;
-                if (freq <= 0){
-                    down.setActive(false);
-                    freq = 0;
-                }
-                if (!up.isActive()){
-                    up.setActive(true);
-                }
-                checkFreq();
-            } else if (button == set){
-                ItemStack stack = inventory.getStackInSlot(0);
-                if (ItemStackHelper.isStackValid(stack)){
-                    if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
-                        IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
-                        if (component != null) {
-                            if (isValidFreq(freq)){
-                                component.setUUID(networkID);
-                                component.setFrequency(freq);
-                            }
-                        }
-                    } else if (stack.getItem() instanceof IEnderNetworkItem){
-                        ((IEnderNetworkItem) stack.getItem()).setNetworkID(networkID, stack);
-                    }
-                }
-            } else if (button == clear){
-                ItemStack stack = inventory.getStackInSlot(0);
-                if (ItemStackHelper.isStackValid(stack)){
-                    if (stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
-                        IEnderNetworkComponent component = stack.getCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null);
-                        if (component != null) {
-                            component.setUUID(null);
-                            component.setFrequency(-1);
-                        }
-                        freq = 0;
-                        checkUpDown();
-                    } else if (stack.getItem() instanceof IEnderNetworkItem){
-                        ((IEnderNetworkItem) stack.getItem()).setNetworkID(networkID, stack);
-                    }
-                }
-            }
-        }
-
-        boolean isValidFreq(int freq){
-            for (int i : valid){
-                if (i == freq){
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
-            ItemStack ret = super.slotClick(slotId, dragType, clickTypeIn, player);
-            detectAndSendChanges();
-            return ret;
-        }
-
-        @Override
-        public void onContainerClosed(EntityPlayer player) {
-            if (!player.worldObj.isRemote && inventory.getStackInSlot(0) != null){
-                player.entityDropItem(inventory.getStackInSlot(0), 1);
-                inventory.clear();
-            }
-            super.onContainerClosed(player);
-        }
-
     }
 
     private class InternalGui extends BaseGuiContainer {
@@ -365,6 +155,6 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
             return new EFluxResourceLocation("gui/GuiNull.png");
         }
 
-    }
+    }*/
 
 }

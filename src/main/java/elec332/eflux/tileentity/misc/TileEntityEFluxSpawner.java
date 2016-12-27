@@ -101,7 +101,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
     }
 
     public void checkRedstone(){
-        redstoneActivated = worldObj.isBlockPowered(pos);
+        redstoneActivated = getWorld().isBlockPowered(pos);
         sendPacket(1, new NBTHelper().addToTag(redstoneActivated, "r").serializeNBT());
     }
 

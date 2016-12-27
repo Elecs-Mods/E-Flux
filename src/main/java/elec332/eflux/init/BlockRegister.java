@@ -8,6 +8,7 @@ import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.items.ItemBlockEFluxChunkLoader;
 import elec332.eflux.items.ItemBlockEFluxSpawner;
+import elec332.eflux.multipart.BlockCable;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -28,12 +30,14 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public final class BlockRegister {
 
-    public static Block ores, areaMover;
+    public static Block ores, areaMover, cable;
     public static BlockStateWrapper frameBasic, frameNormal, frameAdvanced, itemGate, laserLens, laserCore, heatResistantGlass, heater, monitor, radiator, motor, precisionMotor, dustStorage, powerInlet,
                                     fluidInlet, fluidOutlet, enderReader, powerOutlet;
     public static BlockStateWrapper oreCopper, oreZinc, oreSilver, oreTin;
 
     public static void init() {
+
+        cable = GameRegistry.register(new BlockCable().setCreativeTab(EFlux.creativeTab));
 
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){

@@ -21,12 +21,25 @@ import java.util.List;
  */
 public class BlockMachineQuadProvider implements IQuadProvider {
 
+    @SuppressWarnings("unchecked")
     public BlockMachineQuadProvider(TextureAtlasSprite[][] textures, IElecQuadBakery quadBakery){
         this.textures = textures;
         this.quadBakery = quadBakery;
+        this.quadCache = new List[textures.length][EnumFacing.VALUES.length][EnumFacing.VALUES.length];
+        for (int i = 0; i < textures.length; i++) {
+            TextureAtlasSprite[] textures_ = textures[i];
+            for (EnumFacing facing : EnumFacing.VALUES){
+                ModelRotation rotation = defaultFor(facing);
+                for (EnumFacing side : EnumFacing.VALUES){
+                    EnumFacing usedRot = rotation.rotate(side);
+                    quadCache[i][facing.ordinal()][side.ordinal()] = ImmutableList.of(quadBakery.bakeQuad(MutableQuadTemplate.templateForTexture(side, textures_[usedRot.ordinal()])));
+                }
+            }
+        }
     }
 
     private final TextureAtlasSprite[][] textures;
+    private final List<BakedQuad>[][][] quadCache; //on/off, facing, side
     private final IElecQuadBakery quadBakery;
 
     @Override
@@ -34,10 +47,11 @@ public class BlockMachineQuadProvider implements IQuadProvider {
         if (side == null){
             return ImmutableList.of();
         }
-        TextureAtlasSprite[] textures = this.textures[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0];
-        ModelRotation rotation = state == null ? ModelRotation.X0_Y0 : defaultFor(BlockMachine.getFacing(state));
-        EnumFacing usedRot = rotation.rotate(side);
-        return Lists.newArrayList(quadBakery.bakeQuad(MutableQuadTemplate.templateForTexture(side, textures[usedRot.ordinal()])));
+        return quadCache[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0][(state == null ? EnumFacing.NORTH : BlockMachine.getFacing(state)).ordinal()][side.ordinal()];
+        //TextureAtlasSprite[] textures = this.textures[(state != null && ((IExtendedBlockState)state).getValue(BlockMachine.ACTIVATED_PROPERTY)) ? 1 : 0];
+        //ModelRotation rotation = state == null ? ModelRotation.X0_Y0 : defaultFor(BlockMachine.getFacing(state));
+        //EnumFacing usedRot = rotation.rotate(side);
+        //return Lists.newArrayList());
     }
 
     public static ModelRotation defaultFor(EnumFacing facing) {

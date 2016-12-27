@@ -80,6 +80,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
             } else {
                 this.diff = EnumCircuit.SMALL;
             }
+            getSolderedComponents();
         }
 
         private EnumCircuit diff;
@@ -199,7 +200,9 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
             } else {
                tag.setByte("diff", diff.getCircuitLevel());
             }
-            tag.setTag("components", InventoryHelper.writeItemsToNBT(components));
+            if (components != null) {
+                tag.setTag("components", InventoryHelper.writeItemsToNBT(components));
+            }
             return tag;
         }
 
@@ -219,6 +222,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
                     this.diff = EnumCircuit.SMALL;
                 }
             }
+            getSolderedComponents();
             InventoryHelper.readItemsFromNBT(nbt.getCompoundTag("components"), this.components);
         }
 

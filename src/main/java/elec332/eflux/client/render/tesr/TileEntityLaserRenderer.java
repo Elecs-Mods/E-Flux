@@ -2,9 +2,9 @@ package elec332.eflux.client.render.tesr;
 
 import elec332.core.api.client.ITessellator;
 import elec332.core.client.RenderHelper;
+import elec332.core.main.ElecCore;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -29,8 +29,7 @@ public class TileEntityLaserRenderer extends TileEntitySpecialRenderer<TileEntit
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
-                Minecraft mc = Minecraft.getMinecraft();
-                EntityPlayerSP p = mc.thePlayer;
+                EntityPlayerSP p = (EntityPlayerSP) ElecCore.proxy.getClientPlayer();
                 double doubleX = p.lastTickPosX + (p.posX - p.lastTickPosX) * partialTicks;
                 double doubleY = p.lastTickPosY + (p.posY - p.lastTickPosY) * partialTicks;
                 double doubleZ = p.lastTickPosZ + (p.posZ - p.lastTickPosZ) * partialTicks;

@@ -1,8 +1,9 @@
 package elec332.eflux.util;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import elec332.core.util.InventoryHelper;
-import elec332.core.util.RegistryHelper;
+import elec332.core.util.ItemStackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -22,8 +23,8 @@ import java.util.function.Function;
 public class RecipeHelper {
 
     public static <T extends IRecipe> T registerRecipe(Function<Data, T> f, ItemStack stack, Object... recipeComponents){
-        T ret = f.apply(decipher(stack, recipeComponents));
-        RegistryHelper.getCraftingManager().addRecipe(ret);
+        T ret = f.apply(decipher(Preconditions.checkNotNull(stack), recipeComponents));
+        elec332.core.util.recipes.RecipeHelper.getCraftingManager().addRecipe(ret);
         return ret;
     }
 
@@ -102,7 +103,7 @@ public class RecipeHelper {
         }
 
         @Override
-        public boolean checkMatch(@Nonnull InventoryCrafting p_77573_1_, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
+        public boolean checkMatch(@Nonnull InventoryCrafting inventoryCrafting, int p_77573_2_, int p_77573_3_, boolean p_77573_4_) {
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
                     int k = i - p_77573_2_;
@@ -117,9 +118,9 @@ public class RecipeHelper {
                         }
                     }
 
-                    ItemStack itemstack1 = p_77573_1_.getStackInRowAndColumn(i, j);
+                    ItemStack itemstack1 = inventoryCrafting.getStackInRowAndColumn(i, j);
 
-                    if (itemstack1 != null || itemstack != null) {
+                    if (ItemStackHelper.isStackValid(itemstack1) || ItemStackHelper.isStackValid(itemstack)) {
                         if (!InventoryHelper.areEqualNoSize(itemstack, itemstack1)){
                             return false;
                         }

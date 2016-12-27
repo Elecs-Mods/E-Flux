@@ -50,7 +50,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     @Override
     public ItemStack inject(ItemStack stack) {
         if (!ItemStackHelper.isStackValid(stack))
-            return null;
+            return stack;
         final int s = stack.stackSize;
         for (int i = 0; i < s; i++) {
             ItemStack stack1 = stack.copy();
@@ -59,7 +59,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
                 return stack;
             stack.stackSize--;
         }
-        return null;
+        return ItemStackHelper.NULL_STACK;
     }
 
     @Override

@@ -3,7 +3,6 @@ package elec332.eflux.items;
 import elec332.core.item.AbstractItem;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
-import net.minecraft.item.Item;
 
 /**
  * Created by Elec332 on 10-9-2015.
@@ -11,7 +10,7 @@ import net.minecraft.item.Item;
 public abstract class AbstractEFluxItem extends AbstractItem {
 
     public AbstractEFluxItem(String name){
-        super(new EFluxResourceLocation(name));
+        super(name == null ? null : new EFluxResourceLocation(name));
         setCreativeTab(EFlux.creativeTab);
     }
 

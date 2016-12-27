@@ -12,6 +12,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -44,7 +45,7 @@ public class ItemEFluxWrench extends AbstractTexturedEFluxItem implements IRight
             if (block instanceof IWrenchable) {
                 if (player.isSneaking()) {
                     world.setBlockToAir(pos);
-                    world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), ((IWrenchable) block).itemDropped(world, pos)));
+                    WorldHelper.spawnEntityInWorld(world, new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), ((IWrenchable) block).itemDropped(world, pos)));
                 } else if (!((IWrenchable) block).onWrenched(world, pos, side) && !block.rotateBlock(world, pos, side)){
                     return EnumActionResult.SUCCESS;
                 }
@@ -57,4 +58,5 @@ public class ItemEFluxWrench extends AbstractTexturedEFluxItem implements IRight
         }
         return EnumActionResult.SUCCESS;
     }
+
 }

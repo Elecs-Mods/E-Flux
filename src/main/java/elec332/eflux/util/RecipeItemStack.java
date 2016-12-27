@@ -1,5 +1,6 @@
 package elec332.eflux.util;
 
+import elec332.core.util.OredictHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -63,7 +64,7 @@ public final class RecipeItemStack {
     }
 
     private boolean isRegisteredAsOre(String s, ItemStack stack){
-        for (ItemStack itemStack : OreDictionary.getOres(s)){
+        for (ItemStack itemStack : OredictHelper.getOres(s, false)){
             if (itemStack.getItem() == stack.getItem()){
                 if (itemStack.getItemDamage() == stack.getItemDamage())
                     return true;

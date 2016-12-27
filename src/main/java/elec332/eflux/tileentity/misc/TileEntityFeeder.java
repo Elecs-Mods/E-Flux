@@ -1,20 +1,16 @@
 package elec332.eflux.tileentity.misc;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ContainerMachine;
-import elec332.core.inventory.ITileWithSlots;
-import elec332.core.tile.IInventoryTile;
+import elec332.core.inventory.widget.slot.WidgetSlot;
+import elec332.core.inventory.window.ISimpleWindowFactory;
+import elec332.core.inventory.window.Window;
 import elec332.core.util.BasicInventory;
 import elec332.eflux.EFlux;
-import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.inventory.GuiStandardFormat;
 import elec332.eflux.tileentity.TileEntityEFlux;
 import elec332.eflux.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 import java.util.List;
@@ -31,7 +26,7 @@ import java.util.List;
  * Created by Elec332 on 19-2-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxFeeder")
-public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile, ITileWithSlots, ITickable {
+public class TileEntityFeeder extends TileEntityEFlux implements ISimpleWindowFactory, ITickable {
 
     public TileEntityFeeder(){
         invWrapper = new InvWrapper(new BasicInventory("", 1, this));
@@ -45,7 +40,7 @@ public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile,
         feedCounter--;
         if (feedCounter <= 0){
             feedCounter = 500 + EFlux.random.nextInt(1000);
-            List<EntityAnimal> animals = worldObj.getEntitiesWithinAABB(EntityAnimal.class, Utils.getAABBAroundBlock(pos, 2, 2, 2, 2, 2, 2));
+            List<EntityAnimal> animals = getWorld().getEntitiesWithinAABB(EntityAnimal.class, Utils.getAABBAroundBlock(pos, 2, 2, 2, 2, 2, 2));
             for (EntityAnimal animal : animals){
                 if (animal.isBreedingItem(invWrapper.extractItem(0, 1, true)) && animal.getGrowingAge() == 0 && !animal.isInLove()){
                     animal.setInLove(null);
@@ -76,7 +71,7 @@ public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile,
 
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-         return openGui(player, EFlux.instance, 0);
+         return openLocalWindow(player);
     }
 
     @Override
@@ -91,19 +86,9 @@ public class TileEntityFeeder extends TileEntityEFlux implements IInventoryTile,
     }
 
     @Override
-    public BaseContainer getGuiServer(EntityPlayer player) {
-        return new ContainerMachine(this, player, 0);
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return new GuiStandardFormat(getGuiServer(player), new EFluxResourceLocation("gui/GuiNull.png"));
-    }
-
-    @Override
-    public void addSlots(BaseContainer container) {
-        container.addSlotToContainer(new SlotItemHandler(invWrapper, 0, 66, 53));
-        container.addPlayerInventoryToContainer();
+    public void modifyWindow(Window window, Object... args) {
+        window.addWidget(new WidgetSlot(invWrapper, 0, 66, 53));
+        window.addPlayerInventoryToContainer();
     }
 
 }

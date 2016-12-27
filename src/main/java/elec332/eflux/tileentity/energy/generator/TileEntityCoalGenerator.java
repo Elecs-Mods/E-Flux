@@ -1,28 +1,23 @@
 package elec332.eflux.tileentity.energy.generator;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.api.inventory.IDefaultInventory;
-import elec332.core.grid.GridInformation;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.inventory.ContainerMachine;
-import elec332.core.inventory.ITileWithSlots;
+import elec332.core.inventory.widget.slot.WidgetSlot;
+import elec332.core.inventory.window.ISimpleWindowFactory;
+import elec332.core.inventory.window.Window;
 import elec332.core.tile.IActivatableMachine;
-import elec332.core.tile.IInventoryTile;
 import elec332.core.tile.IRandomDisplayTickProviderTile;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.*;
-import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.inventory.GuiStandardFormat;
+import elec332.eflux.api.energy.ConnectionType;
+import elec332.eflux.api.energy.IEnergyProvider;
+import elec332.eflux.api.energy.IEnergyTile;
+import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.tileentity.TileEntityEFlux;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -42,14 +37,16 @@ import java.util.Random;
  * Created by Elec332 on 29-4-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxCoalGenerator")
-public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyProvider, IDefaultInventory, IInventoryTile, ITileWithSlots, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
+public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyProvider, ISimpleWindowFactory, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
     public TileEntityCoalGenerator(){
-        inventory = new BasicInventory("", 1){
+        inventory = new BasicItemHandler(1){
+
             @Override
-            public boolean isItemValidForSlot(int id, ItemStack stack) {
+            public boolean isStackValidForSlot(int slot, @Nonnull ItemStack stack) {
                 return TileEntityFurnace.isItemFuel(stack);
             }
+
         };
         dirData = new byte[6];
         transmitter = new IEnergyTransmitter() {
@@ -86,11 +83,11 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
         } else {
             ltp = 0;
             sppt = 0;
-            ItemStack stack = inventory.getStackInSlot(0);
+            ItemStack stack = inventory.extractItem(0, 1, true);
             if (ItemStackHelper.isStackValid(stack)) {
                 int burnTime = TileEntityFurnace.getItemBurnTime(stack.copy());
                 if (burnTime > 0) {
-                    inventory.decrStackSize(0, 1);
+                    inventory.extractItem(0, 1, false);
                     this.burnTime = burnTime;
                     sppt = 150;
                     if (!active) {
@@ -98,8 +95,8 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
                         reRenderBlock();
                     }
                 } else {
-                    inventory.setInventorySlotContents(0, null);
-                    WorldHelper.dropStack(worldObj, pos.offset(getTileFacing()), stack.copy());
+                    inventory.setStackInSlot(0, ItemStackHelper.NULL_STACK);
+                    WorldHelper.dropStack(getWorld(), pos.offset(getTileFacing()), stack.copy());
                 }
             }
             if (active && !(burnTime > 0)) {
@@ -107,7 +104,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
                 reRenderBlock();
             }
         }
-        if (worldObj.getTotalWorldTime() % 5 == 0) {
+        if (getWorld().getTotalWorldTime() % 5 == 0) {
             outA = 0;
             for (int i = 0; i < dirData.length; i++) {
                 if (dirData[i] == 1) {
@@ -121,11 +118,11 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
         //System.out.println(pos+"   "+info.getActiveConnections());
     }
 
-    @GridInformation(IEnergyGridInformation.class)
-    private IEnergyGridInformation info;
+    //@GridInformation(IEnergyGridInformation.class)
+    //private IEnergyGridInformation info;
     private int ltp, sppt, burnTime, outA;
     private byte[] dirData;
-    private BasicInventory inventory;
+    private BasicItemHandler inventory;
     private boolean active;
     private IEnergyTransmitter transmitter;
 
@@ -146,22 +143,17 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
         return ret;
     }
 
-    @Nonnull
-    @Override
-    public BasicInventory getInventory() {
-        return inventory;
-    }
-
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        inventory.readFromNBT(tagCompound);
+        inventory.deserializeNBT(tagCompound);
         sppt = tagCompound.getInteger("ibt");
         burnTime = tagCompound.getInteger("bt");
         active = tagCompound.getBoolean("aC");
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
@@ -173,28 +165,18 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
 
     @Override
     public void onBlockRemoved() {
-        InventoryHelper.dropInventoryItems(worldObj, pos, this);
+        WorldHelper.dropInventoryItems(getWorld(), pos, inventory);
         super.onBlockRemoved();
     }
 
     @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return openGui(player, EFlux.instance, 0);
+        return openLocalWindow(player);
     }
 
     @Override
-    public Container getGuiServer(EntityPlayer player) {
-        return new ContainerMachine(this, player, 0);
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return new GuiStandardFormat((BaseContainer) getGuiServer(player), new EFluxResourceLocation("gui/GuiNull.png"));
-    }
-
-    @Override
-    public void addSlots(final BaseContainer container) {
-        container.addSlotToContainer(new Slot(inventory, 0, 66, 53){
+    public void modifyWindow(Window window, Object... args) {
+        window.addWidget(new WidgetSlot(inventory, 0, 66, 53){
 
             @Override
             public boolean isItemValid(ItemStack stack) {
@@ -202,7 +184,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
             }
 
         });
-        container.addPlayerInventoryToContainer();
+        window.addPlayerInventoryToContainer();
     }
 
     @Override
@@ -223,20 +205,20 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
 
             switch (enumfacing) {
                 case WEST:
-                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.FLAME, d0 - d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                     break;
                 case EAST:
-                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.FLAME, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                     break;
                 case NORTH:
-                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
-                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - d3, 0.0D, 0.0D, 0.0D);
                     break;
                 case SOUTH:
-                    worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
-                    worldObj.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
+                    getWorld().spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + d3, 0.0D, 0.0D, 0.0D);
             }
         }
     }

@@ -11,35 +11,24 @@ import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.core.client.model.map.BakedModelMetaMap;
-import elec332.core.inventory.BaseContainer;
-import elec332.core.tile.IInventoryTile;
-import elec332.core.world.WorldHelper;
-import elec332.eflux.EFlux;
+import elec332.core.main.ElecCore;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
-import elec332.eflux.client.inventory.GuiEnderContainer;
-import elec332.eflux.client.inventory.GuiMachine;
-import elec332.eflux.client.manual.gui.GuiManual;
 import elec332.eflux.client.render.FurnaceContentsRenderer;
 import elec332.eflux.client.render.tesr.TESRAreaMover;
 import elec332.eflux.client.render.tesr.TileEntityLaserRenderer;
 import elec332.eflux.client.render.tesr.TileEntityTankRenderer;
-import elec332.eflux.inventory.ContainerEnderContainer;
-import elec332.eflux.multipart.cable.PartBasicCable;
-import elec332.eflux.tileentity.TileEntityBreakableMachine;
+import elec332.eflux.init.BlockRegister;
+import elec332.eflux.multipart.TileEntityCable;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,6 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -65,54 +55,8 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tile = WorldHelper.getTileAt(world, new BlockPos(x, y, z));
-        switch (ID){
-            case 3:
-                return new GuiManual();
-            case 1:
-                if (tile instanceof TileEntityBreakableMachine) {
-                    return ((TileEntityBreakableMachine) tile).getBreakableMachineInventory().brokenGui(Side.CLIENT, player);
-                }
-                return null;
-            case 2:
-                if (tile != null) {
-                    return new GuiMachine((BaseContainer) getServerGuiElement(2, player, world, x, y, z)) {
-                        @Override
-                        public ResourceLocation getBackgroundImageLocation() {
-                            return new EFluxResourceLocation("BGRED");
-                        }
-                    };
-                }
-                return null;
-            case 4:
-                Container container1 = getServerGuiElement(ID, player, world, x, y, z);
-                if (container1 != null){
-                    return new GuiEnderContainer((ContainerEnderContainer) container1);
-                }
-                return null;
-            case 5:
-                Container container2 = getServerGuiElement(ID, player, world, x, y, z);
-                if (container2 != null){
-                    return new GuiMachine((BaseContainer) container2) {
-                        @Override
-                        public ResourceLocation getBackgroundImageLocation() {
-                            return new EFluxResourceLocation("gui/GuiNull.png");
-                        }
-                    };
-                }
-                return null;
-            default:
-                if (tile instanceof IInventoryTile) {
-                    return ((IInventoryTile) tile).getGuiClient(player);
-                }
-                return null;
-        }
-    }
-
-    @Override
     public World getClientWorld() {
-        return Minecraft.getMinecraft().theWorld;
+        return ElecCore.proxy.getClientWorld();
     }
 
     @Override
@@ -123,7 +67,6 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, tankRenderer);
         RenderingRegistry.instance().registerLoader(tankRenderer);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAreaMover.class, new TESRAreaMover());
-        RenderingRegistry.instance().registerFakeItem(EFlux.creativeTab.getTabIconItem().getItem());
 
         /*EFlux.multiBlockRegistry.registerMultiBlockRenderer(MultiBlockEnderContainer.class, new IMultiBlockRenderer<MultiBlockEnderContainer>() {
 
@@ -143,6 +86,15 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
                 return new AxisAlignedBB(multiblock.getLocation(), multiblock.getBlockLocAtTranslatedPos(2, 2, 2));
             }
         });*/
+        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getBlockStateMapper().registerBlockStateMapper(BlockRegister.cable, new StateMapperBase() {
+
+            @Override
+            @Nonnull
+            protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state) {
+                return new ModelResourceLocation("eflux:i-aint-making-jsons_"+state.getBlock().getMetaFromState(state));
+            }
+
+        });
     }
 
     /**
@@ -232,12 +184,12 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     private class CM implements IQuadProvider {
 
         private CM(IExtendedBlockState state, int meta){
-            up = state.getValue(PartBasicCable.UP);
-            down = state.getValue(PartBasicCable.DOWN);
-            north = state.getValue(PartBasicCable.NORTH);
-            east = state.getValue(PartBasicCable.EAST);
-            south = state.getValue(PartBasicCable.SOUTH);
-            west = state.getValue(PartBasicCable.WEST);
+            up = state.getValue(TileEntityCable.UP);
+            down = state.getValue(TileEntityCable.DOWN);
+            north = state.getValue(TileEntityCable.NORTH);
+            east = state.getValue(TileEntityCable.EAST);
+            south = state.getValue(TileEntityCable.SOUTH);
+            west = state.getValue(TileEntityCable.WEST);
             this.meta = meta;
             this.state = state;
         }

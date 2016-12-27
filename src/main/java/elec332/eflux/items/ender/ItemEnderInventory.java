@@ -1,5 +1,6 @@
 package elec332.eflux.items.ender;
 
+import elec332.core.inventory.window.WindowManager;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IWeakEnderConnection;
@@ -27,7 +28,7 @@ public class ItemEnderInventory extends AbstractEnderCapabilityItem<IItemHandler
     @Override
     protected ActionResult<ItemStack> execute(@Nonnull IEnderNetworkComponent<IItemHandler> component, @Nonnull IWeakEnderConnection<IItemHandler> connection, @Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote){
-            player.openGui(EFlux.instance, 5, world, -3, hand == EnumHand.MAIN_HAND ? -3 : -9, -3);
+            WindowManager.openWindow(player, EFlux.proxy, world, -3, hand == EnumHand.MAIN_HAND ? -3 : -9, -3, (byte) 5);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

@@ -8,20 +8,12 @@ import elec332.core.api.client.model.map.IBakedModelMetaMap;
 import elec332.core.client.model.loading.INoJsonItem;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.multipart.cable.PartAdvancedCable;
-import elec332.eflux.multipart.cable.PartBasicCable;
-import elec332.eflux.multipart.cable.PartNormalCable;
-import mcmultipart.multipart.IMultipart;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +27,7 @@ import java.util.List;
 public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJsonItem {
 
     public ItemEFluxCable() {
-        super("cable");
+        super(null);
         this.setHasSubtypes(true);
     }
 
@@ -45,22 +37,8 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
     private TextureAtlasSprite[] textures;
 
     @Override
-    public IMultipart createPart(World world, BlockPos pos, EnumFacing side, Vec3d hit, ItemStack stack, EntityPlayer player) {
-        switch (stack.getMetadata()){
-            case 0:
-                return new PartBasicCable();
-            case 1:
-                return new PartNormalCable();
-            case 2:
-                return new PartAdvancedCable();
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+    @SideOnly(Side.CLIENT) //TODO: Bug
+    public void getSubItems(@Nonnull Item item, @Nonnull List subItems, CreativeTabs creativeTab) {
         for (int i = 0; i < 3; i++) {
             subItems.add(new ItemStack(item, 1, i));
         }

@@ -1,5 +1,6 @@
 package elec332.eflux.init;
 
+import com.google.common.base.Preconditions;
 import elec332.core.java.JavaHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.OredictHelper;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 
 import static elec332.eflux.EFlux.random;
+import static elec332.eflux.init.BlockRegister.cable;
 import static elec332.eflux.init.BlockRegister.*;
 import static elec332.eflux.init.ItemRegister.*;
 import static elec332.eflux.util.EnumMachines.*;
@@ -81,9 +83,9 @@ public final class RecipeRegister {
         registerShapedRecipe(precisionMotor.toItemStack(), "SGS", "CMC", "R R", 'S', silverIngot, 'G', GOLD_INGOT, 'C', copperCoil, 'M', motor.toItemStack(), 'R', REDSTONE);
         registerShapedRecipe(dustStorage.toItemStack(), "CBC", "ICI", "FGF", 'C', copperIngot, 'B', IRON_BARS, 'I', IRON_INGOT, 'C', CHEST, 'F', frameNormal.toItemStack(), 'G', itemGate.toItemStack());
 
-        registerShapedRecipe(new ItemStack(cableBasic.getItem(), 5, 0), "RRR", "SCS", "RRR", 'R', REDSTONE, 'S', silverIngot, 'C', copperIngot);
-        registerShapedRecipe(new ItemStack(cableNormal.getItem(), 3, 1), "RRR", "CGC", "RRR", 'R', REDSTONE, 'G', GOLD_INGOT, 'C', conductiveIngot);
-        registerShapedRecipe(new ItemStack(cableAdvanced.getItem(), 1, 2), "RER", "CSC", "RER", 'R', REDSTONE, 'S', silverIngot, 'C', conductiveIngot, 'E', ENDER_PEARL);
+        registerShapedRecipe(new ItemStack(cable, 5, 0), "RRR", "SCS", "RRR", 'R', REDSTONE, 'S', silverIngot, 'C', copperIngot);
+        registerShapedRecipe(new ItemStack(cable, 3, 1), "RRR", "CGC", "RRR", 'R', REDSTONE, 'G', GOLD_INGOT, 'C', conductiveIngot);
+        registerShapedRecipe(new ItemStack(cable, 1, 2), "RER", "CSC", "RER", 'R', REDSTONE, 'S', silverIngot, 'C', conductiveIngot, 'E', ENDER_PEARL);
 
         registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ENDER_EYE, 'L', CHUNKSUB.getBlock(), 'I', IRON_INGOT, 'S', silverIngot);
         registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ENDER_EYE, 'I', IRON_INGOT, 'M', multimeter, 'Z', zincIngot, 'R', REDSTONE);
@@ -153,7 +155,7 @@ public final class RecipeRegister {
 
         });
         GameRegistry.addRecipe(new DustRecipe());
-        OredictHelper.registerRecipeSorter(new EFluxResourceLocation("dusts"), DustRecipe.class);
+        elec332.core.util.recipes.RecipeHelper.registerRecipeSorter(new EFluxResourceLocation("dusts"), DustRecipe.class);
         EFluxFurnaceRecipes.getInstance().registerRecipe(new IEFluxFurnaceRecipe() {
 
             @Override
@@ -236,7 +238,7 @@ public final class RecipeRegister {
 
         @Override
         public ItemStack getRecipeOutput() {
-            return null;
+            return ItemStackHelper.NULL_STACK;
         }
 
         @Override
@@ -259,7 +261,7 @@ public final class RecipeRegister {
     }
 
     private static void registerShapedRecipe(ItemStack stack, Object... params){
-        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_FUNCTION, stack, params);
+        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_FUNCTION, Preconditions.checkNotNull(stack), params);
     }
 
 }

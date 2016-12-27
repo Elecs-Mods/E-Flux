@@ -9,6 +9,7 @@ import elec332.eflux.items.ender.capability.ItemEFluxEnderCapabilityPlayerInvent
 import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -40,6 +41,19 @@ public final class ItemRegister {
     public static ItemStack redstoneUpgrade;
 
     public static void init(){
+
+        Item cable = GameRegistry.register(new ItemBlock(BlockRegister.cable){
+
+            @Override
+            public int getMetadata(int damage) {
+                return damage;
+            }
+
+        }.setRegistryName(BlockRegister.cable.getRegistryName()));
+        cableBasic = new ItemStack(cable, 1, 0);
+        cableNormal = new ItemStack(cable, 1, 1);
+        cableAdvanced = new ItemStack(cable, 1, 2);
+
 
         multimeter = GameRegistry.register(new ItemEFluxMultiMeter());
         wrench = GameRegistry.register(new ItemEFluxWrench());
@@ -145,7 +159,7 @@ public final class ItemRegister {
     }
 
     static void registerMultiPartItems(){
-        cable = GameRegistry.register(new ItemEFluxCable());
+        //cable = GameRegistry.register(new ItemEFluxCable());
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);
         cableAdvanced = new ItemStack(cable, 1, 2);
