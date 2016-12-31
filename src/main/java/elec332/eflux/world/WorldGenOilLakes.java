@@ -1,5 +1,6 @@
 package elec332.eflux.world;
 
+import elec332.core.world.WorldHelper;
 import elec332.eflux.init.FluidRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -97,7 +98,7 @@ public class WorldGenOilLakes extends WorldGenerator {
                             BlockPos blockpos = position.add(i2, j4 - 1, j3);
 
                             if (worldIn.getBlockState(blockpos).getBlock() == Blocks.DIRT && worldIn.getLightFor(EnumSkyBlock.SKY, position.add(i2, j4, j3)) > 0) {
-                                Biome biome = worldIn.getBiome(blockpos);
+                                Biome biome = WorldHelper.getBiome(worldIn, blockpos);
 
                                 if (biome.topBlock.getBlock() == Blocks.MYCELIUM) {
                                     worldIn.setBlockState(blockpos, Blocks.MYCELIUM.getDefaultState(), 2);

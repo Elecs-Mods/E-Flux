@@ -49,6 +49,12 @@ public final class ItemRegister {
                 return damage;
             }
 
+            @Override
+            @Nonnull
+            public String getUnlocalizedName(ItemStack stack) {
+                return super.getUnlocalizedName(stack)+"."+stack.getMetadata();
+            }
+
         }.setRegistryName(BlockRegister.cable.getRegistryName()));
         cableBasic = new ItemStack(cable, 1, 0);
         cableNormal = new ItemStack(cable, 1, 1);

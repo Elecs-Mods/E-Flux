@@ -1,6 +1,7 @@
 package elec332.eflux.util;
 
 import com.google.common.base.Objects;
+import elec332.core.inventory.ICompatibleInventory;
 import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.Window;
 import elec332.core.main.ElecCore;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public class BreakableMachineInventory implements IInventory {
+public class BreakableMachineInventory implements ICompatibleInventory {
 
     public BreakableMachineInventory(IBreakableMachine tile, ItemStack s){
         this.i = tile;
@@ -91,15 +92,16 @@ public class BreakableMachineInventory implements IInventory {
                 int l = 240;
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) k / 1.0F, (float) l / 1.0F);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                drawSlot(fS);
+                drawSlot(fS, 66, 53);
                 GlStateManager.popMatrix();
             }
 
             @SideOnly(Side.CLIENT)
-            private void drawSlot(Slot slotIn) {
-                int i = slotIn.xPos;
-                int j = slotIn.yPos;
+            private void drawSlot(Slot slotIn, int i, int j) {
                 ItemStack itemstack = slotIn.getStack();
+                if (!ItemStackHelper.isStackValid(itemstack)){
+                    return;
+                }
                 String s = "";
 
                 RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
@@ -128,7 +130,12 @@ public class BreakableMachineInventory implements IInventory {
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean canBeUsedByPlayer(@Nonnull EntityPlayer player) {
+        return i.isBroken();
+    }
+
+    @Override
+    public boolean isInventoryEmpty() {
         return false;
     }
 
@@ -212,11 +219,6 @@ public class BreakableMachineInventory implements IInventory {
     @Override
     public void markDirty() {
 
-    }
-
-    @Override
-    public boolean isUsableByPlayer(@Nonnull EntityPlayer p_70300_1_) {
-        return i.isBroken();
     }
 
     @Override

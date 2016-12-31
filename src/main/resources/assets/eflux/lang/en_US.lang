@@ -31,10 +31,6 @@ item.eflux.dusts.duststone.name=Stone Dust
 item.eflux.dusts.dusttin.name=Tin Dust
 item.eflux.dusts.dustconductive.name=Conductive Dust
 
-item.eflux.cable.0.name=Basic Cable
-item.eflux.cable.1.name=Normal Cable
-item.eflux.cable.2.name=Advanced Cable
-
 item.eflux.brine.name=Brine Bucket
 item.eflux.lpg.name=LPG Bucket
 item.eflux.petrol.name=Petrol Bucket
@@ -76,6 +72,11 @@ item.eflux.energy_eflux.name=Ender-Upgrade: EFlux Energy
 item.eflux.redstoneupgrade.name=Redstone Upgrade
 
 ##BLOCKS
+
+tile.eflux.cable.0.name=Basic Cable
+tile.eflux.cable.1.name=Normal Cable
+tile.eflux.cable.2.name=Advanced Cable
+
 tile.eflux.lasercore.name=Laser Core
 tile.eflux.heater.name=Heater
 tile.eflux.duststorage.name=Dust Storage

@@ -6,7 +6,7 @@ import elec332.core.util.PlayerHelper;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
-import elec332.eflux.util.SafeWrappedInventory;
+import elec332.core.util.SafeWrappedIItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -63,7 +63,7 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
     private UUID player;
     private static final String NBT_KEY = "enderPlayer";
     private static final IItemHandlerModifiable NULL_INVENTORY;
-    private SafeWrappedInventory inv;
+    private SafeWrappedIItemHandler inv;
 
     @Override
     @Nonnull
@@ -111,7 +111,7 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
                 itemHandler = NULL_INVENTORY;
             }
         }
-        inv = SafeWrappedInventory.of(itemHandler);
+        inv = SafeWrappedIItemHandler.of(itemHandler);
     }
 
     @Override
@@ -191,10 +191,11 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
                 return null;
             }
 
-            @Override
+            //1.10 <-> 1.11 @Override
             public int getSlotLimit(int slot) {
                 return 0;
             }
+
         };
     }
 

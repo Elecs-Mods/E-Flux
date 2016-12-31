@@ -264,7 +264,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
 
     @Override
     public String getRequiredElecCoreVersion(String mcVersion) {
-        return mcVersion.equals("1.11") ? ELECCORE_VERSION : null; //TODO
+        return ELECCORE_VERSION;//mcVersion.equals("1.11") ? ELECCORE_VERSION : null; //TODO
     }
 
     public static void systemPrintDebug(Object s){

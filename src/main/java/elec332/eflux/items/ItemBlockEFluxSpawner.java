@@ -1,6 +1,7 @@
 package elec332.eflux.items;
 
 import elec332.core.item.AbstractItemBlock;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
 import net.minecraft.block.Block;
@@ -41,9 +42,9 @@ public class ItemBlockEFluxSpawner extends AbstractItemBlock {
         NBTTagCompound spawnerTag = new NBTTagCompound();
         ((TileEntityMobSpawner) tile).getSpawnerBaseLogic().writeToNBT(spawnerTag);
 
-        if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && WorldHelper.canBlockBePlaced(worldIn, this.block, pos, false, facing, null)) {
+        if (ItemStackHelper.isStackValid(stack) && stack.stackSize != 0 && playerIn.canPlayerEdit(pos, facing, stack) && WorldHelper.canBlockBePlaced(worldIn, this.block, pos, false, facing, null)) {
             int i = this.getMetadata(stack.getMetadata());
-            IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn, hand);
+            IBlockState iblockstate1 = WorldHelper.getBlockStateForPlacement(this.block, worldIn, pos, facing, hitX, hitY, hitZ, i, playerIn, hand);
 
             if (placeBlockAt(stack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1)) {
                 SoundType soundtype = this.block.getSoundType(iblockstate1, worldIn, pos, playerIn);

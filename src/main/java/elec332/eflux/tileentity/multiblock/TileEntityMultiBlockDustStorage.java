@@ -2,6 +2,7 @@ package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.inventory.IDefaultInventory;
 import elec332.core.api.registration.RegisteredTileEntity;
+import elec332.core.inventory.ICompatibleInventory;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.machine.MultiBlockGrinder;
@@ -21,7 +22,7 @@ import javax.annotation.Nonnull;
  * Created by Elec332 on 10-9-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxDustStorage")
-public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements ISidedInventory, IDefaultInventory {
+public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements ICompatibleInventory, ISidedInventory {
 
     private ItemStack stored;
     private boolean redstone;
@@ -84,12 +85,6 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
         return true;//((MultiBlockGrinder)getMultiBlock()).extractItem(p_102008_2_);
     }
 
-    @Nonnull
-    @Override
-    public IInventory getInventory() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public int getSizeInventory() {
         return 1;
@@ -135,8 +130,13 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
     }
 
     @Override
-    public boolean isUsableByPlayer(@Nonnull EntityPlayer p_70300_1_) {
+    public boolean canBeUsedByPlayer(@Nonnull EntityPlayer p_70300_1_) {
         return true;
+    }
+
+    @Override
+    public boolean isInventoryEmpty() {
+        return false;
     }
 
     @Override

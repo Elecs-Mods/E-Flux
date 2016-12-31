@@ -1,6 +1,7 @@
 package elec332.eflux.multiblock.machine;
 
 import com.google.common.collect.Lists;
+import elec332.core.tile.TileBase;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.FurnaceRenderTile;
@@ -51,7 +52,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
         if (getWorldObj().isRemote && frt == null){
             //System.out.println("Set renderer");
             FurnaceRenderTile frt = new FurnaceRenderTile();
-            frt.setWorld(getWorldObj());
+            TileBase.setWorld(frt, getWorldObj());
             frt.setPos(getBlockLocAtTranslatedPos(1, 1, 1));
             frt.setMultiBlock(this, getMultiBlockFacing(), "unknown");
             this.frt = frt;

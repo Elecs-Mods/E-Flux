@@ -8,6 +8,7 @@ import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.api.client.model.map.IBakedModelMetaMap;
 import elec332.core.api.client.model.model.IQuadProvider;
+import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.core.client.model.map.BakedModelMetaMap;
@@ -18,23 +19,19 @@ import elec332.eflux.client.render.FurnaceContentsRenderer;
 import elec332.eflux.client.render.tesr.TESRAreaMover;
 import elec332.eflux.client.render.tesr.TileEntityLaserRenderer;
 import elec332.eflux.client.render.tesr.TileEntityTankRenderer;
-import elec332.eflux.init.BlockRegister;
+import elec332.eflux.multipart.EnumCableType;
 import elec332.eflux.multipart.TileEntityCable;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import elec332.eflux.tileentity.misc.TileEntityTank;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
@@ -85,7 +82,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             public AxisAlignedBB getRenderingBoundingBox(MultiBlockEnderContainer multiblock) {
                 return new AxisAlignedBB(multiblock.getLocation(), multiblock.getBlockLocAtTranslatedPos(2, 2, 2));
             }
-        });*/
+        });
         Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getBlockStateMapper().registerBlockStateMapper(BlockRegister.cable, new StateMapperBase() {
 
             @Override
@@ -94,7 +91,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
                 return new ModelResourceLocation("eflux:i-aint-making-jsons_"+state.getBlock().getMetaFromState(state));
             }
 
-        });
+        });*/
     }
 
     /**
@@ -118,21 +115,25 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
      */
     @Override
     public void registerTextures(IIconRegistrar iconRegistrar) {
-        textures = new TextureAtlasSprite[3];
-        textures[0] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/basicCable"));
-        textures[1] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/normalCable"));
-        textures[2] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/advancedCable"));
+        textures = new TextureAtlasSprite[EnumCableType.values().length];
+        for (EnumCableType cableType : EnumCableType.values()){
+            textures[cableType.ordinal()] = iconRegistrar.registerSprite(new EFluxResourceLocation(cableType.getTextureLocation()));
+        }
     }
 
     private TextureAtlasSprite[] textures;
     private IBakedModelMetaMap<IBakedModel> models;
     private IElecQuadBakery quadBakery;
-
+/*
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_1#multipart"), new CR(1));
         event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_2#multipart"), new CR(2));
+    }*/
+
+    public IBakedModel getCableModel(int i){
+        return new CR(i);
     }
 
     private class CR implements IBakedModel {
@@ -144,6 +145,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         private final int meta;
 
         @Override
+        @Nonnull
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
             return side == null ? new CM((IExtendedBlockState) state, meta).getBakedQuads(state, null, rand) : ImmutableList.<BakedQuad>of();
         }
@@ -171,7 +173,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
         @Override
         @SuppressWarnings("deprecation")
         public ItemCameraTransforms getItemCameraTransforms() {
-            return null;
+            return ElecModelBakery.DEFAULT_BLOCK;
         }
 
         @Override
@@ -184,18 +186,20 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     private class CM implements IQuadProvider {
 
         private CM(IExtendedBlockState state, int meta){
-            up = state.getValue(TileEntityCable.UP);
-            down = state.getValue(TileEntityCable.DOWN);
-            north = state.getValue(TileEntityCable.NORTH);
-            east = state.getValue(TileEntityCable.EAST);
-            south = state.getValue(TileEntityCable.SOUTH);
-            west = state.getValue(TileEntityCable.WEST);
+            if (state != null) {
+                up = state.getValue(TileEntityCable.UP);
+                down = state.getValue(TileEntityCable.DOWN);
+                north = state.getValue(TileEntityCable.NORTH);
+                east = state.getValue(TileEntityCable.EAST);
+                south = state.getValue(TileEntityCable.SOUTH);
+                west = state.getValue(TileEntityCable.WEST);
+            }
             this.meta = meta;
             this.state = state;
         }
 
         private final IBlockState state;
-        private final boolean up, down, north, east, south, west;
+        private boolean up, down, north, east, south, west;
         private final int meta;
 
         @Override
@@ -205,7 +209,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
         @SuppressWarnings("all")
         public List<BakedQuad> getGeneralQuads() {
-            if (up && down && north && east && south && west){
+            if (state == null || up && down && north && east && south && west){
                 return models.forMeta(meta).getQuads(state, null, 0L);
             }
             List<BakedQuad> ret = Lists.newArrayList();

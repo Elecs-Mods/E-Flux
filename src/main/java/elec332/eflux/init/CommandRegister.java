@@ -3,6 +3,7 @@ package elec332.eflux.init;
 import com.google.common.collect.Lists;
 import elec332.core.api.registry.ISingleRegister;
 import elec332.core.main.ElecCore;
+import elec332.core.util.AbstractCommandBase;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -34,22 +35,22 @@ public final class CommandRegister {
     }
 
     public void init(ISingleRegister<ICommand> commandRegistry){
-        commandRegistry.register(new CommandBase() {
+        commandRegistry.register(new AbstractCommandBase() {
 
             private static final String reloadConfig = "reloadConfig";
 
             @Override
-            public String getName() {
+            public String getMCCommandName() {
                 return "EFlux";
             }
 
             @Override
-            public String getUsage(ICommandSender sender) {
+            public String getMCCommandUsage(ICommandSender sender) {
                 return "UsageString";
             }
 
             @Override
-            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            public List<String> getMCTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
                 return Lists.newArrayList(reloadConfig);
             }
 

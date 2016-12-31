@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import elec332.core.java.JavaHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.OredictHelper;
+import elec332.core.util.recipes.IDefaultRecipe;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.recipes.CompressorRecipes;
@@ -19,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -184,7 +184,7 @@ public final class RecipeRegister {
     }
 
     @SuppressWarnings("all")
-    private static class DustRecipe implements IRecipe {
+    private static class DustRecipe implements IDefaultRecipe {
 
         @Override
         public boolean matches(InventoryCrafting inv, World worldIn) {
@@ -239,11 +239,6 @@ public final class RecipeRegister {
         @Override
         public ItemStack getRecipeOutput() {
             return ItemStackHelper.NULL_STACK;
-        }
-
-        @Override
-        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-            return ForgeHooks.defaultRecipeGetRemainingItems(inv);
         }
 
     }

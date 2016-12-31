@@ -1,8 +1,11 @@
 package elec332.eflux.multipart;
 
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.Locale;
 
 /**
  * Created by Elec332 on 17-12-2016.
@@ -39,6 +42,11 @@ public enum EnumCableType implements IStringSerializable {
     @Nonnull
     public String getName() {
         return name;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public String getTextureLocation(){
+        return "blocks/" + toString().toLowerCase(Locale.ENGLISH) + "Cable";
     }
 
 }
