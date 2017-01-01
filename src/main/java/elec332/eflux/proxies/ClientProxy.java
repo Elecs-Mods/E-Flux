@@ -7,7 +7,6 @@ import elec332.core.api.client.model.IElecModelBakery;
 import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.api.client.model.map.IBakedModelMetaMap;
-import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.ElecModelBakery;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.loading.IModelAndTextureLoader;
@@ -37,7 +36,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -122,15 +120,8 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
     }
 
     private TextureAtlasSprite[] textures;
-    private IBakedModelMetaMap<IBakedModel> models;
+    public IBakedModelMetaMap<IBakedModel> models;
     private IElecQuadBakery quadBakery;
-/*
-    @SubscribeEvent
-    public void onModelBakeEvent(ModelBakeEvent event) {
-        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_0#multipart"), new CR(0));
-        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_1#multipart"), new CR(1));
-        event.getModelRegistry().putObject(new ModelResourceLocation("eflux:i-aint-making-jsons_2#multipart"), new CR(2));
-    }*/
 
     public IBakedModel getCableModel(int i){
         return new CR(i);
@@ -146,8 +137,22 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
         @Override
         @Nonnull
-        public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-            return side == null ? new CM((IExtendedBlockState) state, meta).getBakedQuads(state, null, rand) : ImmutableList.<BakedQuad>of();
+        public List<BakedQuad> getQuads(IBlockState state_, EnumFacing side, long rand) {
+            boolean up, down, north, east, south, west;
+            up = down = north = east = south = west = false;
+            if (state_ != null) {
+                IExtendedBlockState state = (IExtendedBlockState) state_;
+                up = state.getValue(TileEntityCable.UP);
+                down = state.getValue(TileEntityCable.DOWN);
+                north = state.getValue(TileEntityCable.NORTH);
+                east = state.getValue(TileEntityCable.EAST);
+                south = state.getValue(TileEntityCable.SOUTH);
+                west = state.getValue(TileEntityCable.WEST);
+            }
+            //if (up && down && north && east && south && west){
+            //    return models.forMeta(meta).getQuads(state_, side, rand);
+            //}
+            return side == null ? getGeneralQuads(up, down, north, east, south, west) : ImmutableList.<BakedQuad>of();
         }
 
         @Override
@@ -157,7 +162,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
         @Override
         public boolean isGui3d() {
-            return false;
+            return true;
         }
 
         @Override
@@ -181,37 +186,8 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
             return ItemOverrideList.NONE;
         }
 
-    }
-
-    private class CM implements IQuadProvider {
-
-        private CM(IExtendedBlockState state, int meta){
-            if (state != null) {
-                up = state.getValue(TileEntityCable.UP);
-                down = state.getValue(TileEntityCable.DOWN);
-                north = state.getValue(TileEntityCable.NORTH);
-                east = state.getValue(TileEntityCable.EAST);
-                south = state.getValue(TileEntityCable.SOUTH);
-                west = state.getValue(TileEntityCable.WEST);
-            }
-            this.meta = meta;
-            this.state = state;
-        }
-
-        private final IBlockState state;
-        private boolean up, down, north, east, south, west;
-        private final int meta;
-
-        @Override
-        public List<BakedQuad> getBakedQuads(@Nullable IBlockState state, EnumFacing side, long random) {
-            return side != null ? ImmutableList.<BakedQuad>of() : getGeneralQuads();
-        }
-
         @SuppressWarnings("all")
-        public List<BakedQuad> getGeneralQuads() {
-            if (state == null || up && down && north && east && south && west){
-                return models.forMeta(meta).getQuads(state, null, 0L);
-            }
+        public List<BakedQuad> getGeneralQuads(boolean up, boolean down, boolean north, boolean east, boolean south, boolean west) {
             List<BakedQuad> ret = Lists.newArrayList();
 
             float thickness = 6;

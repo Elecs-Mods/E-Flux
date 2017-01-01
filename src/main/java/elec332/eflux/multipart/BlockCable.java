@@ -112,7 +112,7 @@ public class BlockCable extends BlockTileBase implements INoJsonBlock {
     @Override
     @SuppressWarnings("all")
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
-        ((TileEntityCable) WorldHelper.getTileAt(world, pos)).addCollisionBoxes(entityBox, collidingBoxes, entityIn);
+        super.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entityIn);//(TileEntityCable) WorldHelper.getTileAt(world, pos)).addCollisionBoxes(entityBox, collidingBoxes, entityIn);
     }
 
     @Override

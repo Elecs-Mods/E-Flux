@@ -128,7 +128,7 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
         if (gridIdentifier != null){
             tag.setString("uidC", gridIdentifier.toString());
         }
-        sendPacket(0, tag);
+        sendPacket(1, tag);
     }
 
     @Override
