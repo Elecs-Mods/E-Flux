@@ -2,7 +2,6 @@ package elec332.eflux.multiblock.machine;
 
 import com.google.common.collect.Lists;
 import elec332.core.tile.TileBase;
-import elec332.core.util.PlayerHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.init.ItemRegister;
@@ -11,7 +10,6 @@ import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;

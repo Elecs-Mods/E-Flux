@@ -1,10 +1,10 @@
 package elec332.eflux.endernetwork.capabilities;
 
 import elec332.core.util.BasicInventory;
+import elec332.core.util.SafeWrappedIItemHandler;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
-import elec332.core.util.SafeWrappedIItemHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;

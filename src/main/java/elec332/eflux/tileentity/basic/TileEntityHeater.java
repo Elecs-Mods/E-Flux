@@ -6,7 +6,6 @@ import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.heat.IHeatReceiver;
-import elec332.eflux.tileentity.multiblock.AbstractTileEntityMultiBlock;
 import elec332.eflux.util.HeatHelper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;

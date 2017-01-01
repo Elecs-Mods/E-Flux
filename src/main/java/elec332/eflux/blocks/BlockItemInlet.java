@@ -1,26 +1,12 @@
 package elec332.eflux.blocks;
 
-import elec332.core.api.client.model.IElecModelBakery;
-import elec332.core.api.client.model.IElecQuadBakery;
-import elec332.core.api.client.model.IElecTemplateBakery;
-import elec332.core.api.client.model.map.IBakedModelMetaRotationMap;
-import elec332.core.client.model.map.BakedModelMetaRotationMap;
-import elec332.core.util.DirectionHelper;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.tileentity.multiblock.TileEntityMultiBlockItemGate;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelRotation;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Elec332 on 13-1-2016.

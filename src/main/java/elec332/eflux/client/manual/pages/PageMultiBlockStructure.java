@@ -1,7 +1,6 @@
 package elec332.eflux.client.manual.pages;
 
 import com.google.common.collect.Lists;
-import elec332.core.client.util.GuiDraw;
 import elec332.core.inventory.tooltip.ToolTip;
 import elec332.core.main.ElecCore;
 import elec332.core.multiblock.BlockStructure;

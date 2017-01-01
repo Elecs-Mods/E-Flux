@@ -1,7 +1,6 @@
 package elec332.eflux.client.render.model;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.template.MutableQuadTemplate;
