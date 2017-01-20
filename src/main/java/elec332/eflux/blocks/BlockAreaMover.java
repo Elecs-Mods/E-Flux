@@ -39,18 +39,13 @@ import java.util.List;
 /**
  * Created by Elec332 on 17-1-2016.
  */
-public class BlockAreaMover extends AbstractBlock implements INoJsonBlock, ITileEntityProvider {
+public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider {
 
     public BlockAreaMover() {
         super(Material.ROCK);
         setUnlocalizedName(EFlux.ModID.toLowerCase()+".areaMover");
         setRegistryName(new EFluxResourceLocation("areaMover"));
     }
-
-    @SideOnly(Side.CLIENT)
-    private IBakedModel model;
-    @SideOnly(Side.CLIENT)
-    private TextureAtlasSprite[] textures;
 
     public BlockAreaMover register(){
         GameRegistry.register(this);
@@ -65,65 +60,17 @@ public class BlockAreaMover extends AbstractBlock implements INoJsonBlock, ITile
         }
     }
 
-    /**
-     * This method is used when a model is requested to render the block in a world.
-     *
-     * @param state The current BlockState.
-     * @return The model to render for this block for the given arguments.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(IBlockState state) {
-        return model;
-    }
-
-    /**
-     * This method is used when a model is requested when its not placed, so for an item.
-     *
-     * @return The model to render when the block is not placed.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
-        return model;
-    }
-
-    /**
-     * A helper method to prevent you from having to hook into the event,
-     * use this to make your quads. (This always comes AFTER the textures are loaded)
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
-        model = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(textures));
-    }
-
-    /**
-     * Use this to register your textures.
-     *
-     * @param iconRegistrar The IIconRegistrar.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(IIconRegistrar iconRegistrar) {
-        textures = new TextureAtlasSprite[6];
-        for (int i = 0; i < 6; i++) {
-            textures[i] = (i == 1) ? iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/moverTop")) : iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/moverSide"));
-        }
-    }
-
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityAreaMover();
     }
 
-    /* TODO: Update with compat
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         int range = TileEntityAreaMover.getRange(stack.getItemDamage());
         tooltip.add("Range: "+range);
-    }*/
+    }
 
     public class BAMItemBlock extends AbstractItemBlock {
 

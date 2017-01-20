@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 13-1-2016.
  */
-public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, ITileEntityProvider {
+public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvider {
 
     public BlockMachineFrame(String name) {
         super(Material.ROCK, name, EFlux.ModID.toLowerCase());
@@ -52,7 +52,7 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @Override
     public BlockMachineFrame register() {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()){
-            registerClient();
+            //registerClient();
         }
         super.register();
         return this;
@@ -72,47 +72,6 @@ public class BlockMachineFrame extends BlockWithMeta implements INoJsonBlock, IT
     @Nonnull
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
-    }
-
-    /**
-     * This method is used when a model is requested to render the block in a world.
-     *
-     * @param state The current BlockState.
-     * @return The model to render for this block for the given arguments.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(IBlockState state) {
-        return model;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
-        return model;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
-        itemModel = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture));
-        model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), quadProvider);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void registerClient(){
-        quadProvider = new MachineFrameQuadProvider();
-    }
-
-    /**
-     * Use this to register your textures.
-     *
-     * @param iconRegistrar The IIconRegistrar.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(IIconRegistrar iconRegistrar) {
-        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/default_side"));
     }
 
     @Override

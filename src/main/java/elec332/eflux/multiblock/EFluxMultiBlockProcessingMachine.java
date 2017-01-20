@@ -55,8 +55,8 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
         for (int i = 0; i < s; i++) {
             ItemStack stack1 = stack.copy();
             stack1.stackSize = 1;
-            if (!InventoryHelper.addItemToInventory(inventory, stack1))
-                return stack;
+            //if (!InventoryHelper.addItemToInventory(inventory, stack1))
+              //todo  return stack;
             stack.stackSize--;
         }
         return ItemStackHelper.NULL_STACK;

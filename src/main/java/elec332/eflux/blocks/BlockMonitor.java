@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 14-1-2016.
  */
-public class BlockMonitor extends AbstractBlock implements IWrenchable, INoJsonBlock, ITileEntityProvider {
+public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEntityProvider {
 
     public BlockMonitor() {
         super(Material.ROCK);
@@ -123,78 +123,6 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, INoJsonB
         } else {
             super.neighborChanged(world, pos, state, neighbor, p_189540_5_);
         }
-    }
-
-    /**
-     * This method is used when a model is requested to render the block in a world.
-     *
-     * @param state The current BlockState.
-     * @return The model to render for this block for the given arguments.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(IBlockState state) {
-        //TileEntityMonitor tile = (TileEntityMonitor)WorldHelper.getTileAt(iba, pos);
-        int meta = 0;
-        //if (tile != null){
-        //    meta = tile.getMonitorSide();
-        //} else {
-         //   Minecraft.getMinecraft().theWorld.markBlockRangeForRenderUpdate(pos, pos);
-        //}
-
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty())));
-    }
-
-    /**
-     * This method is used when a model is requested when its not placed, so for an item.
-     *
-     * @return The model to render when the block is not placed.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
-        return rotationMap.forMeta(stack.getItemDamage());
-    }
-
-    /**
-     * A helper method to prevent you from having to hook into the event,
-     * use this to make your quads. (This always comes AFTER the textures are loaded)
-     *
-     * @param quadBakery     The QuadBakery.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final IElecQuadBakery quadBakery, IElecModelBakery modelBakery, final IElecTemplateBakery templateBakery) {
-        rotationMap = new BakedModelMetaRotationMap<IBakedModel>();
-        rotationMap.setModelsForRotation(0, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorF))));
-        rotationMap.setModelsForRotation(1, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorR))));
-        rotationMap.setModelsForRotation(2, modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(forSpecialFront(monitorL))));
-    }
-
-    /**
-     * Use this to register your textures.
-     *
-     * @param iconRegistrar The IIconRegistrar.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(IIconRegistrar iconRegistrar) {
-        normal = iconRegistrar.registerSprite(getTextureLocation("normal"));
-        monitorF = iconRegistrar.registerSprite(getTextureLocation("monitorFull"));
-        monitorR = iconRegistrar.registerSprite(getTextureLocation("monitorRightSide"));
-        monitorL = iconRegistrar.registerSprite(getTextureLocation("monitorLeftSide"));
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected ResourceLocation getTextureLocation(String s){
-        return new EFluxResourceLocation("blocks/"+s);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected TextureAtlasSprite[] forSpecialFront(TextureAtlasSprite front){
-        return new TextureAtlasSprite[]{
-                normal, normal, front, normal, normal, normal
-        };
     }
 
     private void pokeCheck(IBlockAccess world, BlockPos pos){

@@ -40,7 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class BlockMachine extends BlockTileBase implements INoJsonBlock {
+public class BlockMachine extends BlockTileBase {
 
     public BlockMachine(IEFluxBlockMachineData machine){
         super(machine.getBlockMaterial(), machine.getTileClass(), machine.getName(), EFlux.ModID.toLowerCase());
@@ -85,62 +85,6 @@ public class BlockMachine extends BlockTileBase implements INoJsonBlock {
     protected TextureAtlasSprite[][] textures;
     @SideOnly(Side.CLIENT)
     private IBakedModel model;
-
-    /**
-     * This method is used when a model is requested to render the block in a world.
-     *
-     * @param state The current BlockState.
-     * @return The model to render for this block for the given arguments.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBlockModel(IBlockState state) {
-        /*TileEntity tile = WorldHelper.getTileAt(iba, pos);
-        int meta = (machine.hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive()) ? 1 : 0;
-        return rotationMap.forMetaAndRotation(meta, DirectionHelper.getRotationFromFacing(getFacing(state)));*/
-        return model;
-    }
-
-    /**
-     * This method is used when a model is requested when its not placed, so for an item.
-     *
-     * @return The model to render when the block is not placed.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
-        return model;
-    }
-
-    /**
-     * A helper method to prevent you from having to hook into the event,
-     * use this to make your quads. (This always comes AFTER the textures are loaded)
-     *
-     * @param quadBakery     The QuadBakery.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
-        model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), new BlockMachineQuadProvider(textures, quadBakery)/*modelBakery.forTemplateRotation(templateBakery.newDefaultBlockTemplate(textures[i]))*/);
-    }
-
-    /**
-     * Use this to register your textures.
-     *
-     * @param iconRegistrar The IIconRegistrar.
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(IIconRegistrar iconRegistrar) {
-        int t = machine.hasTwoStates() ? 2 : 1;
-        textures = new TextureAtlasSprite[t][6];
-        for (int i = 0; i < t; i++) {
-            for (EnumFacing facing : EnumFacing.VALUES){
-                String s = machine.getTextureProvider().getIconName(facing, i == 1);
-                textures[i][facing.ordinal()] = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/"+s));
-            }
-        }
-    }
 
     public static EnumFacing getFacing(IBlockAccess iba, BlockPos pos){
         return getFacing(WorldHelper.getBlockState(iba, pos));

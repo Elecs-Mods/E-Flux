@@ -71,7 +71,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     }
 
     public boolean canAddToOutput(ItemStack stack){
-        return InventoryHelper.addItemToInventory(gate, stack);
+        return false;//todo return InventoryHelper.addItemToInventory(gate.getInventory(), stack, false);
     }
 
     public void ejectStack(ItemStack stack){
