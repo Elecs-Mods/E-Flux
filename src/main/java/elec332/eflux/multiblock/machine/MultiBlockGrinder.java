@@ -4,7 +4,7 @@ import elec332.core.util.ItemStackHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
-import elec332.eflux.recipes.old.EnumRecipeMachine;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import elec332.eflux.util.DustPile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 27-8-2015.
@@ -96,7 +98,6 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
         return 500;
     }
 
-
     @Override
     public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
         /*if (!getWorldObj().isRemote){
@@ -113,7 +114,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
         if (startup > .8f && ItemStackHelper.isStackValid(stack)){
             oldProgress++;
             if (oldProgress > 100){
-                inventory.setInventorySlotContents(slot, null);
+                inventory.setStackInSlot(slot, ItemStackHelper.NULL_STACK);
                 resetProgressData(slot);
                 dustPile.addGrindResult(stack);
                 oldProgress = 0;
@@ -125,13 +126,16 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
         return oldProgress;
     }
 
+    @Nonnull
     public ItemStack extractItem(){
-        if (dustPile.getSize() <= 0)
-            return null;
+        if (dustPile.getSize() <= 0) {
+            return ItemStackHelper.NULL_STACK;
+        }
         ItemStack ret = new ItemStack(ItemRegister.groundMesh);
         NBTTagCompound tag = dustPile.getStack();
-        if (tag == null)
-            return null;
+        if (tag == null) {
+            return ItemStackHelper.NULL_STACK;
+        }
         ret.setTagCompound(tag);
         return ret;
     }
@@ -139,7 +143,9 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
     @Override
     public void setBroken(boolean broken) {
         super.setBroken(broken);
-        if (broken)
+        if (broken) {
             startup = 0;
+        }
     }
+
 }

@@ -32,13 +32,13 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
         IEnderNetworkComponent component = EnderConnectionHelper.getClearedComponent(WorldHelper.getTileAt(worldIn, pos), facing);
         if (component != null){
             component.setUUID(getUUID(stack));
         }
-        return super.onItemUse(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
+        return super.onItemUseC(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
     }
 
     @Override

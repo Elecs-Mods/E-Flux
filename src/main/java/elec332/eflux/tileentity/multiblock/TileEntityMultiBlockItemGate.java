@@ -2,39 +2,44 @@ package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
-import elec332.core.api.inventory.IDefaultInventory;
 import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.tile.IActivatableMachine;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
+import elec332.core.util.WrappedItemHandler;
+import elec332.core.world.WorldHelper;
 import elec332.eflux.multiblock.EFluxMultiBlockMachine;
 import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 4-9-2015.
  */
 //TODO: Interface
 @RegisteredTileEntity("TileEntityEFluxMultiBlockItemGate")
-public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements ISidedInventory, IDefaultInventory, IActivatableMachine, ITickable {
+public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine implements IActivatableMachine, ITickable {
 
     public TileEntityMultiBlockItemGate(){
         super();
-        this.inventory = new BasicInventory("itemGate", 3, this);
+        this.inventory = new BasicItemHandler(3);
+        in = WrappedItemHandler.wrap(inventory, true, false);
+        out = WrappedItemHandler.wrap(inventory, false, true);
     }
 
-    private BasicInventory inventory;
+    private BasicItemHandler inventory;
+    private IItemHandler in, out;
     private int mode;
     private boolean hasFilter;
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         inventory.writeToNBT(tagCompound);
@@ -44,7 +49,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        inventory.readFromNBT(tagCompound);
+        inventory.deserializeNBT(tagCompound);
     }
 
     @Override
@@ -63,7 +68,7 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
 
     @Override
     public void onBlockRemoved() {
-        InventoryHelper.dropInventoryItems(getWorld(), pos, this);
+        WorldHelper.dropInventoryItems(getWorld(), pos, inventory);
         super.onBlockRemoved();
     }
 
@@ -75,8 +80,8 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
     @Override
     public void update() {
         if (!getWorld().isRemote && isInputMode() && timeCheck() && getMultiBlock() != null){
-            for (int i = 0; i < inventory.getSizeInventory(); i++) {
-                inventory.setInventorySlotContents(i, (((EFluxMultiBlockMachine)getMultiBlock())).inject(inventory.getStackInSlot(i)));
+            for (int i = 0; i < inventory.getSlots(); i++) {
+                inventory.setStackInSlot(i, (((EFluxMultiBlockMachine)getMultiBlock())).inject(inventory.getStackInSlot(i)));
             }
         }
     }
@@ -112,21 +117,6 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
         super.addInformation(information, hitData);
     }
 
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == getTileFacing() ? allSlots(inventory.getSizeInventory()) : new int[0];
-    }
-
-    @Override
-    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        return side == getTileFacing() && isInputMode() && isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
-        return side == getTileFacing() && isOutputMode();
-    }
-
     private int[] allSlots(int i){
         int[] ret = new int[i];
         for (int j = 0; j < i; j++) {
@@ -143,15 +133,31 @@ public class TileEntityMultiBlockItemGate extends TileEntityBlockMachine impleme
         return mode == 1;
     }
 
-    @Nonnull
-    @Override
-    public IInventory getInventory() {
-        return inventory;
+    @Nullable
+    private IItemHandler getInv(EnumFacing side){
+        if (side == getTileFacing()){
+            if (isInputMode()){
+                return in;
+            }
+            return out;
+        }
+        return null;
     }
 
     @Override
     public boolean isActive() {
         return isInputMode();
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, boolean hasMultiBlock) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing, hasMultiBlock);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) getInv(facing) : super.getCapability(capability, facing, hasMultiBlock);
     }
 
 }

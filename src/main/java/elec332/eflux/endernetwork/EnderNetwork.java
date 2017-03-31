@@ -95,7 +95,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     private boolean powered;
     private int drain;
 
-    private int endergyProduction_MAX = 640;
+    private static final int endergyProduction_MAX = 640;
 
     private int endergy;
     private int maxEndergy = 1000;
@@ -262,13 +262,13 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
         }
         List<IStableEnderConnection> list = activeConnections[i];
         if (list != null){
-            for (IStableEnderConnection connection : list){
+            for (IStableEnderConnection<?> connection : list){
                 disconnect_internal(connection, DisconnectReason.CAPABILITY_REMOVED);
             }
         }
         activeConnections[i] = null;
         if (capability != null) {
-            linkedReferences[i] = new WeakReference<IEnderCapability>(capability);
+            linkedReferences[i] = new WeakReference<>(capability);
             activeConnections[i] = Lists.newArrayList();
             if (side.isServer()) {
                 capabilityNetworkHandlers[i] = new CapabilityNetworkHandler(i, this);
@@ -307,7 +307,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
             if (!powered){
                 disconnectAll(DisconnectReason.OUT_OF_POWER);
                 for (int i = 0; i < capabilities.length; i++) {
-                    linkedReferences[i] = new WeakReference<IEnderCapability>(capabilities[i]);
+                    linkedReferences[i] = new WeakReference<>(capabilities[i]);
                 }
                 for (IEnderCapability capability : capabilities){
                     if (capability != null){

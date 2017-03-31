@@ -28,13 +28,13 @@ public class ItemEFluxEnderLink extends AbstractTexturedEFluxItem implements IEn
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
         IEnderNetworkComponent component = EnderConnectionHelper.getClearedComponent(WorldHelper.getTileAt(worldIn, pos), null);
         if (component != null) {
             component.setUUID(getNetworkID(stack));
         }
-        return super.onItemUse(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
+        return super.onItemUseC(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
     }
 
     @Override

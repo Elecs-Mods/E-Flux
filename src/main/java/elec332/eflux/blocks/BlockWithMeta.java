@@ -1,6 +1,7 @@
 package elec332.eflux.blocks;
 
 import elec332.core.tile.AbstractBlock;
+import elec332.eflux.items.AbstractTexturedItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -9,7 +10,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -47,6 +47,7 @@ public abstract class BlockWithMeta extends AbstractBlock {
 
     @Override
     @Nonnull
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return getBlockState().getBaseState().withProperty(getProperty(), meta);
     }
@@ -73,7 +74,7 @@ public abstract class BlockWithMeta extends AbstractBlock {
     }
 
     @Override
-    protected void getSubBlocks(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
+    public void getSubBlocksC(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
         for (int i = 0; i < getTypes(); i++) {
             subBlocks.add(new ItemStack(item, 1, i));
         }
@@ -86,12 +87,13 @@ public abstract class BlockWithMeta extends AbstractBlock {
         return getMetaFromState(state);
     }
 
-    public static class MetaItemBlock extends ItemBlock {
+    public static class MetaItemBlock extends AbstractTexturedItemBlock {
 
         public MetaItemBlock(Block block) {
             super(block);
-            if (!(block instanceof BlockWithMeta))
+            if (!(block instanceof BlockWithMeta)) {
                 throw new IllegalArgumentException();
+            }
             this.setHasSubtypes(true);
             this.setMaxDamage(0);
         }
@@ -102,6 +104,7 @@ public abstract class BlockWithMeta extends AbstractBlock {
         }
 
         @Override
+        @Nonnull
         public String getUnlocalizedName(ItemStack stack) {
             return ((BlockWithMeta) block).getUnlocalizedName(stack);
         }

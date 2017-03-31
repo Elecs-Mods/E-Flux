@@ -29,7 +29,7 @@ public class ItemEFluxEnderConfigurator extends AbstractTexturedEFluxItem {
 
     @Override
     @Nonnull
-    public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote){
             return EnumActionResult.SUCCESS;
         }

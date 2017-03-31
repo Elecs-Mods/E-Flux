@@ -21,7 +21,7 @@ public class ItemEFluxMultiBlockCreator extends AbstractTexturedEFluxItem {
 
     @Nonnull
     @Override
-    protected EnumActionResult onItemUse(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         EFlux.multiBlockRegistry.getStructureRegistry().attemptCreate(player, world, pos, facing);
         return EnumActionResult.PASS;
     }

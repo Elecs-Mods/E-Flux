@@ -37,7 +37,7 @@ public class ItemEFluxWrench extends AbstractTexturedEFluxItem implements IRight
 
     @Nonnull
     @Override
-    protected EnumActionResult onItemUse(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             ItemStack stack = player.getHeldItem(hand);
             Block block = WorldHelper.getBlockAt(world, pos);

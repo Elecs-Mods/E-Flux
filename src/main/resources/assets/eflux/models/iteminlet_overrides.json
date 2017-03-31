@@ -1,0 +1,7 @@
+{
+	"textureOverrides": {
+		"activated": {
+			"true": "eflux:blocks/iteminletfront-eflux:blocks/itemoutletfront"
+		}
+	}
+}

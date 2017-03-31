@@ -5,6 +5,7 @@ import elec332.core.api.client.ITextureLoader;
 import elec332.core.client.RenderHelper;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.tesselator.ElecTessellator;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
 import net.minecraft.client.Minecraft;
@@ -12,11 +13,11 @@ import net.minecraft.client.renderer.entity.RenderEntityItem;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -36,9 +37,9 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
 
     @Override
     public void renderTileEntityAt(FurnaceRenderTile tile, double x, double y, double z, float f, int what) {
-        IInventory inventory = tile.getInv();
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (inventory.getStackInSlot(i) != null) {
+        IItemHandler inventory = tile.getInv();
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            if (ItemStackHelper.isStackValid(inventory.getStackInSlot(i))) {
                 renderItemStack(inventory.getStackInSlot(i), x, y, z, i, i < 4 ? 0 : 1);
             }
         }

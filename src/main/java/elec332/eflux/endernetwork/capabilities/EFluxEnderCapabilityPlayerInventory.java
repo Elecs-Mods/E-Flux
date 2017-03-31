@@ -1,15 +1,18 @@
 package elec332.eflux.endernetwork.capabilities;
 
 import elec332.core.server.ServerHelper;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.IElecItemHandler;
+import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.util.SafeWrappedIItemHandler;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,6 +36,7 @@ import java.util.UUID;
  */
 public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability<IItemHandler> {
 
+    @SuppressWarnings("unused")
     public EFluxEnderCapabilityPlayerInventory(Side side, IEnderNetwork network) {
         super(side, network);
         if (side.isServer()) {
@@ -105,8 +109,9 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
                 itemHandler = NULL_INVENTORY;
             }
         } else {
-            if (Minecraft.getMinecraft().getConnection().getPlayerInfo(this.player) != null){
-                itemHandler = new InvWrapper(new BasicInventory("", 36));
+            NetworkPlayerInfo info = getPlayerInfo();
+            if (info != null){
+                itemHandler = new InvWrapper(new InventoryBasic("", false, 36));
             } else {
                 itemHandler = NULL_INVENTORY;
             }
@@ -117,8 +122,7 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
     @Override
     public void addInformation(List<String> list) {
         list.add("");
-        //EntityPlayerMP player = ServerHelper.instance.getRealPlayer(this.player);
-        NetworkPlayerInfo info = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.player);
+        NetworkPlayerInfo info = getPlayerInfo();
         list.add(info == null ? null : info.getGameProfile().getName());
     }
 
@@ -164,11 +168,20 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
         }
     }
 
+    @Nullable
+    private NetworkPlayerInfo getPlayerInfo(){
+        NetHandlerPlayClient netHandler = Minecraft.getMinecraft().getConnection();
+        if (netHandler == null){
+            return null;
+        }
+        return netHandler.getPlayerInfo(this.player);
+    }
+
     static {
-        NULL_INVENTORY = new IItemHandlerModifiable() {
+        NULL_INVENTORY = new IElecItemHandler() {
 
             @Override
-            public void setStackInSlot(int slot, ItemStack stack) {
+            public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
             }
 
             @Override
@@ -177,26 +190,30 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
             }
 
             @Override
+            @Nonnull
             public ItemStack getStackInSlot(int slot) {
-                return null;
+                return ItemStackHelper.NULL_STACK;
             }
 
             @Override
-            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            @Nonnull
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
                 return stack;
             }
 
             @Override
+            @Nonnull
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                return null;
+                return ItemStackHelper.NULL_STACK;
             }
 
-            //1.10 <-> 1.11 @Override
+            @Override
             public int getSlotLimit(int slot) {
                 return 0;
             }
 
         };
+
     }
 
 }

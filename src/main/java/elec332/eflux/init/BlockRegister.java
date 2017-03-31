@@ -6,6 +6,7 @@ import elec332.eflux.blocks.*;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
+import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.items.ItemBlockEFluxChunkLoader;
 import elec332.eflux.items.ItemBlockEFluxSpawner;
 import elec332.eflux.multipart.BlockCable;
@@ -165,7 +166,7 @@ public final class BlockRegister {
 
         @Override
         public Class<? extends ItemBlock> getItemBlockClass() {
-            return ItemBlock.class;
+            return AbstractTexturedItemBlock.class;
         }
 
         @Override
@@ -242,7 +243,7 @@ public final class BlockRegister {
 
         @Override
         public Class<? extends ItemBlock> getItemBlockClass() {
-            return ItemBlock.class;
+            return AbstractTexturedItemBlock.class;
         }
 
         @Override

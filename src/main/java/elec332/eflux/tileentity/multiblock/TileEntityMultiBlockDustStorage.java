@@ -1,18 +1,12 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.inventory.ICompatibleInventory;
+import elec332.core.util.IElecItemHandler;
 import elec332.core.util.ItemStackHelper;
-import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nonnull;
 
@@ -20,9 +14,10 @@ import javax.annotation.Nonnull;
  * Created by Elec332 on 10-9-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxDustStorage")
-public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements ICompatibleInventory, ISidedInventory {
+public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements IElecItemHandler {
 
-    private ItemStack stored;
+    @Nonnull
+    private ItemStack stored = ItemStackHelper.NULL_STACK;
     private boolean redstone;
 
     @Override
@@ -39,7 +34,7 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
     }
 
     private void pulse(){
-        if (stored == null && getMultiBlock() != null){
+        if (!ItemStackHelper.isStackValid(stored) && getMultiBlock() != null){
             stored = ((MultiBlockGrinder)getMultiBlock()).extractItem();
             markDirty();
         }
@@ -68,132 +63,53 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
     }
 
     @Override
-    @Nonnull
-    public int[] getSlotsForFace(@Nonnull EnumFacing s) {
-        return new int[]{0};
-    }
-
-    @Override
-    public boolean canInsertItem(int p_102007_1_, @Nonnull ItemStack p_102007_2_, @Nonnull EnumFacing p_102007_3_) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractItem(int p_102008_1_, @Nonnull ItemStack p_102008_2_, @Nonnull EnumFacing p_102008_3_) {
-        return true;//((MultiBlockGrinder)getMultiBlock()).extractItem(p_102008_2_);
-    }
-
-    @Override
-    public int getSizeInventory() {
+    public int getSlots() {
         return 1;
     }
 
-    @Override
     @Nonnull
-    public ItemStack getStackInSlot(int p_70301_1_) {
-        if (p_70301_1_ == 0)
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        if (slot == 0){
             return stored;
+        }
         return ItemStackHelper.NULL_STACK;
     }
 
-    @Override
     @Nonnull
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-        if (p_70298_1_ == 0) {
-            final ItemStack ret = stored;
-            stored = null;
-            return ret;
+    @Override
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        return stack; //No insertion possible
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot == 0 && amount > 0 && ItemStackHelper.isStackValid(stored)){
+            ItemStack ret = ItemStackHelper.copyItemStack(stored);
+            if (ret.stackSize <= amount){
+                this.stored = ItemStackHelper.NULL_STACK;
+                return ret;
+            } else {
+                ret.stackSize = amount;
+                this.stored.stackSize -= amount;
+                return ret;
+            }
         }
         return ItemStackHelper.NULL_STACK;
     }
 
     @Override
-    @Nonnull
-    public ItemStack removeStackFromSlot(int p_70304_1_) {
-        return ItemStackHelper.NULL_STACK;
+    public int getSlotLimit(int i) {
+        return 64;
     }
 
     @Override
-    public void setInventorySlotContents(int p_70299_1_, @Nonnull ItemStack p_70299_2_) {
-        if (stored == null && ItemStackHelper.isStackValid(p_70299_2_) && p_70299_2_.getItem() == ItemRegister.groundMesh){
-            stored = p_70299_2_;
-            return;
+    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
+        if (slot != 0){
+            throw new IllegalArgumentException();
         }
-        throw new RuntimeException();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 1;
-    }
-
-    @Override
-    public boolean canBeUsedByPlayer(@Nonnull EntityPlayer p_70300_1_) {
-        return true;
-    }
-
-    @Override
-    public boolean isInventoryEmpty() {
-        return false;
-    }
-
-    @Override
-    public void openInventory(@Nonnull EntityPlayer player) {
-    }
-
-    @Override
-    public void closeInventory(@Nonnull EntityPlayer player) {
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int p_94041_1_, @Nonnull ItemStack p_94041_2_) {
-        return false;
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
-     */
-    @Override
-    @Nonnull
-    public String getName() {
-        return "";
-    }
-
-    /**
-     * Returns true if this thing is named
-     */
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    /**
-     * Get the formatted ChatComponent that will be used for the sender's username in chat
-     */
-    @Override
-    @Nonnull
-    public ITextComponent getDisplayName() {
-        return new TextComponentString("");
+        stored = stack;
     }
 
 }

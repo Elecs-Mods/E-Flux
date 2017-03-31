@@ -55,14 +55,13 @@ public class BlockItemInlet extends BlockMachine {
     static {
         DATA = new AbstractEFluxBlockMachineData() {
 
-            private final IBlockTextureProvider textureProvider = new IBlockTextureProvider() {
-                @Override
-                public String getIconName(EnumFacing side, boolean active) {
-                    if (side == EnumFacing.NORTH){
-                        return active ? "itemInletFront" : "itemOutletFront";
-                    }
-                    return BlockTextures.defaultSideTexture;
+            private final IBlockTextureProvider textureProvider = (side, active) -> {
+
+                if (side == EnumFacing.NORTH){
+                    return active ? "itemInletFront" : "itemOutletFront";
                 }
+                return BlockTextures.defaultSideTexture;
+
             };
 
             @Override

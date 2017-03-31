@@ -1,6 +1,5 @@
 package elec332.eflux.recipes;
 
-import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.item.ItemStack;
 
 /**

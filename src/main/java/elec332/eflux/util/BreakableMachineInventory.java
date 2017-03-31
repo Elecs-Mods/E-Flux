@@ -1,11 +1,10 @@
 package elec332.eflux.util;
 
 import com.google.common.base.Objects;
-import elec332.core.inventory.ICompatibleInventory;
 import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.Window;
 import elec332.core.main.ElecCore;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.util.IBreakableMachine;
@@ -18,30 +17,26 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public class BreakableMachineInventory implements ICompatibleInventory {
+public class BreakableMachineInventory extends BasicItemHandler {
 
     public BreakableMachineInventory(IBreakableMachine tile, ItemStack s){
+        super(1);
         this.i = tile;
         this.repairItem = s;
-        this.inventoryContent = new ItemStack[]{
-                ItemStackHelper.NULL_STACK
-        };
     }
 
-    private ItemStack[] inventoryContent;
     private IBreakableMachine i;
     private ItemStack repairItem;
 
@@ -52,11 +47,11 @@ public class BreakableMachineInventory implements ICompatibleInventory {
     public Window brokenGui() {
         return new Window() {
 
-            IInventory fake = new BasicInventory("", 1);
+            IInventory fake = new InventoryBasic("<FAKE>", false, 1);
 
             @Override
             protected void initWindow() {
-                addWidget(new WidgetSlot(new InvWrapper(BreakableMachineInventory.this), 0, 66, 53));
+                addWidget(new WidgetSlot(BreakableMachineInventory.this, 0, 66, 53));
                 addPlayerInventoryToContainer();
             }
 
@@ -115,6 +110,11 @@ public class BreakableMachineInventory implements ICompatibleInventory {
                 itemRender.zLevel = 0.0F;
             }
 
+            @Override
+            public void onWindowClosed(EntityPlayer playerIn) {
+                super.onWindowClosed(playerIn);
+                canFix();
+            }
 
             @Override
             public ResourceLocation getBackgroundImageLocation() {
@@ -124,144 +124,35 @@ public class BreakableMachineInventory implements ICompatibleInventory {
         };
     }
 
-    @Override
-    public int getSizeInventory() {
-        return 1;
-    }
-
-    @Override
-    public boolean canBeUsedByPlayer(@Nonnull EntityPlayer player) {
-        return i.isBroken();
-    }
-
-    @Override
-    public boolean isInventoryEmpty() {
-        return false;
-    }
-
-    @Override
     @Nonnull
-    public ItemStack getStackInSlot(int slot) {
-        return inventoryContent[slot];
-    }
-
     @Override
-    @Nonnull
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-        if(this.inventoryContent[p_70298_1_] != null) {
-            ItemStack itemstack;
-            if(this.inventoryContent[p_70298_1_].stackSize <= p_70298_2_) {
-                itemstack = this.inventoryContent[p_70298_1_];
-                this.inventoryContent[p_70298_1_] = ItemStackHelper.NULL_STACK;
-                this.markDirty();
-                return itemstack;
-            } else {
-                itemstack = this.inventoryContent[p_70298_1_].splitStack(p_70298_2_);
-                if(this.inventoryContent[p_70298_1_].stackSize == 0) {
-                    this.inventoryContent[p_70298_1_] = ItemStackHelper.NULL_STACK;
-                }
-
-                this.markDirty();
-                return itemstack;
-            }
-        } else {
-            return ItemStackHelper.NULL_STACK;
-        }
-    }
-
-    @Override
-    @Nonnull
-    public ItemStack removeStackFromSlot(int p_70304_1_) {
-        if(this.inventoryContent[p_70304_1_] != null) {
-            ItemStack itemstack = this.inventoryContent[p_70304_1_];
-            this.inventoryContent[p_70304_1_] = ItemStackHelper.NULL_STACK;
-            return itemstack;
-        } else {
-            return ItemStackHelper.NULL_STACK;
-        }
-    }
-
-    @Override
-    public void setInventorySlotContents(int p_70299_1_, @Nonnull ItemStack p_70299_2_) {
-        this.inventoryContent[p_70299_1_] = p_70299_2_;
-        if(ItemStackHelper.isStackValid(p_70299_2_) && p_70299_2_.stackSize > this.getInventoryStackLimit()) {
-            p_70299_2_.stackSize = this.getInventoryStackLimit();
-        }
-        this.markDirty();
-    }
-
-    @Override
-    @Nonnull
-    public String getName() {
-        return "BrokenMachine";
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return true;
-    }
-
-    /**
-     * Get the formatted ChatComponent that will be used for the sender's username in chat
-     */
-    @Override
-    @Nonnull
-    @SuppressWarnings("all")
-    public ITextComponent getDisplayName() {
-        return null;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public void markDirty() {
-
-    }
-
-    @Override
-    public void openInventory(@Nonnull EntityPlayer player) {
-
-    }
-
-    @Override
-    public void closeInventory(@Nonnull EntityPlayer player) {
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        ItemStack ret = super.insertItem(slot, stack, simulate);
         canFix();
+        return ret;
+    }
+
+    @Override
+    public boolean canInsert(int slot, @Nonnull ItemStack stack) {
+        return InventoryHelper.areEqualNoSize(stack, repairItem);
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack ret = super.extractItem(slot, amount, simulate);
+        canFix();
+        return ret;
     }
 
     @SuppressWarnings("all")
     public boolean canFix(){
-        if (InventoryHelper.areEqualNoSize(inventoryContent[0], repairItem) && inventoryContent[0].stackSize == repairItem.stackSize) {
+        if (InventoryHelper.areEqualNoSize(getStackInSlot(0), repairItem) && getStackInSlot(0).stackSize == repairItem.stackSize) {
             i.setBroken(false);
-            inventoryContent[0] = ItemStackHelper.NULL_STACK;
+            setStackInSlot(0, ItemStackHelper.NULL_STACK);
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean isItemValidForSlot(int p_94041_1_, @Nonnull ItemStack p_94041_2_) {
-        return InventoryHelper.areEqualNoSizeNoNBT(p_94041_2_, repairItem);
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
-    }
 }

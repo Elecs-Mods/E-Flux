@@ -1,28 +1,19 @@
 package elec332.eflux.blocks;
 
-import elec332.core.api.client.IIconRegistrar;
-import elec332.core.api.client.model.IElecModelBakery;
-import elec332.core.api.client.model.IElecQuadBakery;
-import elec332.core.api.client.model.IElecTemplateBakery;
-import elec332.core.api.client.model.map.IBakedModelMetaRotationMap;
 import elec332.core.api.wrench.IWrenchable;
-import elec332.core.client.model.loading.INoJsonBlock;
-import elec332.core.client.model.map.BakedModelMetaRotationMap;
+import elec332.core.client.model.loading.INoBlockStateJsonBlock;
 import elec332.core.tile.AbstractBlock;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BlockStateHelper;
 import elec332.core.util.DirectionHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.tileentity.basic.TileEntityMonitor;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -30,21 +21,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
 /**
  * Created by Elec332 on 14-1-2016.
  */
-public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEntityProvider {
+public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEntityProvider, INoBlockStateJsonBlock.DefaultImpl {
 
     public BlockMonitor() {
         super(Material.ROCK);
@@ -54,11 +42,11 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
         setHardness(2.5f);
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
     }
-
+/*
     @SideOnly(Side.CLIENT)
     private IBakedModelMetaRotationMap<IBakedModel> rotationMap;
     @SideOnly(Side.CLIENT)
-    public static TextureAtlasSprite normal, monitorF, monitorR, monitorL;
+    public static TextureAtlasSprite normal, monitorF, monitorR, monitorL;&*/
 
     public BlockMonitor register(){
         GameRegistry.register(this);
@@ -67,11 +55,11 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
     }
 
     @Override
-    protected boolean onBlockActivated(World world, BlockPos pos, EntityPlayer player, EnumHand hand, IBlockState state, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedC(World world, BlockPos pos, EntityPlayer player, EnumHand hand, IBlockState state, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileBase)
             return ((TileBase) tile).onBlockActivated(state, player, hand, facing, hitX, hitY, hitZ);
-        return super.onBlockActivated(world, pos, player, hand, state, facing, hitX, hitY, hitZ);
+        return super.onBlockActivatedC(world, pos, player, hand, state, facing, hitX, hitY, hitZ);
     }
 
     @Override
@@ -96,7 +84,8 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
     }
 
     @Override
-    public IBlockState getBlockStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    @Nonnull
+    public IBlockState getBlockStateForPlacementC(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         pokeCheck(world, pos);
         return getBlockState().getBaseState().withProperty(BlockStateHelper.FACING_NORMAL.getProperty(), DirectionHelper.getFacingOnPlacement(placer));
     }
@@ -114,14 +103,14 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
     }
 
     @Override
-    protected void neighborChanged(World world, BlockPos pos, IBlockState state, Block neighbor, BlockPos p_189540_5_) {
+    public void neighborChangedC(World world, BlockPos pos, IBlockState state, Block neighbor, BlockPos p_189540_5_) {
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityMonitor) {
             ((TileEntityMonitor) tile).pokeCheckStuff();
         } else if (tile instanceof TileBase) {
             ((TileBase) tile).onNeighborBlockChange(neighbor);
         } else {
-            super.neighborChanged(world, pos, state, neighbor, p_189540_5_);
+            super.neighborChangedC(world, pos, state, neighbor, p_189540_5_);
         }
     }
 
@@ -138,6 +127,7 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
 
     @Override
     @Nonnull
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return BlockStateHelper.FACING_NORMAL.getStateForMeta(this, meta);
     }

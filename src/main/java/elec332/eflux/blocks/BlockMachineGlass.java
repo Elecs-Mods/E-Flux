@@ -4,6 +4,8 @@ import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 2-9-2015.
  */
@@ -19,6 +21,7 @@ public class BlockMachineGlass extends BlockMachine {
     }
 
     @Override
+    @Nonnull
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }

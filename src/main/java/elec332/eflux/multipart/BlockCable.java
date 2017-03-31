@@ -70,7 +70,7 @@ public class BlockCable extends BlockTileBase implements INoJsonBlock {
     }
 
     @Override
-    protected void getSubBlocks(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
+    public void getSubBlocksC(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
         for (int i = 0; i < EnumCableType.values().length; i++) {
             subBlocks.add(new ItemStack(item, 1, i));
         }
@@ -88,7 +88,7 @@ public class BlockCable extends BlockTileBase implements INoJsonBlock {
     }
 
     @Override
-    public IBlockState getBlockStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public IBlockState getBlockStateForPlacementC(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return getStateFromMeta(meta);
     }
 
@@ -128,8 +128,8 @@ public class BlockCable extends BlockTileBase implements INoJsonBlock {
 
     @Nullable
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state) {
-        return super.getCollisionBoundingBox(world, pos, state);
+    public AxisAlignedBB getCollisionBoundingBoxC(IBlockAccess world, BlockPos pos, IBlockState state) {
+        return super.getCollisionBoundingBoxC(world, pos, state);
     }
 
     @Override

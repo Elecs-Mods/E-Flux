@@ -20,16 +20,15 @@ public class EnderCapabilityHelper {
         return new DefaultFactory(name, factory, textures);
     }
 
-    public static Function<Pair<Side, IEnderNetwork>, IEnderCapability> getConstructor(Class<? extends AbstractEnderCapability> clazz){
-        return new Function<Pair<Side, IEnderNetwork>, IEnderCapability>() {
-            @Override
-            public IEnderCapability apply(Pair<Side, IEnderNetwork> params) {
-                try {
-                    return clazz.getConstructor(Side.class, IEnderNetwork.class).newInstance(params.getLeft(), params.getRight());
-                } catch (Exception e){
-                    throw new RuntimeException(e);
-                }
+    public static Function<Pair<Side, IEnderNetwork>, IEnderCapability> getConstructor(final Class<? extends AbstractEnderCapability> clazz){
+        return params -> {
+
+            try {
+                return clazz.getConstructor(Side.class, IEnderNetwork.class).newInstance(params.getLeft(), params.getRight());
+            } catch (Exception e){
+                throw new RuntimeException(e);
             }
+
         };
     }
 

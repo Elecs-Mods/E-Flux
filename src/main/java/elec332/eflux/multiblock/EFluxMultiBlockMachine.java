@@ -5,7 +5,6 @@ import elec332.core.api.info.IInformation;
 import elec332.core.inventory.window.IWindowFactory;
 import elec332.core.inventory.window.Window;
 import elec332.core.multiblock.AbstractMultiBlock;
-import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.energy.IEnergyReceiver;

@@ -4,6 +4,7 @@ import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
 import elec332.eflux.client.blocktextures.BlockTextures;
 import elec332.eflux.client.blocktextures.IBlockTextureProvider;
+import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.tileentity.ender.TileEntityEnderChest;
 import elec332.eflux.tileentity.energy.generator.TileEntityCoalGenerator;
 import elec332.eflux.tileentity.energy.machine.*;
@@ -72,7 +73,7 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     private EnumMachines(Class<? extends TileEntity> tileClass){
         this.tileClass = tileClass;
         this.textureProvider = BlockTextures.getDefaultProvider();
-        this.itemBlockClass = ItemBlock.class;
+        this.itemBlockClass = AbstractTexturedItemBlock.class;
     }
 
     private EnumMachines (Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){

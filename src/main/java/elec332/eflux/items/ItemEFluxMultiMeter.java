@@ -27,7 +27,7 @@ public class ItemEFluxMultiMeter extends AbstractTexturedEFluxItem implements IR
 
     @Nonnull
     @Override
-    protected EnumActionResult onItemUse(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             IEnergyGridInformation info = EFlux.gridHandler.getInformationFor(new DimensionCoordinate(world, pos));
             if (info != null){
@@ -37,4 +37,5 @@ public class ItemEFluxMultiMeter extends AbstractTexturedEFluxItem implements IR
         }
         return EnumActionResult.SUCCESS;
     }
+
 }

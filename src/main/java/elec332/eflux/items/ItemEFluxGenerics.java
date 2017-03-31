@@ -64,7 +64,7 @@ public class ItemEFluxGenerics extends AbstractEFluxItem implements INoJsonItem 
     }
 
     @Override
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+    public void getSubItemsC(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i = 0; i < components.length; i++){
             subItems.add(new ItemStack(item, 1, i));
         }

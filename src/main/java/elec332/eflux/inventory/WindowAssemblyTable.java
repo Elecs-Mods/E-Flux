@@ -5,7 +5,7 @@ import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.IWindowListener;
 import elec332.core.inventory.window.Window;
 import elec332.core.main.ElecCore;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.MinecraftList;
 import elec332.eflux.api.circuit.CircuitHelper;
@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -53,16 +52,15 @@ public class WindowAssemblyTable extends Window {
             public boolean isItemValid(ItemStack stack) {
                 return CircuitHelper.getCircuit(stack) != null;
             }
-
-
+            
         });
         this.circuit = new InventoryCircuit();
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                assemblies.add(this.addWidget(new WidgetSlotAssembly(new InvWrapper(circuit), j + i * 3, 30 + j * 18, 17 + i * 18)));
+                assemblies.add(this.addWidget(new WidgetSlotAssembly(circuit, j + i * 3, 30 + j * 18, 17 + i * 18)));
             }
         }
-        circuit.openInventory(getPlayer());
+        circuit.checkOpen();
         ItemStack stack = circuitItem.getStackInSlot(0);
         if (CircuitHelper.isEtchedCircuit(stack)) {
             circuit.setStack(stack);
@@ -71,6 +69,7 @@ public class WindowAssemblyTable extends Window {
         syncSlots();
         if (!getPlayer().getEntityWorld().isRemote){
             tickable = new Runnable() {
+
                 @Override
                 public void run() {
                     canClick = assemblyTable.getStoredPower() >= 200;
@@ -78,6 +77,7 @@ public class WindowAssemblyTable extends Window {
                         crafting.sendProgressBarUpdate(3, canClick ? 1 : 0);
                     }
                 }
+
             };
             ElecCore.tickHandler.registerTickable(tickable, Side.SERVER);
         }
@@ -147,6 +147,7 @@ public class WindowAssemblyTable extends Window {
         if (!player.getEntityWorld().isRemote) {
             ElecCore.tickHandler.removeTickable(tickable);
         }
+        circuit.checkClose();
     }
 
     @Override
@@ -158,10 +159,10 @@ public class WindowAssemblyTable extends Window {
         super.handleMouseClick(slotIn, slotId, mouseButton, type);
     }
 
-    private class InventoryCircuit extends BasicInventory {
+    private class InventoryCircuit extends BasicItemHandler {
 
         private InventoryCircuit(){
-            super("NAME", 9);
+            super(9);
         }
 
         public void setStack(ItemStack stack) {
@@ -179,49 +180,31 @@ public class WindowAssemblyTable extends Window {
 
         private ItemStack stack;
 
-        @Override
-        public void openInventory(@Nonnull EntityPlayer player) {
-            checkOpen();
-        }
-
-        @Override
-        public void setInventorySlotContents(int slotID, @Nonnull ItemStack stack) {
-            if (slotID >= inventoryContents.size()){
-                return;
-            }
-            super.setInventorySlotContents(slotID, stack);
-        }
-
         private void checkOpen(){
             if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
-                inventoryContents = (MinecraftList<ItemStack>) circuit.getSolderedComponents();
+                stacks = circuit.getSolderedComponents();
             }
-        }
-
-        @Override
-        public void closeInventory(@Nonnull EntityPlayer player) {
-            checkClose();
         }
 
         private void checkClose(){
             if (ItemStackHelper.isStackValid(stack)) {
-                markDirty();
-                inventoryContents = MinecraftList.create(0, ItemStackHelper.NULL_STACK);
+                onContentsChanged(-1);
+                stacks = MinecraftList.create(0, ItemStackHelper.NULL_STACK);
             }
         }
 
         @Override
-        public void markDirty() {
+        protected void onContentsChanged(int slot) {
             if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
-                circuit.setSolderedComponents(inventoryContents);
+                circuit.setSolderedComponents(stacks);
             }
         }
 
         public void validate(){
             isValid();
-            markDirty();
+            onContentsChanged(-1);
         }
 
         private boolean isValid(){
@@ -234,12 +217,12 @@ public class WindowAssemblyTable extends Window {
         }
 
         @Override
-        public boolean isItemValidForSlot(int id, @Nonnull ItemStack stack) {
+        public boolean isStackValidForSlot(int slot, @Nonnull ItemStack stack) {
             return stack.getItem() instanceof IElectricComponent;
         }
 
         @Override
-        public int getInventoryStackLimit() {
+        public int getSlotLimit(int slot) {
             return 1;
         }
 

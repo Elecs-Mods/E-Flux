@@ -1,25 +1,18 @@
 package elec332.eflux.blocks;
 
-import elec332.core.api.client.IIconRegistrar;
-import elec332.core.api.client.model.IElecModelBakery;
-import elec332.core.api.client.model.IElecQuadBakery;
-import elec332.core.api.client.model.IElecTemplateBakery;
-import elec332.core.client.model.loading.INoJsonBlock;
-import elec332.core.item.AbstractItemBlock;
+import elec332.core.client.model.loading.INoBlockStateJsonBlock;
 import elec332.core.tile.AbstractBlock;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
+import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.tileentity.misc.TileEntityAreaMover;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,8 +23,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -39,7 +30,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 17-1-2016.
  */
-public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider {
+public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider, INoBlockStateJsonBlock.DefaultImpl {
 
     public BlockAreaMover() {
         super(Material.ROCK);
@@ -54,14 +45,14 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
     }
 
     @Override
-    protected void getSubBlocks(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
+    public void getSubBlocksC(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
         for (int i = 0; i < 3; i++) {
             subBlocks.add(new ItemStack(this, 1, i));
         }
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityAreaMover();
     }
 
@@ -72,9 +63,9 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
         tooltip.add("Range: "+range);
     }
 
-    public class BAMItemBlock extends AbstractItemBlock {
+    public class BAMItemBlock extends AbstractTexturedItemBlock {
 
-        public BAMItemBlock(Block block) {
+        private BAMItemBlock(Block block) {
             super(block);
         }
 
@@ -87,9 +78,9 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
 
         @Override
         @Nonnull
-        public EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        public EnumActionResult onItemUseC(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
             ItemStack stack = ItemStackHelper.copyItemStack(playerIn.getHeldItem(hand));
-            EnumActionResult ret = super.onItemUse(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
+            EnumActionResult ret = super.onItemUseC(playerIn, hand, worldIn, pos, facing, hitX, hitY, hitZ);
             if (ret == EnumActionResult.SUCCESS){
                 IBlockState iblockstate = worldIn.getBlockState(pos);
                 Block block = iblockstate.getBlock();

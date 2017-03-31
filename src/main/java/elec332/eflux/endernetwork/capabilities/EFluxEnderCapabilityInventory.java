@@ -1,10 +1,10 @@
 package elec332.eflux.endernetwork.capabilities;
 
-import elec332.core.util.BasicInventory;
 import elec332.core.util.SafeWrappedIItemHandler;
 import elec332.eflux.api.ender.internal.DisconnectReason;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,7 +72,7 @@ public class EFluxEnderCapabilityInventory extends AbstractEnderCapability<IItem
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         this.slots = nbt.getInteger("slots");
-        this.inv = SafeWrappedIItemHandler.of(new InvWrapper(new BasicInventory("", slots)));
+        this.inv = SafeWrappedIItemHandler.of(new InvWrapper(new InventoryBasic("", false, slots)));
         CAPABILITY.getStorage().readNBT(CAPABILITY, inv, null, nbt.getTag("contents"));
     }
 

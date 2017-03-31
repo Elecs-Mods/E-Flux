@@ -3,13 +3,12 @@ package elec332.eflux.multiblock;
 import com.google.common.collect.Maps;
 import elec332.core.api.inventory.IHasProgressBar;
 import elec332.core.client.inventory.IResourceLocationProvider;
-import elec332.core.util.BasicInventory;
-import elec332.core.util.InventoryHelper;
+import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.util.IEFluxMachine;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.HashMap;
 
@@ -29,20 +28,14 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     @Override
     public void init() {
         super.init();
-        inventory = new BasicInventory("y", getSlots(), getSaveDelegate()){
-            @Override
-            public int getInventoryStackLimit() {
-                return 1;
-            }
-        };//new RIWInventory(0, getSaveDelegate());
-        //setHook();
+        inventory = new BasicItemHandler(getSlots());
     }
 
     public int getSlots(){
         return 6;
     }
 
-    protected BasicInventory inventory;
+    protected BasicItemHandler inventory;
     protected int startup;
     protected int startupTime;
     protected HashMap<Integer, Integer> progressMap;
@@ -84,7 +77,7 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
                 }
             }
             if (!isBroken()) {
-                for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                for (int i = 0; i < inventory.getSlots(); i++) {
                     int q = progressMap.get(i);
                     ItemStack stack = inventory.getStackInSlot(i);
                     if (!ItemStackHelper.isStackValid(stack)){
@@ -184,11 +177,11 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        this.inventory.readFromNBT(tagCompound);
+        this.inventory.deserializeNBT(tagCompound);
         this.startup = tagCompound.getInteger("startup");
     }
 
-    public IInventory getInventory(){
+    public IItemHandler getInventory(){
         return inventory;
     }
 

@@ -1,35 +1,30 @@
 package elec332.eflux.blocks;
 
-import elec332.core.api.client.IIconRegistrar;
-import elec332.core.api.client.model.IElecModelBakery;
-import elec332.core.api.client.model.IElecQuadBakery;
-import elec332.core.api.client.model.IElecTemplateBakery;
-import elec332.core.client.model.loading.INoJsonBlock;
+import com.google.common.collect.Lists;
+import elec332.core.client.model.loading.INoBlockStateJsonBlock;
+import elec332.core.client.model.loading.INoUnlistedBlockStateJsonBlock;
 import elec332.core.tile.BlockTileBase;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BlockStateHelper;
+import elec332.core.util.DirectionHelper;
 import elec332.core.util.UniversalUnlistedProperty;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
-import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.client.render.model.BlockMachineQuadProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.model.VariantList;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -37,10 +32,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class BlockMachine extends BlockTileBase {
+public class BlockMachine extends BlockTileBase implements INoBlockStateJsonBlock.RotationImpl, INoUnlistedBlockStateJsonBlock {
 
     public BlockMachine(IEFluxBlockMachineData machine){
         super(machine.getBlockMaterial(), machine.getTileClass(), machine.getName(), EFlux.ModID.toLowerCase());
@@ -48,15 +46,38 @@ public class BlockMachine extends BlockTileBase {
         setDefaultState(BlockStateHelper.FACING_NORMAL.setDefaultMetaState(this));
         this.machine = machine;
         this.layer = machine.getRenderingLayer();
+        this.has2States = machine.hasTwoStates();
     }
 
     public static final IUnlistedProperty<Boolean> ACTIVATED_PROPERTY;
 
     private final IEFluxBlockMachineData machine;
+    private final boolean has2States;
     private final BlockRenderLayer layer;
 
     public IEFluxBlockMachineData getMachine(){
         return this.machine;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public VariantList getVariantsFor(IBlockState state) {
+        Block b = state.getBlock();
+        ModelRotation mr = DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty()));
+        Variant variant = new Variant(b.getRegistryName(), mr, false, 1);
+        return new VariantList(Lists.newArrayList(variant));
+    }
+
+    @Override
+    public boolean hasTextureOverrideJson(IBlockState state) {
+        return has2States;
+    }
+
+    @Override
+    public void addAdditionalData(IBlockState state, Map<String, String> dataMap) {
+        if (has2States){
+            dataMap.put("activated", "" + ((IExtendedBlockState) state).getValue(ACTIVATED_PROPERTY));
+        }
     }
 
     @Override
@@ -72,20 +93,19 @@ public class BlockMachine extends BlockTileBase {
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return machine.getRenderType();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube(IBlockState state) {
         return layer == BlockRenderLayer.SOLID;
     }
 
-    @SideOnly(Side.CLIENT)
-    protected TextureAtlasSprite[][] textures;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel model;
-
+    @SuppressWarnings("unused")
     public static EnumFacing getFacing(IBlockAccess iba, BlockPos pos){
         return getFacing(WorldHelper.getBlockState(iba, pos));
     }
@@ -95,11 +115,14 @@ public class BlockMachine extends BlockTileBase {
     }
 
     @Override
+    @Nonnull
     public BlockRenderLayer getBlockLayer() {
         return layer;
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return BlockStateHelper.FACING_NORMAL.getStateForMeta(this, meta);
     }
@@ -110,18 +133,23 @@ public class BlockMachine extends BlockTileBase {
     }
 
     @Override
+    @Nonnull
     protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this, new IProperty[]{BlockStateHelper.FACING_NORMAL.getProperty()}, new IUnlistedProperty[]{ACTIVATED_PROPERTY});
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    @Nonnull
+    public IBlockState getExtendedState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
+        if (!has2States){
+            return state;
+        }
         TileEntity tile = WorldHelper.getTileAt(world, pos);
-        return ((IExtendedBlockState)state).withProperty(ACTIVATED_PROPERTY, machine.hasTwoStates() && tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive());
+        return ((IExtendedBlockState)state).withProperty(ACTIVATED_PROPERTY, tile instanceof IActivatableMachine && ((IActivatableMachine) tile).isActive());
     }
 
     static {
-        ACTIVATED_PROPERTY = new UniversalUnlistedProperty<Boolean>("activated", Boolean.class);
+        ACTIVATED_PROPERTY = new UniversalUnlistedProperty<>("activated", Boolean.class);
     }
 
 }

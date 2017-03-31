@@ -1,6 +1,5 @@
 package elec332.eflux.items;
 
-import elec332.core.item.AbstractItemBlock;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.tileentity.misc.TileEntityEFluxSpawner;
@@ -24,7 +23,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 21-2-2016.
  */
-public class ItemBlockEFluxSpawner extends AbstractItemBlock {
+public class ItemBlockEFluxSpawner extends AbstractTexturedItemBlock {
 
     public ItemBlockEFluxSpawner(Block block) {
         super(block);
@@ -32,7 +31,7 @@ public class ItemBlockEFluxSpawner extends AbstractItemBlock {
 
     @Nonnull
     @Override
-    protected EnumActionResult onItemUse(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseC(EntityPlayer playerIn, EnumHand hand, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = WorldHelper.getTileAt(worldIn, pos);
         ItemStack stack = playerIn.getHeldItem(hand);
         if (!(tile instanceof TileEntityMobSpawner)/* || !hasLink(stack)*/) {

@@ -1,4 +1,4 @@
-package elec332.eflux.recipes.old;
+package elec332.eflux.recipes;
 
 /**
  * Created by Elec332 on 1-9-2015.

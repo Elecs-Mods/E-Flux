@@ -44,7 +44,7 @@ public class ItemEFluxEnderCapability extends AbstractItem implements INoJsonIte
     private final List<Integer> types;
 
     @Override
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+    public void getSubItemsC(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i : types){
             subItems.add(new ItemStack(this, 1, i));
         }

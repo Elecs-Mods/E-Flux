@@ -1,0 +1,10 @@
+{
+
+	"parent": "block/orientable",
+    "textures": {
+        "top": "eflux:blocks/normal",
+        "front": "eflux:blocks/iteminletfront",
+        "side": "eflux:blocks/normal"
+    }
+
+}

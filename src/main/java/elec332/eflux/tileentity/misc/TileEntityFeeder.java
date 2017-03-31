@@ -4,7 +4,7 @@ import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.ISimpleWindowFactory;
 import elec332.core.inventory.window.Window;
-import elec332.core.util.BasicInventory;
+import elec332.core.util.BasicItemHandler;
 import elec332.eflux.EFlux;
 import elec332.eflux.tileentity.TileEntityEFlux;
 import elec332.eflux.util.Utils;
@@ -18,8 +18,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,11 +30,11 @@ import java.util.List;
 public class TileEntityFeeder extends TileEntityEFlux implements ISimpleWindowFactory, ITickable {
 
     public TileEntityFeeder(){
-        invWrapper = new InvWrapper(new BasicInventory("", 1, this));
+        invWrapper = new BasicItemHandler(1);
     }
 
     private int feedCounter = 0;
-    private InvWrapper invWrapper;
+    private IItemHandlerModifiable invWrapper;
 
     @Override
     public void update() {
@@ -59,6 +60,7 @@ public class TileEntityFeeder extends TileEntityEFlux implements ISimpleWindowFa
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setInteger("fc", feedCounter);

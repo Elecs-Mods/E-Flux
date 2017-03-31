@@ -1,6 +1,5 @@
 package elec332.eflux;
 
-import com.google.common.collect.Lists;
 import elec332.core.api.IElecCoreMod;
 import elec332.core.api.config.IConfigWrapper;
 import elec332.core.api.data.IExternalSaveHandler;
@@ -14,6 +13,7 @@ import elec332.core.api.util.IDependencyHandler;
 import elec332.core.client.model.RenderingRegistry;
 import elec332.core.config.ConfigWrapper;
 import elec332.core.inventory.window.WindowManager;
+import elec332.core.java.ReflectionHelper;
 import elec332.core.main.ElecCoreRegistrar;
 import elec332.core.multiblock.MultiBlockRegistry;
 import elec332.core.network.IElecNetworkHandler;
@@ -39,13 +39,12 @@ import elec332.eflux.network.PacketPlayerConnection;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
-import elec332.eflux.recipes.old.EnumRecipeMachine;
-import elec332.eflux.recipes.old.RecipeRegistry;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
 import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenRegister;
 import mcp.mobius.waila.api.SpecialChars;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.command.ICommand;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.IMerchant;
@@ -59,6 +58,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -67,19 +68,20 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -118,16 +120,14 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         logger = LogManager.getLogger("EFlux");
         loadTimer = new LoadTimer(logger, ModName);
         loadTimer.startPhase(event);
-        creativeTab = new AbstractCreativeTab("EFlux") {
+        creativeTab = AbstractCreativeTab.create("EFlux", new Supplier<ItemStack>() {
 
-            @SideOnly(Side.CLIENT)
-            @Nonnull
             @Override
-            protected ItemStack getDisplayStack() {
+            public ItemStack get() {
                 return new ItemStack(RenderingRegistry.instance().registerFakeItem(new AbstractTexturedEFluxItem("circuit"){}));
             }
 
-        };
+        });
         enderCapabilityRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("enderCapabilities"), IEnderCapabilityFactory.class, EnderRegistryCallbacks.INSTANCE);
         circuitRegistry = RegistryHelper.createRegistry(new EFluxResourceLocation("circuits"), ICircuitDataProvider.class, RegistryHelper.getNullCallback());
         EFluxAPI.dummyLoad();
@@ -231,6 +231,74 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
 
         });
         EnderNetworkManager.dummy();
+        MinecraftForge.EVENT_BUS.register(new Object(){
+
+            @SubscribeEvent(priority = EventPriority.LOWEST)
+            @SuppressWarnings("all")
+            public void afterAllModelsBaked(ModelBakeEvent event){
+                ModelLoader modelLoader = event.getModelLoader();
+                try {
+                    //Set<ModelResourceLocation> set = (Set<ModelResourceLocation>) ReflectionHelper.makeFinalFieldModifiable(ModelLoader.class.getDeclaredField("missingVariants")).get(modelLoader);
+                    Map<ResourceLocation, Exception> exceptionMap = (Map<ResourceLocation, Exception>) ReflectionHelper.makeFinalFieldModifiable(ModelLoader.class.getDeclaredField("loadingExceptions")).get(modelLoader);
+                    File f = new File((File) FMLInjectionData.data()[6], "missing_json.txt");
+                    if (!f.exists()){
+                        f.createNewFile();
+                    }
+                    PrintStream ps = new PrintStream(new FileOutputStream(f));
+                    Map<ResourceLocation, Exception> exceptionMap_ = exceptionMap.entrySet()
+                            .stream()
+                            .sorted(Map.Entry.comparingByKey(new Comparator<ResourceLocation>() {
+
+                                @Override
+                                public int compare(ResourceLocation o1, ResourceLocation o2) {
+                                    int i = o1.getResourcePath().compareTo(o2.getResourcePath());
+                                    if (i == 0){
+                                        String f = "", f1 = "";
+                                        if (o1 instanceof ModelResourceLocation){
+                                            f = ((ModelResourceLocation) o1).getVariant();
+                                        }
+                                        if (o2 instanceof ModelResourceLocation){
+                                            f1 = ((ModelResourceLocation) o2).getVariant();
+                                        }
+                                        return f.compareTo(f1);
+                                    }
+                                    return i;
+                                }
+
+                            }))
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue,
+                                    (e1, e2) -> e1,
+                                    LinkedHashMap::new
+                            ));
+                    for (Map.Entry<ResourceLocation, Exception> e : exceptionMap_.entrySet()){
+                        if (!(e.getKey().getResourceDomain().equals("eflux") || e.getKey().getResourcePath().contains("eflux"))){
+                            continue;
+                        }
+                        ps.println("----------");
+                        ps.println("ResourceLocation: "+e.getKey());
+                        Throwable ex = e.getValue();
+                        int i = 0;
+                        while ((ex = ex.getCause()) != null){
+                            if (ex instanceof FileNotFoundException){
+                                ps.println("FileNotFound: "+ex.getMessage());
+                                i++;
+                            }
+                            if (i >= 8){
+                                //break;
+                            }
+                        }
+                        ps.println("----------");
+                    }
+
+                    ps.close();
+                } catch (Exception e1){
+                    e1.printStackTrace();
+                }
+            }
+
+        });
         //register items/blocks
         loadTimer.endPhase(event);
     }
@@ -274,8 +342,8 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
     }
 
     private void registerRecipes(){
-        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.DYE, 3, 5));
-        RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.BEEF)), new ItemStack(Items.EXPERIENCE_BOTTLE, 6));
+        //RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, "ingotIron", new ItemStack(Items.DYE, 3, 5));
+        //RecipeRegistry.instance.registerRecipe(EnumRecipeMachine.COMPRESSOR, Lists.newArrayList(new RecipeItemStack("gemDiamond"), new RecipeItemStack(Items.BEEF)), new ItemStack(Items.EXPERIENCE_BOTTLE, 6));
     }
 
     /*

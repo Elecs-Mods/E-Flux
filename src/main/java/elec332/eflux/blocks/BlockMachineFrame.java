@@ -34,13 +34,13 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 13-1-2016.
  */
-public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvider {
+public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvider, INoJsonBlock {
 
     public BlockMachineFrame(String name) {
         super(Material.ROCK, name, EFlux.ModID.toLowerCase());
     }
 
-    public static final IUnlistedProperty<BlockPos> FRAME_POS_PROPERTY = new UniversalUnlistedProperty<BlockPos>("position", BlockPos.class);
+    public static final IUnlistedProperty<BlockPos> FRAME_POS_PROPERTY = new UniversalUnlistedProperty<>("position", BlockPos.class);
 
     @SideOnly(Side.CLIENT)
     private TextureAtlasSprite texture;
@@ -52,7 +52,7 @@ public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvi
     @Override
     public BlockMachineFrame register() {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()){
-            //registerClient();
+            registerClient();
         }
         super.register();
         return this;
@@ -74,13 +74,55 @@ public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvi
         return BlockRenderLayer.CUTOUT;
     }
 
+    /**
+     * This method is used when a model is requested to render the block in a world.
+     *
+     * @param state The current BlockState.
+     * @return The model to render for this block for the given arguments.
+     */
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getBlockModel(IBlockState state) {
+        return model;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        return model;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
+        itemModel = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture));
+        model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), quadProvider);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void registerClient(){
+        quadProvider = new MachineFrameQuadProvider();
+    }
+
+    /**
+     * Use this to register your textures.
+     *
+     * @param iconRegistrar The IIconRegistrar.
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerTextures(IIconRegistrar iconRegistrar) {
+        texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/default_side"));
+    }
+
+    @Override
+    @Nonnull
+    public IBlockState getExtendedState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
         return ((IExtendedBlockState)state).withProperty(FRAME_POS_PROPERTY, pos);
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityBlockMachine();
     }
 

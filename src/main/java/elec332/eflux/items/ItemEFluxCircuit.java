@@ -43,7 +43,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+    public void getSubItemsC(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (EnumCircuit type : EnumCircuit.VALUES){
             subItems.add(createNewEmptyCircuit(type));
         }

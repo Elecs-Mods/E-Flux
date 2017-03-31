@@ -23,7 +23,7 @@ public class ItemEFluxEnderCapabilityPlayerInventory extends ItemEFluxEnderCapab
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(EntityPlayer player, @Nonnull EnumHand hand, World world) {
+    public ActionResult<ItemStack> onItemRightClickC(EntityPlayer player, @Nonnull EnumHand hand, World world) {
         if (!(player instanceof FakePlayer)) {
             ItemStack itemStack = player.getHeldItem(hand);
             if (!itemStack.hasTagCompound()) {
@@ -31,7 +31,7 @@ public class ItemEFluxEnderCapabilityPlayerInventory extends ItemEFluxEnderCapab
             }
             itemStack.getTagCompound().setString("enderPlayer", PlayerHelper.getPlayerUUID(player).toString());
         }
-        return super.onItemRightClick(player, hand, world);
+        return super.onItemRightClickC(player, hand, world);
     }
 
 }

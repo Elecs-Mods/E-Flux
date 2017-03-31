@@ -12,6 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Elec332 on 20-7-2015.
  */
@@ -74,7 +76,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
         return 0;
     }
 
-    /**
+    /*
      * RF part
      */
 
@@ -121,13 +123,13 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         return (capability == EFluxAPI.RECEIVER_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         return (capability == EFluxAPI.RECEIVER_CAPABILITY && facing == getTileFacing()) ? (T)this : super.getCapability(capability, facing);
     }
 

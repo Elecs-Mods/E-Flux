@@ -2,11 +2,12 @@ package elec332.eflux.multiblock.machine;
 
 import com.google.common.collect.Lists;
 import elec332.core.tile.TileBase;
+import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
-import elec332.eflux.recipes.old.EnumRecipeMachine;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,9 +102,9 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public void onProcessComplete(ItemStack stack, int slot) {
-        inventory.decrStackSize(slot, 1);
+        inventory.extractItem(slot, 1, false);
         ItemStack out = FurnaceRecipes.instance().getSmeltingResult(stack);
-        if (out == null){
+        if (!ItemStackHelper.isStackValid(out)){
             out = ItemRegister.scrap.copy();
         }
         if (!canAddToOutput(out)){

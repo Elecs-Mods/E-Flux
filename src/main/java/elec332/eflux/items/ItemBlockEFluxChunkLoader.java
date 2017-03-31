@@ -1,6 +1,5 @@
 package elec332.eflux.items;
 
-import elec332.core.item.AbstractItemBlock;
 import elec332.core.util.PlayerHelper;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 10-1-2016.
  */
-public class ItemBlockEFluxChunkLoader extends AbstractItemBlock {
+public class ItemBlockEFluxChunkLoader extends AbstractTexturedItemBlock {
 
     public ItemBlockEFluxChunkLoader(Block block) {
         super(block);

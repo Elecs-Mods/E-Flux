@@ -3,7 +3,6 @@ package elec332.eflux.recipes;
 import com.google.common.collect.Lists;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
-import elec332.eflux.recipes.old.EnumRecipeMachine;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;

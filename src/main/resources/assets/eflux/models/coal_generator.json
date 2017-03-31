@@ -1,0 +1,10 @@
+{
+
+	"parent": "block/orientable",
+    "textures": {
+        "top": "eflux:blocks/normal",
+        "front": "eflux:blocks/coalgeneratorfront",
+        "side": "eflux:blocks/default_back"
+    }
+
+}

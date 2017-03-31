@@ -40,13 +40,13 @@ public class ItemEFluxBluePrint extends AbstractTexturedEFluxItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+    public void getSubItemsC(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
         if (EFlux.circuitRegistry.getKeys().size() > 0 && ElecCore.developmentEnvironment) {
             for (ICircuitDataProvider circuitData : EFlux.circuitRegistry) {
                 subItems.add(createBlueprint(circuitData));
             }
         } else {
-            super.getSubItems(item, subItems, creativeTab);
+            super.getSubItemsC(item, subItems, creativeTab);
         }
     }
 

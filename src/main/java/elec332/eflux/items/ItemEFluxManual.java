@@ -22,7 +22,7 @@ public class ItemEFluxManual extends AbstractTexturedEFluxItem {
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(EntityPlayer playerIn, @Nonnull EnumHand hand, World worldIn) {
+    public ActionResult<ItemStack> onItemRightClickC(EntityPlayer playerIn, @Nonnull EnumHand hand, World worldIn) {
         if (worldIn.isRemote){
             WindowManager.openClientWindow(new WindowManual());
         }

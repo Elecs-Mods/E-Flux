@@ -5,7 +5,7 @@ import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.CompressorRecipes;
-import elec332.eflux.recipes.old.EnumRecipeMachine;
+import elec332.eflux.recipes.EnumRecipeMachine;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -74,7 +74,7 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public void onProcessComplete(ItemStack stack, int slot) {
-        inventory.decrStackSize(slot, 1);
+        inventory.extractItem(slot, 1, false);
         ItemStack result = CompressorRecipes.getInstance().getOutput(stack);
         if (result == null){
             result = ItemRegister.scrap.copy();

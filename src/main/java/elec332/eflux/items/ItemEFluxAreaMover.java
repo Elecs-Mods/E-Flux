@@ -45,7 +45,8 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
 
     @Override
     @SuppressWarnings("all")
-    public EnumActionResult onItemUseFirst(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+    @Nonnull
+    public EnumActionResult onItemUseFirstC(EntityPlayer player, EnumHand hand, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
         boolean creative = isCreative(stack);
         IWeakEnderConnection<IEndergyCapability> connection = creative ? null : getCurrentConnection(stack);
@@ -93,15 +94,15 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(EntityPlayer player, @Nonnull EnumHand hand, World world) {
+    public ActionResult<ItemStack> onItemRightClickC(EntityPlayer player, @Nonnull EnumHand hand, World world) {
         ItemStack stack = player.getHeldItem(hand);
-        return isCreative(stack) ? new ActionResult<ItemStack>(EnumActionResult.PASS, stack) : super.onItemRightClick(player, hand, world);
+        return isCreative(stack) ? new ActionResult<ItemStack>(EnumActionResult.PASS, stack) : super.onItemRightClickC(player, hand, world);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected void getSubItems(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
-        super.getSubItems(item, subItems, creativeTab);
+    public void getSubItemsC(@Nonnull Item item, List<ItemStack> subItems, CreativeTabs creativeTab) {
+        super.getSubItemsC(item, subItems, creativeTab);
         if (Config.General.creativeAreaMover){
             subItems.add(new ItemStack(item, 1, CREATIVE_META));
         }
