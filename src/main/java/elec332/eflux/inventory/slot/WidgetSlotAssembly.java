@@ -19,6 +19,7 @@ public class WidgetSlotAssembly extends WidgetSlot {
     public void setI(int i){
         this.i = i;
     }
+
     private int i = 0;
     public ItemStack validItem = ItemStackHelper.NULL_STACK;
 

@@ -34,6 +34,9 @@ repositories {
 	maven {
 		url "http://maven.amadornes.com/"
 	}
+    maven {
+		url "http://tehnut.info/maven"
+	}
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -76,16 +79,12 @@ minecraft {
 }
 
 dependencies {
-    deobfProvided "mcp.mobius.waila:Waila:${config.waila_version}"//_${config.minecraft_version}"
+    deobfCompile "mcp.mobius.waila:Hwyla:${config.waila_version}"
 	deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.jei_version}"
-//	deobfCompile "MCMultiPart:MCMultiPart-experimental:${config.mcmp_version}:universal"
-	//compile "codechicken:CodeChickenLib:"+config.minecraft_version + "-" + config.ccl_version + ":dev"
-    //compile "codechicken:CodeChickenCore:"+config.minecraft_version + "-" + config.ccc_version + ":dev"
-	//compile "codechicken:NotEnoughItems:${config.minecraft_version}-${config.nei_version}:dev"
+	deobfCompile "MCMultiPart2:MCMultiPart:${config.mcmp_version}"
 }
 
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", modVersion
     inputs.property "mcversion", config.minecraft_version

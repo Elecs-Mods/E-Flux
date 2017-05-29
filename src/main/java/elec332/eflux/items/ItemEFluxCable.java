@@ -37,8 +37,8 @@ public class ItemEFluxCable extends AbstractEFluxMultiPartItem implements INoJso
     private TextureAtlasSprite[] textures;
 
     @Override
-    @SideOnly(Side.CLIENT) //TODO: Bug
-    public void getSubItemsC(@Nonnull Item item, @Nonnull List subItems, CreativeTabs creativeTab) {
+    @SideOnly(Side.CLIENT)
+    public void getSubItemsC(@Nonnull Item item, @Nonnull List<ItemStack> subItems, CreativeTabs creativeTab) {
         for (int i = 0; i < 3; i++) {
             subItems.add(new ItemStack(item, 1, i));
         }

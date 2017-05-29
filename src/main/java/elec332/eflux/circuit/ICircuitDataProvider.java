@@ -1,4 +1,4 @@
-package elec332.eflux.items.circuits;
+package elec332.eflux.circuit;
 
 import elec332.eflux.api.circuit.EnumCircuit;
 import net.minecraft.item.ItemStack;

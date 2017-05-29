@@ -9,7 +9,7 @@ import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.client.EFluxResourceLocation;
-import elec332.eflux.items.circuits.IEFluxCircuit;
+import elec332.eflux.circuit.IEFluxCircuit;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;

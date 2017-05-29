@@ -26,7 +26,6 @@ public class ItemEFluxManual extends AbstractTexturedEFluxItem {
         if (worldIn.isRemote){
             WindowManager.openClientWindow(new WindowManual());
         }
-        //WindowManager.openWindow(playerIn, EFlux.proxy, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ, (byte) 3);
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
     }
 

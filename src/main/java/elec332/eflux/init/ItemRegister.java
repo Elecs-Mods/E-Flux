@@ -3,7 +3,7 @@ package elec332.eflux.init;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.*;
-import elec332.eflux.items.circuits.ICircuitDataProvider;
+import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.items.ender.ItemEnderInventory;
 import elec332.eflux.items.ender.capability.ItemEFluxEnderCapabilityPlayerInventory;
 import elec332.eflux.util.GrinderRecipes;

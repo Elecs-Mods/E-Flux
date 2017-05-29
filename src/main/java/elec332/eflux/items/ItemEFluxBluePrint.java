@@ -5,7 +5,7 @@ import elec332.core.util.ItemStackHelper;
 import elec332.core.util.StatCollector;
 import elec332.eflux.EFlux;
 import elec332.eflux.init.ItemRegister;
-import elec332.eflux.items.circuits.ICircuitDataProvider;
+import elec332.eflux.circuit.ICircuitDataProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

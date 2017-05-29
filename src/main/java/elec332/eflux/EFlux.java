@@ -34,7 +34,7 @@ import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.ItemEFluxBluePrint;
-import elec332.eflux.items.circuits.ICircuitDataProvider;
+import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.network.PacketPlayerConnection;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import elec332.eflux.proxies.CommonProxy;
@@ -74,6 +74,8 @@ import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -233,6 +235,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         EnderNetworkManager.dummy();
         MinecraftForge.EVENT_BUS.register(new Object(){
 
+            @SideOnly(Side.CLIENT)
             @SubscribeEvent(priority = EventPriority.LOWEST)
             @SuppressWarnings("all")
             public void afterAllModelsBaked(ModelBakeEvent event){
@@ -332,7 +335,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
 
     @Override
     public String getRequiredElecCoreVersion(String mcVersion) {
-        return ELECCORE_VERSION;//mcVersion.equals("1.11") ? ELECCORE_VERSION : null; //TODO
+        return ELECCORE_VERSION;
     }
 
     public static void systemPrintDebug(Object s){
