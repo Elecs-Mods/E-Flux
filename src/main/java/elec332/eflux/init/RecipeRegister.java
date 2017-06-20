@@ -5,6 +5,7 @@ import elec332.core.java.JavaHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.OredictHelper;
 import elec332.core.util.recipes.IDefaultRecipe;
+import elec332.core.util.recipes.RecipeHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.recipes.CompressorRecipes;
@@ -12,7 +13,6 @@ import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.IEFluxFurnaceRecipe;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
-import elec332.eflux.util.RecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -88,15 +88,16 @@ public final class RecipeRegister {
         registerShapedRecipe(BlockRegister.areaMover, "CGC", "ELE", "ISI", 'C', compressedIngot, 'G', heatResistantGlass.toItemStack(), 'E', ENDER_EYE, 'L', CHUNKSUB.getBlock(), 'I', IRON_INGOT, 'S', silverIngot);
         registerShapedRecipe(new ItemStack(ItemRegister.areaMover), " E ", "IMI", "ZRZ", 'E', ENDER_EYE, 'I', IRON_INGOT, 'M', multimeter, 'Z', zincIngot, 'R', REDSTONE);
 
-        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(dustConductive.getItem(), 3, dustConductive.getItemDamage()), dustGold, dustSilver, dustTin);
+        RecipeHelper.getCraftingManager().addShapelessRecipe(new ItemStack(dustConductive.getItem(), 3, dustConductive.getItemDamage()), dustGold, dustSilver, dustTin);
 
         registerShapedRecipe(carbonMesh, "CCC", "CCC", "CCC", 'C', dustCoal);
 
-        CraftingManager.getInstance().addShapelessRecipe(new ItemStack(manual), BOOK, REDSTONE);
+        RecipeHelper.getCraftingManager().addShapelessRecipe(new ItemStack(manual), BOOK, REDSTONE);
 
-        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
-        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, normalUnrefinedBoard, "CSC", "RIL", "CSC", 'C', copperIngot, 'S', silverIngot, 'R', REDSTONE, 'I', smallUnrefinedBoard, 'L', new ItemStack(DYE, 1, 15));
-        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_WITH_NBT_CHECK, advancedUnrefinedBoard, "CBC", "BLB", "SCS", 'C', conductiveIngot, 'B', normalUnrefinedBoard, 'L', new ItemStack(DYE, 1, 11), 'S', GOLD_INGOT);
+        //todo: nbt check for below
+        registerShapedRecipe(smallUnrefinedBoard, "RIR", "CCC", "GDG", 'R', REDSTONE, 'I', new ItemStack(DYE, 1, 4), 'C', copperIngot, 'G', new ItemStack(DYE, 1, 8), 'D', dustIron);
+        registerShapedRecipe(normalUnrefinedBoard, "CSC", "RIL", "CSC", 'C', copperIngot, 'S', silverIngot, 'R', REDSTONE, 'I', smallUnrefinedBoard, 'L', new ItemStack(DYE, 1, 15));
+        registerShapedRecipe(advancedUnrefinedBoard, "CBC", "BLB", "SCS", 'C', conductiveIngot, 'B', normalUnrefinedBoard, 'L', new ItemStack(DYE, 1, 11), 'S', GOLD_INGOT);
 
     }
 
@@ -152,8 +153,8 @@ public final class RecipeRegister {
             }
 
         });
-        GameRegistry.addRecipe(new DustRecipe());
-        elec332.core.util.recipes.RecipeHelper.registerRecipeSorter(new EFluxResourceLocation("dusts"), DustRecipe.class);
+        RecipeHelper.getCraftingManager().registerRecipe(new DustRecipe(), "dusts");
+        //RecipeHelper.registerRecipeSorter(new EFluxResourceLocation("dusts"), DustRecipe.class);
         EFluxFurnaceRecipes.getInstance().registerRecipe(new IEFluxFurnaceRecipe() {
 
             @Override
@@ -230,6 +231,11 @@ public final class RecipeRegister {
         }
 
         @Override
+        public boolean func_194133_a(int p_194133_1_, int p_194133_2_) {
+            return p_194133_1_ * p_194133_2_ >= getRecipeSize();
+        }
+
+        ///@Override
         public int getRecipeSize() {
             return 4;
         }
@@ -254,7 +260,7 @@ public final class RecipeRegister {
     }
 
     private static void registerShapedRecipe(ItemStack stack, Object... params){
-        RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_FUNCTION, Preconditions.checkNotNull(stack), params);
+        RecipeHelper.getCraftingManager().addRecipe(stack, params);//RecipeHelper.registerRecipe(RecipeHelper.SHAPED_RECIPE_FUNCTION, Preconditions.checkNotNull(stack), params);
     }
 
 }

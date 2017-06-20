@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import elec332.core.inventory.tooltip.ToolTip;
 import elec332.core.main.ElecCore;
 import elec332.core.multiblock.BlockStructure;
+import elec332.core.util.InventoryHelper;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.client.manual.gui.WindowManual;
 import net.minecraft.block.Block;
@@ -151,7 +152,7 @@ public class PageMultiBlockStructure extends AbstractManualPage {
 
     protected void renderToolTip(ItemStack stack, int x, int y, WindowManual manual, List<String> note) {
         //GlStateManager.translate(x, y, 0);
-        List<String> list = stack.getTooltip(ElecCore.proxy.getClientPlayer(), Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+        List<String> list = InventoryHelper.getTooltip(stack, ElecCore.proxy.getClientPlayer(), Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
                 list.set(i, stack.getRarity().rarityColor + list.get(i));

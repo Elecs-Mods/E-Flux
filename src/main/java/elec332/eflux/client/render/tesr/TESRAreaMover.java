@@ -12,7 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class TESRAreaMover extends TileEntitySpecialRenderer<TileEntityAreaMover> {
 
     @Override
-    public void renderTileEntityAt(TileEntityAreaMover te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void func_192841_a(TileEntityAreaMover te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

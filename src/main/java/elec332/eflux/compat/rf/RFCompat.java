@@ -1,6 +1,7 @@
 package elec332.eflux.compat.rf;
 
 import elec332.core.api.module.ElecModule;
+import elec332.core.util.recipes.RecipeHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
@@ -27,7 +28,7 @@ public class RFCompat {
     public void init(FMLInitializationEvent event) {
         EFlux.logger.info("Initialising RF compat...");
         rfConverterBlock = new BlockMachine(DATA).registerTile().register().setCreativeTab(EFlux.creativeTab); //TODO
-        GameRegistry.addShapedRecipe(new ItemStack(rfConverterBlock), "CFC", "ZCZ", "FRF", 'C', ItemRegister.conductiveIngot, 'F', ItemRegister.conductiveCoil, 'Z', ItemRegister.zincIngot, 'R', BlockRegister.powerInlet.toItemStack());
+        RecipeHelper.getCraftingManager().addRecipe(new ItemStack(rfConverterBlock), "CFC", "ZCZ", "FRF", 'C', ItemRegister.conductiveIngot, 'F', ItemRegister.conductiveCoil, 'Z', ItemRegister.zincIngot, 'R', BlockRegister.powerInlet.toItemStack());
     }
 
     private static final IEFluxBlockMachineData DATA;

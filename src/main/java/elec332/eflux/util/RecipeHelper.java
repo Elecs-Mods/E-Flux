@@ -9,11 +9,14 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.RecipeSorter;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 
@@ -22,9 +25,9 @@ import java.util.function.Function;
  */
 public class RecipeHelper {
 
-    public static <T extends IRecipe> T registerRecipe(Function<Data, T> f, ItemStack stack, Object... recipeComponents){
+ /*   public static <T extends IRecipe> T registerRecipe(Function<Data, T> f, ItemStack stack, Object... recipeComponents){
         T ret = f.apply(decipher(Preconditions.checkNotNull(stack), recipeComponents));
-        elec332.core.util.recipes.RecipeHelper.getCraftingManager().addRecipe(ret);
+        elec332.core.util.recipes.RecipeHelper.getCraftingManager().registerRecipe(ret);
         return ret;
     }
 
@@ -89,7 +92,7 @@ public class RecipeHelper {
         }
 
         public final int width, height;
-        public final ItemStack[] ingredients;
+        public final NonNullList<Ingredient> ingredients;
         public final ItemStack output;
 
     }
@@ -98,8 +101,8 @@ public class RecipeHelper {
 
     private static class ShapedNBTRecipe extends ShapedRecipes {
 
-        public ShapedNBTRecipe(int width, int height, ItemStack[] input, ItemStack output) {
-            super(width, height, input, output);
+        public ShapedNBTRecipe(int width, int height, NonNullList<Ingredient> input, ItemStack output) {
+            super(UUID.randomUUID().toString(), width, height, input, output);
         }
 
         @Override
@@ -136,6 +139,6 @@ public class RecipeHelper {
         RecipeSorter.register("eflux:shapedNBT", ShapedNBTRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
         SHAPED_RECIPE_FUNCTION = (Data data) -> new ShapedRecipes(data.width, data.height, data.ingredients, data.output);
         SHAPED_RECIPE_WITH_NBT_CHECK = (Data data) -> new ShapedNBTRecipe(data.width, data.height, data.ingredients, data.output);
-    }
+    }*/
 
 }

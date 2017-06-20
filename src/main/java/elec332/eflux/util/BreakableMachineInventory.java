@@ -1,5 +1,6 @@
 package elec332.eflux.util;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.Window;
@@ -105,7 +106,7 @@ public class BreakableMachineInventory extends BasicItemHandler {
 
                 GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(itemstack, i, j);
-                itemRender.renderItemOverlayIntoGUI(Objects.firstNonNull(itemstack.getItem().getFontRenderer(itemstack), elec332.core.client.RenderHelper.getMCFontrenderer()), itemstack, i, j, s);
+                itemRender.renderItemOverlayIntoGUI(MoreObjects.firstNonNull(itemstack.getItem().getFontRenderer(itemstack), elec332.core.client.RenderHelper.getMCFontrenderer()), itemstack, i, j, s);
 
                 itemRender.zLevel = 0.0F;
             }

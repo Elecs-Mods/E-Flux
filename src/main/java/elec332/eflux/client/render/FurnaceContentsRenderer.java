@@ -36,7 +36,7 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
     //private static final double specialY = (1.0D/16)+(1.0D/32);
 
     @Override
-    public void renderTileEntityAt(FurnaceRenderTile tile, double x, double y, double z, float f, int what) {
+    public void func_192841_a(FurnaceRenderTile tile, double x, double y, double z, float f, int what, float alpha) {
         IItemHandler inventory = tile.getInv();
         for (int i = 0; i < inventory.getSlots(); i++) {
             if (ItemStackHelper.isStackValid(inventory.getStackInSlot(i))) {

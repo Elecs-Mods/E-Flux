@@ -29,7 +29,7 @@ import java.util.Map;
 public class TileEntityTankRenderer<T extends TileEntity & IEFluxTank> extends TileEntitySpecialRenderer<T> implements ITextureLoader {
 
     @Override
-    public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void func_192841_a(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 
         Fluid fluid = te.getClientRenderFluid();
         float height = te.getClientRenderHeight();

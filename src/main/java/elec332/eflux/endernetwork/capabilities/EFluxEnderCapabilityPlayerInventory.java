@@ -1,7 +1,6 @@
 package elec332.eflux.endernetwork.capabilities;
 
 import elec332.core.server.ServerHelper;
-import elec332.core.util.IElecItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.util.SafeWrappedIItemHandler;
@@ -178,7 +177,7 @@ public class EFluxEnderCapabilityPlayerInventory extends AbstractEnderCapability
     }
 
     static {
-        NULL_INVENTORY = new IElecItemHandler() {
+        NULL_INVENTORY = new IItemHandlerModifiable() {
 
             @Override
             public void setStackInSlot(int slot, @Nonnull ItemStack stack) {

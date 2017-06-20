@@ -7,7 +7,6 @@ import elec332.core.inventory.window.Window;
 import elec332.core.main.ElecCore;
 import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
-import elec332.core.util.MinecraftList;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.circuit.IElectricComponent;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -183,14 +183,14 @@ public class WindowAssemblyTable extends Window {
         private void checkOpen(){
             if (ItemStackHelper.isStackValid(stack)) {
                 ICircuit circuit = Objects.requireNonNull(CircuitHelper.getCircuit(stack));
-                stacks = circuit.getSolderedComponents();
+                stacks = (NonNullList<ItemStack>) circuit.getSolderedComponents();
             }
         }
 
         private void checkClose(){
             if (ItemStackHelper.isStackValid(stack)) {
                 onContentsChanged(-1);
-                stacks = MinecraftList.create(0, ItemStackHelper.NULL_STACK);
+                stacks = NonNullList.withSize(0, ItemStackHelper.NULL_STACK);
             }
         }
 

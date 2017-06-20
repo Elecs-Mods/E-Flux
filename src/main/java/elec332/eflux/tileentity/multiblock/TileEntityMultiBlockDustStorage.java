@@ -1,12 +1,12 @@
 package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.registration.RegisteredTileEntity;
-import elec332.core.util.IElecItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * Created by Elec332 on 10-9-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxDustStorage")
-public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements IElecItemHandler {
+public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBlock implements IItemHandlerModifiable {
 
     @Nonnull
     private ItemStack stored = ItemStackHelper.NULL_STACK;

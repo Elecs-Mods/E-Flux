@@ -42,8 +42,8 @@ public class ItemEFluxInfusedEnder extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformationC(ItemStack stack, World playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformationC(stack, playerIn, tooltip, advanced);
         tooltip.add("Network ID: "+getUUID(stack));
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,8 +52,8 @@ public class ItemEFluxBluePrint extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformationC(ItemStack stack, World playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformationC(stack, playerIn, tooltip, advanced);
         ICircuitDataProvider circuitDataProvider = getBlueprintData(stack);
         if (circuitDataProvider != null){
             tooltip.add(StatCollector.translateToLocal("circuit."+circuitDataProvider.getRegistryName().toString().replace(":", ".")));

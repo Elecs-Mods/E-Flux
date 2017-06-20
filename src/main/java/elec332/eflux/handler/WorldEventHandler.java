@@ -119,10 +119,12 @@ public class WorldEventHandler {
     }
 
     @SubscribeEvent
-    public void checkCapabilities(AttachCapabilitiesEvent.TileEntity event){
-        final TileEntity tile = event.getTileEntity();
-        if (tile instanceof IRedstoneUpgradable){
-            event.addCapability(new EFluxResourceLocation("redstone"), new RCP(((IRedstoneUpgradable) tile).getModePredicate()));
+    public void checkCapabilities(AttachCapabilitiesEvent event){
+        if (TileEntity.class.isAssignableFrom((Class<?>) event.getGenericType())) {
+            final TileEntity tile = (TileEntity) event.getObject();
+            if (tile instanceof IRedstoneUpgradable) {
+                event.addCapability(new EFluxResourceLocation("redstone"), new RCP(((IRedstoneUpgradable) tile).getModePredicate()));
+            }
         }
     }
 

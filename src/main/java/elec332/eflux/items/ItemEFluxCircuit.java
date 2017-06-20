@@ -2,7 +2,6 @@ package elec332.eflux.items;
 
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
-import elec332.core.util.MinecraftList;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.circuit.CircuitHelper;
@@ -13,11 +12,12 @@ import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.circuit.IEFluxCircuit;
 import elec332.eflux.util.CapabilityWrapper;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,8 +50,8 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformationC(ItemStack stack, World world, List<String> tooltip, boolean advanced) {
+        super.addInformationC(stack, world, tooltip, advanced);
         ICircuit circuit = CircuitHelper.getCircuit(stack);
         if (circuit != null) {
             tooltip.add("Etched: " + circuit.isEtchedCircuit());
@@ -86,7 +86,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
         private EnumCircuit diff;
         private boolean etched, valid;
         private ICircuitDataProvider circuit;
-        private MinecraftList<ItemStack> components;
+        private NonNullList<ItemStack> components;
 
         @Override
         public int boardSize() {
@@ -170,17 +170,17 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
         @Nonnull
         public List<ItemStack> getSolderedComponents() {
             if (components == null){
-                components = InventoryHelper.newItemStackList(boardSize());
+                components = NonNullList.withSize(boardSize(), ItemStackHelper.NULL_STACK);
             }
             return components;
         }
 
         @Override
         public void setSolderedComponents(List<ItemStack> components) {
-            if (!(components instanceof MinecraftList)){
+            if (!(components instanceof NonNullList)){
                 throw new UnsupportedOperationException();
             }
-            this.components = (MinecraftList<ItemStack>) components;
+            this.components = (NonNullList<ItemStack>) components;
         }
 
         private void clear(){

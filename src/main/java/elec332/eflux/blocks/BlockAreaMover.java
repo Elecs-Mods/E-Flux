@@ -57,8 +57,8 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformationC(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+        super.addInformationC(stack, player, tooltip, advanced);
         int range = TileEntityAreaMover.getRange(stack.getItemDamage());
         tooltip.add("Range: "+range);
     }

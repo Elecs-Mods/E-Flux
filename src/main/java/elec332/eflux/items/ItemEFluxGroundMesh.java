@@ -6,6 +6,7 @@ import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class ItemEFluxGroundMesh extends AbstractTexturedEFluxItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advancedToolTips) {
-        super.addInformation(stack, player, tooltip, advancedToolTips);
+    public void addInformationC(ItemStack stack, World player, List<String> tooltip, boolean advancedToolTips) {
+        super.addInformationC(stack, player, tooltip, advancedToolTips);
         if (!(!ItemStackHelper.isStackValid(stack) || stack.getItem() != ItemRegister.groundMesh || stack.getTagCompound() == null)) {
             DustPile dustPile = DustPile.fromNBT(stack.getTagCompound());
             if (isValidMesh(stack)) {
