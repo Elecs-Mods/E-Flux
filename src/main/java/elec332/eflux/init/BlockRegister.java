@@ -4,8 +4,6 @@ import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
-import elec332.eflux.client.blocktextures.BlockTextures;
-import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.items.ItemBlockEFluxChunkLoader;
 import elec332.eflux.items.ItemBlockEFluxSpawner;
@@ -76,7 +74,7 @@ public final class BlockRegister {
         oreSilver = new BlockStateWrapper(ores, 3);
         oreZinc = new BlockStateWrapper(ores, 2);
 
-        Block frame = new BlockMachineFrame("blockFrame").register().setCreativeTab(EFlux.creativeTab);
+        Block frame = new BlockMachineFrame("blockframe").register().setCreativeTab(EFlux.creativeTab);
         Block itemInlet = new BlockItemInlet().register().setCreativeTab(EFlux.creativeTab);
 
         frameBasic = new BlockStateWrapper(frame, 0);
@@ -110,10 +108,10 @@ public final class BlockRegister {
 
     private static void registerOreDictionary(){
         BlockOres ores = (BlockOres) BlockRegister.ores;
-        for (int i = 0; i < ores.getTypes(); i++) {
-            String s = ores.nameForType(i);
+        for (BlockOres.EnumOreType type : ores.getTypes()) {
+            String s = type.getName();
             String newS = new String(new char[]{s.charAt(0)}).toUpperCase() + s.substring(1); //Look away please...
-            OreDictionary.registerOre("ore"+newS, new ItemStack(ores, 1, i));
+            OreDictionary.registerOre("ore"+newS, new ItemStack(ores, 1, type.ordinal()));
         }
     }
 
@@ -123,32 +121,30 @@ public final class BlockRegister {
 
     public enum BlockMachineParts implements IEFluxBlockMachineData {
 
-        LASERCORE(BlockTextures.getDefaultProvider("laserCoreFront")),
-        HEATER(TileEntityHeater.class, BlockTextures.getDefaultProvider("heaterFront")),
-        DUSTSTORAGE(TileEntityMultiBlockDustStorage.class, BlockTextures.getCustomProvider("dustStorage", "default_side", "default_side")),
-        RADIATOR(BlockTextures.getDefaultProvider("radiator")),
-        MOTOR(BlockTextures.getDefaultProvider("motor")),
-        PRECISION_MOTOR(BlockTextures.getDefaultProvider("precisionMotor")),
-        FLUIDINLET(TileEntityMultiBlockFluidInlet.class, BlockTextures.getDefaultProvider("fluidInletFront")),
-        FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class, BlockTextures.getDefaultProvider("fluidOutletFront")),
+        LASERCORE(),
+        HEATER(TileEntityHeater.class),
+        DUSTSTORAGE(TileEntityMultiBlockDustStorage.class),
+        RADIATOR(),
+        MOTOR(),
+        PRECISION_MOTOR(),
+        FLUIDINLET(TileEntityMultiBlockFluidInlet.class),
+        FLUIDOUTLET(TileEntityMultiBlockFluidOutlet.class),
 
-        POWERINLET(TileEntityMultiBlockPowerInlet.class, BlockTextures.getDefaultProvider("powerinlet_front")),
-        ENDER(TileEntityMultiBlockEnderReader.class, BlockTextures.getDefaultProvider("ender_front")),
-        POWEROUTLET(TileEntityMultiBlockPowerOutlet.class, BlockTextures.getDefaultProvider("poweroutlet_front")),
+        POWERINLET(TileEntityMultiBlockPowerInlet.class),
+        ENDER(TileEntityMultiBlockEnderReader.class),
+        POWEROUTLET(TileEntityMultiBlockPowerOutlet.class),
 
         ;
 
-        private BlockMachineParts(IBlockTextureProvider textureProvider){
-            this(TileEntityBlockMachine.class, textureProvider);
+        private BlockMachineParts(){
+            this(TileEntityBlockMachine.class);
         }
 
-        private BlockMachineParts(Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
+        private BlockMachineParts(Class<? extends TileEntity> tileClass){
             this.tileClass = tileClass;
-            this.textureProvider = textureProvider;
         }
 
         private final Class<? extends TileEntity> tileClass;
-        private final IBlockTextureProvider textureProvider;
 
         public void init(){
             this.block = new BlockMachine(this).register();
@@ -189,11 +185,6 @@ public final class BlockRegister {
         }
 
         @Override
-        public IBlockTextureProvider getTextureProvider() {
-            return textureProvider;
-        }
-
-        @Override
         public void setCreativeTab(CreativeTabs creativeTabs) {
             block.setCreativeTab(creativeTabs);
         }
@@ -215,16 +206,14 @@ public final class BlockRegister {
     }
 
     private enum GlassTypes implements IEFluxBlockMachineData {
-        GLASS(TileEntityBlockMachine.class, BlockTextures.getHeatGlassProvider()),
-        LASERLENS(TileEntityLaser.class, BlockTextures.getLaserLensProvider())
+        GLASS(TileEntityBlockMachine.class),
+        LASERLENS(TileEntityLaser.class)
         ;
 
-        private GlassTypes(Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
-            this.textureProvider = textureProvider;
+        private GlassTypes(Class<? extends TileEntity> tileClass){
             this.tileClass = tileClass;
         }
 
-        private final IBlockTextureProvider textureProvider;
         private final Class<? extends TileEntity> tileClass;
 
         public void init(){
@@ -263,11 +252,6 @@ public final class BlockRegister {
 
         public BlockStateWrapper getMultiBlockWrapper(){
             return bsw;
-        }
-
-        @Override
-        public IBlockTextureProvider getTextureProvider() {
-            return textureProvider;
         }
 
         @Override

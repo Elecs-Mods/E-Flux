@@ -1,25 +1,5 @@
 package elec332.eflux.util;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-import elec332.core.util.InventoryHelper;
-import elec332.core.util.ItemStackHelper;
-import net.minecraft.block.Block;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.RecipeSorter;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-
-
 /**
  * Created by Elec332 on 6-6-2016.
  */

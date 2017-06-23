@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_column",
     "textures": {
-        "all": "eflux:blocks/normal"
+        "side": "eflux:blocks/feeder_sides",
+		"end": "eflux:blocks/feeder_tb"
     }
 }

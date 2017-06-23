@@ -2,8 +2,6 @@ package elec332.eflux.util;
 
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
-import elec332.eflux.client.blocktextures.BlockTextures;
-import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.tileentity.ender.TileEntityEnderChest;
 import elec332.eflux.tileentity.energy.generator.TileEntityCoalGenerator;
@@ -25,23 +23,23 @@ import net.minecraft.util.EnumBlockRenderType;
  */
 public enum EnumMachines implements IEFluxBlockMachineData {
 
-    CAPACITOR(TileEntityCapacitor.class, BlockTextures.getCapacitorProvider()),
-    COAL_GENERATOR(TileEntityCoalGenerator.class, BlockTextures.getCoalGenProvider()),
-    ASSEMBLY_TABLE(TileEntityAssemblyTable.class, BlockTextures.getAssemblyTableProvider()),
-    GROWTHLAMP(TileEntityGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS, BlockTextures.getGrowthLampProvider()),
-    CHUNKMAIN(TileEntityMainChunkLoader.class, BlockTextures.getChunkMainProvider()),
-    CHUNKSUB(TileEntitySubChunkLoader.class, BlockTextures.getChunkSubProvider()),
-    TESLACOIL(TileEntityTeslaCoil.class, BlockTextures.getTeslaCoilProvider()),
-    SCANNER(TileEntityScanner.class, BlockTextures.getScannerProvider()),
-    WASHER(TileEntityWasher.class, BlockTextures.getWasherProvider()),
-    RUBBLESIEVE(TileEntityRubbleSieve.class, BlockTextures.getRubbleSieveProvider()),
-    ETCHINGMACHINE(TileEntityEtchingMachine.class, BlockTextures.getEtchingMachineProvider()),
+    CAPACITOR(TileEntityCapacitor.class),
+    COAL_GENERATOR(TileEntityCoalGenerator.class),
+    ASSEMBLY_TABLE(TileEntityAssemblyTable.class),
+    GROWTHLAMP(TileEntityGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS),
+    CHUNKMAIN(TileEntityMainChunkLoader.class),
+    CHUNKSUB(TileEntitySubChunkLoader.class),
+    TESLACOIL(TileEntityTeslaCoil.class),
+    SCANNER(TileEntityScanner.class),
+    WASHER(TileEntityWasher.class),
+    RUBBLESIEVE(TileEntityRubbleSieve.class),
+    ETCHINGMACHINE(TileEntityEtchingMachine.class),
 
-    FEEDER(TileEntityFeeder.class, BlockTextures.getFeederProvider()),
-    SPAWNER(TileEntityEFluxSpawner.class, BlockTextures.getSpawnerProvider()),
+    FEEDER(TileEntityFeeder.class),
+    SPAWNER(TileEntityEFluxSpawner.class),
 
-    TANK(TileEntityTank.class, EnumBlockRenderType.INVISIBLE, Material.ROCK, BlockTextures.getTankProvider()),
-    ENDERCHEST(TileEntityEnderChest.class, BlockTextures.getEnderChestProvider())
+    TANK(TileEntityTank.class, EnumBlockRenderType.INVISIBLE, Material.ROCK),
+    ENDERCHEST(TileEntityEnderChest.class)
 
     ;
     //___Data__//////////////////////////////////////////////////////////
@@ -52,38 +50,25 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     private BlockMachine blockMachine;
     private EnumBlockRenderType renderID = EnumBlockRenderType.MODEL;
     private Material material = Material.ROCK;
-    private IBlockTextureProvider textureProvider;
     public BlockRenderLayer renderingLayer = BlockRenderLayer.SOLID;
 
-    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID, Material material, IBlockTextureProvider textureProvider){
-        this(tileClass, renderID, material);
-        this.textureProvider = textureProvider;
-    }
-
-    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID, Material material){
+    EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID, Material material){
         this(tileClass, renderID);
         this.material = material;
     }
 
-    private EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID){
+    EnumMachines(Class<? extends TileEntity> tileClass, EnumBlockRenderType renderID){
         this(tileClass);
         this.renderID = renderID;
     }
 
-    private EnumMachines(Class<? extends TileEntity> tileClass){
+    EnumMachines(Class<? extends TileEntity> tileClass){
         this.tileClass = tileClass;
-        this.textureProvider = BlockTextures.getDefaultProvider();
         this.itemBlockClass = AbstractTexturedItemBlock.class;
-    }
-
-    private EnumMachines (Class<? extends TileEntity> tileClass, IBlockTextureProvider textureProvider){
-        this(tileClass);
-        this.textureProvider = textureProvider;
     }
 
     public void init(){
         this.blockMachine = new BlockMachine(this);
-        //GameRegistry.registerBlock(blockMachine, itemBlockClass, blockMachine.blockName);
         blockMachine.register();
     }
 
@@ -110,11 +95,6 @@ public enum EnumMachines implements IEFluxBlockMachineData {
     @Override
     public BlockMachine getBlock() {
         return blockMachine;
-    }
-
-    @Override
-    public IBlockTextureProvider getTextureProvider() {
-        return textureProvider;
     }
 
     @Override

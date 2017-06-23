@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/cube_column",
     "textures": {
-        "all": "eflux:blocks/normal"
+        "side": "eflux:blocks/cap_side",
+		"end": "eflux:blocks/cap_top"
     }
 }

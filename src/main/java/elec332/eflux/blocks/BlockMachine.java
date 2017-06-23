@@ -1,12 +1,9 @@
 package elec332.eflux.blocks;
 
-import com.google.common.collect.Lists;
 import elec332.core.client.model.loading.INoBlockStateJsonBlock;
-import elec332.core.client.model.loading.INoUnlistedBlockStateJsonBlock;
 import elec332.core.tile.BlockTileBase;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BlockStateHelper;
-import elec332.core.util.DirectionHelper;
 import elec332.core.util.UniversalUnlistedProperty;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -15,9 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelRotation;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.block.model.VariantList;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -29,8 +23,6 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -38,7 +30,7 @@ import java.util.Map;
 /**
  * Created by Elec332 on 30-4-2015.
  */
-public class BlockMachine extends BlockTileBase implements INoBlockStateJsonBlock.RotationImpl, INoUnlistedBlockStateJsonBlock {
+public class BlockMachine extends BlockTileBase implements INoBlockStateJsonBlock.RotationImpl {
 
     public BlockMachine(IEFluxBlockMachineData machine){
         super(machine.getBlockMaterial(), machine.getTileClass(), machine.getName(), EFlux.ModID.toLowerCase());
@@ -57,15 +49,6 @@ public class BlockMachine extends BlockTileBase implements INoBlockStateJsonBloc
 
     public IEFluxBlockMachineData getMachine(){
         return this.machine;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public VariantList getVariantsFor(IBlockState state) {
-        Block b = state.getBlock();
-        ModelRotation mr = DirectionHelper.getRotationFromFacing(state.getValue(BlockStateHelper.FACING_NORMAL.getProperty()));
-        Variant variant = new Variant(b.getRegistryName(), mr, false, 1);
-        return new VariantList(Lists.newArrayList(variant));
     }
 
     @Override

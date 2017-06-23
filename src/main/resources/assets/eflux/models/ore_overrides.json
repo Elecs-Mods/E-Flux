@@ -1,0 +1,9 @@
+{
+	"textureOverrides": {
+		"type": {
+			"tin": "eflux:blocks/ore/copper_ore-eflux:blocks/ore/tin_ore",
+			"zinc": "eflux:blocks/ore/copper_ore-eflux:blocks/ore/zinc_ore",
+			"silver": "eflux:blocks/ore/copper_ore-eflux:blocks/ore/silver_ore"
+		}
+	}
+}

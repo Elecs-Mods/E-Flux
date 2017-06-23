@@ -1,6 +1,12 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "eflux:blocks/normal"
+    "parent": "block/cube",
+	"textures": {
+        "particle": "eflux:blocks/heatglass",
+        "down": "eflux:blocks/heatglass",
+        "up": "eflux:blocks/heatglass",
+        "north": "eflux:blocks/laserlensfront",
+        "east": "eflux:blocks/heatglass",
+        "south": "eflux:blocks/laserlensfront",
+        "west": "eflux:blocks/heatglass"
     }
 }

@@ -6,6 +6,7 @@ import elec332.core.api.client.model.IElecQuadBakery;
 import elec332.core.api.client.model.IElecTemplateBakery;
 import elec332.core.api.client.model.model.IQuadProvider;
 import elec332.core.client.model.loading.INoJsonBlock;
+import elec332.core.util.IDefaultStringSerializable;
 import elec332.core.util.UniversalUnlistedProperty;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 13-1-2016.
  */
-public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvider, INoJsonBlock {
+public class BlockMachineFrame extends BlockWithMeta<BlockMachineFrame.EnumMachineFrameType> implements ITileEntityProvider, INoJsonBlock {
 
     public BlockMachineFrame(String name) {
         super(Material.ROCK, name, EFlux.ModID.toLowerCase());
@@ -59,13 +60,13 @@ public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvi
     }
 
     @Override
-    public IUnlistedProperty[] getUnlistedProperties() {
-        return new IUnlistedProperty[]{FRAME_POS_PROPERTY};
+    public Class<EnumMachineFrameType> getEnumClass() {
+        return EnumMachineFrameType.class;
     }
 
     @Override
-    public int getTypes() {
-        return 3;
+    public IUnlistedProperty[] getUnlistedProperties() {
+        return new IUnlistedProperty[]{FRAME_POS_PROPERTY};
     }
 
     @Override
@@ -124,6 +125,14 @@ public class BlockMachineFrame extends BlockWithMeta implements ITileEntityProvi
     @Override
     public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileEntityBlockMachine();
+    }
+
+    public enum EnumMachineFrameType implements IDefaultStringSerializable {
+
+        BASIC,
+        NORMAL,
+        ADVANCED
+
     }
 
 }

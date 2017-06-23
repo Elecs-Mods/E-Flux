@@ -5,12 +5,13 @@ import elec332.eflux.items.AbstractTexturedItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 21-7-2015.
  */
-public abstract class BlockWithMeta extends AbstractBlock {
+public abstract class BlockWithMeta<T extends Enum<T> & IStringSerializable> extends AbstractBlock {
 
     public BlockWithMeta(Material mat, String blockName, String modID) {
         super(mat);
@@ -32,13 +33,20 @@ public abstract class BlockWithMeta extends AbstractBlock {
         this.blockName = blockName;
     }
 
-    private PropertyInteger META;
+    private PropertyEnum<T> META;
+    private T[] types;
     protected final String blockName;
 
-    public final PropertyInteger getProperty(){
-        if (META == null)
-            META = PropertyInteger.create("meta", 0, getTypes()-1);
+    public final PropertyEnum<T> getProperty(){
+        if (META == null) {
+            META = PropertyEnum.create("type", getEnumClass());
+            this.types = getEnumClass().getEnumConstants();
+        }
         return META;
+    }
+
+    public T getType(IBlockState state){
+        return state.getValue(META);
     }
 
     public IUnlistedProperty[] getUnlistedProperties(){
@@ -49,14 +57,15 @@ public abstract class BlockWithMeta extends AbstractBlock {
     @Nonnull
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
-        return getBlockState().getBaseState().withProperty(getProperty(), meta);
+        return getBlockState().getBaseState().withProperty(getProperty(), types[getMeta(meta)]);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(getProperty());
+        return state.getValue(getProperty()).ordinal();
     }
 
+    @SuppressWarnings("all")
     public BlockWithMeta register(){
         GameRegistry.register(this);
         GameRegistry.register(new MetaItemBlock(this).setRegistryName(getRegistryName()));
@@ -70,21 +79,32 @@ public abstract class BlockWithMeta extends AbstractBlock {
     }
 
     public String getUnlocalizedName(ItemStack stack){
-        return getUnlocalizedName() + "." + stack.getItemDamage();
+        return getUnlocalizedName() + "." + types[getMeta(stack.getMetadata())].getName().toLowerCase();
     }
 
     @Override
     public void getSubBlocksC(@Nonnull Item item, List<ItemStack> subBlocks, CreativeTabs creativeTab) {
-        for (int i = 0; i < getTypes(); i++) {
+        for (int i = 0; i < types.length; i++) {
             subBlocks.add(new ItemStack(item, 1, i));
         }
     }
 
-    public abstract int getTypes();
+    protected abstract Class<T> getEnumClass();
+
+    public final T[] getTypes() {
+        return types;
+    }
 
     @Override
     public int damageDropped(IBlockState state) {
         return getMetaFromState(state);
+    }
+
+    public int getMeta(int meta){
+        if (meta < 0 || meta >= types.length){
+            meta = 0;
+        }
+        return meta;
     }
 
     public static class MetaItemBlock extends AbstractTexturedItemBlock {

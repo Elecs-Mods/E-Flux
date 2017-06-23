@@ -94,9 +94,9 @@ tile.eflux.ore.tin.name=Tin Ore
 tile.eflux.ore.zinc.name=Zinc Ore
 tile.eflux.ore.silver.name=Silver Ore
 
-tile.eflux.blockFrame.0.name=Basic Machine Frame
-tile.eflux.blockFrame.1.name=Normal Machine Frame
-tile.eflux.blockFrame.2.name=Advanced Machine Frame
+tile.eflux.blockframe.basic.name=Basic Machine Frame
+tile.eflux.blockframe.normal.name=Normal Machine Frame
+tile.eflux.blockframe.advanced.name=Advanced Machine Frame
 
 tile.eflux.iteminlet.name=Item Gate
 

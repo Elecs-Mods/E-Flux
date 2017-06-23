@@ -1,6 +1,12 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "eflux:blocks/normal"
+    "parent": "block/cube",
+	"textures": {
+        "particle": "eflux:blocks/normal",
+        "down": "eflux:blocks/gl_facing",
+        "up": "eflux:blocks/normal",
+        "north": "eflux:blocks/normal",
+        "east": "eflux:blocks/normal",
+        "south": "eflux:blocks/normal",
+        "west": "eflux:blocks/normal"
     }
 }

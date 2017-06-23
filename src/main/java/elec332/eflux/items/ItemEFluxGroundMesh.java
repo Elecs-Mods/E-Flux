@@ -4,7 +4,6 @@ import elec332.core.util.ItemStackHelper;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.util.DustPile;
 import elec332.eflux.util.GrinderRecipes;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 

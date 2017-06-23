@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "eflux:blocks/normal"
+        "all": "eflux:blocks/ore/copper_ore"
     }
 }

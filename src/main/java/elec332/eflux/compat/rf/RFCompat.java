@@ -6,15 +6,12 @@ import elec332.eflux.EFlux;
 import elec332.eflux.blocks.BlockMachine;
 import elec332.eflux.blocks.data.AbstractEFluxBlockMachineData;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
-import elec332.eflux.client.blocktextures.BlockTextures;
-import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import elec332.eflux.init.BlockRegister;
 import elec332.eflux.init.ItemRegister;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Created by Elec332 on 20-7-2015.
@@ -39,11 +36,6 @@ public class RFCompat {
             @Override
             public Class<? extends TileEntity> getTileClass() {
                 return TileRFConverter.class;
-            }
-
-            @Override
-            public IBlockTextureProvider getTextureProvider() {
-                return BlockTextures.getRFConverterProvider();
             }
 
             @Override

@@ -1,13 +1,11 @@
 package elec332.eflux.init;
 
-import com.google.common.base.Preconditions;
 import elec332.core.java.JavaHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.util.OredictHelper;
 import elec332.core.util.recipes.IDefaultRecipe;
 import elec332.core.util.recipes.RecipeHelper;
 import elec332.eflux.EFlux;
-import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.recipes.CompressorRecipes;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.recipes.IEFluxFurnaceRecipe;
@@ -17,10 +15,8 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 

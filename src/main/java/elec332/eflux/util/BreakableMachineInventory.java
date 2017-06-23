@@ -1,7 +1,6 @@
 package elec332.eflux.util;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import elec332.core.inventory.widget.slot.WidgetSlot;
 import elec332.core.inventory.window.Window;
 import elec332.core.main.ElecCore;

@@ -22,6 +22,7 @@ import elec332.core.util.*;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.util.IBreakableMachine;
+import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.EnderRegistryCallbacks;
@@ -34,7 +35,6 @@ import elec332.eflux.handler.WorldEventHandler;
 import elec332.eflux.init.*;
 import elec332.eflux.items.AbstractTexturedEFluxItem;
 import elec332.eflux.items.ItemEFluxBluePrint;
-import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.network.PacketPlayerConnection;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import elec332.eflux.proxies.CommonProxy;
@@ -89,7 +89,7 @@ import java.util.stream.Collectors;
  * Created by Elec332 on 24-2-2015.
  */
 @Mod(modid = EFlux.ModID, name = EFlux.ModName, dependencies = "required-after:eleccore;",
-        acceptedMinecraftVersions = "[1.10,)", useMetadata = true, canBeDeactivated = true)
+        acceptedMinecraftVersions = "[1.12,)", useMetadata = true, canBeDeactivated = true)
 public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandler {
 
     public static final String ModName = "E-Flux";

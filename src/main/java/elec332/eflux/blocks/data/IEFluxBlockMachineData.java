@@ -1,6 +1,5 @@
 package elec332.eflux.blocks.data;
 
-import elec332.eflux.client.blocktextures.IBlockTextureProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,8 +22,6 @@ public interface IEFluxBlockMachineData {
     public Material getBlockMaterial();
 
     public Block getBlock();
-
-    public IBlockTextureProvider getTextureProvider();
 
     public void setCreativeTab(CreativeTabs creativeTabs);
 

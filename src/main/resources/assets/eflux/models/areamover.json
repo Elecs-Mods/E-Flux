@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/orientable_vertical",
     "textures": {
-        "all": "eflux:blocks/normal"
+        "side": "eflux:blocks/moverside",
+		"front": "eflux:blocks/movertop"
     }
 }
