@@ -21,7 +21,7 @@ public class TileEntityLaserRenderer extends TileEntitySpecialRenderer<TileEntit
     private static final ResourceLocation laser = new EFluxResourceLocation("textures/laser.png");
 
     @Override
-    public void func_192841_a(TileEntityLaser te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileEntityLaser te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GL11.glPushAttrib(GL11.GL_CURRENT_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT | GL11.GL_TEXTURE_BIT);
             if (te.active() /*&& ((MultiBlockLaser)te.getMultiBlock()).isActive()*/) {
                 GL11.glDepthMask(false);

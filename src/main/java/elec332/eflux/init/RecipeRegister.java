@@ -16,7 +16,10 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
@@ -179,7 +182,7 @@ public final class RecipeRegister {
     }
 
     @SuppressWarnings("all")
-    private static class DustRecipe implements IDefaultRecipe {
+    private static class DustRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IDefaultRecipe {
 
         @Override
         public boolean matches(InventoryCrafting inv, World worldIn) {
@@ -227,13 +230,8 @@ public final class RecipeRegister {
         }
 
         @Override
-        public boolean func_194133_a(int p_194133_1_, int p_194133_2_) {
-            return p_194133_1_ * p_194133_2_ >= getRecipeSize();
-        }
-
-        ///@Override
-        public int getRecipeSize() {
-            return 4;
+        public boolean canFit(int width, int height) {
+            return width >= 2 && height >= 2;
         }
 
         @Override

@@ -71,7 +71,7 @@ public final class EnderCapabilityWrapper implements INBTSerializable<NBTTagComp
 
     @Override
     public final void deserializeNBT(NBTTagCompound nbt) {
-        capabilityFactory = EFlux.enderCapabilityRegistry.getObject(new ResourceLocation(nbt.getString("wcapCls")));
+        capabilityFactory = EFlux.enderCapabilityRegistry.getValue(new ResourceLocation(nbt.getString("wcapCls")));
         nbt.removeTag("wcapCls");
         if (capabilityFactory == null){
             nullify = true;

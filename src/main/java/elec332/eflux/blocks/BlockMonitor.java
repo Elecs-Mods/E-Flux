@@ -6,6 +6,7 @@ import elec332.core.tile.AbstractBlock;
 import elec332.core.tile.TileBase;
 import elec332.core.util.BlockStateHelper;
 import elec332.core.util.DirectionHelper;
+import elec332.core.util.RegistryHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.tileentity.basic.TileEntityMonitor;
@@ -49,8 +50,8 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
     public static TextureAtlasSprite normal, monitorF, monitorR, monitorL;&*/
 
     public BlockMonitor register(){
-        GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+        RegistryHelper.register(this);
+        RegistryHelper.register(new ItemBlock(this).setRegistryName(getRegistryName()));
         return this;
     }
 

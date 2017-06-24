@@ -51,7 +51,7 @@ public class WorldEventHandler {
                     enderman = true;
                 }
                 if (entity instanceof EntityItem) {
-                    ItemStack stack = ((EntityItem) entity).getEntityItem();
+                    ItemStack stack = ((EntityItem) entity).getItem();
                     if (ItemStackHelper.isStackValid(stack)) {
                         Item item = stack.getItem();
                         if (item == Items.ENDER_PEARL) {
@@ -82,11 +82,11 @@ public class WorldEventHandler {
                         for (int i = 0; i < pairs2; i++) {
                             ItemStack stack = ItemEFluxInfusedEnder.createStack(EnderNetworkManager.get(event.getWorld()).generateNewKey(), null);
                             //stack.stackSize = 2;
-                            WorldHelper.dropStack(event.getWorld(), (int) pos.xCoord, (int) pos.yCoord, (int) pos.zCoord, stack);
+                            WorldHelper.dropStack(event.getWorld(), (int) pos.x, (int) pos.y, (int) pos.z, stack);
                         }
                         for (EntityItem item : list){
-                            if (item.getEntityItem().getItemDamage() > 0) {
-                                item.getEntityItem().setItemDamage(0);
+                            if (item.getItem().getItemDamage() > 0) {
+                                item.getItem().setItemDamage(0);
                             }
                         }
                     }

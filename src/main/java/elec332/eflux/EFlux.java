@@ -1,5 +1,6 @@
 package elec332.eflux;
 
+import com.google.common.base.Preconditions;
 import elec332.core.api.IElecCoreMod;
 import elec332.core.api.config.IConfigWrapper;
 import elec332.core.api.data.IExternalSaveHandler;
@@ -70,12 +71,12 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -111,8 +112,8 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
     public static IConfigWrapper configWrapper, configOres;
     public static Random random;
     public static MultiBlockRegistry multiBlockRegistry;
-    public static FMLControlledNamespacedRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
-    public static FMLControlledNamespacedRegistry<ICircuitDataProvider> circuitRegistry;
+    public static ForgeRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
+    public static ForgeRegistry<ICircuitDataProvider> circuitRegistry;
     public static EFluxGridHandler gridHandler;
 
     private LoadTimer loadTimer;
@@ -198,7 +199,8 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         });
         RecipeRegister.registerRecipes();
         IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = RegistryHelper.getVillagerRegistry();
-        new VillagerRegistry.VillagerCareer(villagerRegistry.getValue(new ResourceLocation("smith")), "technician").addTrade(1, IElecTradeList.wrap(new IElecTradeList() {
+        VillagerRegistry.VillagerProfession smith = Preconditions.checkNotNull(villagerRegistry.getValue(new ResourceLocation("smith")));
+        new VillagerRegistry.VillagerCareer(smith, "technician").addTrade(1, IElecTradeList.wrap(new IElecTradeList() {
 
             @Override
             public void modifyMerchantRecipeList(IMerchant merchant, @Nonnull MerchantRecipeList tradeList, @Nonnull Random random) {

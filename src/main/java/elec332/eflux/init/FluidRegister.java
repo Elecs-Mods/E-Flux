@@ -1,5 +1,6 @@
 package elec332.eflux.init;
 
+import elec332.core.util.RegistryHelper;
 import elec332.eflux.blocks.BlockFluid;
 import elec332.eflux.client.EFluxResourceLocation;
 import net.minecraft.block.Block;
@@ -46,7 +47,7 @@ public final class FluidRegister {
             }
         };
         FluidRegistry.registerFluid(ret);
-        final Block block = GameRegistry.register(new BlockFluid(ret));
+        final Block block = RegistryHelper.register(new BlockFluid(ret));
         ret.setBlock(block);
         FluidRegistry.addBucketForFluid(ret);
         //GameRegistry.register(new ItemBucket((BlockFluid) block).setCreativeTab(EFlux.creativeTab));

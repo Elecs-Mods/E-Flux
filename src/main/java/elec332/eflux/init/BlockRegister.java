@@ -1,5 +1,6 @@
 package elec332.eflux.init;
 
+import elec332.core.util.RegistryHelper;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
@@ -36,7 +37,7 @@ public final class BlockRegister {
 
     public static void init() {
 
-        cable = GameRegistry.register(new BlockCable().setCreativeTab(EFlux.creativeTab));
+        cable = RegistryHelper.register(new BlockCable().setCreativeTab(EFlux.creativeTab));
 
         for (EnumMachines machine : EnumMachines.values()){
             switch (machine){

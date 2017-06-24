@@ -163,7 +163,7 @@ public class BlockCable extends BlockTileBase implements INoJsonBlock {
     }
 
     @Override
-    public boolean isFullyOpaque(IBlockState state) {
+    public boolean isTopSolid(IBlockState state) {
         return false;
     }
 

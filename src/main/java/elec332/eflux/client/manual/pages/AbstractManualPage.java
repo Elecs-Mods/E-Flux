@@ -1,5 +1,6 @@
 package elec332.eflux.client.manual.pages;
 
+import elec332.core.client.RenderHelper;
 import elec332.eflux.client.ClientHelper;
 import elec332.eflux.client.manual.ManualPage;
 import elec332.eflux.client.manual.gui.WindowManual;
@@ -28,7 +29,7 @@ public abstract class AbstractManualPage extends ManualPage {
 
     @Override
     public final void renderPage(int width, int height, int mouseX, int mouseY, WindowManual manual) {
-        FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer fr = RenderHelper.getMCFontrenderer();
         int oldHeight = fr.FONT_HEIGHT;
         fr.FONT_HEIGHT = 32;
         String text = ClientHelper.translateToLocal(unLocalisedName);

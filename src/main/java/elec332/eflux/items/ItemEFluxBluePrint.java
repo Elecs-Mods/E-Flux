@@ -33,7 +33,7 @@ public class ItemEFluxBluePrint extends AbstractTexturedEFluxItem {
     @Nullable
     public ICircuitDataProvider getBlueprintData(ItemStack stack){
         if (ItemStackHelper.isStackValid(stack) && stack.getItem() == this && stack.hasTagCompound() && stack.getTagCompound().hasKey("bp")){
-            return EFlux.circuitRegistry.getObject(new ResourceLocation(stack.getTagCompound().getString("bp")));
+            return EFlux.circuitRegistry.getValue(new ResourceLocation(stack.getTagCompound().getString("bp")));
         }
         return null;
     }

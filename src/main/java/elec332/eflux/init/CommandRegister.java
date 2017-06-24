@@ -74,7 +74,7 @@ public final class CommandRegister {
                         }
                     } else if (arg.equals("circuit")){
                         ItemStack stack = ItemRegister.normalUnrefinedBoard.copy();
-                        ((IEFluxCircuit)CircuitHelper.getCircuit(stack)).etch(EFlux.circuitRegistry.getObject(new EFluxResourceLocation("shock")));
+                        ((IEFluxCircuit)CircuitHelper.getCircuit(stack)).etch(EFlux.circuitRegistry.getValue(new EFluxResourceLocation("shock")));
                         ((EntityPlayer) sender).inventory.addItemStackToInventory(stack);
                     }
                 }

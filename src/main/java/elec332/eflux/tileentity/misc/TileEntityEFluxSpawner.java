@@ -174,7 +174,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
 
                     for (int i = 0; i < this.spawnCount; ++i)
                     {
-                        NBTTagCompound nbttagcompound = this.randomEntity.getNbt();
+                        NBTTagCompound nbttagcompound = this.spawnData.getNbt();
                         NBTTagList nbttaglist = nbttagcompound.getTagList("Pos", 6);
                         World world = this.getSpawnerWorld();
                         int j = nbttaglist.tagCount();
@@ -188,7 +188,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
                             return;
                         }
 
-                        int k = world.getEntitiesWithinAABB(entity.getClass(), (new AxisAlignedBB((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), (double)(blockpos.getX() + 1), (double)(blockpos.getY() + 1), (double)(blockpos.getZ() + 1))).expandXyz((double)this.spawnRange)).size();
+                        int k = world.getEntitiesWithinAABB(entity.getClass(), (new AxisAlignedBB((double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), (double)(blockpos.getX() + 1), (double)(blockpos.getY() + 1), (double)(blockpos.getZ() + 1))).grow((double)this.spawnRange)).size();
 
                         if (k >= this.maxNearbyEntities)
                         {
@@ -202,7 +202,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
                         if (entityliving == null || entityliving.getCanSpawnHere() && entityliving.isNotColliding())
                         {
                             modifyEntity(entity);
-                            if (this.randomEntity.getNbt().getSize() == 1 && this.randomEntity.getNbt().hasKey("id", 8) && entity instanceof EntityLiving) {
+                            if (this.spawnData.getNbt().getSize() == 1 && this.spawnData.getNbt().hasKey("id", 8) && entity instanceof EntityLiving) {
                                 ((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), null);
                             }
 

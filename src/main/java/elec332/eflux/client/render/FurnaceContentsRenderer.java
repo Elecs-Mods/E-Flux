@@ -36,7 +36,7 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
     //private static final double specialY = (1.0D/16)+(1.0D/32);
 
     @Override
-    public void func_192841_a(FurnaceRenderTile tile, double x, double y, double z, float f, int what, float alpha) {
+    public void render(FurnaceRenderTile tile, double x, double y, double z, float f, int what, float alpha) {
         IItemHandler inventory = tile.getInv();
         for (int i = 0; i < inventory.getSlots(); i++) {
             if (ItemStackHelper.isStackValid(inventory.getStackInSlot(i))) {
@@ -94,7 +94,7 @@ public class FurnaceContentsRenderer extends TileEntitySpecialRenderer<FurnaceRe
         GL11.glPushMatrix();
         if (!b)
             GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-        renderDummy.setEntityItemStack(stack);
+        renderDummy.setItem(stack);
         re.doRender(renderDummy, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
         GL11.glPopMatrix();
         GL11.glPopMatrix();

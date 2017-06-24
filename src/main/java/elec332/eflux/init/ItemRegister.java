@@ -1,5 +1,6 @@
 package elec332.eflux.init;
 
+import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.circuit.EnumCircuit;
 import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -42,7 +43,7 @@ public final class ItemRegister {
 
     public static void init(){
 
-        Item cable = GameRegistry.register(new ItemBlock(BlockRegister.cable){
+        Item cable = RegistryHelper.register(new ItemBlock(BlockRegister.cable){
 
             @Override
             public int getMetadata(int damage) {
@@ -61,21 +62,21 @@ public final class ItemRegister {
         cableAdvanced = new ItemStack(cable, 1, 2);
 
 
-        multimeter = GameRegistry.register(new ItemEFluxMultiMeter());
-        wrench = GameRegistry.register(new ItemEFluxWrench());
-        groundMesh = GameRegistry.register(new ItemEFluxGroundMesh());
-        areaMover = GameRegistry.register(new ItemEFluxAreaMover());
-        multiBlockCreator = GameRegistry.register(new ItemEFluxMultiBlockCreator());
-        entangledEnder = GameRegistry.register(new ItemEFluxInfusedEnder());
+        multimeter = RegistryHelper.register(new ItemEFluxMultiMeter());
+        wrench = RegistryHelper.register(new ItemEFluxWrench());
+        groundMesh = RegistryHelper.register(new ItemEFluxGroundMesh());
+        areaMover = RegistryHelper.register(new ItemEFluxAreaMover());
+        multiBlockCreator = RegistryHelper.register(new ItemEFluxMultiBlockCreator());
+        entangledEnder = RegistryHelper.register(new ItemEFluxInfusedEnder());
 
         efluxItems = new ItemEFluxGenerics();
-        GameRegistry.register(efluxItems);
+        RegistryHelper.register(efluxItems);
         carbonPlate = new ItemStack(efluxItems, 1, 0);
         scrap = new ItemStack(efluxItems, 1, 1);
         carbonMesh = new ItemStack(efluxItems, 1, 2);
 
         ingot = new ItemEFluxIngots();
-        GameRegistry.register(ingot);
+        RegistryHelper.register(ingot);
         copperIngot = new ItemStack(ingot, 1, 0);
         tinIngot = new ItemStack(ingot, 1, 1);
         zincIngot = new ItemStack(ingot, 1, 2);
@@ -84,13 +85,13 @@ public final class ItemRegister {
         conductiveIngot = new ItemStack(ingot, 1, 5);
 
         coil = new ItemEFluxCoils();
-        GameRegistry.register(coil);
+        RegistryHelper.register(coil);
         copperCoil = new ItemStack(coil, 1, 0);
         silverCoil = new ItemStack(coil, 1, 1);
         conductiveCoil = new ItemStack(coil, 1, 2);
 
         dusts = new ItemEFluxDusts();
-        GameRegistry.register(dusts);
+        RegistryHelper.register(dusts);
         dustIron = new ItemStack(dusts, 1, 0);
         dustGold = new ItemStack(dusts, 1, 1);
         dustCopper = new ItemStack(dusts, 1, 2);
@@ -102,21 +103,21 @@ public final class ItemRegister {
         dustConductive = new ItemStack(dusts, 1, 8);
 
         unrefinedBoard = new ItemEFluxCircuit();
-        GameRegistry.register(unrefinedBoard);
+        RegistryHelper.register(unrefinedBoard);
         smallUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.SMALL);
         normalUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.NORMAL);
         advancedUnrefinedBoard = ((ItemEFluxCircuit)unrefinedBoard).createNewEmptyCircuit(EnumCircuit.ADVANCED);
 
-        components = GameRegistry.register(new ItemEFluxElectricComponents());
-        brokenComponents = GameRegistry.register(new ItemEFluxElectricComponents.BrokenComponents());
-        manual = GameRegistry.register(new ItemEFluxManual());
-        nullBlueprint = GameRegistry.register(new ItemEFluxBluePrint());
-        enderLink = GameRegistry.register(new ItemEFluxEnderLink());
-        enderConfigurator = GameRegistry.register(new ItemEFluxEnderConfigurator());
-        enderCapabilityPlayerInventory = GameRegistry.register(new ItemEFluxEnderCapabilityPlayerInventory());
-        enderInventoryViewer = GameRegistry.register(new ItemEnderInventory());
+        components = RegistryHelper.register(new ItemEFluxElectricComponents());
+        brokenComponents = RegistryHelper.register(new ItemEFluxElectricComponents.BrokenComponents());
+        manual = RegistryHelper.register(new ItemEFluxManual());
+        nullBlueprint = RegistryHelper.register(new ItemEFluxBluePrint());
+        enderLink = RegistryHelper.register(new ItemEFluxEnderLink());
+        enderConfigurator = RegistryHelper.register(new ItemEFluxEnderConfigurator());
+        enderCapabilityPlayerInventory = RegistryHelper.register(new ItemEFluxEnderCapabilityPlayerInventory());
+        enderInventoryViewer = RegistryHelper.register(new ItemEnderInventory());
         //What was I doing here again?
-        redstoneUpgrade = new ItemStack(GameRegistry.register(new AbstractEFluxItem("redstoneUpgrade"){}).setMaxStackSize(1));
+        redstoneUpgrade = new ItemStack(RegistryHelper.register(new AbstractEFluxItem("redstoneUpgrade"){}).setMaxStackSize(1));
 
         registerOreDictionary();
         registerCircuits();
@@ -140,7 +141,7 @@ public final class ItemRegister {
     }
 
     private static void registerCircuits() {
-        GameRegistry.register(new ICircuitDataProvider() {
+        RegistryHelper.register(new ICircuitDataProvider() {
 
             @Override
             @Nonnull

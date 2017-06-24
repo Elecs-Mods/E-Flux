@@ -72,7 +72,7 @@ public class ChunkLoaderPlayerProperties extends ElecPlayer.ExtendedProperties{
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         if (nbtTagCompound.hasKey("mainLoc")) {
             this.hasHandler = nbtTagCompound.getBoolean("handler?");
-            this.world = ServerHelper.instance.getMinecraftServer().worldServerForDimension(nbtTagCompound.getInteger("dim"));
+            this.world = ServerHelper.instance.getMinecraftServer().getWorld(nbtTagCompound.getInteger("dim"));
             this.main = (TileEntityMainChunkLoader) WorldHelper.getTileAt(world, new NBTHelper(nbtTagCompound.getCompoundTag("mainLoc")).getPos());
             NBTTagList list = nbtTagCompound.getTagList("locations", 10);
             for (int i = 0; i < list.tagCount(); i++) {

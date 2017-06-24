@@ -1,5 +1,6 @@
 package elec332.eflux.init;
 
+import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.ender.IEnderCapability;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.api.ender.internal.IEnderNetwork;
@@ -43,7 +44,7 @@ public final class CapabilityRegister {
     }
 
     private static IEnderCapabilityFactory registerEnderCapability(String name, Class<? extends AbstractEnderCapability> clazz, int types){
-        return GameRegistry.register(new DefaultMetaItemFactory(new EFluxResourceLocation(name), EnderCapabilityHelper.getConstructor(clazz), types));
+        return RegistryHelper.register(new DefaultMetaItemFactory(new EFluxResourceLocation(name), EnderCapabilityHelper.getConstructor(clazz), types));
     }
 
     private static IEnderCapabilityFactory registerEnderCapabilityNoItem(String name, Class<? extends AbstractEnderCapability> clazz){
@@ -55,11 +56,11 @@ public final class CapabilityRegister {
     }
 
     private static IEnderCapabilityFactory registerEnderCapability(String name, Function<Pair<Side, IEnderNetwork>, IEnderCapability> factory){
-        return GameRegistry.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)));
+        return RegistryHelper.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)));
     }
 
     private static IEnderCapabilityFactory registerEnderCapabilityNoItem(String name, Function<Pair<Side, IEnderNetwork>, IEnderCapability> factory){
-        return GameRegistry.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)){
+        return RegistryHelper.register(new DefaultFactory(new EFluxResourceLocation(name), factory, new EFluxResourceLocation("items/"+name)){
 
             @Override
             public boolean createItem() {

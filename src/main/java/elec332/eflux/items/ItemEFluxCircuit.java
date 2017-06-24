@@ -212,7 +212,7 @@ public class ItemEFluxCircuit extends AbstractTexturedEFluxItem {
             this.etched = nbt.getBoolean("etched");
             this.valid = nbt.getBoolean("valid");
             if (nbt.hasKey("circuitData")) {
-                this.circuit = EFlux.circuitRegistry.getObject(new ResourceLocation(nbt.getString("circuitData")));
+                this.circuit = EFlux.circuitRegistry.getValue(new ResourceLocation(nbt.getString("circuitData")));
                 this.diff = this.circuit.getCircuitType();
             } else {
                 this.circuit = null;

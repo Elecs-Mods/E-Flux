@@ -1,6 +1,7 @@
 package elec332.eflux.blocks;
 
 import elec332.core.tile.AbstractBlock;
+import elec332.core.util.RegistryHelper;
 import elec332.eflux.items.AbstractTexturedItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -67,8 +68,8 @@ public abstract class BlockWithMeta<T extends Enum<T> & IStringSerializable> ext
 
     @SuppressWarnings("all")
     public BlockWithMeta register(){
-        GameRegistry.register(this);
-        GameRegistry.register(new MetaItemBlock(this).setRegistryName(getRegistryName()));
+        RegistryHelper.register(this);
+        RegistryHelper.register(new MetaItemBlock(this).setRegistryName(getRegistryName()));
         return this;
     }
 

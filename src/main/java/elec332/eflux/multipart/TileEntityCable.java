@@ -182,12 +182,12 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
     }*/
 
     public void addCollisionBoxes(AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
-        if (mask.intersectsWith(HITBOXES[6])){
+        if (mask.intersects(HITBOXES[6])){
             list.add(HITBOXES[6]);
         }
         for (EnumFacing facing : EnumFacing.VALUES){
             int i = facing.ordinal();
-            if (connected(facing) && mask.intersectsWith(HITBOXES[i])){
+            if (connected(facing) && mask.intersects(HITBOXES[i])){
                 list.add(HITBOXES[i]);
             }
         }

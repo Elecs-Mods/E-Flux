@@ -4,6 +4,7 @@ import elec332.core.client.model.loading.INoBlockStateJsonBlock;
 import elec332.core.tile.BlockTileBase;
 import elec332.core.tile.IActivatableMachine;
 import elec332.core.util.BlockStateHelper;
+import elec332.core.util.RegistryHelper;
 import elec332.core.util.UniversalUnlistedProperty;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
@@ -65,10 +66,10 @@ public class BlockMachine extends BlockTileBase implements INoBlockStateJsonBloc
 
     @Override
     public BlockMachine register() {
-        GameRegistry.register(this);
+        RegistryHelper.register(this);
         Class<? extends ItemBlock> itemBlockClass = machine.getItemBlockClass();
         try {
-            GameRegistry.register(itemBlockClass.getConstructor(Block.class).newInstance(this), getRegistryName());
+            RegistryHelper.register(itemBlockClass.getConstructor(Block.class).newInstance(this), getRegistryName());
         } catch (Exception e){
             throw new RuntimeException("Error registering ItemBlock: "+itemBlockClass.getCanonicalName());
         }

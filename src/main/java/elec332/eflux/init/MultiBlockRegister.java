@@ -226,7 +226,7 @@ public final class MultiBlockRegister {
                 List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, aabb);
                 boolean ret = false;
                 for (EntityItem item : items){
-                    ItemStack stack = item.getEntityItem();
+                    ItemStack stack = item.getItem();
                     if (stack != null && stack.getItem() != null && stack.getItem() == Items.ENDER_EYE){
                         ret = true;
                         break;

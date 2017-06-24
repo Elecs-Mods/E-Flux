@@ -111,30 +111,6 @@ public class WorldGenOilLakes extends WorldGenerator {
                 }
             }
 
-            if (this.block.getDefaultState().getMaterial() == Material.LAVA) {
-                for (int j2 = 0; j2 < 16; ++j2) {
-                    for (int k3 = 0; k3 < 16; ++k3) {
-                        for (int k4 = 0; k4 < 8; ++k4) {
-                            boolean flag1 = !aboolean[(j2 * 16 + k3) * 8 + k4] && (j2 < 15 && aboolean[((j2 + 1) * 16 + k3) * 8 + k4] || j2 > 0 && aboolean[((j2 - 1) * 16 + k3) * 8 + k4] || k3 < 15 && aboolean[(j2 * 16 + k3 + 1) * 8 + k4] || k3 > 0 && aboolean[(j2 * 16 + (k3 - 1)) * 8 + k4] || k4 < 7 && aboolean[(j2 * 16 + k3) * 8 + k4 + 1] || k4 > 0 && aboolean[(j2 * 16 + k3) * 8 + (k4 - 1)]);
-
-                            if (flag1 && (k4 < 4 || rand.nextInt(2) != 0) && worldIn.getBlockState(position.add(j2, k4, k3)).getMaterial().isSolid()) {
-                                worldIn.setBlockState(position.add(j2, k4, k3), Blocks.STONE.getDefaultState(), 2);
-                            }
-                        }
-                    }
-                }
-            }
-/*
-            if (this.block.getDefaultState().getMaterial() == Material.WATER) {
-                for (int k2 = 0; k2 < 16; ++k2) {
-                    for (int l3 = 0; l3 < 16; ++l3) {
-                        if (worldIn.canBlockFreezeWater(position.add(k2, 4, l3))) {
-                            worldIn.setBlockState(position.add(k2, 4, l3), Blocks.ICE.getDefaultState(), 2);
-                        }
-                    }
-                }
-            }*/
-
             return true;
         }
     }

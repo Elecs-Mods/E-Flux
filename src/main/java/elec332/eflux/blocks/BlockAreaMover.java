@@ -3,6 +3,7 @@ package elec332.eflux.blocks;
 import elec332.core.client.model.loading.INoBlockStateJsonBlock;
 import elec332.core.tile.AbstractBlock;
 import elec332.core.util.ItemStackHelper;
+import elec332.core.util.RegistryHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -39,8 +40,8 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
     }
 
     public BlockAreaMover register(){
-        GameRegistry.register(this);
-        GameRegistry.register(new BAMItemBlock(this).setRegistryName(getRegistryName()));
+        RegistryHelper.register(this);
+        RegistryHelper.register(new BAMItemBlock(this).setRegistryName(getRegistryName()));
         return this;
     }
 

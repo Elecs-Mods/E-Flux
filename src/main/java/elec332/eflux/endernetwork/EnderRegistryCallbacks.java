@@ -1,6 +1,5 @@
 package elec332.eflux.endernetwork;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.Lists;
 import elec332.core.api.client.ITextureLoader;
 import elec332.core.client.model.RenderingRegistry;
@@ -11,7 +10,9 @@ import elec332.eflux.items.ender.capability.ItemEFluxEnderCapability;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryInternal;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.util.List;
 import java.util.Map;
@@ -27,20 +28,20 @@ public enum EnderRegistryCallbacks implements RegistryHelper.FullRegistryCallbac
     private final List<Integer> registeredTypes = Lists.newArrayList();
 
     @Override
-    public void onCreate(Map<ResourceLocation, ?> slaveset, BiMap<ResourceLocation, ? extends IForgeRegistry<?>> registries) {
+    public void onCreate(IForgeRegistryInternal<IEnderCapabilityFactory> owner, RegistryManager stage) {
 
     }
 
     @Override
-    public void onClear(IForgeRegistry<IEnderCapabilityFactory> is, Map<ResourceLocation, ?> slaveset) {
+    public void onClear(IForgeRegistryInternal<IEnderCapabilityFactory> owner, RegistryManager stage) {
 
     }
 
     @Override
-    public void onAdd(IEnderCapabilityFactory obj, int id, Map<ResourceLocation, ?> slaveset) {
+    public void onAdd(IForgeRegistryInternal<IEnderCapabilityFactory> owner, RegistryManager stage, int id, IEnderCapabilityFactory obj) {
         if (!registeredTypes.contains(id)) {
             if (obj.createItem()) {
-                GameRegistry.register(new ItemEFluxEnderCapability(obj));
+                RegistryHelper.register(new ItemEFluxEnderCapability(obj));
             }
             if (FMLCommonHandler.instance().getSide().isClient()) {
                 if (obj instanceof IModelLoader) {
@@ -52,11 +53,6 @@ public enum EnderRegistryCallbacks implements RegistryHelper.FullRegistryCallbac
             }
             registeredTypes.add(id);
         }
-    }
-
-    @Override
-    public void onSubstituteActivated(Map<ResourceLocation, ?> slaveset, IEnderCapabilityFactory original, IEnderCapabilityFactory replacement, ResourceLocation name) {
-
     }
 
 }
