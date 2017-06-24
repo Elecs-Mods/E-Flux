@@ -115,46 +115,5 @@ public class TileEntityMultiBlockEnderReader extends AbstractTileEntityMultiBloc
     public Window createWindow(Object... args) {
         return new WindowEnderReader(this);
     }
-/*
-    @Override
-    public Container getGuiServer(EntityPlayer player) {
-        return new InternalContainer(player);
-    }
-
-    @Override
-    public Object getGuiClient(EntityPlayer player) {
-        return new InternalGui((InternalContainer) getGuiServer(player));
-    }
-
-    private class InternalGui extends BaseGuiContainer {
-
-        private InternalGui(InternalContainer container) {
-            super(container);
-            this.container = container;
-        }
-
-        private final InternalContainer container;
-
-
-        @Override
-        protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-            super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-            int here = container.freq;
-            boolean b = false;//Arrays.binarySearch(container.getValidFrequencies(), here) != -1;
-            for (int i : container.valid){
-                if (i == here){
-                    b = true;
-                    break;
-                }
-            }
-            RenderHelper.getMCFontrenderer().drawString("" + here, 27, 37, b ? GuiEnderContainer.GREEN.getRGB() : Color.RED.getRGB());
-        }
-
-        @Override
-        public ResourceLocation getBackgroundImageLocation() {
-            return new EFluxResourceLocation("gui/GuiNull.png");
-        }
-
-    }*/
 
 }

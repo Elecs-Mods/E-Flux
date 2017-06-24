@@ -8,8 +8,13 @@ import elec332.core.util.ItemStackHelper;
 import elec332.eflux.util.IEFluxMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 /**
@@ -39,21 +44,6 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     protected int startup;
     protected int startupTime;
     protected HashMap<Integer, Integer> progressMap;
-
-    @Override
-    public ItemStack inject(ItemStack stack) {
-        if (!ItemStackHelper.isStackValid(stack))
-            return stack;
-        final int s = stack.stackSize;
-        for (int i = 0; i < s; i++) {
-            ItemStack stack1 = stack.copy();
-            stack1.stackSize = 1;
-            //if (!InventoryHelper.addItemToInventory(inventory, stack1))
-              //todo  return stack;
-            stack.stackSize--;
-        }
-        return ItemStackHelper.NULL_STACK;
-    }
 
     @Override
     public final void onTick() {
@@ -110,40 +100,6 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
         return startup >= startupTime;
     }
 
-    /*public boolean switchToItemMode(){
-        if (!inventory.isEmpty())
-            return false;
-        inventory = new RIWInventory(0, getSaveDelegate());
-        setHook();
-        return true;
-    }
-
-    public boolean switchToBlockMode(){
-        if (!inventory.isEmpty())
-            return false;
-        inventory = new RIWInventory(1, getSaveDelegate());
-        setHook();
-        return true;
-    }
-
-    private void setHook(){
-        inventory.addHook(this);
-    }
-
-    @Override
-    public void onRIWInventoryChanged() {
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (inventory.getStackInSlot(i) == null)
-                progressMap.put(i, 0);
-        }
-    }
-
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        inventory.removeHook(this);
-    }*/
-
     public void setStartupTime(int newTime){
         this.startupTime = newTime;
     }
@@ -183,6 +139,12 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
 
     public IItemHandler getInventory(){
         return inventory;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getSpecialCapability(Capability<T> capability, EnumFacing facing, @Nonnull BlockPos pos) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) inventory : super.getSpecialCapability(capability, facing, pos);
     }
 
 }

@@ -28,7 +28,7 @@ public abstract class AbstractTileEntityMultiBlockFluidHandler extends AbstractT
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) getFluidHandler(facing, hasMultiBlock) :super.getCapability(capability, facing, hasMultiBlock);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) getFluidHandler(facing, hasMultiBlock) : super.getCapability(capability, facing, hasMultiBlock);
     }
 
 }

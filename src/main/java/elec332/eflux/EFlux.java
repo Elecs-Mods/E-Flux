@@ -42,7 +42,6 @@ import elec332.eflux.proxies.CommonProxy;
 import elec332.eflux.recipes.EFluxFurnaceRecipes;
 import elec332.eflux.util.CalculationHelper;
 import elec332.eflux.util.Config;
-import elec332.eflux.util.RecipeItemStack;
 import elec332.eflux.world.WorldGenRegister;
 import mcp.mobius.waila.api.SpecialChars;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -145,7 +144,6 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         ElecCoreRegistrar.GRIDHANDLERS.register(gridHandler = new EFluxGridHandler());
 
         //DEBUG///////////////////
-        logger.info(new RecipeItemStack(Items.IRON_INGOT).setStackSize(3).equals(new RecipeItemStack("ingotIron").setStackSize(2)));
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(17, 20, 40, 1000, 0.15f));
         logger.info(CalculationHelper.calcRequestedEF(16, 20, 40, 1000, 0.15f));

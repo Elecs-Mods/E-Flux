@@ -3,6 +3,7 @@ package elec332.eflux.multiblock.machine;
 import com.google.common.collect.Lists;
 import elec332.core.api.info.IInfoDataAccessorBlock;
 import elec332.core.api.info.IInformation;
+import elec332.core.main.ElecCore;
 import elec332.core.multiblock.AbstractMultiBlock;
 import elec332.core.util.FluidTankWrapper;
 import elec332.core.world.WorldHelper;
@@ -97,15 +98,15 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
     public void onTick() {
         if (heat >= Config.MultiBlocks.DistillationTower.heatDispersion) { //Heat dispersion
             heat -= Config.MultiBlocks.DistillationTower.heatDispersion;
-        } else {
+        } else if (heat != 0){
             heat = 0;
         }
-        if (getWorldObj().getWorldTime() % 20 == 0 && heat > Config.MultiBlocks.DistillationTower.requiredheat){
+        if (getWorldObj().getWorldTime() % 60 == 0 && heat > Config.MultiBlocks.DistillationTower.minHeat){
             FluidStack stack = oilTank.drain(100, false);
             if (stack == null || stack.amount != 100){
                 return;
             }
-            heat -= Config.MultiBlocks.DistillationTower.requiredheat;
+            heat -= Config.MultiBlocks.DistillationTower.requiredHeat;
             oilTank.drain(100, true);
             attemptFill(lubeTank, 2, lubicrant);
             attemptFill(fuelTank, 49, fuel);
@@ -118,9 +119,9 @@ public class MultiBlockDistillationTower extends AbstractMultiBlock implements I
 
     private void attemptFill(FluidTankWrapper tank, int fill, Fluid fluid){
         int i = tank.fill(new FluidStack(fluid, fill), true);
-        if (i != fill){
+        if (i != fill && !getWorldObj().isRemote){
             BlockPos boomPos = getBlockLocAtTranslatedPos(1, 2, 5);
-            WorldHelper.spawnExplosion(getWorldObj(), boomPos.getX(), boomPos.getY(), boomPos.getZ(), 5f);
+            ElecCore.tickHandler.registerCall(() -> WorldHelper.spawnExplosion(getWorldObj(), boomPos.getX(), boomPos.getY(), boomPos.getZ(), 5f), getWorldObj());
         }
     }
 

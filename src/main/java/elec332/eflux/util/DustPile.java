@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,23 +45,20 @@ public class DustPile {
     }
 
     public NBTTagCompound getStack(){
-        if (content.isEmpty())
+        if (content.isEmpty()) {
             return null;
+        }
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         final boolean ensureMax = total <= 9;
         int i = 9;
-        Collections.sort(content, new Comparator<GrinderRecipes.OreDictStack>() {
-            @Override
-            public int compare(GrinderRecipes.OreDictStack o1, GrinderRecipes.OreDictStack o2) {
-                return o1.amount - o2.amount;
-            }
-        });
+        content.sort(Comparator.comparingInt(o -> o.amount));
         final float f = 9.0f/(total/2);
         List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
         for (GrinderRecipes.OreDictStack dustPart : content){
-            if (i == 0)
+            if (i == 0) {
                 break;
+            }
             int q = (int) (f * dustPart.amount * EFlux.random.nextFloat() * 3);
             if (q > dustPart.amount || ensureMax){
                 q = dustPart.amount;
@@ -106,39 +102,34 @@ public class DustPile {
     }
 
     public int wash(){
-        int i = 0;
-        List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
-        for (GrinderRecipes.OreDictStack dustPart : content) {
-            if (dustPart.name.equals(GrinderRecipes.stoneDust)) {
-                i += dustPart.amount;
-                toRemove.add(dustPart);
-            }
-        }
-        content.removeAll(toRemove);
         pure = true;
-        total -= i;
-        return i;
+        return removeAll(GrinderRecipes.stoneDust);
     }
 
     public int sieve(){
+        clean = true;
+        return removeAll(GrinderRecipes.scrap);
+    }
+
+    private int removeAll(String name){
         int i = 0;
         List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
         for (GrinderRecipes.OreDictStack dustPart : content) {
-            if (dustPart.name.equals(GrinderRecipes.scrap)) {
+            if (dustPart.name.equals(name)) {
                 i += dustPart.amount;
                 toRemove.add(dustPart);
             }
         }
         content.removeAll(toRemove);
-        clean = true;
         total -= i;
         return i;
     }
 
     @Nullable
     public NBTTagCompound toNBT(){
-        if (content.isEmpty())
+        if (content.isEmpty()) {
             return null;
+        }
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         for (GrinderRecipes.OreDictStack dustPart : content){
@@ -154,13 +145,17 @@ public class DustPile {
     }
 
     public void readFromNBT(NBTTagCompound tagCompound){
-        if (tagCompound == null || !tagCompound.hasKey("dusts"))
+        if (tagCompound == null || !tagCompound.hasKey("dusts")) {
             return;
+        }
         NBTTagList tagList = tagCompound.getTagList("dusts", 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
             GrinderRecipes.OreDictStack stack = GrinderRecipes.OreDictStack.readFromNBT(tag);
-            content.add(stack);
+            if (stack == null){
+                continue;
+            }
+            addPart(stack);
             total += stack.amount;
         }
         scanned = tagCompound.getBoolean("dusts_scanned");
@@ -173,15 +168,18 @@ public class DustPile {
         clean = true;
         pure = true;
         for (GrinderRecipes.OreDictStack dustPart : content){
-            if (dustPart.name.equals(GrinderRecipes.scrap))
+            if (dustPart.name.equals(GrinderRecipes.scrap)) {
                 clean = false;
-            if (dustPart.name.equals(GrinderRecipes.stoneDust))
+            }
+            if (dustPart.name.equals(GrinderRecipes.stoneDust)) {
                 pure = false;
+            }
         }
 
         ItemStack ret = getContentStack(stacks);
-        if (ret != null)
+        if (ret != null) {
             return ret;
+        }
         ret = new ItemStack(ItemRegister.groundMesh);
         ret.stackSize = stacks;
         ret.setTagCompound(toNBT());
@@ -214,21 +212,26 @@ public class DustPile {
         if (!(clean && pile.clean)){
             clean = false;
         }
-        checkAdd(pile.content.toArray(new GrinderRecipes.OreDictStack[1]));
+        checkAdd(pile.content);
     }
 
-    private void checkAdd(GrinderRecipes.OreDictStack... dustParts){
+    private void checkAdd(List<GrinderRecipes.OreDictStack> dustParts){
         for (GrinderRecipes.OreDictStack dustPart : dustParts){
-            total += dustPart.amount;
-            boolean b = false;
-            for (GrinderRecipes.OreDictStack dustPart_ : content){
-                if (dustPart.name.equals(dustPart_.name)){
-                    dustPart_.amount += dustPart.amount;
-                    b = true;
-                }
+            addPart(dustPart);
+        }
+    }
+
+    private void addPart(GrinderRecipes.OreDictStack dustPart){
+        total += dustPart.amount;
+        boolean b = false;
+        for (GrinderRecipes.OreDictStack dustPart_ : content){
+            if (dustPart_.canMerge(dustPart)){
+                dustPart_.merge(dustPart);
+                b = true;
             }
-            if (!b)
-                content.add(dustPart);
+        }
+        if (!b) {
+            content.add(dustPart);
         }
     }
 

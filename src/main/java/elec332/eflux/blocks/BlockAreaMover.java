@@ -23,7 +23,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -61,7 +60,7 @@ public class BlockAreaMover extends AbstractBlock implements ITileEntityProvider
     public void addInformationC(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
         super.addInformationC(stack, player, tooltip, advanced);
         int range = TileEntityAreaMover.getRange(stack.getItemDamage());
-        tooltip.add("Range: "+range);
+        tooltip.add("Range: " + range + 2);
     }
 
     public class BAMItemBlock extends AbstractTexturedItemBlock {

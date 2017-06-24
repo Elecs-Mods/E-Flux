@@ -8,16 +8,12 @@ import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
 import elec332.eflux.recipes.EnumRecipeMachine;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,7 +27,6 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     public MultiBlockFurnace() {
         super();
         setStartupTime(1200);
-
     }
 
     @Override
@@ -39,9 +34,6 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
         super.init();
         setItemOutput(1, 1, 0);
         setTile();
-        //middle = getBlockLocAtTranslatedPos(1, 1, 1);
-        //getWorldObj().setBlockState(middle, BlockRegister.renderBlock.getStateFromMeta(0), 3);
-        //((TileEntityInsideItemRenderer)WorldHelper.getTileAt(getWorldObj(), middle)).setMultiBlock(this, getMultiBlockFacing(), getStructureID());
     }
 
     @SideOnly(Side.CLIENT)
@@ -49,20 +41,17 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
 
     private void setTile(){
         if (getWorldObj().isRemote && frt == null){
-            //System.out.println("Set renderer");
             FurnaceRenderTile frt = new FurnaceRenderTile();
             TileBase.setWorld(frt, getWorldObj());
             frt.setPos(getBlockLocAtTranslatedPos(1, 1, 1));
             frt.setMultiBlock(this, getMultiBlockFacing(), "unknown");
             this.frt = frt;
-            //getWorldObj().setTileEntity(frt.getPos(), frt);
             Minecraft.getMinecraft().renderGlobal.updateTileEntities(Collections.<TileEntity>emptyList(), Lists.newArrayList((TileEntity)frt));
         }
     }
 
     private void removeTile(){
         if (getWorldObj().isRemote && frt != null) {
-            //System.out.println("Removed renderer");
             Minecraft.getMinecraft().renderGlobal.updateTileEntities(Lists.newArrayList(frt), Collections.<TileEntity>emptyList());
             frt = null;
         }
@@ -123,16 +112,6 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     public void tick(int startup) {
         super.tick(startup);
         getSaveDelegate().syncData();
-    }
-
-    @Override
-    public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
-        //if (player instanceof EntityPlayerMP)
-        //    for (int i = 0; i < inventory.getSizeInventory(); i++) {
-        //        PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
-        //    }
-
-        return super.onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
     @Override

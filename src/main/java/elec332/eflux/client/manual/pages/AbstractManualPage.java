@@ -4,7 +4,6 @@ import elec332.core.client.RenderHelper;
 import elec332.eflux.client.ClientHelper;
 import elec332.eflux.client.manual.ManualPage;
 import elec332.eflux.client.manual.gui.WindowManual;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.TextFormatting;
 

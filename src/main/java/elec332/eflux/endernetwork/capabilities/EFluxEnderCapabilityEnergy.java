@@ -10,7 +10,6 @@ import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,6 +17,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by Elec332 on 21-5-2016.
@@ -131,17 +132,12 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
     }
 
     private List<IEnergyReceiver> getAllReceivers(){
-        List<IEnergyReceiver> ret = Lists.newArrayList();
-        for (IStableEnderConnection<IEnergyReceiver> connection : activeConnections){
-            TileEntity tile = connection.getComponent().getTile();
-            if (WorldHelper.chunkLoaded(tile.getWorld(), tile.getPos()) && tile.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, null)){
-                IEnergyReceiver receiver = tile.getCapability(EFluxAPI.RECEIVER_CAPABILITY, null);
-                if (receiver != null){
-                    ret.add(receiver);
-                }
-            }
-        }
-        return ret;
+        return activeConnections.stream()
+                .map(connection -> connection.getComponent().getTile())
+                .filter(tile -> WorldHelper.chunkLoaded(tile.getWorld(), tile.getPos()) && tile.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, null))
+                .map(tile -> tile.getCapability(EFluxAPI.RECEIVER_CAPABILITY, null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 }

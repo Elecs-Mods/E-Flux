@@ -7,15 +7,11 @@ import elec332.core.client.model.loading.IModelLoader;
 import elec332.core.util.RegistryHelper;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
 import elec332.eflux.items.ender.capability.ItemEFluxEnderCapability;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryManager;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Elec332 on 7-5-2016.

@@ -49,7 +49,12 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
 
     @Override
     public void onTick() {
-        if (getWorldObj().getWorldTime() % 10 == 0 && heat >= Config.MultiBlocks.Desalter.requiredheat){
+        if (heat >= Config.MultiBlocks.Desalter.heatDispersion) {
+            heat -= Config.MultiBlocks.Desalter.heatDispersion;
+        } else if (heat != 0){
+            heat = 0;
+        }
+        if (getWorldObj().getWorldTime() % 80 == 0 && heat >= Config.MultiBlocks.Desalter.minHeat){
             FluidStack drained = oilTank.drain(20, false);
             if (drained == null || drained.amount != 20){
                 return;
@@ -58,7 +63,7 @@ public class MultiBlockDesalter extends AbstractMultiBlock implements IHeatRecei
             if (drained == null || drained.amount != 20){
                 return;
             }
-            heat -= Config.MultiBlocks.Desalter.requiredheat;
+            heat -= Config.MultiBlocks.Desalter.requiredHeat;
             oilTank.drain(20, true);
             waterTank.drain(25, true);
             attemptFill(crudeOilTank, 16, crudeOil);

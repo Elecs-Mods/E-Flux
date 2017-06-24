@@ -30,7 +30,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public void init() {
-        super.init();//switchToBlockMode();
+        super.init();
     }
 
     private DustPile dustPile;
