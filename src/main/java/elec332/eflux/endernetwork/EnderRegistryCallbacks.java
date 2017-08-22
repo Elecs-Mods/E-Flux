@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryManager;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public enum EnderRegistryCallbacks implements RegistryHelper.FullRegistryCallbac
     }
 
     @Override
-    public void onAdd(IForgeRegistryInternal<IEnderCapabilityFactory> owner, RegistryManager stage, int id, IEnderCapabilityFactory obj) {
+    public void onAdd(IForgeRegistryInternal<IEnderCapabilityFactory> owner, RegistryManager stage, int id, IEnderCapabilityFactory obj, @Nullable IEnderCapabilityFactory oldObj) {
         if (!registeredTypes.contains(id)) {
             if (obj.createItem()) {
                 RegistryHelper.register(new ItemEFluxEnderCapability(obj));

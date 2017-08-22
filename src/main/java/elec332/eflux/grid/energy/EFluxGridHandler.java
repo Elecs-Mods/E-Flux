@@ -78,7 +78,6 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
                     if (grid != null) {
                         for (EFluxEnergyGrid.ConnectionData o2 : grid.getAllConnections()) {
                             o2.object.setGridForFace(null, o2.connectedFacing);
-                            //o2.object.removedFromGrid(grid);
                             if (!updates.contains(o2.object.getPosition()) && !o.equals(o2.object)) {
                                 add.add(o2.object.getPosition());
                             }

@@ -156,6 +156,13 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         configWrapper.registerConfig(new Config());
         configWrapper.refresh();
 
+        CapabilityRegister.init();
+        BlockRegister.init();
+        ItemRegister.init();
+        MultiPartRegister.init();
+        FluidRegister.init();
+        proxy.initRenderStuff();
+
         loadTimer.endPhase(event);
         MCModInfo.createMCModInfo(event,
                 "Created by Elec332",
@@ -164,75 +171,6 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
                 "logo",
                 new String[]{"Elec332"}
         );
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) throws IOException {
-        loadTimer.startPhase(event);
-        ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
-        CapabilityRegister.init();
-        BlockRegister.init();
-        ItemRegister.init();
-        MultiPartRegister.init();
-        FluidRegister.init();
-        proxy.initRenderStuff();
-        WorldGenRegister.init();
-        WindowManager.INSTANCE.register(proxy);
-        MultiBlockRegister.init();
-        configOres.refresh();
-        configWrapper.refresh();
-        registerRecipes();
-        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
-        MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
-        ElecCoreRegistrar.GRIDHANDLERS.register(new EFluxTankHandler());
-        ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new EnderNetworkInfoProvider());
-
-        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
-
-            @Override
-            public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
-                //Dummy, just load my chunks please.....
-            }
-
-        });
-        RecipeRegister.registerRecipes();
-        IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = RegistryHelper.getVillagerRegistry();
-        VillagerRegistry.VillagerProfession smith = Preconditions.checkNotNull(villagerRegistry.getValue(new ResourceLocation("smith")));
-        new VillagerRegistry.VillagerCareer(smith, "technician").addTrade(1, IElecTradeList.wrap(new IElecTradeList() {
-
-            @Override
-            public void modifyMerchantRecipeList(IMerchant merchant, @Nonnull MerchantRecipeList tradeList, @Nonnull Random random) {
-                ICircuitDataProvider randomCircuit = getRandomBlueprint(random);
-                int i = 14 + random.nextInt(9) * (randomCircuit.getCircuitType().getCircuitLevel() + 1);
-                tradeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, i), ItemEFluxBluePrint.createBlueprint(randomCircuit)));
-            }
-
-            private ICircuitDataProvider getRandomBlueprint(Random random){
-                List<ICircuitDataProvider> circuits = circuitRegistry.getValues();
-                return circuits.get(random.nextInt(circuits.size()));
-            }
-
-        }));
-        ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new IInfoProvider() {
-
-            @Override
-            public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
-                if (hitData.getData().getBoolean("_M-broken")) {
-                    information.addInformation(SpecialChars.ALIGNCENTER + SpecialChars.ITALIC + "Broken");
-                }
-            }
-
-            @Nonnull
-            @Override
-            public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
-                if (tile instanceof IBreakableMachine){
-                    tag.setBoolean("_M-broken", ((IBreakableMachine) tile).isBroken());
-                }
-                return tag;
-            }
-
-        });
-        EnderNetworkManager.dummy();
         MinecraftForge.EVENT_BUS.register(new Object(){
 
             @SideOnly(Side.CLIENT)
@@ -302,6 +240,76 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
             }
 
         });
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) throws IOException {
+        loadTimer.startPhase(event);
+        ServerHelper.instance.registerExtendedPlayerProperties("EFluxChunks", ChunkLoaderPlayerProperties.class);
+        //CapabilityRegister.init();
+        //BlockRegister.init();
+        //ItemRegister.init();
+        //MultiPartRegister.init();
+        //FluidRegister.init();
+        //proxy.initRenderStuff();
+        WorldGenRegister.init();
+        WindowManager.INSTANCE.register(proxy);
+        MultiBlockRegister.init();
+        configOres.refresh();
+        configWrapper.refresh();
+        registerRecipes();
+        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new WorldEventHandler());
+        ElecCoreRegistrar.GRIDHANDLERS.register(new EFluxTankHandler());
+        ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new EnderNetworkInfoProvider());
+
+        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ForgeChunkManager.LoadingCallback() {
+
+            @Override
+            public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
+                //Dummy, just load my chunks please.....
+            }
+
+        });
+        RecipeRegister.registerRecipes();
+        IForgeRegistry<VillagerRegistry.VillagerProfession> villagerRegistry = RegistryHelper.getVillagerRegistry();
+        VillagerRegistry.VillagerProfession smith = Preconditions.checkNotNull(villagerRegistry.getValue(new ResourceLocation("smith")));
+        new VillagerRegistry.VillagerCareer(smith, "technician").addTrade(1, IElecTradeList.wrap(new IElecTradeList() {
+
+            @Override
+            public void modifyMerchantRecipeList(IMerchant merchant, @Nonnull MerchantRecipeList tradeList, @Nonnull Random random) {
+                ICircuitDataProvider randomCircuit = getRandomBlueprint(random);
+                int i = 14 + random.nextInt(9) * (randomCircuit.getCircuitType().getCircuitLevel() + 1);
+                tradeList.add(new MerchantRecipe(new ItemStack(Items.EMERALD, i), ItemEFluxBluePrint.createBlueprint(randomCircuit)));
+            }
+
+            private ICircuitDataProvider getRandomBlueprint(Random random){
+                List<ICircuitDataProvider> circuits = circuitRegistry.getValues();
+                return circuits.get(random.nextInt(circuits.size()));
+            }
+
+        }));
+        ElecCoreRegistrar.INFORMATION_PROVIDERS.register(new IInfoProvider() {
+
+            @Override
+            public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+                if (hitData.getData().getBoolean("_M-broken")) {
+                    information.addInformation(SpecialChars.ALIGNCENTER + SpecialChars.ITALIC + "Broken");
+                }
+            }
+
+            @Nonnull
+            @Override
+            public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+                if (tile instanceof IBreakableMachine){
+                    tag.setBoolean("_M-broken", ((IBreakableMachine) tile).isBroken());
+                }
+                return tag;
+            }
+
+        });
+        EnderNetworkManager.dummy();
+
         //register items/blocks
         loadTimer.endPhase(event);
     }
@@ -321,6 +329,11 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
     @Override
     public void registerSaveHandlers(ISingleRegister<IExternalSaveHandler> saveHandlerRegistry) {
         EnderNetworkManager.registerSaveHandler(saveHandlerRegistry);
+    }
+
+    @Override
+    public boolean useLangCompat() {
+        return false;
     }
 
     @Override

@@ -90,12 +90,14 @@ public class BlockMachineFrame extends BlockWithMeta<BlockMachineFrame.EnumMachi
     @Override
     @SideOnly(Side.CLIENT)
     public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
+        System.out.println("getitemmodel");
         return model;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IElecQuadBakery quadBakery, IElecModelBakery modelBakery, IElecTemplateBakery templateBakery) {
+        System.out.println("registermodels");
         itemModel = modelBakery.forTemplate(templateBakery.newDefaultBlockTemplate(texture));
         model = modelBakery.forQuadProvider(templateBakery.newDefaultBlockTemplate(), quadProvider);
     }
@@ -113,6 +115,7 @@ public class BlockMachineFrame extends BlockWithMeta<BlockMachineFrame.EnumMachi
     @Override
     @SideOnly(Side.CLIENT)
     public void registerTextures(IIconRegistrar iconRegistrar) {
+        System.out.println("registertextures");
         texture = iconRegistrar.registerSprite(new EFluxResourceLocation("blocks/default_side"));
     }
 

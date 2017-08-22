@@ -65,6 +65,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
             public int getMaxRPTransfer() {
                 return 50;
             }
+
         };
     }
 
@@ -226,9 +227,7 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
     @Override
     @SuppressWarnings("all")
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        boolean ret = ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
-        EFlux.systemPrintDebug("req: " + facing + " " + capability.getName() + " ret: " + ret);
-        return ret;
+       return  ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
     }
 
     @Override
