@@ -23,7 +23,7 @@ public class EnergyAPIHelper {
     }
 
     public static boolean isProvider(ICapabilityProvider provider, EnumFacing side) {
-        return provider != null && provider.hasCapability(EFluxAPI.PROVIDER_CAPABILITY, side);
+        return provider != null && provider.hasCapability(EFluxAPI.GENERATOR_CAPABILITY, side);
     }
 
     public static boolean isTransmitter(ICapabilityProvider provider, EnumFacing side) {

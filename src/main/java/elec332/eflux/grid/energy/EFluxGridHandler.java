@@ -5,8 +5,8 @@ import elec332.core.grid.AbstractGridHandler;
 import elec332.core.main.ElecCore;
 import elec332.core.world.DimensionCoordinate;
 import elec332.eflux.api.EFluxAPI;
+import elec332.eflux.api.energy.IEnergyGenerator;
 import elec332.eflux.api.energy.IEnergyGridInformation;
-import elec332.eflux.api.energy.IEnergyProvider;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.util.Config;
@@ -184,7 +184,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
             }
         }
         if (isProvider(o2, opp)){
-            IEnergyProvider source = getProvider(o2, opp);
+            IEnergyGenerator source = getProvider(o2, opp);
             if (source != null && source.canConnectTo(PROVIDER, o1Tile, TRANSMITTER, o1T) && o1T.canConnectTo(TRANSMITTER, o2Tile, PROVIDER, source)){
                 return true;
             }
@@ -196,7 +196,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     private boolean providerReceiver(EFluxEnergyObject o1, EnumFacing facing, EFluxEnergyObject o2){
         EnumFacing opp = facing.getOpposite();
         if (isProvider(o1, facing) && isReceiver(o2, opp)){
-            IEnergyProvider source = getProvider(o1, facing);
+            IEnergyGenerator source = getProvider(o1, facing);
             IEnergyReceiver receiver = getReceiver(o2, opp);
             return source != null && receiver != null && source.canConnectTo(PROVIDER, o2.getTileEntity(), RECEIVER, receiver) && receiver.canConnectTo(RECEIVER, o1.getTileEntity(), PROVIDER, source);
         }
@@ -211,8 +211,8 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         return capabilityProvider.getCapability(RECEIVER_CAPABILITY, facing);
     }
 
-    private IEnergyProvider getProvider(ICapabilityProvider capabilityProvider, EnumFacing facing){
-        return capabilityProvider.getCapability(PROVIDER_CAPABILITY, facing);
+    private IEnergyGenerator getProvider(ICapabilityProvider capabilityProvider, EnumFacing facing){
+        return capabilityProvider.getCapability(GENERATOR_CAPABILITY, facing);
     }
 
     private boolean isReceiver(ICapabilityProvider capabilityProvider, EnumFacing facing){
@@ -220,7 +220,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     }
 
     private boolean isProvider(ICapabilityProvider capabilityProvider, EnumFacing facing){
-        return capabilityProvider.hasCapability(PROVIDER_CAPABILITY, facing);
+        return capabilityProvider.hasCapability(GENERATOR_CAPABILITY, facing);
     }
 
     protected static boolean isValidReceiver(ICapabilityProvider capabilityProvider, EnumFacing facing){
@@ -228,7 +228,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     }
 
     protected static boolean isValidProvider(ICapabilityProvider capabilityProvider, EnumFacing facing){
-        return hasValidCapability(capabilityProvider, facing, PROVIDER_CAPABILITY);
+        return hasValidCapability(capabilityProvider, facing, GENERATOR_CAPABILITY);
     }
 
     protected static boolean isValidTransmitter(ICapabilityProvider capabilityProvider, EnumFacing facing){
@@ -257,7 +257,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
             return false;
         }
         for (EnumFacing facing : EnumFacing.VALUES){
-            if (tile.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.PROVIDER_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, facing)){
+            if (tile.hasCapability(EFluxAPI.RECEIVER_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.GENERATOR_CAPABILITY, facing) || tile.hasCapability(EFluxAPI.TRANSMITTER_CAPABILITY, facing)){
                 return true;
             }
         }

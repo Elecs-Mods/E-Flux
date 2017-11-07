@@ -105,6 +105,7 @@ public abstract class AbstractEnderCapabilityItem<T> extends AbstractTexturedEFl
         return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
+    @Nullable
     protected IWeakEnderConnection<T> getCurrentConnection(ItemStack stack){
         if (ItemStackHelper.isStackValid(stack) && stack.getItem() == this && stack.hasCapability(EFluxAPI.ENDER_COMPONENT_CAPABILITY, null)) {
             @SuppressWarnings("unchecked")

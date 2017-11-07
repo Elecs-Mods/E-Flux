@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 14-1-2016.
  */
-public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEntityProvider, INoBlockStateJsonBlock.DefaultImpl {
+public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEntityProvider, INoBlockStateJsonBlock.RotationImpl {
 
     public BlockMonitor() {
         super(Material.ROCK);
@@ -87,7 +87,7 @@ public class BlockMonitor extends AbstractBlock implements IWrenchable, ITileEnt
     @Nonnull
     public IBlockState getBlockStateForPlacementC(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         pokeCheck(world, pos);
-        return getBlockState().getBaseState().withProperty(BlockStateHelper.FACING_NORMAL.getProperty(), DirectionHelper.getFacingOnPlacement(placer));
+        return getDefaultState().withProperty(BlockStateHelper.FACING_NORMAL.getProperty(), DirectionHelper.getFacingOnPlacement(placer));
     }
 
     @Override

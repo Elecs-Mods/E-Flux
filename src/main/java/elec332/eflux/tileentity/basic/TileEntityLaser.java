@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
  * Created by Elec332 on 16-1-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxLaser")
-public class TileEntityLaser extends TileEntityBlockMachine {
+public class TileEntityLaser extends TileEntityMultiBlockMachinePart {
 
     private BlockPos pos = BlockPos.ORIGIN;
     private boolean active;

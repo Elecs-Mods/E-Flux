@@ -64,12 +64,12 @@ public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyG
     }
 
     @Override
-    public int getCurrentRP(EnumFacing side) {
+    public int getCurrentEF(EnumFacing side) {
         return getGrid(side).processedRP;
     }
 
     @Override
-    public int getLastProcessedEF(EnumFacing side) {
+    public int getLastProcessedRP(EnumFacing side) {
         return getGrid(side).processedEF;
     }
 
@@ -209,7 +209,7 @@ public class EFluxEnergyObject extends DefaultTileEntityLink implements IEnergyG
         SIDES = EnumFacing.VALUES.length;
         ENERGY_CAPABILITIES = new Capability[3];
         ENERGY_CAPABILITIES[0] = EFluxAPI.RECEIVER_CAPABILITY;
-        ENERGY_CAPABILITIES[1] = EFluxAPI.PROVIDER_CAPABILITY;
+        ENERGY_CAPABILITIES[1] = EFluxAPI.GENERATOR_CAPABILITY;
         ENERGY_CAPABILITIES[2] = EFluxAPI.TRANSMITTER_CAPABILITY;
     }
 

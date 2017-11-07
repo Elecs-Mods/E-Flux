@@ -1,13 +1,17 @@
 package elec332.eflux.multiblock;
 
 import com.google.common.collect.Maps;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInformation;
 import elec332.core.api.inventory.IHasProgressBar;
 import elec332.core.client.inventory.IResourceLocationProvider;
 import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.util.IEFluxMachine;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,7 +37,18 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
     @Override
     public void init() {
         super.init();
-        inventory = new BasicItemHandler(getSlots());
+        inventory = createItemHandler();
+    }
+
+    protected BasicItemHandler createItemHandler(){
+        return new BasicItemHandler(getSlots()){
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return 1;
+            }
+
+        };
     }
 
     public int getSlots(){
@@ -135,6 +150,24 @@ public abstract class EFluxMultiBlockProcessingMachine extends EFluxMultiBlockMa
         super.readFromNBT(tagCompound);
         this.inventory.deserializeNBT(tagCompound);
         this.startup = tagCompound.getInteger("startup");
+    }
+
+    @Override
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        super.addInformation(information, hitData);
+        if (hitData.getData().hasKey("perct")) {
+            information.add("Startup: " + hitData.getData().getString("perct"));
+        }
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+        tag = super.getInfoNBTData(tag, tile, player, hitData);
+        if (startup != startupTime) {
+            tag.setString("perct", String.format("%.2f", ((float) startup / startupTime) * 100) + "%");
+        }
+        return tag;
     }
 
     public IItemHandler getInventory(){

@@ -14,13 +14,14 @@ import net.minecraft.util.math.BlockPos;
  * Created by Elec332 on 14-1-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxMonitor")
-public class TileEntityMonitor extends TileEntityBlockMachine {
+public class TileEntityMonitor extends TileEntityMultiBlockMachinePart {
 
     private int monitorSide;
 
     public void pokeCheckStuff() {
-        if (getBlockType() != BlockRegister.monitor.block || getBlockMetadata() != BlockRegister.monitor.meta)
+        if (getBlockType() != BlockRegister.monitor.block) {
             return;
+        }
         boolean neighbour = false;
         for (EnumFacing direction : EnumFacing.VALUES) {
             if (direction == EnumFacing.UP || direction == EnumFacing.DOWN)

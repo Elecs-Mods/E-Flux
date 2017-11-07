@@ -9,10 +9,9 @@ import elec332.core.tile.IRandomDisplayTickProviderTile;
 import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
-import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.ConnectionType;
-import elec332.eflux.api.energy.IEnergyProvider;
+import elec332.eflux.api.energy.IEnergyGenerator;
 import elec332.eflux.api.energy.IEnergyTile;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.tileentity.TileEntityEFlux;
@@ -37,7 +36,7 @@ import java.util.Random;
  * Created by Elec332 on 29-4-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxCoalGenerator")
-public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyProvider, ISimpleWindowFactory, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
+public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyGenerator, ISimpleWindowFactory, IActivatableMachine, IRandomDisplayTickProviderTile, ITickable {
 
     public TileEntityCoalGenerator(){
         inventory = new BasicItemHandler(1){
@@ -227,13 +226,13 @@ public class TileEntityCoalGenerator extends TileEntityEFlux implements IEnergyP
     @Override
     @SuppressWarnings("all")
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-       return  ((capability == EFluxAPI.PROVIDER_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
+       return  ((capability == EFluxAPI.GENERATOR_CAPABILITY || capability == EFluxAPI.TRANSMITTER_CAPABILITY) && facing != getTileFacing()) || super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("all")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        return capability == EFluxAPI.PROVIDER_CAPABILITY ? (facing != getTileFacing() ? (T)this : null) : (capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (facing != getTileFacing() ? (T)transmitter : null) : super.getCapability(capability, facing));
+        return capability == EFluxAPI.GENERATOR_CAPABILITY ? (facing != getTileFacing() ? (T)this : null) : (capability == EFluxAPI.TRANSMITTER_CAPABILITY ? (facing != getTileFacing() ? (T)transmitter : null) : super.getCapability(capability, facing));
     }
 
 }

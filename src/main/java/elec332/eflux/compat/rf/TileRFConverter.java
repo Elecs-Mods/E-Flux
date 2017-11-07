@@ -81,7 +81,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
      */
 
     /**
-     * Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.
+     * Remove energy from an IEnergyGenerator, internal distribution is left entirely to the IEnergyGenerator.
      *
      * @param from       Orientation the energy is extracted from.
      * @param maxExtract Maximum amount of energy to extract.

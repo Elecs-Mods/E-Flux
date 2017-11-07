@@ -50,6 +50,9 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
         ItemStack stack = player.getHeldItem(hand);
         boolean creative = isCreative(stack);
         IWeakEnderConnection<IEndergyCapability> connection = creative ? null : getCurrentConnection(stack);
+        if (connection == null){
+            return EnumActionResult.FAIL;
+        }
         TileEntity tile = WorldHelper.getTileAt(world, pos);
         if (tile instanceof TileEntityAreaMover){
             if (!world.isRemote && !stack.hasTagCompound()){
@@ -62,7 +65,7 @@ public class ItemEFluxAreaMover extends AbstractEnderCapabilityItem<IEndergyCapa
                 }
             }
             return !world.isRemote ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
-        } else if (stack.hasTagCompound()){
+        } else if (player.isSneaking() && stack.hasTagCompound()){
             if (!world.isRemote) {
                 BlockPos newPos = pos.offset(side);
                 int range = stack.getItemDamage();

@@ -8,11 +8,11 @@ import net.minecraftforge.common.capabilities.Capability;
  */
 public enum ConnectionType {
 
-    PROVIDER(IEnergyProvider.class) {
+    PROVIDER(IEnergyGenerator.class) {
 
         @Override
-        public Capability<IEnergyProvider> getCapability() {
-            return EFluxAPI.PROVIDER_CAPABILITY;
+        public Capability<IEnergyGenerator> getCapability() {
+            return EFluxAPI.GENERATOR_CAPABILITY;
         }
 
         @Override

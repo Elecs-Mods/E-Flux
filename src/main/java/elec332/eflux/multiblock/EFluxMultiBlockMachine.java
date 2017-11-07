@@ -16,8 +16,10 @@ import elec332.eflux.util.BreakableMachineInventory;
 import elec332.eflux.util.MultiBlockLogic;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -99,9 +101,18 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
 
     @Override
     public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
-        information.add("Power: "+energyContainer.getStoredPower());
-        information.add("Broken: "+broken);
+        information.add("Power: "+hitData.getData().getInteger("pwer"));
+        information.add("Broken: "+hitData.getData().getBoolean("brkn"));
         super.addInformation(information, hitData);
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+        tag = super.getInfoNBTData(tag, tile, player, hitData);
+        tag.setInteger("pwer", energyContainer.getStoredPower());
+        tag.setBoolean("brkn", broken);
+        return tag;
     }
 
     public int getStoredPower(){

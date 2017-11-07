@@ -2,18 +2,16 @@ package elec332.eflux.grid.energy;
 
 import com.google.common.collect.Sets;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergyProvider;
+import elec332.eflux.api.energy.IEnergyGenerator;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
-import elec332.eflux.api.energy.ISpecialEnergyProvider;
+import elec332.eflux.api.energy.IEnergyProvider;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Elec332 on 24-7-2016.
@@ -28,15 +26,19 @@ public class EFluxEnergyGrid {
         this.receivers = Sets.newHashSet();
         this.providers = Sets.newHashSet();
         this.specialProviders = Sets.newHashSet();
-        this.maxTransfer = -1;
+        this.maxEF = maxRP = maxPow = -1;
         this.transmitters = Sets.newHashSet();
+        this.random = new Random();
+        this.uuid = UUID.randomUUID();
     }
 
     private final Set<EFluxEnergyObject> allObjects, allObjectsImmutable, transmitters;
     private final Set<ConnectionData> allConnections, allConnectionsImmutable;
     private final Set<ConnectionData> receivers, providers, specialProviders;
+    private final Random random;
+    private final UUID uuid;
 
-    private int maxTransfer;
+    private int maxEF, maxRP, maxPow;
 
     int processedEF, processedRP;
 
@@ -106,8 +108,8 @@ public class EFluxEnergyGrid {
         EnumFacing f = connectionData.connectedFacing;
         boolean b = false;
         if (EFluxGridHandler.isValidProvider(c, f)){
-            IEnergyProvider provider = c.getCapability(EFluxAPI.PROVIDER_CAPABILITY, f);
-            if (provider instanceof ISpecialEnergyProvider){
+            IEnergyGenerator provider = c.getCapability(EFluxAPI.GENERATOR_CAPABILITY, f);
+            if (provider instanceof IEnergyProvider){
                 specialProviders.add(connectionData);
                 b = true;
             } else {
@@ -121,8 +123,7 @@ public class EFluxEnergyGrid {
         }
         if (EFluxGridHandler.isValidTransmitter(c, backup)){
             IEnergyTransmitter transmitter = c.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, backup);
-            int i = transmitter.getMaxEFTransfer();
-            checkTransferRate(i);
+            checkTransferRate(transmitter);
             transmitters.add(connectionData.object);
             b = true;
         }
@@ -134,14 +135,24 @@ public class EFluxEnergyGrid {
         }
     }
 
-    private void checkTransferRate(int newPossibleRate){
-        if (newPossibleRate == -1){
+    private void checkTransferRate(IEnergyTransmitter transmitter){
+        if (transmitter == null){
             return;
         }
-        if (maxTransfer == -1){
-            maxTransfer = newPossibleRate;
-        } else {
-            maxTransfer = Math.min(maxTransfer, newPossibleRate);
+        if (maxEF == -1){
+            maxEF = transmitter.getMaxEFTransfer();
+        } else if (transmitter.getMaxEFTransfer() != -1){
+            maxEF = Math.min(maxEF, transmitter.getMaxEFTransfer());
+        }
+        if (maxRP == -1){
+            maxRP = transmitter.getMaxRPTransfer();
+        } else if (transmitter.getMaxRPTransfer() != -1){
+            maxRP = Math.min(maxRP, transmitter.getMaxRPTransfer());
+        }
+        if (maxPow == -1){
+            maxPow = transmitter.getMaxPowerTransfer();
+        } else if (transmitter.getMaxPowerTransfer() != -1){
+            maxPow = Math.min(maxPow, transmitter.getMaxPowerTransfer());
         }
     }
 
@@ -185,29 +196,43 @@ public class EFluxEnergyGrid {
     @SuppressWarnings("all")
     private void distributePower(){
         int requestedPower = 0;
-        int rp = 1;
-        int totalProvided = 0;
-        int specialCanProvide = 0;
-
+        int rp = 0;
+        int ef = 0;
+        int resistance = 0;
+        int reqPow = 0;
+/*
         int[] va = new int[this.receivers.size()];
         IEnergyReceiver[] vReceivers = new IEnergyReceiver[this.receivers.size()];
 
         int[] vs = new int[specialProviders.size()];
-        ISpecialEnergyProvider[] vProviders = new ISpecialEnergyProvider[specialProviders.size()];
+        IEnergyProvider[] vProviders = new IEnergyProvider[specialProviders.size()];
 
         int counter = 0;
         for (ConnectionData gridData : this.receivers) {
             IEnergyReceiver receiver = gridData.object.getCapability(EFluxAPI.RECEIVER_CAPABILITY, gridData.connectedFacing);
-            rp = Math.max(rp, receiver.requestedRP());
+            resistance += 1f/receiver.getResistance();
+            reqPow = (receiver.getRequestedEF() * receiver.getRequestedEF())/receiver.getResistance();
             vReceivers[counter] = receiver;
             counter++;
         }
         counter = 0;
+
         for (ConnectionData gridData : providers) {
-            totalProvided += gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.connectedFacing).provideEnergy(rp, true);
+            IEnergyGenerator provider = gridData.object.getCapability(EFluxAPI.GENERATOR_CAPABILITY, gridData.connectedFacing);
+            float calcVar = (random.nextFloat() * (provider.getVariance() * 2)) - provider.getVariance();
+            int efC = provider.getCurrentAverageEF();
+
         }
+
+/*
+
+
+        if (maxTransfer > -1) {
+            rp = Math.min(rp, maxTransfer);
+        }
+
         for (ConnectionData gridData : specialProviders) {
-            ISpecialEnergyProvider energyProvider = (ISpecialEnergyProvider) gridData.object.getCapability(EFluxAPI.PROVIDER_CAPABILITY, gridData.connectedFacing);
+            IEnergyProvider energyProvider = (IEnergyProvider) gridData.object.getCapability(EFluxAPI.GENERATOR_CAPABILITY, gridData.connectedFacing);
             int e = energyProvider.provideEnergy(rp, false);
             vs[counter] = e;
             specialCanProvide += e;
@@ -219,9 +244,6 @@ public class EFluxEnergyGrid {
             int e = receiver.getRequestedEF(rp);
             va[i] = e;
             requestedPower += e;
-        }
-        if (maxTransfer > -1) { //TODO: Move up?
-            rp = Math.min(rp, maxTransfer);
         }
         if (totalProvided >= requestedPower){
             for (int i = 0; i < vReceivers.length; i++) {
@@ -251,7 +273,7 @@ public class EFluxEnergyGrid {
             }
         }
         processedRP = rp;
-        processedEF = totalProvided;
+        processedEF = totalProvided;*/
     }
 
     private void debugStuff(){
