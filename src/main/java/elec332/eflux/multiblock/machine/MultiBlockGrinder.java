@@ -1,6 +1,7 @@
 package elec332.eflux.multiblock.machine;
 
 import elec332.core.util.ItemStackHelper;
+import elec332.core.util.PlayerHelper;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.multiblock.EFluxMultiBlockProcessingMachine;
@@ -100,12 +101,12 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Override
     public boolean onAnyBlockActivatedSafe(EntityPlayer player, EnumHand hand, BlockPos pos, IBlockState state) {
-        /*if (!getWorldObj().isRemote){
-            for (int i = 0; i < inventory.getSizeInventory(); i++) {
+        if (!getWorldObj().isRemote){
+            for (int i = 0; i < inventory.getSlots(); i++) {
                 PlayerHelper.sendMessageToPlayer(player, ""+inventory.getStackInSlot(i));
             }
             PlayerHelper.sendMessageToPlayer(player, ""+dustPile.getSize());
-        }*/
+        }
         return super.onAnyBlockActivatedSafe(player, hand, pos, state);
     }
 
@@ -128,6 +129,9 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
 
     @Nonnull
     public ItemStack extractItem(){
+        if (isBroken()){
+            return ItemStackHelper.NULL_STACK;
+        }
         if (dustPile.getSize() <= 0) {
             return ItemStackHelper.NULL_STACK;
         }

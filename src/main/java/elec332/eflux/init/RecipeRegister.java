@@ -115,7 +115,7 @@ public final class RecipeRegister {
 
     private static void registerEFluxRecipes(){
         CompressorRecipes.getInstance().registerRecipe(carbonMesh, carbonPlate, false);
-        GrinderRecipes.instance.addRecipe("vanillaCoal", new GrinderRecipes.OreDictStack("dustCoal", 18));
+        GrinderRecipes.instance.addRecipe("vanillaCoal", new GrinderRecipes.OreDictStack("dustCoal", 9));
         GrinderRecipes.instance.addRecipe(new GrinderRecipes.IGrinderRecipe() {
 
             @Override

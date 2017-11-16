@@ -6,6 +6,9 @@ import elec332.eflux.multiblock.machine.MultiBlockGrinder;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -88,11 +91,15 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
         if (slot == 0 && amount > 0 && ItemStackHelper.isStackValid(stored)){
             ItemStack ret = ItemStackHelper.copyItemStack(stored);
             if (ret.stackSize <= amount){
-                this.stored = ItemStackHelper.NULL_STACK;
+                if (!simulate) {
+                    this.stored = ItemStackHelper.NULL_STACK;
+                }
                 return ret;
             } else {
                 ret.stackSize = amount;
-                this.stored.stackSize -= amount;
+                if (!simulate) {
+                    this.stored.stackSize -= amount;
+                }
                 return ret;
             }
         }
@@ -110,6 +117,17 @@ public class TileEntityMultiBlockDustStorage extends AbstractTileEntityMultiBloc
             throw new IllegalArgumentException();
         }
         stored = stack;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing, boolean hasMultiBlock) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing, hasMultiBlock);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this : super.getCapability(capability, facing, hasMultiBlock);
     }
 
 }

@@ -1,6 +1,9 @@
 package elec332.eflux.multipart;
 
 import com.google.common.collect.Lists;
+import elec332.core.api.info.IInfoDataAccessorBlock;
+import elec332.core.api.info.IInfoProvider;
+import elec332.core.api.info.IInformation;
 import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.client.RenderHelper;
 import elec332.core.main.ElecCore;
@@ -16,6 +19,7 @@ import elec332.eflux.init.ItemRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -35,7 +39,7 @@ import java.util.UUID;
  * Created by Elec332 on 17-12-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxCable")
-public final class TileEntityCable extends TileBase implements IEnergyTransmitter {
+public final class TileEntityCable extends TileBase implements IEnergyTransmitter, IInfoProvider {
 
     public TileEntityCable(){
         this(null);
@@ -144,6 +148,8 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
     public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector) {
         return otherType != ConnectionType.TRANSMITTER || (!(otherConnector instanceof TileEntityCable) || cableType == ((TileEntityCable) otherConnector).cableType);
     }
+
+
 
     @Override
     public int getMaxEFTransfer() {
@@ -288,6 +294,18 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
         HITBOXES[EnumFacing.WEST.ordinal()] = new AxisAlignedBB(heightStuff, heightStuff, heightStuff, 0, f1, f1);
         HITBOXES[EnumFacing.EAST.ordinal()] = new AxisAlignedBB(1, heightStuff, heightStuff, f1, f1, f1);
         HITBOXES[6] = new AxisAlignedBB(heightStuff, heightStuff, heightStuff, f1, f1, f1);
+    }
+
+    @Override
+    public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
+        information.add("Max RP: "+cableType.getMaxRP());
+        information.add("Max EF: "+cableType.getMaxEF());
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
+        return new NBTTagCompound();
     }
 
     private class ClientChecker implements Runnable {

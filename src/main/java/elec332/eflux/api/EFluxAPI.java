@@ -3,7 +3,7 @@ package elec332.eflux.api;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.ender.IEnderNetworkComponent;
 import elec332.eflux.api.ender.internal.IEndergyCapability;
-import elec332.eflux.api.energy.IEnergyProvider;
+import elec332.eflux.api.energy.IEnergyGenerator;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.IEnergyTransmitter;
 import elec332.eflux.api.heat.IHeatReceiver;
@@ -22,8 +22,8 @@ public class EFluxAPI {
 
     @CapabilityInject(IEnergyReceiver.class)
     public static Capability<IEnergyReceiver> RECEIVER_CAPABILITY;
-    @CapabilityInject(IEnergyProvider.class)
-    public static Capability<IEnergyProvider> PROVIDER_CAPABILITY;
+    @CapabilityInject(IEnergyGenerator.class)
+    public static Capability<IEnergyGenerator> GENERATOR_CAPABILITY;
     @CapabilityInject(IEnergyTransmitter.class)
     public static Capability<IEnergyTransmitter> TRANSMITTER_CAPABILITY;
 
@@ -44,7 +44,7 @@ public class EFluxAPI {
 
     static {
         registerWithoutStorageAndDefaultInstance(IEnergyReceiver.class);
-        registerWithoutStorageAndDefaultInstance(IEnergyProvider.class);
+        registerWithoutStorageAndDefaultInstance(IEnergyGenerator.class);
         registerWithoutStorageAndDefaultInstance(IEnergyTransmitter.class);
         registerWithoutStorageAndDefaultInstance(IHeatReceiver.class);
         registerWithoutStorageAndDefaultInstance(IEnderNetworkComponent.class);
@@ -52,6 +52,7 @@ public class EFluxAPI {
         registerWithoutStorageAndDefaultInstance(ICircuit.class);
     }
 
+    @SuppressWarnings("all")
     static void registerWithoutStorageAndDefaultInstance(Class clazz){
         CapabilityManager.INSTANCE.register(clazz, new Capability.IStorage() {
 

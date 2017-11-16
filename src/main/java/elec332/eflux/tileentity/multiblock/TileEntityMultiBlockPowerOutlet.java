@@ -2,7 +2,7 @@ package elec332.eflux.tileentity.multiblock;
 
 import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergyProvider;
+import elec332.eflux.api.energy.IEnergyGenerator;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -11,10 +11,10 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 13-9-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxMultiBlockPowerOutlet")
-public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBlockHandler<IEnergyProvider> implements IEnergyProvider {
+public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBlockHandler<IEnergyGenerator> implements IEnergyGenerator {
 
-    @CapabilityInject(IEnergyProvider.class)
-    public static Capability<IEnergyProvider> CAPABILITY;
+    @CapabilityInject(IEnergyGenerator.class)
+    public static Capability<IEnergyGenerator> CAPABILITY;
 /*
     @Override
     public void onTileUnloaded() {
@@ -38,23 +38,23 @@ public class TileEntityMultiBlockPowerOutlet extends AbstractTileEntityMultiBloc
      */
     @Override
     public int provideEnergy(int rp, boolean execute) {
-        IEnergyProvider mb = getMultiBlockHandler();
+        IEnergyGenerator mb = getMultiBlockHandler();
         return mb == null ? 0 : mb.provideEnergy(rp, execute);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing, boolean hasMultiBlock) {
-        return (capability == EFluxAPI.PROVIDER_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing, hasMultiBlock);
+        return (capability == EFluxAPI.GENERATOR_CAPABILITY && facing == getTileFacing()) || super.hasCapability(capability, facing, hasMultiBlock);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
-        return capability == EFluxAPI.PROVIDER_CAPABILITY ? (facing == getTileFacing() ? (T)this : null) : super.getCapability(capability, facing, hasMultiBlock);
+        return capability == EFluxAPI.GENERATOR_CAPABILITY ? (facing == getTileFacing() ? (T)this : null) : super.getCapability(capability, facing, hasMultiBlock);
     }
 
     @Override
-    protected Capability<IEnergyProvider> getCapability() {
+    protected Capability<IEnergyGenerator> getCapability() {
         return CAPABILITY;
     }
 

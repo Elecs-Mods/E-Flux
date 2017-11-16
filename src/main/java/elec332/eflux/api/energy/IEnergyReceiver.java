@@ -5,29 +5,12 @@ package elec332.eflux.api.energy;
  */
 public interface IEnergyReceiver extends IEnergyTile {
 
-    /**
-     *
-     * @return The Redstone Potential at which the machine wishes to operate
-     */
-    public int requestedRP();
+    //volts
+    public int getRequestedEF();
 
-    /**
-     *
-     * @param rp
-     *      The Redstone Potential in the network
-     *
-     * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
-    public int getRequestedEF(int rp);
+    public int getResistance();
 
-    /**
-     * @param rp
-     *      the RedstonePotential in the network
-     * @param ef
-     *      the amount of EnergeticFlux that is being provided
-     *
-     * @return The amount of EnergeticFlux that wasn't used
-     */
-    public int receivePower(int rp, int ef);
+    //Blow up if voltage is too high or something... (or AC instead of DC, if machine has no rectifier)
+    public void receivePower(int ef, int rp, EnergyType type);
 
 }

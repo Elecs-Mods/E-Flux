@@ -15,7 +15,7 @@ import net.minecraftforge.common.capabilities.Capability;
  * Created by Elec332 on 15-4-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxHeater")
-public class TileEntityHeater extends TileEntityBlockMachine implements ITickable, IEFluxPowerHandler {
+public class TileEntityHeater extends TileEntityMultiBlockMachinePart implements ITickable, IEFluxPowerHandler {
 
     public TileEntityHeater(){
         energyContainer = new EnergyContainer(500, this);

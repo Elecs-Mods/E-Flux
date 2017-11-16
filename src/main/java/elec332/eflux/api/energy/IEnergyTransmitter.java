@@ -16,4 +16,12 @@ public interface IEnergyTransmitter extends IEnergyTile {
 
     public int getMaxRPTransfer();
 
+    default public int getMaxPowerTransfer() {
+        return getMaxEFTransfer() * getMaxRPTransfer();
+    }
+
+    public default float getCableLength(){
+        return 1;
+    }
+
 }

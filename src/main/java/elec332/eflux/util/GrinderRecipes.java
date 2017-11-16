@@ -128,7 +128,8 @@ public class GrinderRecipes {
             if (!canMerge(stack)){
                 throw new IllegalArgumentException();
             }
-            return new OreDictStack(name, amount + stack.amount);
+            amount += stack.amount;
+            return this;
         }
 
         public void writeToNBT(NBTTagCompound tag){

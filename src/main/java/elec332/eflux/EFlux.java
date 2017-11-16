@@ -22,6 +22,7 @@ import elec332.core.server.ServerHelper;
 import elec332.core.util.*;
 import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.ender.IEnderCapabilityFactory;
+import elec332.eflux.api.energy.EnergyType;
 import elec332.eflux.api.util.IBreakableMachine;
 import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -141,7 +142,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         networkHandler.registerClientPacket(new PacketSyncEnderNetwork());
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
-        ElecCoreRegistrar.GRIDHANDLERS.register(gridHandler = new EFluxGridHandler());
+        //ElecCoreRegistrar.GRIDHANDLERS.register(gridHandler = new EFluxGridHandler());
 
         //DEBUG///////////////////
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));
@@ -317,6 +318,9 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
         loadTimer.startPhase(event);
+        if (EnergyType.values().length != 2){
+            throw new RuntimeException("Someone is messing with the laws of physics.");
+        }
         //Nope
         loadTimer.endPhase(event);
     }

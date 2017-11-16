@@ -48,12 +48,14 @@ public class DustPile {
         if (content.isEmpty()) {
             return null;
         }
+        System.out.println(content);
         NBTTagCompound ret = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         final boolean ensureMax = total <= 9;
         int i = 9;
         content.sort(Comparator.comparingInt(o -> o.amount));
         final float f = 9.0f/(total/2);
+        System.out.println(f);
         List<GrinderRecipes.OreDictStack> toRemove = Lists.newArrayList();
         for (GrinderRecipes.OreDictStack dustPart : content){
             if (i == 0) {
@@ -84,6 +86,7 @@ public class DustPile {
             content.clear();
             total = 0;
         }
+        System.out.println("tags: "+list.tagCount());
         if (list.tagCount() > 0) {
             ret.setTag("dusts", list);
             return ret;

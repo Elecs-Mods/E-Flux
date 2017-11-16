@@ -9,7 +9,7 @@ import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.items.ItemBlockEFluxChunkLoader;
 import elec332.eflux.items.ItemBlockEFluxSpawner;
 import elec332.eflux.multipart.BlockCable;
-import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityMultiBlockMachinePart;
 import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
 import elec332.eflux.tileentity.multiblock.*;
@@ -137,7 +137,7 @@ public final class BlockRegister {
         ;
 
         private BlockMachineParts(){
-            this(TileEntityBlockMachine.class);
+            this(TileEntityMultiBlockMachinePart.class);
         }
 
         private BlockMachineParts(Class<? extends TileEntity> tileClass){
@@ -206,7 +206,7 @@ public final class BlockRegister {
     }
 
     private enum GlassTypes implements IEFluxBlockMachineData {
-        GLASS(TileEntityBlockMachine.class),
+        GLASS(TileEntityMultiBlockMachinePart.class),
         LASERLENS(TileEntityLaser.class)
         ;
 

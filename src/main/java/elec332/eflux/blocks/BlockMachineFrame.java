@@ -11,7 +11,7 @@ import elec332.core.util.UniversalUnlistedProperty;
 import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.render.model.MachineFrameQuadProvider;
-import elec332.eflux.tileentity.basic.TileEntityBlockMachine;
+import elec332.eflux.tileentity.basic.TileEntityMultiBlockMachinePart;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -90,7 +90,6 @@ public class BlockMachineFrame extends BlockWithMeta<BlockMachineFrame.EnumMachi
     @Override
     @SideOnly(Side.CLIENT)
     public IBakedModel getItemModel(ItemStack stack, World world, EntityLivingBase entity) {
-        System.out.println("getitemmodel");
         return model;
     }
 
@@ -127,7 +126,7 @@ public class BlockMachineFrame extends BlockWithMeta<BlockMachineFrame.EnumMachi
 
     @Override
     public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-        return new TileEntityBlockMachine();
+        return new TileEntityMultiBlockMachinePart();
     }
 
     public enum EnumMachineFrameType implements IDefaultStringSerializable {

@@ -9,8 +9,8 @@ public interface IEnergyGridInformation {
 
     public int getActiveConnections();
 
-    public int getCurrentRP(EnumFacing side);
+    public int getCurrentEF(EnumFacing side);
 
-    public int getLastProcessedEF(EnumFacing side);
+    public int getLastProcessedRP(EnumFacing side);
 
 }
