@@ -36,7 +36,7 @@ public abstract class EFluxMultiBlockGenerator extends AbstractMultiBlock implem
 
     protected int storedPower;
 
-    @Override
+    //@Override
     public int provideEnergy(int rp, boolean execute) {
         int maxPower = Math.min(storedPower, getMaxProvidedPower());
         if (execute){

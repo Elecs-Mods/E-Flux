@@ -6,6 +6,7 @@ import elec332.core.main.ElecCore;
 import elec332.core.util.InventoryHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.EFlux;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.init.ItemRegister;
@@ -31,6 +32,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -98,11 +101,22 @@ public class WorldEventHandler {
 
     @SubscribeEvent
     public void onBlockActivated(PlayerInteractEvent.RightClickBlock event){
+        if (event.getItemStack().getItem() == ItemRegister.wireCoil){
+            event.setUseBlock(Event.Result.DENY);
+            return;
+        }
         TileEntity tile = WorldHelper.getTileAt(event.getWorld(), event.getPos());
         if (tile != null && tile.hasCapability(RedstoneCapability.CAPABILITY, null)){
             tile.getCapability(RedstoneCapability.CAPABILITY, null).onActivated(event.getEntityPlayer(), event.getItemStack());
         }
     }
+    @SubscribeEvent
+    public void worldUnload(WorldEvent.Unload event){
+        if (!event.getWorld().isRemote && WorldHelper.getDimID(event.getWorld()) == 0){
+            EFlux.electricityGridHandler.clear();
+        }
+    }
+
 
     @SubscribeEvent
     public void onBlockChanged(BlockEvent.NeighborNotifyEvent event){

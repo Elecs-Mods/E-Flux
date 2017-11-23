@@ -7,10 +7,10 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 16-4-2015.
  */
-public interface IEnergyTransmitter extends IEnergyTile {
+public interface IEnergyTransmitter extends IEnergyObject {
 
-    @Override
-    public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector);
+    //@Override
+    public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyObject otherConnector);
 
     public int getMaxEFTransfer();
 

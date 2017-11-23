@@ -58,7 +58,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
     protected int getMaxStoredPower() {
         return 9000;
     }
-
+/*
     @Override
     public float getAcceptance() {
         return 1.0f;
@@ -73,7 +73,7 @@ public class MultiBlockGrinder extends EFluxMultiBlockProcessingMachine {
     public int getOptimalRP() {
         return 10;
     }
-
+*/
     @Override
     public ItemStack getRandomRepairItem() {
         return new ItemStack(Items.IRON_INGOT);

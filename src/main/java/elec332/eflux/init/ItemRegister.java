@@ -40,7 +40,11 @@ public final class ItemRegister {
     //Misc
     public static ItemStack redstoneUpgrade;
 
+    public static Item wireCoil;
+
     public static void init(){
+
+        wireCoil = RegistryHelper.register(new ItemOverHeadWireCoil("wirething"));
 
         Item cable = RegistryHelper.register(new ItemBlock(BlockRegister.cable){
 

@@ -269,7 +269,7 @@ public class TileEntityEFluxSpawner extends TileEntityEFlux implements ITickable
     private void makeBrainDead(EntityLiving entity){
         entity.tasks.taskEntries.clear();
         entity.targetTasks.taskEntries.clear();
-        entity.getNavigator().clearPathEntity();
+        entity.getNavigator().clearPath();
         entity.setCanPickUpLoot(false);
     }
 

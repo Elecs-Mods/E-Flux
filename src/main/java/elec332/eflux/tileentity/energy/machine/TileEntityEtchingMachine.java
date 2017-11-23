@@ -11,6 +11,7 @@ import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.circuit.CircuitHelper;
 import elec332.eflux.api.circuit.ICircuit;
 import elec332.eflux.api.energy.container.IProgressMachine;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.circuit.ICircuitDataProvider;
 import elec332.eflux.circuit.IEFluxCircuit;
 import elec332.eflux.client.EFluxResourceLocation;
@@ -24,8 +25,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 4-6-2016.
@@ -68,24 +71,44 @@ public class TileEntityEtchingMachine extends BreakableMachineTileWithSlots impl
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 320;
-    }
-
-    @Override
-    public int getRequestedRP() {
-        return 8;
-    }
-
-    @Override
-    public int getEFForOptimalRP() {
-        return 9;
+    public int getWorkingVoltage() {
+        return 12;
     }
 
     @Override
     public float getAcceptance() {
         return 0.3f;
     }
+
+    @Override
+    public int getMaxRP() {
+        return 4;
+    }
+
+    @Override
+    public double getResistance() {
+        return 3.3;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
+    }
+
+    @Override
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
+    }
+
+    private ConnectionPoint cp1, cp2;
 
     @Override
     public int getRequiredPowerPerTick() {

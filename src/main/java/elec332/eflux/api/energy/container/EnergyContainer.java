@@ -1,23 +1,29 @@
 package elec332.eflux.api.energy.container;
 
 import elec332.core.api.inventory.IHasProgressBar;
+import elec332.eflux.api.energy.EnergyType;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.util.IBreakableMachine;
-import elec332.eflux.util.CalculationHelper;
+import elec332.eflux.api.util.ConnectionPoint;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 24-8-2015.
  */
 public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
 
-    public EnergyContainer(int energy, IEFluxPowerHandler powerHandler, IBreakableMachine breakableMachine){
-        this(energy, powerHandler);
+    public EnergyContainer(IEFluxPowerHandler powerHandler, IBreakableMachine breakableMachine){
+        this(powerHandler);
         this.breakableMachine = breakableMachine;
     }
 
-    public EnergyContainer(int maxEnergy, IEFluxPowerHandler powerHandler){
-        this.maxEnergy = maxEnergy;
+    public EnergyContainer(IEFluxPowerHandler powerHandler){
+        this.maxEnergy = powerHandler.getWorkingVoltage() * powerHandler.getMaxRP();
         this.powerHandler = powerHandler;
         this.breakableMachine = null;
     }
@@ -25,11 +31,12 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
     private IEFluxPowerHandler powerHandler;
     private int maxEnergy;
     private int storedPower;
+    public double lastEf, lastRP;
     private IBreakableMachine breakableMachine;
     private int processTime;
     private int progress;
     private IProgressMachine progressMachine;
-    private int lastRP;
+    //private int lastRP;
 
     public final void tick(){
         if (progressMachine != null){
@@ -46,14 +53,15 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
             } else if (progress > 0) {
                 progress = 0;
             }
+            storedPower = 0;
         }
     }
 
     protected int calculateProcessTime(int initialTime){
-        int dev = Math.max(lastRP, powerHandler.getOptimalRP());
-        int devTo = Math.min(lastRP, powerHandler.getOptimalRP());
-        float mul = (float)devTo/dev;
-        float fin = 1/(mul/2);
+        //int dev = Math.max(lastRP, powerHandler.getOptimalRP());
+        //int devTo = Math.min(lastRP, powerHandler.getOptimalRP());
+        //float mul = (float)devTo/dev;
+        //float fin = 1/(mul/2);
         return (int) initialTime;//(initialTime*fin);
     }
 
@@ -121,38 +129,6 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
         return progress/(float) processTime;
     }
 
-    @Override
-    public int requestedRP() {
-        return powerHandler.getOptimalRP();
-    }
-
-    @Override
-    public final int getRequestedEF(int rp) {
-        if (breakableMachine != null) {
-            if (rp < requestedRP() * (1 - getAcceptance()) || breakableMachine.isBroken()) {
-                return 0;
-            }
-            if (rp > requestedRP() * (1 + getAcceptance())) {
-                breakMachine();
-                markDirty();
-            }
-        }
-        return powerHandler.getEFForOptimalRP(); //Math.min(efForOptimalRP, (maxEnergy-storedPower)/rp);
-    }
-
-    @Override
-    public final int receivePower(int rp, int ef) {
-        if (breakableMachine != null && breakableMachine.isBroken())
-            return 0;
-        int calcEF = CalculationHelper.calcRequestedEF(rp, requestedRP(), powerHandler.getEFForOptimalRP(), (maxEnergy-storedPower)/rp, getAcceptance());
-        this.storedPower += rp*calcEF;
-        if (storedPower > maxEnergy)
-            this.storedPower = maxEnergy;
-        this.lastRP = rp;
-        markDirty();
-        return 0;
-    }
-
     public final void breakMachine(){
         if (breakableMachine != null){
             breakableMachine.setBroken(true);
@@ -162,6 +138,41 @@ public class EnergyContainer implements IHasProgressBar, IEnergyReceiver {
 
     private void markDirty(){
         powerHandler.markObjectDirty();
+    }
+
+    @Override
+    public double getResistance() {
+        return powerHandler.getResistance();
+    }
+
+    @Override
+    public void receivePower(double ef, double rp) {
+        ef = Math.abs(ef);
+        rp = Math.abs(rp);
+        lastEf = ef;
+        lastRP = rp;
+        storedPower += ef * rp;
+        if (storedPower > maxEnergy){
+            storedPower = maxEnergy;
+        }
+    }
+
+    @Nonnull
+    @Override
+    public EnergyType getEnergyType(int post) {
+        return powerHandler.getEnergyType();
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return powerHandler.getConnectionPoint(post);
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return powerHandler.getConnectionPoint(side, hitVec);
     }
 
 }

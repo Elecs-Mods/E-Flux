@@ -123,7 +123,7 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
     public ItemStack getRandomRepairItem() {
         return new ItemStack(Items.IRON_INGOT);
     }
-
+/*
     @Override
     public float getAcceptance() {
         return 0.5f;
@@ -134,16 +134,16 @@ public class MultiBlockFurnace extends EFluxMultiBlockProcessingMachine {
         return hasStartedUp() ? 30 : 22;
     }
 
-    @Override
-    public EnumRecipeMachine getMachine() {
-        return EnumRecipeMachine.FURNACE;
-    }
+
 
     @Override
     public int getOptimalRP() {
         return 15;
     }
-
+*/@Override
+public EnumRecipeMachine getMachine() {
+    return EnumRecipeMachine.FURNACE;
+}
     @Override
     public ResourceLocation getBackgroundImageLocation() {
         return new ResourceLocation("textures/gui/container/furnace.png");

@@ -1,14 +1,18 @@
 package elec332.eflux.init;
 
+import elec332.core.tile.BlockTileBase;
 import elec332.core.util.RegistryHelper;
 import elec332.core.world.location.BlockStateWrapper;
 import elec332.eflux.EFlux;
 import elec332.eflux.blocks.*;
 import elec332.eflux.blocks.data.IEFluxBlockMachineData;
+import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.items.AbstractTexturedItemBlock;
 import elec332.eflux.items.ItemBlockEFluxChunkLoader;
 import elec332.eflux.items.ItemBlockEFluxSpawner;
 import elec332.eflux.multipart.BlockCable;
+import elec332.eflux.tileentity.TileGeneratorHVOutput;
+import elec332.eflux.tileentity.TileTestReceiver;
 import elec332.eflux.tileentity.basic.TileEntityMultiBlockMachinePart;
 import elec332.eflux.tileentity.basic.TileEntityHeater;
 import elec332.eflux.tileentity.basic.TileEntityLaser;
@@ -16,13 +20,21 @@ import elec332.eflux.tileentity.multiblock.*;
 import elec332.eflux.util.EnumMachines;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 24-2-2015.
@@ -104,6 +116,32 @@ public final class BlockRegister {
 
         areaMover = new BlockAreaMover().register().setCreativeTab(EFlux.creativeTab);
         registerOreDictionary();
+        registerBlock(new BlockWireConnector(new EFluxResourceLocation("wireconn")));
+        registerBlock(new BlockTileBase(Material.CAKE, TileGeneratorHVOutput.class, new EFluxResourceLocation("hvgenout")){
+
+            @Override
+            @SuppressWarnings("all")
+            public IBlockState getBlockStateForPlacementC(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, @Nullable EnumHand hand) {
+                return getStateFromMeta(meta);
+            }
+
+        });
+
+        registerBlock(new BlockTileBase(Material.CAKE, TileTestReceiver.class, new EFluxResourceLocation("receiver")){
+
+            @Override
+            @SuppressWarnings("all")
+            public IBlockState getBlockStateForPlacementC(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, @Nullable EnumHand hand) {
+                return getStateFromMeta(meta);
+            }
+
+        });
+    }
+
+    private static void registerBlock(Block block){
+        RegistryHelper.register(block.setCreativeTab(EFlux.creativeTab));
+        RegistryHelper.register(new ItemBlock(block).setCreativeTab(EFlux.creativeTab), block.getRegistryName());
+
     }
 
     private static void registerOreDictionary(){

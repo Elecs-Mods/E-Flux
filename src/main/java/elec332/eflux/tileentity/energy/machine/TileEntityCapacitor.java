@@ -10,8 +10,8 @@ import net.minecraft.util.EnumFacing;
 /**
  * Created by Elec332 on 30-4-2015.
  */
-@RegisteredTileEntity("TileEntityEFluxCapacitor")
-public class TileEntityCapacitor extends TileEntityBreakableMachine implements IEnergyProvider {
+//@RegisteredTileEntity("TileEntityEFluxCapacitor")
+public class TileEntityCapacitor{}/* extends TileEntityBreakableMachine implements IEnergyProvider {
 
     @Override
     public ItemStack getRandomRepairItem() {
@@ -46,7 +46,7 @@ public class TileEntityCapacitor extends TileEntityBreakableMachine implements I
     /**
      * @param direction the direction from which a connection is requested
      * @return weather the tile can connect and accept power from the given side
-     */
+     *
     @Override
     public boolean canAcceptEnergyFrom(EnumFacing direction) {
         return true;
@@ -61,7 +61,7 @@ public class TileEntityCapacitor extends TileEntityBreakableMachine implements I
      * @param rp        the RedstonePotential in the network
      * @param reqEF     the requested amount of EnergeticFlux
      * @return The amount of EnergeticFlux the tile will provide for the given Redstone Potential.
-     */
+     *
     @Override
     public int provideEnergeticFlux(int rp, int reqEF) {
         if (reqEF > energyContainer.getStoredPower()/rp)
@@ -74,7 +74,7 @@ public class TileEntityCapacitor extends TileEntityBreakableMachine implements I
      * @param execute   weather the power is actually drawn from the tile,
      *                  this flag is always true for IEnergySource.
      * @return The amount of EnergeticFlux the tile can provide for the given Redstone Potential.
-     */
+     *
     @Override
     public int provideEnergy(int rp, boolean execute) {
         if (!execute)
@@ -82,3 +82,4 @@ public class TileEntityCapacitor extends TileEntityBreakableMachine implements I
         return 0;
     }
 }
+*/

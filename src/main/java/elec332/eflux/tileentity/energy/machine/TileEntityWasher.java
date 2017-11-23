@@ -13,6 +13,7 @@ import elec332.core.util.FluidHelper;
 import elec332.core.util.FluidTankWrapper;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.init.FluidRegister;
 import elec332.eflux.init.ItemRegister;
@@ -27,12 +28,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 13-9-2015.
@@ -163,24 +166,44 @@ public class TileEntityWasher extends BreakableMachineTileWithSlots implements I
     }
 
     @Override
+    public int getWorkingVoltage() {
+        return 15;
+    }
+
+    @Override
     public float getAcceptance() {
         return 0.1f;
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 3000;
+    public int getMaxRP() {
+        return 10;
     }
 
     @Override
-    public int getEFForOptimalRP() {
-        return 14;
+    public double getResistance() {
+        return 5;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
     }
 
     @Override
-    public int getRequestedRP() {
-        return 7;
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
     }
+
+    private ConnectionPoint cp1, cp2;
 
     @Override
     public boolean canProcess() {
@@ -249,12 +272,6 @@ public class TileEntityWasher extends BreakableMachineTileWithSlots implements I
             }
         }
         gonnaBeOutputted = null;
-    }
-
-
-    @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction != getTileFacing();
     }
 
     @Override

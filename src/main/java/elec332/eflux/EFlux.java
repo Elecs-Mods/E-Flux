@@ -29,6 +29,7 @@ import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.endernetwork.EnderNetworkManager;
 import elec332.eflux.endernetwork.EnderRegistryCallbacks;
 import elec332.eflux.grid.energy.EFluxGridHandler;
+import elec332.eflux.grid.energy5.ElectricityGridHandler;
 import elec332.eflux.grid.tank.EFluxTankHandler;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.handler.EnderNetworkInfoProvider;
@@ -115,6 +116,7 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
     public static ForgeRegistry<IEnderCapabilityFactory> enderCapabilityRegistry;
     public static ForgeRegistry<ICircuitDataProvider> circuitRegistry;
     public static EFluxGridHandler gridHandler;
+    public static ElectricityGridHandler electricityGridHandler;
 
     private LoadTimer loadTimer;
 
@@ -143,6 +145,8 @@ public class EFlux implements IModuleController, IElecCoreMod, IDependencyHandle
         networkHandler.registerClientPacket(new PacketPlayerConnection());
         multiBlockRegistry = new MultiBlockRegistry();
         //ElecCoreRegistrar.GRIDHANDLERS.register(gridHandler = new EFluxGridHandler());
+        ElecCoreRegistrar.GRIDHANDLERS.register(electricityGridHandler = new ElectricityGridHandler());
+
 
         //DEBUG///////////////////
         logger.info(CalculationHelper.calcRequestedEF(23, 20, 40, 1000, 0.15f));

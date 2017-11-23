@@ -5,6 +5,7 @@ import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.api.energy.container.IProgressMachine;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.DustPile;
@@ -13,10 +14,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 17-10-2015.
@@ -181,35 +184,44 @@ public class TileEntityRubbleSieve extends TileEntityBreakableMachine implements
     }
 
     @Override
+    public int getWorkingVoltage() {
+        return 25;
+    }
+
+    @Override
     public float getAcceptance() {
         return 0.2f;
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 300;
-    }
-
-    @Override
-    public int getEFForOptimalRP() {
+    public int getMaxRP() {
         return 12;
     }
 
     @Override
-    public int getRequestedRP() {
-        return 5;
+    public double getResistance() {
+        return 2;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
     }
 
     @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction != EnumFacing.UP && direction != EnumFacing.DOWN;
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
     }
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return isItemSide(capability, facing) || super.hasCapability(capability, facing);
-    }
-
+    private ConnectionPoint cp1, cp2;
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {

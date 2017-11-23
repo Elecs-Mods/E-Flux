@@ -39,7 +39,7 @@ import java.util.UUID;
  * Created by Elec332 on 17-12-2016.
  */
 @RegisteredTileEntity("TileEntityEFluxCable")
-public final class TileEntityCable extends TileBase implements IEnergyTransmitter, IInfoProvider {
+public final class TileEntityCable extends TileBase implements /*IEnergyTransmitter, */IInfoProvider {
 
     public TileEntityCable(){
         this(null);
@@ -144,7 +144,7 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
         reRenderBlock();
     }
 
-    @Override
+    /*@Override
     public boolean canConnectTo(ConnectionType myType, @Nonnull TileEntity otherTile, ConnectionType otherType, @Nonnull IEnergyTile otherConnector) {
         return otherType != ConnectionType.TRANSMITTER || (!(otherConnector instanceof TileEntityCable) || cableType == ((TileEntityCable) otherConnector).cableType);
     }
@@ -160,7 +160,7 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
     public int getMaxRPTransfer() {
         return cableType.getMaxRP();
     }
-
+*/
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         return capability == EFluxAPI.TRANSMITTER_CAPABILITY && canConnectToSide(facing) || super.hasCapability(capability, facing);
@@ -268,9 +268,9 @@ public final class TileEntityCable extends TileBase implements IEnergyTransmitte
                         connectData.set(side.getIndex());
                     } else {
                         IEnergyTransmitter transmitter2 = tile.getCapability(EFluxAPI.TRANSMITTER_CAPABILITY, side.getOpposite());
-                        if (transmitter2 != null && transmitter2.canConnectTo(ConnectionType.TRANSMITTER, my, ConnectionType.TRANSMITTER, this) && this.canConnectTo(ConnectionType.TRANSMITTER, tile, ConnectionType.TRANSMITTER, transmitter2)) {
+                        //if (transmitter2 != null && transmitter2.canConnectTo(ConnectionType.TRANSMITTER, my, ConnectionType.TRANSMITTER, this) && this.canConnectTo(ConnectionType.TRANSMITTER, tile, ConnectionType.TRANSMITTER, transmitter2)) {
                             connectData.set(side.getIndex());
-                        }
+                        //}
                     }
                 }
             }

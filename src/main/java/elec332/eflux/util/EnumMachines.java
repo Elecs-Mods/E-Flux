@@ -23,7 +23,7 @@ import net.minecraft.util.EnumBlockRenderType;
  */
 public enum EnumMachines implements IEFluxBlockMachineData {
 
-    CAPACITOR(TileEntityCapacitor.class),
+    //CAPACITOR(TileEntityCapacitor.class),
     COAL_GENERATOR(TileEntityCoalGenerator.class),
     ASSEMBLY_TABLE(TileEntityAssemblyTable.class),
     GROWTHLAMP(TileEntityGrowthLamp.class, EnumBlockRenderType.MODEL, Material.GLASS),

@@ -31,7 +31,7 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
     public ItemStack getRandomRepairItem() {
         return new ItemStack(Blocks.IRON_BLOCK);
     }
-
+/*
     @Override
     public float getAcceptance() {
         return 0.34f;
@@ -46,7 +46,7 @@ public class MultiBlockCompressor extends EFluxMultiBlockProcessingMachine {
     public int getEFForOptimalRP() {
         return hasStartedUp() ? 28 : 83;
     }
-
+*/
     @Override
     public EnumRecipeMachine getMachine() {
         return EnumRecipeMachine.COMPRESSOR;

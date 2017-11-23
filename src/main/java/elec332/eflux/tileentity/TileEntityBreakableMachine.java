@@ -7,7 +7,6 @@ import elec332.core.server.ServerHelper;
 import elec332.core.util.ItemStackHelper;
 import elec332.eflux.EFlux;
 import elec332.eflux.api.EFluxAPI;
-import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.util.IBreakableMachine;
@@ -23,30 +22,22 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
+import java.text.DecimalFormat;
 
 /**
  * Created by Elec332 on 1-5-2015.
  */
-public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IEnergyReceiver, IBreakableMachine, IInfoProvider, IEFluxPowerHandler {
+public abstract class TileEntityBreakableMachine extends TileEntityEFlux implements IBreakableMachine, IInfoProvider, IEFluxPowerHandler {
 
     public TileEntityBreakableMachine(){
         super();
-        this.energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
+        this.energyContainer = new EnergyContainer(this, this);
     }
 
     private boolean broken = false;
     protected EnergyContainer energyContainer;
 
     public abstract ItemStack getRandomRepairItem();
-
-    protected abstract int getMaxStoredPower();
-
-    @Override
-    public int getOptimalRP() {
-        return getRequestedRP();
-    }
-
-    public abstract int getRequestedRP();
 
     @Override
     public void onBroken(){
@@ -84,6 +75,20 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     }
 
     @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        createConnectionPoints();
+    }
+
+    @Override
+    public void onLoad() {
+        createConnectionPoints();
+    }
+
+    protected void createConnectionPoints(){
+    }
+
+    @Override
     public boolean onBlockActivated(IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (broken) return openBrokenGui(player);
         return onBlockActivatedSafe(state, player, hand, side, hitX, hitY, hitZ);
@@ -96,21 +101,6 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     private boolean openBrokenGui(EntityPlayer player){
         openWindow(player, EFlux.proxy, 1);
         return true;
-    }
-
-    @Override
-    public int getRequestedEF(int rp) {
-        return energyContainer.getRequestedEF(rp);
-    }
-
-    @Override
-    public int receivePower(int rp, int ef) {
-        return energyContainer.receivePower(rp, ef);
-    }
-
-    @Override
-    public int requestedRP() {
-        return energyContainer.requestedRP();
     }
 
     @Override
@@ -138,7 +128,11 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     @Override
     public void addInformation(@Nonnull IInformation information, @Nonnull IInfoDataAccessorBlock hitData) {
         NBTTagCompound tag = hitData.getData();
-        information.addInformation("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
+        DecimalFormat df = new DecimalFormat("#.##");
+        information.add("Voltage: "+df.format(tag.getDouble("ef")));
+        information.add("Amps: "+df.format(tag.getDouble("rp")));
+        information.add("Resistance: "+df.format(getResistance())+" ohms");//"\u2126"));
+        //information.addInformation("Energy: "+tag.getInteger("energy")+"/"+tag.getInteger("maxEnergy"));
     }
 
     @Nonnull
@@ -146,22 +140,20 @@ public abstract class TileEntityBreakableMachine extends TileEntityEFlux impleme
     public NBTTagCompound getInfoNBTData(@Nonnull NBTTagCompound tag, TileEntity tile, @Nonnull EntityPlayerMP player, @Nonnull IInfoDataAccessorBlock hitData) {
         tag.setInteger("energy", energyContainer.getStoredPower());
         tag.setInteger("maxEnergy", energyContainer.getMaxStoredEnergy());
+        tag.setDouble("ef", energyContainer.lastEf);
+        tag.setDouble("rp", energyContainer.lastRP);
         return tag;
     }
 
-    protected boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return true;
-    }
-
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return (capability == EFluxAPI.RECEIVER_CAPABILITY && canAcceptEnergyFrom(facing)) || super.hasCapability(capability, facing);
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+        return capability == EFluxAPI.ENERGY_CAP || super.hasCapability(capability, facing);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        return capability == EFluxAPI.RECEIVER_CAPABILITY ? (canAcceptEnergyFrom(facing) ? (T)this : null) : super.getCapability(capability, facing);
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+        return capability == EFluxAPI.ENERGY_CAP ? (T) energyContainer : super.getCapability(capability, facing);
     }
 
 }

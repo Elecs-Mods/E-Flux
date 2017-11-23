@@ -7,6 +7,7 @@ import elec332.core.inventory.window.ISimpleWindowFactory;
 import elec332.core.inventory.window.Window;
 import elec332.core.util.BasicItemHandler;
 import elec332.core.util.ItemStackHelper;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.init.ItemRegister;
 import elec332.eflux.tileentity.BreakableMachineTileWithSlots;
 import elec332.eflux.util.DustPile;
@@ -17,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 12-9-2015.
@@ -63,29 +66,44 @@ public class TileEntityScanner extends BreakableMachineTileWithSlots implements 
     }
 
     @Override
+    public int getWorkingVoltage() {
+        return 5;
+    }
+
+    @Override
     public float getAcceptance() {
         return 0.03f;
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 400;
+    public int getMaxRP() {
+        return 1;
     }
 
     @Override
-    public int getEFForOptimalRP() {
-        return 40;
+    public double getResistance() {
+        return 25;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
     }
 
     @Override
-    public int getRequestedRP() {
-        return 4;
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
     }
 
-    @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction != getTileFacing();
-    }
+    private ConnectionPoint cp1, cp2;
 
     @Override
     public void modifyWindow(Window window, Object... args) {

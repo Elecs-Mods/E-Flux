@@ -16,13 +16,16 @@ import elec332.eflux.api.ender.internal.IEnderNetwork;
 import elec332.eflux.api.ender.internal.IStableEnderConnection;
 import elec332.eflux.api.energy.IEnergyReceiver;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.multiblock.machine.MultiBlockEnderContainer;
 import elec332.eflux.network.PacketSyncEnderNetwork;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -40,7 +43,7 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 18-2-2016.
  */
-public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEFluxPowerHandler, IEnergyReceiver, ITickable, IEnderNetwork {
+public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEFluxPowerHandler, /*IEnergyReceiver, */ITickable, IEnderNetwork {
 
     @SuppressWarnings("unchecked")
     EnderNetwork(UUID id, Side side){
@@ -348,9 +351,14 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
      *
      * @return the amount of requested EF
      */
-    @Override
+    //@Override
     public int getEFForOptimalRP() {
         return (int) (drain * 1.2);
+    }
+
+    @Override
+    public int getWorkingVoltage() {
+        return 0;
     }
 
     @Override
@@ -359,6 +367,28 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     }
 
     @Override
+    public int getMaxRP() {
+        return 0;
+    }
+
+    @Override
+    public double getResistance() {
+        return 0;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return null;
+    }
+
+    //@Override
     public int getOptimalRP() {
         return MultiBlockEnderContainer.ENDER_RP_REQ;
     }
@@ -370,7 +400,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
 
     /**
      * @return The Redstone Potential at which the machine wishes to operate
-     */
+     *
     @Override
     public int requestedRP() {
         return getOptimalRP();
@@ -379,7 +409,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
     /**
      * @param rp The Redstone Potential in the network
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
+     *
     @Override
     public int getRequestedEF(int rp) {
         return (Math.min(endergyProduction_MAX, maxEndergy - endergy) * POWER_PER_ENDERGY) / rp;
@@ -389,7 +419,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
      * @param rp the RedstonePotential in the network
      * @param ef the amount of EnergeticFlux that is being provided
      * @return The amount of EnergeticFlux that wasn't used
-     */
+     *
     @Override
     public int receivePower(int rp, int ef) {
         endergy += toEndergy(rp, ef);
@@ -397,7 +427,7 @@ public final class EnderNetwork implements INBTSerializable<NBTTagCompound>, IEF
             endergy = maxEndergy;
         }
         return 0;
-    }
+    }*/
 
     private int toEndergy(int rp, int ef){
         return (rp * ef) / POWER_PER_ENDERGY;

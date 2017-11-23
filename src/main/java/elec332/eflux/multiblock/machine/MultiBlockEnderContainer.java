@@ -30,10 +30,10 @@ import java.util.UUID;
 /**
  * Created by Elec332 on 3-5-2016.
  */
-public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFluxPowerHandler, IBreakableMachine {
+public class MultiBlockEnderContainer extends AbstractMultiBlock implements IBreakableMachine {
 
     public MultiBlockEnderContainer(){
-        energyContainer = new EnergyContainer(1200, this, this);
+        energyContainer = null;//new EnergyContainer(1200, this, this);
     }
 
     /**
@@ -92,7 +92,7 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     private IEnergyReceiver getReceiver(){
-        return network == null ? energyContainer : network;
+        return energyContainer;//network == null ? energyContainer : network;
     }
 
     /**
@@ -113,10 +113,17 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
      * do not forget that it will receive a penalty if the machine is not running at optimum RP
      *
      * @return the amount of requested EF
-     */
+
     @Override
     public int getEFForOptimalRP() {
         return 90;
+    }
+
+
+
+    @Override
+    public int getOptimalRP() {
+        return ENDER_RP_REQ;
     }
 
     @Override
@@ -125,15 +132,10 @@ public class MultiBlockEnderContainer extends AbstractMultiBlock implements IEFl
     }
 
     @Override
-    public int getOptimalRP() {
-        return ENDER_RP_REQ;
-    }
-
-    @Override
     public void markObjectDirty() {
         markDirty();
     }
-
+*/
     @Override
     public boolean isBroken() {
         return false;

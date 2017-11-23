@@ -8,6 +8,7 @@ import elec332.core.server.ServerHelper;
 import elec332.core.util.PlayerHelper;
 import elec332.core.world.WorldHelper;
 import elec332.eflux.EFlux;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.handler.ChunkLoaderPlayerProperties;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import net.minecraft.block.state.IBlockState;
@@ -22,9 +23,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -190,19 +193,44 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
     }
 
     @Override
+    public int getWorkingVoltage() {
+        return 120;
+    }
+
+    @Override
     public float getAcceptance() {
         return 0.5f;
     }
 
     @Override
-    public int getEFForOptimalRP() {
-        return 144;
+    public int getMaxRP() {
+        return 15;
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 20000;
+    public double getResistance() {
+        return 10;
     }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
+    }
+
+    @Override
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
+    }
+
+    private ConnectionPoint cp1, cp2;
 
     @Override
     public void onBlockRemoved() {
@@ -212,11 +240,6 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
             getLocations().remove(getPos());
             ChunkLoaderPlayerProperties.get(owner).setMainChunkLoader(null);
         }
-    }
-
-    @Override
-    public int getRequestedRP() {
-        return 33;
     }
 
     @Override
@@ -231,4 +254,5 @@ public class TileEntityMainChunkLoader extends TileEntityBreakableMachine implem
         tag.setInteger("chunksL", loadedChunks);
         return super.getInfoNBTData(tag, tile, player, hitData);
     }
+
 }

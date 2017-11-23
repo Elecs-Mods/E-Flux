@@ -50,9 +50,9 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         }
         if (shouldDebug()) {
             int i3 = 0;
-            for (int i2 : objects.keySet()) {
-                for (ChunkPos chunkPos : objects.get(i2).getChunks())
-                    i3 += objects.get(i2).getObjectsInChunk(chunkPos).size();
+            for (int i2 : getObjects().keySet()) {
+                for (ChunkPos chunkPos : getObjects().get(i2).getChunks())
+                    i3 += getObjects().get(i2).getObjectsInChunk(chunkPos).size();
             }
             System.out.println("Total objects: " + i3);
         }
@@ -179,15 +179,15 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         TileEntity o1Tile = o1.getTileEntity(), o2Tile = o2.getTileEntity();
         if (isReceiver(o2, opp)){
             IEnergyReceiver receiver = getReceiver(o2, opp);
-            if (receiver != null && receiver.canConnectTo(RECEIVER, o1Tile, TRANSMITTER, o1T) && o1T.canConnectTo(TRANSMITTER, o2Tile, RECEIVER, receiver)){
-                return true;
-            }
+            //if (receiver != null && receiver.canConnectTo(RECEIVER, o1Tile, TRANSMITTER, o1T) && o1T.canConnectTo(TRANSMITTER, o2Tile, RECEIVER, receiver)){
+            //    return true;
+            //}
         }
         if (isProvider(o2, opp)){
             IEnergyGenerator source = getProvider(o2, opp);
-            if (source != null && source.canConnectTo(PROVIDER, o1Tile, TRANSMITTER, o1T) && o1T.canConnectTo(TRANSMITTER, o2Tile, PROVIDER, source)){
-                return true;
-            }
+            //if (source != null && source.canConnectTo(PROVIDER, o1Tile, TRANSMITTER, o1T) && o1T.canConnectTo(TRANSMITTER, o2Tile, PROVIDER, source)){
+            //    return true;
+            //}
         }
         return false;
     }
@@ -198,7 +198,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
         if (isProvider(o1, facing) && isReceiver(o2, opp)){
             IEnergyGenerator source = getProvider(o1, facing);
             IEnergyReceiver receiver = getReceiver(o2, opp);
-            return source != null && receiver != null && source.canConnectTo(PROVIDER, o2.getTileEntity(), RECEIVER, receiver) && receiver.canConnectTo(RECEIVER, o1.getTileEntity(), PROVIDER, source);
+           // return source != null && receiver != null && source.canConnectTo(PROVIDER, o2.getTileEntity(), RECEIVER, receiver) && receiver.canConnectTo(RECEIVER, o1.getTileEntity(), PROVIDER, source);
         }
         return false;
     }
@@ -212,7 +212,7 @@ public final class EFluxGridHandler extends AbstractGridHandler<EFluxEnergyObjec
     }
 
     private IEnergyGenerator getProvider(ICapabilityProvider capabilityProvider, EnumFacing facing){
-        return capabilityProvider.getCapability(GENERATOR_CAPABILITY, facing);
+        return null;//capabilityProvider.getCapability(GENERATOR_CAPABILITY, facing);
     }
 
     private boolean isReceiver(ICapabilityProvider capabilityProvider, EnumFacing facing){

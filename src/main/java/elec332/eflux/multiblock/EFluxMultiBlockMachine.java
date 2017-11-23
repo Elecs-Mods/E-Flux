@@ -31,11 +31,11 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 28-7-2015.
  */
-public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, IEFluxPowerHandler, IWindowFactory {
+public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implements IBreakableMachine, /*IEFluxPowerHandler,*/ IWindowFactory {
 
     public EFluxMultiBlockMachine(){
         super();
-        energyContainer = new EnergyContainer(getMaxStoredPower(), this, this);
+        energyContainer = null;//new EnergyContainer(this, this);
         this.broken = false;
     }
 
@@ -55,7 +55,7 @@ public abstract class EFluxMultiBlockMachine extends AbstractMultiBlock implemen
     public void init() {
     }
 
-    @Override
+   // @Override
     public void markObjectDirty() {
         markDirty();
     }

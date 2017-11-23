@@ -3,6 +3,7 @@ package elec332.eflux.tileentity.energy.machine;
 import com.google.common.collect.Lists;
 import elec332.core.api.registration.RegisteredTileEntity;
 import elec332.core.world.WorldHelper;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.tileentity.TileEntityBreakableMachine;
 import elec332.eflux.util.Config;
 import net.minecraft.block.Block;
@@ -15,7 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,32 +81,43 @@ public class TileEntityGrowthLamp extends TileEntityBreakableMachine implements 
     }
 
     @Override
+    public int getWorkingVoltage() {
+        return 9;
+    }
+
+    @Override
     public float getAcceptance() {
         return 0.09f;
     }
 
     @Override
-    public int getEFForOptimalRP() {
+    public int getMaxRP() {
         return 10;
     }
 
     @Override
-    protected int getMaxStoredPower() {
-        return 700;
+    public double getResistance() {
+        return 0.9;
     }
 
-    /**
-     * @param direction the direction from which a connection is requested
-     * @return weather the tile can connect and accept power from the given side
-     */
+    @Nonnull
     @Override
-    public boolean canAcceptEnergyFrom(EnumFacing direction) {
-        return direction == EnumFacing.UP;
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
     }
 
     @Override
-    public int getRequestedRP() {
-        return 7;
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
     }
+
+    private ConnectionPoint cp1, cp2;
 
 }

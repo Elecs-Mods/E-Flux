@@ -98,7 +98,7 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
     public ItemStack getRandomRepairItem() {
         return new ItemStack(Items.APPLE);//TODO CircuitHandler.get(EnumCircuit.SMALL).getUnrefinedCircuit();
     }
-
+/*
     @Override
     public float getAcceptance() {
         return 0.23f;
@@ -113,7 +113,7 @@ public class MultiBlockLaser extends EFluxMultiBlockMachine {
     public int getOptimalRP() {
         return 30;
     }
-
+*/
     @Override
     protected int getMaxStoredPower() {
         return 980000;

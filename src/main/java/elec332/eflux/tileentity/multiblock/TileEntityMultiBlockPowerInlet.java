@@ -11,7 +11,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by Elec332 on 28-7-2015.
  */
 @RegisteredTileEntity("TileEntityEFluxMultiBlockPowerInlet")
-public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<IEnergyReceiver> implements IEnergyReceiver {
+public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlockHandler<IEnergyReceiver> /*implements IEnergyReceiver*/ {
 
     @CapabilityInject(IEnergyReceiver.class)
     private static Capability<IEnergyReceiver> CAPABILITY;
@@ -34,7 +34,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
 
     /**
      * @return The Redstone Potential at which the machine wishes to operate
-     */
+     *
     @Override
     public int requestedRP() {
         IEnergyReceiver mb = getMultiBlockHandler();
@@ -44,7 +44,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
     /**
      * @param rp        The Redstone Potential in the network
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
+     *
     @Override
     public int getRequestedEF(int rp) {
         IEnergyReceiver mb = getMultiBlockHandler();
@@ -55,7 +55,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
      * @param rp        the RedstonePotential in the network
      * @param ef        the amount of EnergeticFlux that is being provided
      * @return The amount of EnergeticFlux that wasn't used
-     */
+     *
     @Override
     public int receivePower(int rp, int ef) {
         lastEF = ef;
@@ -73,7 +73,7 @@ public class TileEntityMultiBlockPowerInlet extends AbstractTileEntityMultiBlock
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, EnumFacing facing, boolean hasMultiBlock) {
         return capability == EFluxAPI.RECEIVER_CAPABILITY ? (facing == getTileFacing() ? (T)this : null) : super.getCapability(capability, facing, hasMultiBlock);
-    }
+    }*/
 
     @Override
     protected Capability<IEnergyReceiver> getCapability() {

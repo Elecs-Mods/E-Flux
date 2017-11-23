@@ -108,7 +108,7 @@ public class EFluxEnergyGrid {
         EnumFacing f = connectionData.connectedFacing;
         boolean b = false;
         if (EFluxGridHandler.isValidProvider(c, f)){
-            IEnergyGenerator provider = c.getCapability(EFluxAPI.GENERATOR_CAPABILITY, f);
+            IEnergyGenerator provider = null;//c.getCapability(EFluxAPI.GENERATOR_CAPABILITY, f);
             if (provider instanceof IEnergyProvider){
                 specialProviders.add(connectionData);
                 b = true;

@@ -6,10 +6,15 @@ import elec332.eflux.api.EFluxAPI;
 import elec332.eflux.api.energy.container.EnergyContainer;
 import elec332.eflux.api.energy.container.IEFluxPowerHandler;
 import elec332.eflux.api.heat.IHeatReceiver;
+import elec332.eflux.api.util.ConnectionPoint;
 import elec332.eflux.util.HeatHelper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by Elec332 on 15-4-2016.
@@ -18,7 +23,7 @@ import net.minecraftforge.common.capabilities.Capability;
 public class TileEntityHeater extends TileEntityMultiBlockMachinePart implements ITickable, IEFluxPowerHandler {
 
     public TileEntityHeater(){
-        energyContainer = new EnergyContainer(500, this);
+        energyContainer = new EnergyContainer(this);
     }
 
     private boolean hasMultiBlock;
@@ -76,8 +81,8 @@ public class TileEntityHeater extends TileEntityMultiBlockMachinePart implements
     }
 
     @Override
-    public int getEFForOptimalRP() {
-        return 15;
+    public int getWorkingVoltage() {
+        return 30;
     }
 
     @Override
@@ -86,9 +91,44 @@ public class TileEntityHeater extends TileEntityMultiBlockMachinePart implements
     }
 
     @Override
-    public int getOptimalRP() {
+    public int getMaxRP() {
         return 20;
     }
+
+    @Override
+    public double getResistance() {
+        return 5;
+    }
+
+    @Nonnull
+    @Override
+    public ConnectionPoint getConnectionPoint(int post) {
+        return post == 0 ? cp1 : cp2;
+    }
+
+    @Nullable
+    @Override
+    public ConnectionPoint getConnectionPoint(EnumFacing side, Vec3d hitVec) {
+        return side != getTileFacing().getOpposite() ? null : (hitVec.y > 0.5 ? cp2 : cp1);
+    }
+
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        createConnectionPoints();
+    }
+
+    @Override
+    public void onLoad() {
+        createConnectionPoints();
+    }
+
+    protected void createConnectionPoints() {
+        cp1 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 1);
+        cp2 = new ConnectionPoint(pos, world, getTileFacing().getOpposite(), 2);
+    }
+
+    private ConnectionPoint cp1, cp2;
 
     @Override
     public void markObjectDirty() {

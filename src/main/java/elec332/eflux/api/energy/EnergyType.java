@@ -6,7 +6,6 @@ package elec332.eflux.api.energy;
 public enum EnergyType {
 
 	AC,
-	AC_3P,
 	DC
 
 }

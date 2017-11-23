@@ -12,6 +12,7 @@ import elec332.core.client.model.RenderingRegistry;
 import elec332.core.client.model.loading.IModelAndTextureLoader;
 import elec332.core.client.model.map.BakedModelMetaMap;
 import elec332.core.main.ElecCore;
+import elec332.eflux.client.ClientHandler;
 import elec332.eflux.client.EFluxResourceLocation;
 import elec332.eflux.client.FurnaceRenderTile;
 import elec332.eflux.client.render.FurnaceContentsRenderer;
@@ -56,6 +57,7 @@ public class ClientProxy extends CommonProxy implements IModelAndTextureLoader {
 
     @Override
     public void initRenderStuff(){
+        MinecraftForge.EVENT_BUS.register(new ClientHandler());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaser.class, new TileEntityLaserRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(FurnaceRenderTile.class, new FurnaceContentsRenderer());
         TileEntityTankRenderer<TileEntityTank> tankRenderer = new TileEntityTankRenderer<TileEntityTank>();

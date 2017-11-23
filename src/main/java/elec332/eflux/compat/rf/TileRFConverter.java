@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Elec332 on 20-7-2015.
  */
-public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnergyProvider, ITickable {
+public class TileRFConverter extends TileBase implements /*IEnergyReceiver,*/ IEnergyProvider, ITickable {
 
     private int storedPower;
 
@@ -47,7 +47,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
 
     /**
      * @return The Redstone Potential at which the machine wishes to operate
-     */
+     *
     @Override
     public int requestedRP() {
         return 1; //This is the only machine that doesn't care about the RP of the network
@@ -56,7 +56,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
     /**
      * @param rp        The Redstone Potential in the network
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
+     *
     @Override
     public int getRequestedEF(int rp) {
         return (int) Math.min(400/rp, ((6000-storedPower)/getRFConversion())/rp);
@@ -66,7 +66,7 @@ public class TileRFConverter extends TileBase implements IEnergyReceiver, IEnerg
      * @param rp        the RedstonePotential in the network
      * @param ef        the amount of EnergeticFlux that is being provided
      //* @return The amount of EnergeticFlux that wasn't used
-     */
+     *
     @Override
     public int receivePower(int rp, int ef) {
         storedPower += rp*ef*getRFConversion();

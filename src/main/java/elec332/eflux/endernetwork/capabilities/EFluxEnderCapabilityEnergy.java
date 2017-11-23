@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Elec332 on 21-5-2016.
  */
-public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyReceiver> implements IEnergyReceiver {
+public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyReceiver>{//} implements IEnergyReceiver {
 
     public EFluxEnderCapabilityEnergy(Side side, IEnderNetwork network) {
         super(side, network);
@@ -41,7 +41,7 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
     @Nullable
     @Override
     public IEnergyReceiver get() {
-        return this;
+        return null;//this;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
 
     /**
      * @return The Redstone Potential at which the machine wishes to operate
-     */
+     *
     @Override
     public int requestedRP() {
         int rp = 0;
@@ -89,7 +89,7 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
     /**
      * @param rp The Redstone Potential in the network
      * @return The amount of EnergeticFlux requested for the Redstone Potential in the network
-     */
+     *
     @Override
     public int getRequestedEF(int rp) {
         int ef = 0;
@@ -104,7 +104,7 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
      * @param rp the RedstonePotential in the network
      * @param ef the amount of EnergeticFlux that is being provided
      * @return The amount of EnergeticFlux that wasn't used
-     */
+     *
     @Override
     public int receivePower(int rp, int ef) {
         ef = (int) (ef * 0.9f);
@@ -138,6 +138,6 @@ public class EFluxEnderCapabilityEnergy extends AbstractEnderCapability<IEnergyR
                 .map(tile -> tile.getCapability(EFluxAPI.RECEIVER_CAPABILITY, null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
+    }*/
 
 }
